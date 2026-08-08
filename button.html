@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Press The Button</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: #080808;
+        color: white;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .game {
+        text-align: center;
+        width: 90%;
+        max-width: 800px;
+    }
+
+    h1 {
+        font-size: 55px;
+        margin: 0 0 10px;
+    }
+
+    p {
+        color: #888;
+    }
+
+    #button {
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        border: 12px solid #500000;
+        background: #e00000;
+        color: white;
+        font-size: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 50px auto;
+        display: block;
+        box-shadow: 0 0 50px rgba(255, 0, 0, .4);
+    }
+
+    #button:hover {
+        background: #ff2222;
+        transform: scale(1.04);
+    }
+
+    #button:active {
+        transform: scale(.94);
+    }
+
+    .result {
+        background: #111;
+        border: 1px solid #292929;
+        border-radius: 15px;
+        padding: 25px;
+    }
+
+    #message {
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    #stats {
+        margin-top: 20px;
+        color: #aaa;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+    <h1>PRESS THE BUTTON</h1>
+
+    <p>Every click causes a random event.</p>
+
+    <button id="button">PRESS</button>
+
+    <div class="result">
+
+        <div id="message">
+            What will happen?
+        </div>
+
+        <div id="stats">
+            Clicks: <span id="clicks">0</span>
+            &nbsp; | &nbsp;
+            Money: £<span id="money">100</span>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let clicks = 0;
+let money = 100;
+
+const button = document.getElementById("button");
+const message = document.getElementById("message");
+const clicksText = document.getElementById("clicks");
+const moneyText = document.getElementById("money");
+
+const outcomes = [
+
+    {
+        text: "You gained £10 💰",
+        action: function() {
+            money += 10;
+        }
+    },
+
+    {
+        text: "Nothing happened.",
+        action: function() {}
+    },
+
+    {
+        text: "You lost £5 💸",
+        action: function() {
+            money -= 5;
+        }
+    },
+
+    {
+        text: "A duck appeared. 🦆",
+        action: function() {}
+    },
+
+    {
+        text: "👁️ You are being watched.",
+        action: function() {}
+    },
+
+    {
+        text: "The button blinked.",
+        action: function() {}
+    },
+
+    {
+        text: "You found £100!",
+        action: function() {
+            money += 100;
+        }
+    },
+
+    {
+        text: "The button laughed.",
+        action: function() {}
+    },
+
+    {
+        text: "STOP PRESSING.",
+        action: function() {}
+    },
+
+    {
+        text: "You hear knocking...",
+        action: function() {}
+    },
+
+     {
+        text: "Hello......",
+        action: function() {}
+    },
+
+    {
+        text: "You lost £50 💸",
+        action: function() {
+            money -= 50;
+        }
+    },
+
+    {
+        text: "The button is now red.",
+        action: function() {
+            button.style.background = "#ff0000";
+        }
+    },
+
+    {
+        text: "The button is now green.",
+        action: function() {
+            button.style.background = "#00ff00";
+        }
+    },
+
+    {
+        text: "The button is now blue.",
+        action: function() {
+            button.style.background = "#0000ff";
+        }
+    },
+    {
+        text: "The button is now yellow.",
+        action: function() {
+            button.style.background = "#ffff00";
+        }
+    },
+
+    {
+        text: "The button is now purple.",
+        action: function() {
+            button.style.background = "#800080";
+        }
+    },
+
+    {
+        text: "The button is now orange.",
+        action: function() {
+            button.style.background = "#ffa500";
+        }
+    },
+    {
+        text: "The button is now pink.",
+        action: function() {
+            button.style.background = "#ff69b4";
+        }
+    },
+
+    {
+        text: "The button is now cyan.",
+        action: function() {
+            button.style.background = "#00ffff";
+        }
+    },
+
+    {
+        text: "The button is now white.",
+        action: function() {
+            button.style.background = "#ffffff";
+            button.style.color = "#000000";
+        }
+    },
+
+    {
+        text: "The button is now black.",
+        action: function() {
+            button.style.background = "#000000";
+            button.style.color = "#ffffff";
+        }
+    },
+    {
+        text: "The button is now rainbow.",
+        action: function() {
+            button.style.background = "linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet)";
+            button.style.color = "#ffffff";
+        }
+    },
+    {
+        text: "The button is now random colors.",
+        action: function() {
+            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+            button.style.background = randomColor;
+            button.style.color = "#ffffff";
+        }
+    },
+    {
+        text: "The button is now invisible.",
+        action: function() {
+            button.style.background = "transparent";
+            button.style.border = "none";
+            button.style.color = "transparent";
+        }
+    },
+    {
+        text: "The button is now normal.",
+        action: function() {
+            button.style.background = "#e00000";
+            button.style.border = "12px solid #500000";
+            button.style.color = "#ffffff";
+        }
+    },
+    {
+        text: "The button is now huge.",
+        action: function() {
+            button.style.width = "400px";
+            button.style.height = "400px";
+        }
+    },
+    {
+        text: "The button is now tiny.",
+        action: function() {
+            button.style.width = "100px";
+            button.style.height = "100px";
+        }
+    },
+    {
+        text: "The button is now normal size.",
+        action: function() {
+            button.style.width = "250px";
+            button.style.height = "250px";
+        }
+    },
+    {
+        text: "The button is now shaking.",
+        action: function() {
+            button.style.animation = "shake 0.5s infinite";
+        }
+    },
+    {
+        text: "The button stopped shaking.",
+        action: function() {
+            button.style.animation = "none";
+        }
+    },
+    {
+        text: "The button is now spinning.",
+        action: function() {
+            button.style.animation = "spin 2s linear infinite";
+        }
+    },
+    {
+        text: "The button stopped spinning.",
+        action: function() {
+            button.style.animation = "none";
+        }
+    },
+    { 
+        text: "The button is now glowing.",
+        action: function() {
+            button.style.boxShadow = "0 0 50px rgba(255, 0, 0, .8)";
+        }
+    },
+    {
+        text: "The button stopped glowing.",
+        action: function() {
+            button.style.boxShadow = "0 0 50px rgba(255, 0, 0, .4)";
+        }
+    },
+    {
+        text: "The button is now pulsating.",
+        action: function() {
+            button.style.animation = "pulse 1s infinite";
+        }
+    },
+    {
+        text: "The button stopped pulsating.",
+        action: function() {
+            button.style.animation = "none";
+        }
+    },
+    {
+        text: "The button is now rainbow pulsating.",
+        action: function() {
+            button.style.animation = "rainbowPulse 1s infinite";
+        }
+    },
+    {
+        text: "The button stopped rainbow pulsating.",
+        action: function() {
+            button.style.animation = "none";
+        }
+    },
+    {
+        text: "The button is now rainbow spinning.",
+        action: function() {
+            button.style.animation = "rainbowSpin 2s linear infinite";
+        }
+    },
+    {
+        text: "The button stopped rainbow spinning.",
+        action: function() {
+            button.style.animation = "none";
+        }
+    },
+    {
+        text: "The button is now rainbow shaking.",
+        action: function() {
+            button.style.animation = "rainbowShake 0.5s infinite";
+        }
+    },
+    {
+        text: "The button stopped rainbow shaking.",
+        action: function() {
+            button.style.animation = "none";
+        }
+    },
+    {
+        text: "The button is now rainbow glowing.",
+        action: function() {
+            button.style.boxShadow = "0 0 50px rgba(255, 0, 0, .8), 0 0 50px rgba(255, 127, 0, .8), 0 0 50px rgba(255, 255, 0, .8), 0 0 50px rgba(0, 255, 0, .8), 0 0 50px rgba(0, 0, 255, .8), 0 0 50px rgba(75, 0, 130, .8), 0 0 50px rgba(148, 0, 211, .8)";
+        }
+    },
+    {
+        text: "The button stopped rainbow glowing.",
+        action: function() {
+            button.style.boxShadow = "none";
+        }
+    },
+    {
+        text: "The button is now rainbow.",
+        action: function() {
+            button.style.background = "linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet)";
+            button.style.color = "#ffffff";
+        }
+    },
+];
+
+button.addEventListener("click", function() {
+
+    clicks++;
+
+    const outcome =
+        outcomes[Math.floor(Math.random() * outcomes.length)];
+
+    outcome.action();
+
+    message.textContent = outcome.text;
+
+    clicksText.textContent = clicks;
+
+    moneyText.textContent = Math.floor(money);
+
+});
+
+</script>
+
+</body>
+</html>
+
