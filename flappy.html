@@ -1,0 +1,1898 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FLAPPY.EXE</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#050505;
+    color:white;
+    font-family:Arial,Helvetica,sans-serif;
+    overflow:hidden;
+}
+
+#wrap{
+    width:100vw;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+#game{
+    position:relative;
+    width:min(1000px,100vw);
+    height:min(700px,100vh);
+    overflow:hidden;
+    background:#70c5ce;
+}
+
+canvas{
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+#hud{
+    position:absolute;
+    top:15px;
+    left:15px;
+    right:15px;
+    display:flex;
+    justify-content:space-between;
+    pointer-events:none;
+    z-index:5;
+}
+
+.box{
+    background:rgba(0,0,0,.55);
+    padding:8px 14px;
+    border-radius:9px;
+    text-align:center;
+    min-width:80px;
+}
+
+.label{
+    font-size:9px;
+    color:#bbb;
+    letter-spacing:2px;
+}
+
+.value{
+    font-size:20px;
+    font-weight:bold;
+}
+
+#power{
+    position:absolute;
+    left:50%;
+    bottom:15px;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,.7);
+    padding:7px 14px;
+    border-radius:20px;
+    font-size:13px;
+    z-index:5;
+    pointer-events:none;
+}
+
+.overlay{
+    position:absolute;
+    inset:0;
+    z-index:20;
+    background:rgba(0,0,0,.75);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.card{
+    width:min(520px,90%);
+    background:#0b0b0b;
+    border:1px solid #333;
+    border-radius:18px;
+    padding:30px;
+    text-align:center;
+}
+
+.card h1{
+    margin-top:0;
+    font-size:42px;
+}
+
+.card p{
+    color:#888;
+    line-height:1.6;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+.mainBtn{
+    background:#00ff9d;
+    color:#00140d;
+    padding:14px 30px;
+    border-radius:9px;
+    font-weight:900;
+    font-size:16px;
+}
+
+.hidden{
+    display:none!important;
+}
+
+
+/* =========================
+   HACK TERMINAL
+========================= */
+
+#hack{
+    position:absolute;
+    inset:0;
+    z-index:50;
+    background:rgba(0,0,0,.93);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+#terminal{
+    width:min(720px,92%);
+    background:#020806;
+    border:1px solid #00ff9d;
+    border-radius:14px;
+    padding:24px;
+    box-shadow:0 0 60px rgba(0,255,157,.15);
+}
+
+#terminalTop{
+    color:#00ff9d;
+    font-family:Consolas,monospace;
+    margin-bottom:18px;
+}
+
+#gateTitle{
+    color:#fff;
+    font-size:24px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+#question{
+    color:#aaa;
+    margin-bottom:15px;
+}
+
+#code{
+    background:#000;
+    border:1px solid #222;
+    border-radius:8px;
+    padding:18px;
+    color:#8affcf;
+    font-family:Consolas,monospace;
+    white-space:pre-wrap;
+    text-align:left;
+    margin-bottom:15px;
+}
+
+#answerRow{
+    display:flex;
+    gap:8px;
+}
+
+#answer{
+    flex:1;
+    background:#000;
+    border:1px solid #333;
+    color:#00ff9d;
+    padding:13px;
+    border-radius:8px;
+    outline:none;
+    font-family:Consolas,monospace;
+}
+
+#execute{
+    background:#00ff9d;
+    color:#00140d;
+    padding:0 22px;
+    border-radius:8px;
+    font-weight:bold;
+}
+
+#hackInfo{
+    margin-top:13px;
+    display:flex;
+    justify-content:space-between;
+    color:#777;
+    font-size:13px;
+}
+
+#hackResult{
+    margin-top:12px;
+    min-height:22px;
+    font-weight:bold;
+}
+
+
+/* =========================
+   CODE GATE
+========================= */
+
+#gateNotice{
+    position:absolute;
+    top:90px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:10;
+    color:#00ff9d;
+    font-family:Consolas,monospace;
+    font-weight:bold;
+    font-size:18px;
+    text-shadow:0 0 15px #00ff9d;
+    pointer-events:none;
+    animation:pulse 1s infinite alternate;
+}
+
+@keyframes pulse{
+    from{opacity:.55}
+    to{opacity:1}
+}
+</style>
+</head>
+
+<body>
+
+<div id="wrap">
+
+<div id="game">
+
+<canvas id="canvas"></canvas>
+
+<div id="hud">
+
+    <div class="box">
+        <div class="label">SCORE</div>
+        <div class="value" id="score">0</div>
+    </div>
+
+    <div class="box">
+        <div class="label">HACK LVL</div>
+        <div class="value" id="level">1</div>
+    </div>
+
+    <div class="box">
+        <div class="label">BEST</div>
+        <div class="value" id="best">0</div>
+    </div>
+
+</div>
+
+<div id="power" class="hidden"></div>
+
+<div id="gateNotice" class="hidden">
+    ⚡ CODE GATE APPROACHING
+</div>
+
+
+<!-- START -->
+
+<div class="overlay" id="start">
+
+<div class="card">
+
+<h1>FLAPPY.EXE</h1>
+
+<p>
+The firewall is unstable.
+Fly through the system and hack
+CODE GATES to gain powerful abilities.
+</p>
+
+<p>
+<b>CLICK / TAP / SPACE</b> to flap.
+</p>
+
+<button class="mainBtn" id="startBtn">
+START SYSTEM
+</button>
+
+</div>
+
+</div>
+
+
+<!-- GAME OVER -->
+
+<div class="overlay hidden" id="gameOver">
+
+<div class="card">
+
+<h1>💀 CRASHED</h1>
+
+<p id="finalText"></p>
+
+<button class="mainBtn" id="restartBtn">
+REBOOT
+</button>
+
+</div>
+
+</div>
+
+
+<!-- HACK SCREEN -->
+
+<div id="hack" class="hidden">
+
+<div id="terminal">
+
+<div id="terminalTop">
+> FIREWALL ACCESS TERMINAL_
+</div>
+
+<div id="gateTitle">
+CODE GATE
+</div>
+
+<div id="question"></div>
+
+<div id="code"></div>
+
+<div id="answerRow">
+
+<input
+    id="answer"
+    autocomplete="off"
+    placeholder="Enter answer..."
+>
+
+<button id="execute">
+EXECUTE
+</button>
+
+</div>
+
+<div id="hackInfo">
+
+<span>
+TIME: <b id="timer">10</b>
+</span>
+
+<span>
+REWARD: <b id="reward">?</b>
+</span>
+
+</div>
+
+<div id="hackResult"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   CANVAS
+===================================================== */
+
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+const game=document.getElementById("game");
+
+function resize(){
+
+    const r=game.getBoundingClientRect();
+
+    canvas.width=r.width;
+    canvas.height=r.height;
+
+}
+
+window.addEventListener("resize",resize);
+
+resize();
+
+
+/* =====================================================
+   UI
+===================================================== */
+
+const scoreEl=document.getElementById("score");
+const levelEl=document.getElementById("level");
+const bestEl=document.getElementById("best");
+
+const startScreen=document.getElementById("start");
+const gameOver=document.getElementById("gameOver");
+
+const finalText=document.getElementById("finalText");
+
+const hack=document.getElementById("hack");
+const question=document.getElementById("question");
+const code=document.getElementById("code");
+const answer=document.getElementById("answer");
+const execute=document.getElementById("execute");
+
+const timer=document.getElementById("timer");
+const rewardEl=document.getElementById("reward");
+const hackResult=document.getElementById("hackResult");
+
+const powerEl=document.getElementById("power");
+const gateNotice=document.getElementById("gateNotice");
+
+
+/* =====================================================
+   BEST
+===================================================== */
+
+let best=Number(
+    localStorage.getItem("flappyExeBest")||0
+);
+
+bestEl.textContent=best;
+
+
+/* =====================================================
+   PLAYER
+===================================================== */
+
+const bird={
+
+    x:150,
+
+    y:300,
+
+    velocity:0,
+
+    radius:15
+
+};
+
+
+/* =====================================================
+   PHYSICS
+
+   Designed around classic Flappy rhythm.
+===================================================== */
+
+const GRAVITY=.21;
+
+const FLAP=-4.7;
+
+let speed=2.35;
+
+const START_GAP=205;
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let running=false;
+
+let score=0;
+
+let pipes=[];
+
+let lastPipeX=0;
+
+let frame=0;
+
+let hackOpen=false;
+
+let hackTimer=null;
+
+let hackSeconds=10;
+
+let currentChallenge=null;
+
+let invincibleUntil=0;
+
+let slowUntil=0;
+
+let doubleScoreUntil=0;
+
+let shield=false;
+
+
+/* =====================================================
+   CODE CHALLENGES
+
+   More get added as level increases.
+===================================================== */
+
+const challenges=[
+
+{
+level:1,
+
+q:"What will this code print?",
+
+code:
+`let x = 5;
+let y = 3;
+
+console.log(x + y);`,
+
+answer:"8",
+
+reward:"INVINCIBILITY"
+},
+
+{
+level:1,
+
+q:"What is the value of x?",
+
+code:
+`let x = 10;
+
+x += 5;`,
+
+answer:"15",
+
+reward:"INVINCIBILITY"
+},
+
+{
+level:1,
+
+q:"What is 6 × 6?",
+
+code:
+`let answer = 6 * 6;`,
+
+answer:"36",
+
+reward:"SHIELD"
+},
+
+{
+level:2,
+
+q:"What will this print?",
+
+code:
+`let x = 10;
+
+if(x > 5){
+    console.log("HACK");
+}`,
+
+answer:"hack",
+
+reward:"SLOW MOTION"
+},
+
+{
+level:2,
+
+q:"What is the final value?",
+
+code:
+`let score = 20;
+
+score += 10;
+score -= 5;`,
+
+answer:"25",
+
+reward:"DOUBLE SCORE"
+},
+
+{
+level:2,
+
+q:"What does this print?",
+
+code:
+`let x = 7;
+
+x -= 2;
+
+console.log(x);`,
+
+answer:"5",
+
+reward:"INVINCIBILITY"
+},
+
+{
+level:3,
+
+q:"What is the result?",
+
+code:
+`let a = 4;
+let b = 3;
+
+console.log(a * b + 2);`,
+
+answer:"14",
+
+reward:"DOUBLE SCORE"
+},
+
+{
+level:3,
+
+q:"What will this print?",
+
+code:
+`let x = 10;
+
+console.log(x === 10);`,
+
+answer:"true",
+
+reward:"SHIELD"
+},
+
+{
+level:4,
+
+q:"What is x?",
+
+code:
+`let x = 2;
+
+x *= 5;
+x += 3;`,
+
+answer:"13",
+
+reward:"INVINCIBILITY"
+},
+
+{
+level:5,
+
+q:"What is the output?",
+
+code:
+`let x = 20;
+
+x /= 4;
+
+console.log(x);`,
+
+answer:"5",
+
+reward:"DOUBLE SCORE"
+}
+
+];
+
+
+/* =====================================================
+   START
+===================================================== */
+
+function startGame(){
+
+    running=true;
+
+    score=0;
+
+    frame=0;
+
+    pipes=[];
+
+    lastPipeX=canvas.width+150;
+
+    speed=2.35;
+
+    hackOpen=false;
+
+    invincibleUntil=0;
+
+    slowUntil=0;
+
+    doubleScoreUntil=0;
+
+    shield=false;
+
+    powerEl.classList.add("hidden");
+
+    gateNotice.classList.add("hidden");
+
+    bird.y=canvas.height/2;
+
+    bird.velocity=0;
+
+    scoreEl.textContent=0;
+
+    levelEl.textContent=1;
+
+    startScreen.classList.add("hidden");
+
+    gameOver.classList.add("hidden");
+
+    hack.classList.add("hidden");
+
+    createPipe(canvas.width+150);
+
+}
+
+
+/* =====================================================
+   FLAP
+===================================================== */
+
+function flap(){
+
+    if(!running)return;
+
+    if(hackOpen)return;
+
+    bird.velocity=FLAP;
+
+}
+
+
+/* =====================================================
+   INPUT
+===================================================== */
+
+game.addEventListener("mousedown",e=>{
+
+    if(
+        e.target.closest("button") ||
+        e.target.closest("input")
+    )return;
+
+    flap();
+
+});
+
+
+game.addEventListener("touchstart",e=>{
+
+    if(
+        e.target.closest("button") ||
+        e.target.closest("input")
+    )return;
+
+    e.preventDefault();
+
+    flap();
+
+},{passive:false});
+
+
+document.addEventListener("keydown",e=>{
+
+    if(e.code==="Space"){
+
+        e.preventDefault();
+
+        flap();
+
+    }
+
+});
+
+
+/* =====================================================
+   CREATE NORMAL PIPE
+===================================================== */
+
+function createPipe(x){
+
+    const level=
+        Math.floor(score/10)+1;
+
+    /*
+       Gap slowly gets smaller.
+    */
+
+    const gap=Math.max(
+        165,
+        START_GAP-
+        Math.min(
+            40,
+            level*4
+        )
+    );
+
+    const margin=75;
+
+    const maxTop=
+        canvas.height-
+        gap-
+        margin;
+
+    const top=
+        margin+
+        Math.random()*
+        Math.max(
+            30,
+            maxTop-margin
+        );
+
+    pipes.push({
+
+        x:x,
+
+        width:72,
+
+        top:top,
+
+        gap:gap,
+
+        passed:false,
+
+        codeGate:false
+
+    });
+
+    lastPipeX=x;
+
+}
+
+
+/* =====================================================
+   CREATE CODE GATE
+===================================================== */
+
+function createCodeGate(){
+
+    /*
+       Code gates are represented as
+       a special pair of firewall pipes.
+    */
+
+    const gap=235;
+
+    const margin=70;
+
+    const maxTop=
+        canvas.height-
+        gap-
+        margin;
+
+    const top=
+        margin+
+        Math.random()*
+        Math.max(
+            20,
+            maxTop-margin
+        );
+
+    pipes.push({
+
+        x:canvas.width+60,
+
+        width:82,
+
+        top:top,
+
+        gap:gap,
+
+        passed:false,
+
+        codeGate:true,
+
+        hacked:false
+
+    });
+
+    gateNotice.classList.remove("hidden");
+
+}
+
+
+/* =====================================================
+   COLLISION
+===================================================== */
+
+function collision(p){
+
+    if(
+        bird.x+bird.radius-4<p.x
+    )return false;
+
+    if(
+        bird.x-bird.radius+4>
+        p.x+p.width
+    )return false;
+
+    const bottom=
+        p.top+p.gap;
+
+    return(
+        bird.y-bird.radius+4<p.top ||
+        bird.y+bird.radius-4>bottom
+    );
+
+}
+
+
+/* =====================================================
+   CHOOSE CHALLENGE
+===================================================== */
+
+function getChallenge(){
+
+    const level=
+        Math.floor(score/10)+1;
+
+    const available=
+        challenges.filter(
+            c=>c.level<=level
+        );
+
+    return available[
+        Math.floor(
+            Math.random()*
+            available.length
+        )
+    ];
+
+}
+
+
+/* =====================================================
+   OPEN HACK
+===================================================== */
+
+function openHack(pipe){
+
+    hackOpen=true;
+
+    currentChallenge=
+        getChallenge();
+
+    question.textContent=
+        currentChallenge.q;
+
+    code.textContent=
+        currentChallenge.code;
+
+    rewardEl.textContent=
+        currentChallenge.reward;
+
+    answer.value="";
+
+    hackResult.textContent="";
+
+    hackSeconds=
+        score<30 ? 12 :
+        score<60 ? 10 :
+        8;
+
+    timer.textContent=
+        hackSeconds;
+
+    hack.classList.remove("hidden");
+
+    gateNotice.classList.add("hidden");
+
+    answer.focus();
+
+    clearInterval(hackTimer);
+
+    hackTimer=setInterval(()=>{
+
+        hackSeconds--;
+
+        timer.textContent=
+            hackSeconds;
+
+        if(hackSeconds<=0){
+
+            hackFailed();
+
+        }
+
+    },1000);
+
+}
+
+
+/* =====================================================
+   REWARD DISPLAY
+===================================================== */
+
+function showPower(text){
+
+    powerEl.textContent=text;
+
+    powerEl.classList.remove("hidden");
+
+    setTimeout(()=>{
+
+        powerEl.classList.add("hidden");
+
+    },2500);
+
+}
+
+
+/* =====================================================
+   HACK SUCCESS
+===================================================== */
+
+function hackSuccess(){
+
+    clearInterval(hackTimer);
+
+    const reward=
+        currentChallenge.reward;
+
+    hackResult.textContent=
+        "✓ ACCESS GRANTED";
+
+    hackResult.style.color=
+        "#00ff9d";
+
+
+    /* INVINCIBILITY */
+
+    if(reward==="INVINCIBILITY"){
+
+        invincibleUntil=
+            Date.now()+10000;
+
+        showPower(
+            "🛡️ 10 SECOND INVINCIBILITY"
+        );
+
+    }
+
+
+    /* SHIELD */
+
+    if(reward==="SHIELD"){
+
+        shield=true;
+
+        showPower(
+            "🛡️ SHIELD READY"
+        );
+
+    }
+
+
+    /* SLOW */
+
+    if(reward==="SLOW MOTION"){
+
+        slowUntil=
+            Date.now()+10000;
+
+        showPower(
+            "🐌 SLOW MOTION — 10 SECONDS"
+        );
+
+    }
+
+
+    /* DOUBLE */
+
+    if(reward==="DOUBLE SCORE"){
+
+        doubleScoreUntil=
+            Date.now()+15000;
+
+        showPower(
+            "💰 DOUBLE SCORE — 15 SECONDS"
+        );
+
+    }
+
+
+    setTimeout(()=>{
+
+        hack.classList.add("hidden");
+
+        hackOpen=false;
+
+    },900);
+
+}
+
+
+/* =====================================================
+   HACK FAIL
+===================================================== */
+
+function hackFailed(){
+
+    clearInterval(hackTimer);
+
+    hackResult.textContent=
+        "✕ ACCESS DENIED";
+
+    hackResult.style.color=
+        "#ff4444";
+
+    /*
+       Wrong answer makes the game
+       temporarily faster.
+    */
+
+    speed*=1.25;
+
+    showPower(
+        "⚠️ SECURITY ALERT — SPEED INCREASED"
+    );
+
+    setTimeout(()=>{
+
+        hack.classList.add("hidden");
+
+        hackOpen=false;
+
+    },900);
+
+}
+
+
+/* =====================================================
+   EXECUTE
+===================================================== */
+
+execute.onclick=()=>{
+
+    const value=
+        answer.value
+        .trim()
+        .toLowerCase();
+
+    if(
+        value===
+        currentChallenge.answer
+        .toLowerCase()
+    ){
+
+        hackSuccess();
+
+    }else{
+
+        hackFailed();
+
+    }
+
+};
+
+
+answer.addEventListener("keydown",e=>{
+
+    if(e.key==="Enter"){
+
+        execute.click();
+
+    }
+
+});
+
+
+/* =====================================================
+   GAME OVER
+===================================================== */
+
+function die(){
+
+    if(!running)return;
+
+    running=false;
+
+    clearInterval(hackTimer);
+
+    hack.classList.add("hidden");
+
+    hackOpen=false;
+
+    if(score>best){
+
+        best=score;
+
+        localStorage.setItem(
+            "flappyExeBest",
+            best
+        );
+
+        bestEl.textContent=
+            best;
+
+    }
+
+    finalText.innerHTML=
+        `
+        You survived <b>${score}</b> gates.<br><br>
+        Hacker Level:
+        <b>${Math.floor(score/10)+1}</b>
+        `;
+
+    gameOver.classList.remove("hidden");
+
+}
+
+
+/* =====================================================
+   UPDATE
+===================================================== */
+
+function update(){
+
+    if(!running)return;
+
+    if(hackOpen)return;
+
+
+    /* ======================
+       BIRD
+    ====================== */
+
+    bird.velocity+=GRAVITY;
+
+    bird.velocity=
+        Math.min(
+            bird.velocity,
+            5.3
+        );
+
+    bird.y+=bird.velocity;
+
+
+    /* ======================
+       SPEED
+    ====================== */
+
+    let currentSpeed=speed;
+
+    if(
+        Date.now()<slowUntil
+    ){
+
+        currentSpeed*=.55;
+
+    }
+
+
+    /* ======================
+       PIPES
+    ====================== */
+
+    for(
+        let i=pipes.length-1;
+        i>=0;
+        i--
+    ){
+
+        const p=pipes[i];
+
+        p.x-=currentSpeed;
+
+
+        /* ==================
+           CODE GATE
+        ================== */
+
+        if(
+            p.codeGate &&
+            !p.hacked &&
+            p.x+p.width<bird.x
+        ){
+
+            p.hacked=true;
+
+            /*
+               Stop the game and
+               ask the coding question.
+            */
+
+            openHack(p);
+
+            return;
+
+        }
+
+
+        /* ==================
+           NORMAL SCORE
+        ================== */
+
+        if(
+            !p.codeGate &&
+            !p.passed &&
+            p.x+p.width<bird.x
+        ){
+
+            p.passed=true;
+
+            const multiplier=
+                Date.now()<doubleScoreUntil
+                ?2
+                :1;
+
+            score+=multiplier;
+
+            scoreEl.textContent=
+                score;
+
+
+            /* LEVEL */
+
+            levelEl.textContent=
+                Math.floor(score/10)+1;
+
+
+            /*
+               Gradual speed increase.
+            */
+
+            if(score%10===0){
+
+                speed+=.08;
+
+            }
+
+
+            /*
+               Code gates become
+               more frequent.
+            */
+
+            if(
+                score>=5 &&
+                score%10===5
+            ){
+
+                createCodeGate();
+
+                return;
+
+            }
+
+        }
+
+
+        /* ==================
+           COLLISION
+        ================== */
+
+        const invincible=
+            Date.now()<
+            invincibleUntil;
+
+        if(
+            collision(p) &&
+            !invincible
+        ){
+
+            if(shield){
+
+                shield=false;
+
+                p.x-=120;
+
+                showPower(
+                    "💥 SHIELD SAVED YOU"
+                );
+
+            }else{
+
+                die();
+
+                return;
+
+            }
+
+        }
+
+
+        /* REMOVE */
+
+        if(
+            p.x+p.width<-20
+        ){
+
+            pipes.splice(i,1);
+
+        }
+
+    }
+
+
+    /* ======================
+       NEXT PIPE
+    ====================== */
+
+    if(
+        pipes.length===0 ||
+        pipes[pipes.length-1].x<
+        canvas.width-260
+    ){
+
+        createPipe(
+            canvas.width+40
+        );
+
+    }
+
+
+    /* ======================
+       BOUNDARIES
+    ====================== */
+
+    const invincible=
+        Date.now()<
+        invincibleUntil;
+
+    if(!invincible){
+
+        if(
+            bird.y-bird.radius<0 ||
+            bird.y+bird.radius>
+            canvas.height
+        ){
+
+            die();
+
+        }
+
+    }else{
+
+        bird.y=
+            Math.max(
+                bird.radius,
+                Math.min(
+                    canvas.height-
+                    bird.radius,
+                    bird.y
+                )
+            );
+
+    }
+
+}
+
+
+/* =====================================================
+   DRAW
+===================================================== */
+
+function draw(){
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* ======================
+       SKY
+    ====================== */
+
+    ctx.fillStyle="#70c5ce";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* ======================
+       CLOUDS
+    ====================== */
+
+    ctx.fillStyle=
+        "rgba(255,255,255,.35)";
+
+    for(
+        let i=0;
+        i<7;
+        i++
+    ){
+
+        const x=
+            (i*180-
+            (Date.now()/70)%180);
+
+        const y=
+            70+(i%3)*80;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            22,
+            0,
+            Math.PI*2
+        );
+
+        ctx.arc(
+            x+25,
+            y-8,
+            29,
+            0,
+            Math.PI*2
+        );
+
+        ctx.arc(
+            x+52,
+            y,
+            22,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+
+    /* ======================
+       PIPES
+    ====================== */
+
+    pipes.forEach(p=>{
+
+        if(p.codeGate){
+
+            /*
+               Hacker pipes.
+            */
+
+            ctx.fillStyle="#101010";
+
+            ctx.fillRect(
+                p.x,
+                0,
+                p.width,
+                p.top
+            );
+
+            ctx.fillRect(
+                p.x,
+                p.top+p.gap,
+                p.width,
+                canvas.height-
+                p.top-
+                p.gap
+            );
+
+            /*
+               Green glowing edges.
+            */
+
+            ctx.strokeStyle=
+                "#00ff9d";
+
+            ctx.lineWidth=3;
+
+            ctx.strokeRect(
+                p.x,
+                0,
+                p.width,
+                p.top
+            );
+
+            ctx.strokeRect(
+                p.x,
+                p.top+p.gap,
+                p.width,
+                canvas.height-
+                p.top-
+                p.gap
+            );
+
+            /*
+               CODE text.
+            */
+
+            ctx.fillStyle="#00ff9d";
+
+            ctx.font=
+                "bold 12px Consolas";
+
+            ctx.textAlign="center";
+
+            ctx.fillText(
+                "CODE",
+                p.x+p.width/2,
+                p.top-18
+            );
+
+            ctx.fillText(
+                "GATE",
+                p.x+p.width/2,
+                p.top+p.gap+30
+            );
+
+        }else{
+
+            /*
+               Normal green pipes.
+            */
+
+            ctx.fillStyle="#35b832";
+
+            ctx.fillRect(
+                p.x,
+                0,
+                p.width,
+                p.top
+            );
+
+            ctx.fillRect(
+                p.x,
+                p.top+p.gap,
+                p.width,
+                canvas.height-
+                p.top-
+                p.gap
+            );
+
+            ctx.fillStyle="#238a22";
+
+            ctx.fillRect(
+                p.x,
+                0,
+                7,
+                p.top
+            );
+
+            ctx.fillRect(
+                p.x,
+                p.top+p.gap,
+                7,
+                canvas.height-
+                p.top-
+                p.gap
+            );
+
+            ctx.fillStyle="#4ddd43";
+
+            ctx.fillRect(
+                p.x-5,
+                p.top-12,
+                p.width+10,
+                12
+            );
+
+            ctx.fillRect(
+                p.x-5,
+                p.top+p.gap,
+                p.width+10,
+                12
+            );
+
+        }
+
+    });
+
+
+    /* ======================
+       BIRD
+    ====================== */
+
+    ctx.save();
+
+    ctx.translate(
+        bird.x,
+        bird.y
+    );
+
+    let rotation=
+        Math.max(
+            -.5,
+            Math.min(
+                1,
+                bird.velocity/7
+            )
+        );
+
+    ctx.rotate(rotation);
+
+
+    /* INVINCIBILITY */
+
+    if(
+        Date.now()<
+        invincibleUntil
+    ){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,
+            0,
+            30,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fillStyle=
+            "rgba(0,255,157,.25)";
+
+        ctx.fill();
+
+        ctx.strokeStyle=
+            "#00ff9d";
+
+        ctx.lineWidth=3;
+
+        ctx.stroke();
+
+    }
+
+
+    /* BODY */
+
+    ctx.fillStyle="#ffd83d";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        bird.radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /* WING */
+
+    ctx.fillStyle="#e6b928";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        -5,
+        7,
+        11,
+        6,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /* EYE */
+
+    ctx.fillStyle="#fff";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        6,
+        -6,
+        6,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle="#111";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        8,
+        -6,
+        2.5,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    /* BEAK */
+
+    ctx.fillStyle="#ff8c21";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        bird.radius-1,
+        0
+    );
+
+    ctx.lineTo(
+        bird.radius+14,
+        5
+    );
+
+    ctx.lineTo(
+        bird.radius-1,
+        9
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    ctx.restore();
+
+
+    /* ======================
+       ROOT ACCESS
+    ====================== */
+
+    if(
+        Date.now()<
+        invincibleUntil
+    ){
+
+        ctx.fillStyle="#00ff9d";
+
+        ctx.font=
+            "bold 16px Arial";
+
+        ctx.textAlign="center";
+
+        ctx.fillText(
+            "⚡ ROOT ACCESS",
+            canvas.width/2,
+            canvas.height-20
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   LOOP
+===================================================== */
+
+function loop(){
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(loop);
+
+}
+
+loop();
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+document
+.getElementById("startBtn")
+.onclick=startGame;
+
+document
+.getElementById("restartBtn")
+.onclick=startGame;
+
+</script>
+
+</body>
+</html>
+
