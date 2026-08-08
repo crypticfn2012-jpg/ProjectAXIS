@@ -1,0 +1,2674 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>COMPUTER VIRUS</title>
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+    --bg:#020604;
+    --panel:#07100a;
+    --panel2:#0a160d;
+    --line:#153d22;
+    --green:#00ff73;
+    --green2:#61ff9c;
+    --muted:#557761;
+    --yellow:#ffd34d;
+    --red:#ff4055;
+    --blue:#55b8ff;
+}
+
+body{
+    margin:0;
+    background:var(--bg);
+    color:#d9ffe5;
+    font-family:Consolas,Monaco,monospace;
+    overflow-x:hidden;
+}
+
+button,input{
+    font-family:inherit;
+}
+
+button{cursor:pointer}
+
+::-webkit-scrollbar{width:7px}
+::-webkit-scrollbar-track{background:#030704}
+::-webkit-scrollbar-thumb{background:#174f2b}
+
+#top{
+    height:68px;
+    background:#050c07;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 22px;
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+.logo{
+    color:var(--green);
+    font-weight:bold;
+    font-size:22px;
+    letter-spacing:2px;
+}
+
+.logo span{color:#3d694d}
+
+.topStats{
+    display:flex;
+    gap:28px;
+}
+
+.stat small{
+    display:block;
+    color:var(--muted);
+    font-size:9px;
+    margin-bottom:4px;
+}
+
+.stat b{
+    color:var(--green2);
+    font-size:14px;
+}
+
+#layout{
+    display:grid;
+    grid-template-columns:205px 1fr 285px;
+    min-height:calc(100vh - 68px);
+}
+
+aside{
+    background:#040a06;
+}
+
+#left{
+    border-right:1px solid var(--line);
+    padding:15px;
+}
+
+#right{
+    border-left:1px solid var(--line);
+    padding:15px;
+}
+
+.navTitle{
+    color:#3f654b;
+    font-size:9px;
+    letter-spacing:2px;
+    margin:10px 0 8px;
+}
+
+.nav{
+    width:100%;
+    padding:11px;
+    margin-bottom:6px;
+    background:#07110a;
+    color:#62866d;
+    border:1px solid var(--line);
+    border-radius:4px;
+    text-align:left;
+}
+
+.nav:hover,
+.nav.active{
+    color:var(--green);
+    border-color:#258044;
+    background:#0a1b0e;
+}
+
+.sideBox{
+    border:1px solid var(--line);
+    background:#07100a;
+    padding:12px;
+    margin-top:18px;
+}
+
+.sideBoxTitle{
+    color:var(--muted);
+    font-size:9px;
+    letter-spacing:1px;
+    margin-bottom:10px;
+}
+
+.progress{
+    height:6px;
+    background:#142018;
+    overflow:hidden;
+    border-radius:4px;
+}
+
+.progress div{
+    height:100%;
+    width:0%;
+    background:var(--green);
+    transition:.3s;
+}
+
+.sideValue{
+    color:var(--green);
+    font-size:18px;
+    margin:5px 0 9px;
+}
+
+#content{
+    padding:25px;
+    min-width:0;
+}
+
+.view{display:none}
+.view.active{display:block}
+
+h1{
+    color:var(--green);
+    font-size:26px;
+    margin:0 0 5px;
+}
+
+.subtitle{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:17px;
+    border-radius:5px;
+}
+
+.cardTitle{
+    color:#6d9778;
+    font-size:10px;
+    letter-spacing:2px;
+    margin-bottom:13px;
+}
+
+.action{
+    width:100%;
+    border:1px solid #1e6535;
+    background:#09190d;
+    color:var(--green);
+    padding:10px;
+    border-radius:4px;
+    margin-top:7px;
+}
+
+.action:hover{
+    border-color:var(--green);
+    background:#0c2112;
+}
+
+.action:disabled{
+    opacity:.3;
+    cursor:not-allowed;
+}
+
+#worldHeader{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+}
+
+.worldButton{
+    padding:9px 13px;
+    background:#07100a;
+    border:1px solid var(--line);
+    color:#62866d;
+    border-radius:4px;
+}
+
+.worldButton.active{
+    border-color:var(--green);
+    color:var(--green);
+}
+
+.network{
+    position:relative;
+    min-height:590px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:
+        linear-gradient(rgba(0,255,115,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(0,255,115,.025) 1px,transparent 1px);
+    background-size:40px 40px;
+}
+
+.network:before{
+    content:"NETWORK // LIVE";
+    position:absolute;
+    top:12px;
+    left:15px;
+    color:#284b33;
+    font-size:9px;
+}
+
+.node{
+    position:absolute;
+    width:135px;
+    padding:11px;
+    background:#061009;
+    border:1px solid #235537;
+    border-radius:5px;
+    transform:translate(-50%,-50%);
+    transition:.15s;
+    z-index:2;
+}
+
+.node:hover{
+    border-color:var(--green);
+    box-shadow:0 0 18px rgba(0,255,115,.12);
+    transform:translate(-50%,-50%) scale(1.03);
+}
+
+.node.infected{
+    border-color:var(--green);
+}
+
+.node.compromised{
+    border-color:var(--yellow);
+}
+
+.node.destroyed{
+    border-color:var(--red);
+    opacity:.55;
+}
+
+.nodeIcon{font-size:22px}
+.nodeName{
+    font-size:11px;
+    color:#b7e9c5;
+    margin-top:4px;
+}
+
+.nodeInfo{
+    color:#50755d;
+    font-size:8px;
+    margin-top:5px;
+}
+
+.nodeBar{
+    height:4px;
+    background:#152119;
+    margin-top:7px;
+}
+
+.nodeBar div{
+    height:100%;
+    background:var(--green);
+}
+
+.connection{
+    position:absolute;
+    height:1px;
+    background:#153f24;
+    transform-origin:left center;
+    z-index:1;
+}
+
+.eventBox{
+    margin-top:15px;
+    border:1px solid var(--line);
+    background:#061009;
+    padding:13px;
+}
+
+.eventBoxTitle{
+    color:#5d8b6a;
+    font-size:9px;
+    letter-spacing:2px;
+    margin-bottom:8px;
+}
+
+#eventText{
+    color:#a7dcb5;
+    font-size:11px;
+}
+
+.resources{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.resource{
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:12px;
+}
+
+.resource small{
+    color:var(--muted);
+    display:block;
+    font-size:9px;
+}
+
+.resource b{
+    color:var(--green);
+    display:block;
+    font-size:18px;
+    margin-top:5px;
+}
+
+.upgrades{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.upgrade{
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:15px;
+}
+
+.upgrade h3{
+    margin:0 0 7px;
+    color:var(--green);
+    font-size:13px;
+}
+
+.upgrade p{
+    color:#62866d;
+    font-size:10px;
+    line-height:1.5;
+    min-height:45px;
+}
+
+.upgradeLevel{
+    color:#9edbb0;
+    font-size:10px;
+    margin-bottom:8px;
+}
+
+.logs{
+    height:600px;
+    overflow-y:auto;
+    background:#010301;
+    border:1px solid var(--line);
+    padding:14px;
+}
+
+.log{
+    font-size:10px;
+    margin-bottom:8px;
+    color:#5e896b;
+}
+
+.log.good{color:var(--green)}
+.log.bad{color:var(--red)}
+.log.warn{color:var(--yellow)}
+.log.special{color:#bd7cff}
+
+.achievementGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+.achievement{
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:13px;
+    opacity:.4;
+}
+
+.achievement.unlocked{
+    opacity:1;
+    border-color:#26703e;
+}
+
+.achievement b{
+    color:var(--green);
+    display:block;
+    margin-bottom:5px;
+}
+
+.achievement small{
+    color:var(--muted);
+}
+
+.researchGrid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.research{
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:15px;
+}
+
+.research h3{
+    color:var(--green);
+    font-size:12px;
+}
+
+.research p{
+    color:var(--muted);
+    font-size:10px;
+    min-height:40px;
+}
+
+.research button{
+    width:100%;
+    padding:9px;
+    background:#09190d;
+    border:1px solid #1e6535;
+    color:var(--green);
+}
+
+.research.done{
+    border-color:var(--green);
+}
+
+#modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.88);
+    z-index:100;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+#modal.show{display:flex}
+
+.modal{
+    width:min(560px,100%);
+    background:#050b07;
+    border:1px solid var(--green);
+    padding:24px;
+    box-shadow:0 0 60px rgba(0,255,115,.12);
+}
+
+.modal h2{
+    color:var(--green);
+    margin-top:0;
+}
+
+.modalText{
+    color:#70977b;
+    font-size:11px;
+    line-height:1.6;
+}
+
+.code{
+    background:#010301;
+    border:1px solid var(--line);
+    color:#9effba;
+    padding:17px;
+    margin:15px 0;
+    white-space:pre-wrap;
+}
+
+#answer{
+    width:100%;
+    padding:12px;
+    background:#010301;
+    color:var(--green);
+    border:1px solid #27583a;
+    outline:none;
+}
+
+.modalButtons{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+}
+
+.modalButtons button{
+    flex:1;
+    padding:11px;
+}
+
+.primary{
+    background:var(--green);
+    color:#001b09;
+    border:0;
+    font-weight:bold;
+}
+
+.secondary{
+    background:#0b160e;
+    color:#76957e;
+    border:1px solid var(--line);
+}
+
+#toast{
+    position:fixed;
+    left:50%;
+    bottom:25px;
+    transform:translate(-50%,80px);
+    opacity:0;
+    transition:.25s;
+    background:#07140b;
+    border:1px solid var(--green);
+    color:var(--green);
+    padding:13px 20px;
+    z-index:200;
+    pointer-events:none;
+}
+
+#toast.show{
+    opacity:1;
+    transform:translate(-50%,0);
+}
+
+@media(max-width:1050px){
+    #layout{grid-template-columns:180px 1fr}
+    #right{display:none}
+}
+
+@media(max-width:700px){
+    #layout{display:block}
+    #left{display:none}
+    #content{padding:12px}
+    .resources{grid-template-columns:repeat(2,1fr)}
+    .upgrades,
+    .researchGrid,
+    .achievementGrid{grid-template-columns:1fr}
+    .network{min-height:650px}
+    .topStats{gap:10px}
+    .topStats .stat:nth-child(n+3){display:none}
+}
+</style>
+</head>
+
+<body>
+
+<header id="top">
+
+    <div class="logo">🦠 COMPUTER<span>.EXE</span></div>
+
+    <div class="topStats">
+
+        <div class="stat">
+            <small>DATA</small>
+            <b id="data">0 MB</b>
+        </div>
+
+        <div class="stat">
+            <small>INFECTED</small>
+            <b id="infected">0</b>
+        </div>
+
+        <div class="stat">
+            <small>THREAT</small>
+            <b id="threat">1</b>
+        </div>
+
+        <div class="stat">
+            <small>TIME</small>
+            <b id="playTime">00:00</b>
+        </div>
+
+    </div>
+
+</header>
+
+<div id="layout">
+
+<aside id="left">
+
+    <div class="navTitle">OPERATIONS</div>
+
+    <button class="nav active" data-view="network">🌐 Network</button>
+    <button class="nav" data-view="research">🧬 Research</button>
+    <button class="nav" data-view="upgrades">⚙ Upgrades</button>
+    <button class="nav" data-view="achievements">🏆 Achievements</button>
+    <button class="nav" data-view="logs">📟 System Log</button>
+
+    <div class="sideBox">
+        <div class="sideBoxTitle">ANTIVIRUS</div>
+
+        <div class="sideValue">
+            <span id="detection">0</span>%
+        </div>
+
+        <div class="progress">
+            <div id="detectionBar"></div>
+        </div>
+    </div>
+
+    <div class="sideBox">
+        <div class="sideBoxTitle">CURRENT REGION</div>
+
+        <div class="sideValue" id="regionName">
+            HOME
+        </div>
+
+        <div class="progress">
+            <div id="regionProgress"></div>
+        </div>
+    </div>
+
+</aside>
+
+
+<main id="content">
+
+<section class="view active" id="networkView">
+
+    <h1>NETWORK</h1>
+
+    <div class="subtitle">
+        Expand your infection. Every compromised machine gives you access to more systems.
+    </div>
+
+    <div class="resources">
+
+        <div class="resource">
+            <small>DATA</small>
+            <b id="data2">0 MB</b>
+        </div>
+
+        <div class="resource">
+            <small>INFECTED</small>
+            <b id="infected2">0</b>
+        </div>
+
+        <div class="resource">
+            <small>RESEARCH</small>
+            <b id="research">0</b>
+        </div>
+
+        <div class="resource">
+            <small>REPUTATION</small>
+            <b id="reputation">0</b>
+        </div>
+
+    </div>
+
+    <div id="worldHeader"></div>
+
+    <div class="network" id="network"></div>
+
+    <div class="eventBox">
+        <div class="eventBoxTitle">LATEST NETWORK EVENT</div>
+        <div id="eventText">Waiting for network activity...</div>
+    </div>
+
+</section>
+
+
+<section class="view" id="researchView">
+
+    <h1>VIRUS RESEARCH</h1>
+
+    <div class="subtitle">
+        Spend research points to unlock new capabilities.
+    </div>
+
+    <div class="researchGrid" id="researchGrid"></div>
+
+</section>
+
+
+<section class="view" id="upgradesView">
+
+    <h1>UPGRADES</h1>
+
+    <div class="subtitle">
+        Improve the underlying architecture of your virus.
+    </div>
+
+    <div class="upgrades" id="upgradeGrid"></div>
+
+</section>
+
+
+<section class="view" id="achievementsView">
+
+    <h1>ACHIEVEMENTS</h1>
+
+    <div class="subtitle">
+        Some achievements are hidden. Good luck finding them.
+    </div>
+
+    <div class="achievementGrid" id="achievementGrid"></div>
+
+</section>
+
+
+<section class="view" id="logsView">
+
+    <h1>SYSTEM LOG</h1>
+
+    <div class="subtitle">
+        Every important action is recorded here.
+    </div>
+
+    <div class="logs" id="logs"></div>
+
+</section>
+
+</main>
+
+
+<aside id="right">
+
+    <div class="card">
+
+        <div class="cardTitle">ACTIVE VIRUS</div>
+
+        <h3 id="virusName" style="color:var(--green);margin:0 0 7px">
+            RON.WORM
+        </h3>
+
+        <div id="virusDescription" class="subtitle" style="margin:0">
+            A primitive self-replicating program.
+        </div>
+
+        <button class="action" id="scanBtn">🔍 SCAN NETWORK</button>
+        <button class="action" id="spreadBtn">🦠 AUTO-SPREAD</button>
+        <button class="action" id="hideBtn">🥷 HIDE ACTIVITY</button>
+        <button class="action" id="evolveBtn">🧬 EVOLVE</button>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="cardTitle">VIRUS STATUS</div>
+
+        <div class="subtitle" style="line-height:2">
+
+            Replication:
+            <b id="repLevel" style="color:var(--green)">1</b>
+            <br>
+
+            Stealth:
+            <b id="stealthLevel" style="color:var(--green)">1</b>
+            <br>
+
+            Data Theft:
+            <b id="dataLevel" style="color:var(--green)">1</b>
+            <br>
+
+            Intelligence:
+            <b id="intelLevel" style="color:var(--green)">1</b>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <div class="cardTitle">OBJECTIVE</div>
+
+        <div id="objective" class="subtitle" style="line-height:1.7">
+            Infect 5 systems.
+        </div>
+
+    </div>
+
+</aside>
+
+</div>
+
+
+<div id="modal">
+
+    <div class="modal">
+
+        <h2>🔐 SECURITY CHALLENGE</h2>
+
+        <div class="modalText" id="modalText"></div>
+
+        <div class="code" id="challenge"></div>
+
+        <input id="answer" placeholder="Enter answer">
+
+        <div class="modalButtons">
+
+            <button class="secondary" id="abort">ABORT</button>
+            <button class="primary" id="submit">BYPASS FIREWALL</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="toast"></div>
+
+
+<script>
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+const defaultState = {
+    data: 150,
+    research: 0,
+    reputation: 0,
+    infected: 0,
+    destroyed: 0,
+    threat: 1,
+    detection: 0,
+    region: 0,
+    replication: 1,
+    stealth: 1,
+    dataTheft: 1,
+    intelligence: 1,
+    evolution: 0,
+    totalInfections: 0,
+    totalAttempts: 0,
+    successfulHacks: 0,
+    playTime: 0,
+    discoveredEvents: [],
+    achievements: [],
+    researchUnlocked: [],
+    upgrades: [],
+    secretFound: false
+};
+
+let state = loadState();
+
+
+/* =========================================================
+   REGIONS
+========================================================= */
+
+const regions = [
+    { name: "HOME", unlock: 0, reward: 1, security: 0 },
+    { name: "OFFICE", unlock: 8, reward: 1.3, security: 8 },
+    { name: "CORPORATE", unlock: 20, reward: 1.7, security: 15 },
+    { name: "FINANCE", unlock: 40, reward: 2.3, security: 25 },
+    { name: "HEALTHCARE", unlock: 65, reward: 3, security: 35 },
+    { name: "INDUSTRIAL", unlock: 95, reward: 4, security: 45 },
+    { name: "CLOUD", unlock: 135, reward: 5.5, security: 55 },
+    { name: "GOVERNMENT", unlock: 185, reward: 8, security: 70 },
+    { name: "UNKNOWN", unlock: 250, reward: 15, security: 90 }
+];
+
+
+/* =========================================================
+   NODE TYPES
+========================================================= */
+
+const nodeTypes = [
+    ["💻", "HOME PC", 8, 50],
+    ["📱", "PHONE", 10, 45],
+    ["📡", "ROUTER", 14, 65],
+    ["💻", "LAPTOP", 17, 70],
+    ["🖨️", "PRINTER", 12, 40],
+    ["📧", "MAIL SERVER", 25, 110],
+    ["🗄️", "FILE SERVER", 32, 150],
+    ["🖥️", "WORKSTATION", 28, 120],
+    ["☁️", "CLOUD NODE", 45, 250],
+    ["💾", "DATABASE", 55, 320],
+    ["💳", "PAYMENT SERVER", 65, 450],
+    ["🏦", "BANK SERVER", 75, 650],
+    ["🏥", "MEDICAL SERVER", 70, 600],
+    ["🏭", "INDUSTRIAL PLC", 82, 750],
+    ["🛰️", "SATELLITE NODE", 90, 900],
+    ["🔐", "SECURE SERVER", 98, 1200],
+    ["🧠", "AI CORE", 105, 1800]
+];
+
+let nodes = [];
+let connections = [];
+
+
+/* =========================================================
+   GENERATE NETWORK
+========================================================= */
+
+function generateNetwork() {
+
+    nodes = [];
+    connections = [];
+
+    const region = regions[state.region];
+
+    const count =
+        12 +
+        state.region * 4 +
+        Math.floor(state.infected / 10);
+
+    for (let i = 0; i < count; i++) {
+
+        const maxType = Math.min(
+            nodeTypes.length,
+            5 + state.region * 2
+        );
+
+        const type =
+            nodeTypes[
+                Math.floor(Math.random() * maxType)
+            ];
+
+        let security =
+            type[2] +
+            region.security +
+            Math.floor(Math.random() * 15);
+
+        security = Math.min(99, security);
+
+        nodes.push({
+            id: i,
+            icon: type[0],
+            name: type[1],
+            security: security,
+            reward: Math.floor(type[3] * region.reward),
+            x: 7 + Math.random() * 86,
+            y: 8 + Math.random() * 84,
+            infected: false,
+            destroyed: false,
+            scanned: false,
+            integrity: 100
+        });
+    }
+
+    for (let i = 0; i < nodes.length; i++) {
+
+        const distances = nodes
+            .map((n, j) => {
+
+                if (i === j) return null;
+
+                const dx = nodes[i].x - n.x;
+                const dy = nodes[i].y - n.y;
+
+                return {
+                    j: j,
+                    d: Math.sqrt(dx * dx + dy * dy)
+                };
+
+            })
+            .filter(Boolean)
+            .sort((a, b) => a.d - b.d)
+            .slice(0, 2);
+
+        distances.forEach(d => {
+
+            const exists = connections.some(c =>
+                (c[0] === i && c[1] === d.j) ||
+                (c[1] === i && c[0] === d.j)
+            );
+
+            if (!exists) {
+                connections.push([i, d.j]);
+            }
+
+        });
+    }
+
+    renderNetwork();
+}
+
+
+/* =========================================================
+   RENDER NETWORK
+========================================================= */
+
+function renderNetwork() {
+
+    const el = document.getElementById("network");
+
+    if (!el) return;
+
+    el.innerHTML = "";
+
+    connections.forEach(c => {
+
+        const a = nodes[c[0]];
+        const b = nodes[c[1]];
+
+        const line = document.createElement("div");
+
+        line.className = "connection";
+
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+
+        const distance =
+            Math.sqrt(dx * dx + dy * dy);
+
+        const angle =
+            Math.atan2(dy, dx) * 180 / Math.PI;
+
+        line.style.left = a.x + "%";
+        line.style.top = a.y + "%";
+        line.style.width = distance + "%";
+        line.style.transform = `rotate(${angle}deg)`;
+
+        el.appendChild(line);
+    });
+
+
+    nodes.forEach(node => {
+
+        const div = document.createElement("div");
+
+        div.className = "node";
+
+        if (node.infected)
+            div.classList.add("infected");
+
+        if (node.destroyed)
+            div.classList.add("destroyed");
+
+        if (node.integrity < 50 && !node.destroyed)
+            div.classList.add("compromised");
+
+        div.style.left = node.x + "%";
+        div.style.top = node.y + "%";
+
+        div.innerHTML = `
+            <div class="nodeIcon">${node.icon}</div>
+
+            <div class="nodeName">
+                ${node.name}
+            </div>
+
+            <div class="nodeInfo">
+                SECURITY ${node.security}%
+                <br>
+                ${
+                    node.destroyed
+                        ? "OFFLINE"
+                        : node.infected
+                            ? "INFECTED"
+                            : "ONLINE"
+                }
+            </div>
+
+            <div class="nodeBar">
+                <div style="width:${node.integrity}%"></div>
+            </div>
+        `;
+
+        div.onclick = function () {
+            selectNode(node);
+        };
+
+        el.appendChild(div);
+    });
+}
+
+
+/* =========================================================
+   SELECT NODE
+========================================================= */
+
+function selectNode(node) {
+
+    if (node.destroyed) {
+        toast("This system is offline.");
+        return;
+    }
+
+    if (node.infected) {
+        toast("Already infected.");
+        return;
+    }
+
+    attemptNode(node);
+}
+
+
+/* =========================================================
+   ATTEMPT INFECTION
+========================================================= */
+
+function attemptNode(node) {
+
+    state.totalAttempts++;
+
+    let chance =
+        92 -
+        node.security +
+        state.replication * 7 +
+        state.intelligence * 4 +
+        state.evolution * 6;
+
+    chance = Math.max(
+        5,
+        Math.min(96, chance)
+    );
+
+    if (
+        node.security >= 55 &&
+        Math.random() < 0.8
+    ) {
+        openChallenge(node);
+        return;
+    }
+
+    resolveInfection(node, chance);
+}
+
+
+/* =========================================================
+   RESOLVE INFECTION
+========================================================= */
+
+function resolveInfection(node, chance) {
+
+    if (Math.random() * 100 <= chance) {
+        infectNode(node);
+    } else {
+        failedInfection(node);
+    }
+}
+
+
+/* =========================================================
+   SUCCESSFUL INFECTION
+========================================================= */
+
+function infectNode(node) {
+
+    if (!node || node.infected || node.destroyed) return;
+
+    node.infected = true;
+    node.integrity = 100;
+
+    state.infected++;
+    state.totalInfections++;
+
+    const reward = Math.floor(
+        node.reward *
+        (1 + state.dataTheft * 0.18)
+    );
+
+    const researchReward = Math.max(
+        1,
+        Math.floor(node.security / 25)
+    );
+
+    state.data += reward;
+    state.research += researchReward;
+
+    state.reputation += Math.max(
+        1,
+        Math.floor(node.security / 20)
+    );
+
+    state.threat +=
+        node.security >= 70
+            ? 3
+            : node.security >= 40
+                ? 2
+                : 1;
+
+    state.detection += Math.max(
+        1,
+        8 - state.stealth
+    );
+
+    log(
+        `INFECTED ${node.name} // +${reward} MB // +${researchReward} RP`,
+        "good"
+    );
+
+    networkEvent(
+        `${node.icon} ${node.name} has been compromised.`
+    );
+
+    randomEvent();
+
+    /*
+       Reveal nearby system
+    */
+
+    if (Math.random() < 0.35) {
+
+        const neighbour = nodes
+            .filter(n =>
+                !n.infected &&
+                !n.destroyed
+            )
+            .sort(
+                (a, b) =>
+                    distance(node, a) -
+                    distance(node, b)
+            )[0];
+
+        if (neighbour) {
+
+            neighbour.scanned = true;
+
+            log(
+                `New route discovered: ${neighbour.name}.`,
+                "good"
+            );
+        }
+    }
+
+    checkUnlocks();
+    checkAchievements();
+    checkAntivirus();
+
+    render();
+}
+
+
+/* =========================================================
+   FAILED INFECTION
+========================================================= */
+
+function failedInfection(node) {
+
+    state.detection += Math.max(
+        2,
+        12 - state.stealth
+    );
+
+    node.integrity = Math.max(
+        20,
+        node.integrity - 15
+    );
+
+    log(
+        `INFECTION FAILED on ${node.name}.`,
+        "warn"
+    );
+
+    networkEvent(
+        "⚠ Security system rejected the infection attempt."
+    );
+
+    checkAntivirus();
+    render();
+}
+
+
+/* =========================================================
+   CHALLENGES
+========================================================= */
+
+const challenges = [
+    {
+        code: "2 → 4 → 8 → 16 → ?",
+        a: "32"
+    },
+    {
+        code: "let x = 7;\nx *= 3;\nconsole.log(x);",
+        a: "21"
+    },
+    {
+        code: "let x = 20;\nx -= 8;\nconsole.log(x);",
+        a: "12"
+    },
+    {
+        code: "1 → 1 → 2 → 3 → 5 → 8 → ?",
+        a: "13"
+    },
+    {
+        code: "console.log(5 * 5 - 4);",
+        a: "21"
+    },
+    {
+        code: "3 → 6 → 12 → 24 → ?",
+        a: "48"
+    },
+    {
+        code: "let x = 100;\nx /= 4;",
+        a: "25"
+    },
+    {
+        code: "console.log(10 + 5 * 2);",
+        a: "20"
+    }
+];
+
+let currentNode = null;
+let challenge = null;
+
+
+function openChallenge(node) {
+
+    currentNode = node;
+
+    challenge =
+        challenges[
+            Math.floor(
+                Math.random() *
+                challenges.length
+            )
+        ];
+
+    document.getElementById("modalText").innerHTML =
+        `
+        <b>${node.icon} ${node.name}</b>
+        is protected by a security layer.
+        <br><br>
+        Bypass the firewall to continue.
+        `;
+
+    document.getElementById("challenge")
+        .textContent = challenge.code;
+
+    document.getElementById("answer").value = "";
+
+    document.getElementById("modal")
+        .classList.add("show");
+
+    setTimeout(function () {
+        document.getElementById("answer").focus();
+    }, 100);
+}
+
+
+/* =========================================================
+   CHALLENGE SUBMIT
+========================================================= */
+
+document.getElementById("submit").onclick = function () {
+
+    if (!challenge || !currentNode) return;
+
+    const input =
+        document.getElementById("answer")
+            .value
+            .trim()
+            .toLowerCase();
+
+    if (input === challenge.a.toLowerCase()) {
+
+        state.successfulHacks++;
+
+        document.getElementById("modal")
+            .classList.remove("show");
+
+        log(
+            `FIREWALL BYPASSED: ${currentNode.name}`,
+            "good"
+        );
+
+        networkEvent(
+            "🔓 Firewall bypass successful."
+        );
+
+        const chance =
+            80 +
+            state.intelligence * 4 +
+            state.replication * 3 +
+            state.evolution * 5 -
+            currentNode.security / 2;
+
+        resolveInfection(
+            currentNode,
+            chance
+        );
+
+    } else {
+
+        state.detection += Math.max(
+            5,
+            15 - state.stealth
+        );
+
+        log(
+            `WRONG SECURITY ANSWER on ${currentNode.name}.`,
+            "bad"
+        );
+
+        networkEvent(
+            "🚨 Incorrect firewall response."
+        );
+
+        checkAntivirus();
+        render();
+    }
+};
+
+
+document.getElementById("answer")
+    .addEventListener("keydown", function (e) {
+
+        if (e.key === "Enter") {
+            document.getElementById("submit").click();
+        }
+
+    });
+
+
+document.getElementById("abort").onclick = function () {
+
+    document.getElementById("modal")
+        .classList.remove("show");
+
+    currentNode = null;
+    challenge = null;
+};
+
+
+/* =========================================================
+   RANDOM EVENTS
+========================================================= */
+
+const events = [
+
+    {
+        text: "A user opened an infected attachment.",
+        effect: function () {
+            state.data += 80;
+        },
+        msg: "+80 MB"
+    },
+
+    {
+        text: "A security researcher noticed unusual traffic.",
+        effect: function () {
+            state.detection += 12;
+        },
+        msg: "Detection +12%"
+    },
+
+    {
+        text: "An employee connected an infected USB drive.",
+        effect: function () {
+            state.data += 150;
+            state.research++;
+        },
+        msg: "+150 MB / +1 RP"
+    },
+
+    {
+        text: "A forgotten workstation came online.",
+        effect: function () {
+            addBonusNode();
+        },
+        msg: "New system discovered"
+    },
+
+    {
+        text: "Antivirus definitions temporarily stopped updating.",
+        effect: function () {
+            state.detection =
+                Math.max(
+                    0,
+                    state.detection - 15
+                );
+        },
+        msg: "Detection -15%"
+    },
+
+    {
+        text: "A network administrator is investigating.",
+        effect: function () {
+            state.detection += 20;
+        },
+        msg: "Detection +20%"
+    },
+
+    {
+        text: "An infected machine has begun spreading by itself.",
+        effect: function () {
+            state.data += 200;
+        },
+        msg: "+200 MB"
+    },
+
+    {
+        text: "A backup server was accidentally exposed.",
+        effect: function () {
+            state.data += 300;
+            state.research += 2;
+        },
+        msg: "+300 MB / +2 RP"
+    },
+
+    {
+        text: "A cloud provider changed its firewall configuration.",
+        effect: function () {
+            state.detection =
+                Math.max(
+                    0,
+                    state.detection - 8
+                );
+        },
+        msg: "Detection -8%"
+    },
+
+    {
+        text: "UNKNOWN_PROCESS.EXE connected to your virus.",
+        effect: function () {
+            state.secretFound = true;
+            state.research += 5;
+        },
+        msg: "+5 RP"
+    },
+
+    {
+        text: "A developer accidentally uploaded credentials.",
+        effect: function () {
+            state.data += 500;
+            state.reputation += 3;
+        },
+        msg: "+500 MB"
+    },
+
+    {
+        text: "A major system reboot wiped temporary logs.",
+        effect: function () {
+            state.detection =
+                Math.max(
+                    0,
+                    state.detection - 25
+                );
+        },
+        msg: "Detection -25%"
+    },
+
+    {
+        text: "An antivirus scan has started early.",
+        effect: function () {
+            state.detection += 30;
+        },
+        msg: "Detection +30%"
+    },
+
+    {
+        text: "You found an abandoned development server.",
+        effect: function () {
+            state.data += 700;
+            state.research += 4;
+        },
+        msg: "+700 MB / +4 RP"
+    },
+
+    {
+        text: "Someone named RON connected to the network.",
+        effect: function () {
+            state.data += 1337;
+        },
+        msg: "+1337 MB"
+    }
+];
+
+
+function randomEvent() {
+
+    if (Math.random() > 0.28) return;
+
+    const event =
+        events[
+            Math.floor(
+                Math.random() *
+                events.length
+            )
+        ];
+
+    event.effect();
+
+    log(
+        "EVENT: " +
+        event.text +
+        " // " +
+        event.msg,
+        "special"
+    );
+
+    networkEvent(
+        "⚡ " +
+        event.text +
+        " (" +
+        event.msg +
+        ")"
+    );
+}
+
+
+/* =========================================================
+   BONUS NODE
+========================================================= */
+
+function addBonusNode() {
+
+    const type =
+        nodeTypes[
+            Math.floor(
+                Math.random() *
+                nodeTypes.length
+            )
+        ];
+
+    nodes.push({
+        id: nodes.length,
+        icon: type[0],
+        name: type[1] + " [EXPOSED]",
+        security: Math.max(5, type[2] - 10),
+        reward: type[3] * 2,
+        x: 10 + Math.random() * 80,
+        y: 10 + Math.random() * 80,
+        infected: false,
+        destroyed: false,
+        scanned: true,
+        integrity: 100
+    });
+
+    renderNetwork();
+}
+
+
+/* =========================================================
+   ANTIVIRUS
+========================================================= */
+
+function checkAntivirus() {
+
+    if (state.detection < 100) return;
+
+    state.detection = 0;
+
+    const targets =
+        nodes.filter(
+            n => n.infected && !n.destroyed
+        );
+
+    if (!targets.length) return;
+
+    const target =
+        targets[
+            Math.floor(
+                Math.random() *
+                targets.length
+            )
+        ];
+
+    target.destroyed = true;
+    target.infected = false;
+
+    state.infected =
+        Math.max(
+            0,
+            state.infected - 1
+        );
+
+    state.destroyed++;
+    state.threat += 3;
+
+    log(
+        `🚨 ANTIVIRUS REMOVED ${target.name}`,
+        "bad"
+    );
+
+    networkEvent(
+        `🚨 ${target.name} has been isolated.`
+    );
+
+    if (state.stealth >= 5) {
+
+        state.detection = 45;
+
+        log(
+            "Stealth architecture prevented a full purge.",
+            "good"
+        );
+    }
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+document.getElementById("scanBtn").onclick = function () {
+
+    const amount =
+        3 + state.intelligence;
+
+    const unknown =
+        nodes
+            .filter(n => !n.scanned)
+            .slice(0, amount);
+
+    unknown.forEach(function (n) {
+        n.scanned = true;
+    });
+
+    state.research += Math.max(
+        1,
+        Math.floor(amount / 2)
+    );
+
+    log(
+        `Network scan completed. ${unknown.length} systems identified.`,
+        "good"
+    );
+
+    networkEvent(
+        `🔍 Scan complete: ${unknown.length} new systems found.`
+    );
+
+    render();
+};
+
+
+document.getElementById("spreadBtn").onclick = function () {
+
+    const targets =
+        nodes
+            .filter(
+                n =>
+                    !n.infected &&
+                    !n.destroyed
+            )
+            .filter(
+                n =>
+                    n.security <
+                    30 +
+                    state.replication * 8 +
+                    state.evolution * 10
+            )
+            .sort(
+                () => Math.random() - 0.5
+            )
+            .slice(
+                0,
+                1 +
+                Math.floor(
+                    state.replication / 3
+                )
+            );
+
+    if (!targets.length) {
+
+        toast(
+            "No vulnerable systems nearby."
+        );
+
+        return;
+    }
+
+    targets.forEach(function (n) {
+        attemptNode(n);
+    });
+};
+
+
+document.getElementById("hideBtn").onclick = function () {
+
+    const reduction =
+        20 +
+        state.stealth * 5;
+
+    state.detection =
+        Math.max(
+            0,
+            state.detection - reduction
+        );
+
+    log(
+        `Activity hidden. Detection -${reduction}%.`,
+        "good"
+    );
+
+    networkEvent(
+        "🥷 Virus activity hidden."
+    );
+
+    render();
+};
+
+
+document.getElementById("evolveBtn").onclick = function () {
+
+    const cost =
+        250 +
+        state.evolution * 300;
+
+    if (state.data < cost) {
+
+        toast(
+            `Evolution requires ${cost} MB.`
+        );
+
+        return;
+    }
+
+    state.data -= cost;
+    state.evolution++;
+    state.research += 3;
+
+    log(
+        `VIRUS EVOLVED TO STAGE ${state.evolution}.`,
+        "special"
+    );
+
+    networkEvent(
+        "🧬 Evolution complete. Virus architecture changed."
+    );
+
+    checkUnlocks();
+    render();
+};
+
+
+/* =========================================================
+   UPGRADES
+========================================================= */
+
+const upgradeInfo = [
+    [
+        "replication",
+        "⚡ RAPID REPLICATION",
+        "Increase infection success.",
+        120
+    ],
+    [
+        "stealth",
+        "🥷 STEALTH ENGINE",
+        "Reduce detection generated by actions.",
+        180
+    ],
+    [
+        "dataTheft",
+        "💾 DATA HARVESTER",
+        "Increase rewards from infected machines.",
+        220
+    ],
+    [
+        "intelligence",
+        "🧠 MACHINE INTELLIGENCE",
+        "Improve scanning and security bypasses.",
+        300
+    ]
+];
+
+
+function renderUpgrades() {
+
+    const grid =
+        document.getElementById("upgradeGrid");
+
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    upgradeInfo.forEach(function (info) {
+
+        const key = info[0];
+        const name = info[1];
+        const description = info[2];
+        const baseCost = info[3];
+
+        const level = state[key];
+        const cost = baseCost * level;
+
+        const div = document.createElement("div");
+
+        div.className = "upgrade";
+
+        div.innerHTML = `
+            <h3>${name}</h3>
+
+            <p>${description}</p>
+
+            <div class="upgradeLevel">
+                LEVEL ${level}
+            </div>
+
+            <button
+                ${state.data < cost ? "disabled" : ""}
+            >
+                UPGRADE — ${cost} MB
+            </button>
+        `;
+
+        div.querySelector("button").onclick =
+            function () {
+
+                if (state.data < cost) return;
+
+                state.data -= cost;
+                state[key]++;
+
+                log(
+                    `${name} upgraded to level ${state[key]}.`,
+                    "good"
+                );
+
+                render();
+            };
+
+        grid.appendChild(div);
+    });
+}
+
+
+/* =========================================================
+   RESEARCH
+========================================================= */
+
+const researchItems = [
+    [
+        "polymorphic",
+        "🧬 POLYMORPHIC CODE",
+        "Your virus changes its signature after every major infection.",
+        5
+    ],
+    [
+        "usb",
+        "💾 USB PROPAGATION",
+        "Infection events can create bonus systems.",
+        8
+    ],
+    [
+        "email",
+        "📧 EMAIL PROPAGATION",
+        "Infected mail servers generate additional data.",
+        12
+    ],
+    [
+        "cloud",
+        "☁️ CLOUD REPLICATION",
+        "Cloud systems provide much larger rewards.",
+        18
+    ],
+    [
+        "rootkit",
+        "👁️ ROOTKIT",
+        "Greatly reduces antivirus detection.",
+        25
+    ],
+    [
+        "zeroday",
+        "☠️ ZERO-DAY ENGINE",
+        "Massively improves attacks against high-security systems.",
+        40
+    ],
+    [
+        "ai",
+        "🧠 AUTONOMOUS AI",
+        "Your virus can occasionally infect systems automatically.",
+        60
+    ],
+    [
+        "quantum",
+        "🌌 QUANTUM PAYLOAD",
+        "Unlocks the final region.",
+        100
+    ]
+];
+
+
+function renderResearch() {
+
+    const grid =
+        document.getElementById("researchGrid");
+
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    researchItems.forEach(function (item) {
+
+        const id = item[0];
+        const name = item[1];
+        const description = item[2];
+        const cost = item[3];
+
+        const unlocked =
+            state.researchUnlocked.includes(id);
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "research" +
+            (unlocked ? " done" : "");
+
+        div.innerHTML = `
+            <h3>${name}</h3>
+
+            <p>${description}</p>
+
+            <button
+                ${unlocked || state.research < cost ? "disabled" : ""}
+            >
+                ${
+                    unlocked
+                        ? "✓ RESEARCHED"
+                        : "RESEARCH — " + cost + " RP"
+                }
+            </button>
+        `;
+
+        div.querySelector("button").onclick =
+            function () {
+
+                if (
+                    unlocked ||
+                    state.research < cost
+                ) return;
+
+                state.research -= cost;
+                state.researchUnlocked.push(id);
+
+                log(
+                    `Research completed: ${name}`,
+                    "good"
+                );
+
+                render();
+            };
+
+        grid.appendChild(div);
+    });
+}
+
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+const achievements = [
+    [
+        "first",
+        "FIRST INFECTION",
+        "Infect your first system."
+    ],
+    [
+        "ten",
+        "SMALL OUTBREAK",
+        "Infect 10 systems."
+    ],
+    [
+        "fifty",
+        "EPIDEMIC",
+        "Infect 50 systems."
+    ],
+    [
+        "hundred",
+        "GLOBAL THREAT",
+        "Infect 100 systems."
+    ],
+    [
+        "hack10",
+        "HACKER",
+        "Successfully bypass 10 firewalls."
+    ],
+    [
+        "research",
+        "SCIENTIST",
+        "Complete 5 research projects."
+    ],
+    [
+        "million",
+        "DATA HOARDER",
+        "Collect 10,000 MB."
+    ],
+    [
+        "unknown",
+        "WHO IS THAT?",
+        "Discover UNKNOWN_PROCESS.EXE."
+    ],
+    [
+        "quantum",
+        "BEYOND",
+        "Reach the UNKNOWN network."
+    ]
+];
+
+
+function checkAchievements() {
+
+    achievements.forEach(function (a) {
+
+        const id = a[0];
+
+        if (state.achievements.includes(id))
+            return;
+
+        let unlocked = false;
+
+        if (id === "first")
+            unlocked = state.totalInfections >= 1;
+
+        if (id === "ten")
+            unlocked = state.totalInfections >= 10;
+
+        if (id === "fifty")
+            unlocked = state.totalInfections >= 50;
+
+        if (id === "hundred")
+            unlocked = state.totalInfections >= 100;
+
+        if (id === "hack10")
+            unlocked = state.successfulHacks >= 10;
+
+        if (id === "research")
+            unlocked =
+                state.researchUnlocked.length >= 5;
+
+        if (id === "million")
+            unlocked = state.data >= 10000;
+
+        if (id === "unknown")
+            unlocked = state.secretFound;
+
+        if (id === "quantum")
+            unlocked = state.region >= 8;
+
+        if (unlocked) {
+
+            state.achievements.push(id);
+            state.data += 250;
+
+            log(
+                `🏆 ACHIEVEMENT UNLOCKED: ${a[1]}`,
+                "special"
+            );
+
+            toast(
+                `🏆 ${a[1]}`
+            );
+        }
+    });
+}
+
+
+function renderAchievements() {
+
+    const grid =
+        document.getElementById("achievementGrid");
+
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    achievements.forEach(function (a) {
+
+        const unlocked =
+            state.achievements.includes(a[0]);
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "achievement" +
+            (unlocked ? " unlocked" : "");
+
+        div.innerHTML = `
+            <b>
+                ${unlocked ? "✓" : "🔒"} ${a[1]}
+            </b>
+
+            <small>
+                ${a[2]}
+            </small>
+        `;
+
+        grid.appendChild(div);
+    });
+}
+
+
+/* =========================================================
+   UNLOCK REGIONS
+========================================================= */
+
+function checkUnlocks() {
+
+    while (
+        state.region + 1 < regions.length &&
+        state.infected >=
+        regions[state.region + 1].unlock
+    ) {
+
+        state.region++;
+
+        generateNetwork();
+
+        log(
+            `🌐 NEW REGION UNLOCKED: ${regions[state.region].name}`,
+            "special"
+        );
+
+        networkEvent(
+            `🌐 Connection established to ${regions[state.region].name}.`
+        );
+
+        toast(
+            `🌐 ${regions[state.region].name} UNLOCKED`
+        );
+    }
+}
+
+
+/* =========================================================
+   OBJECTIVE
+========================================================= */
+
+function objective() {
+
+    if (state.totalInfections < 5)
+        return "Infect 5 systems.";
+
+    if (state.totalInfections < 10)
+        return "Infect 10 systems.";
+
+    if (state.region < 1)
+        return "Reach the OFFICE network.";
+
+    if (state.region < 2)
+        return "Reach the CORPORATE network.";
+
+    if (state.totalInfections < 40)
+        return "Build an outbreak of 40 infected systems.";
+
+    if (state.region < 4)
+        return "Reach the FINANCE network.";
+
+    if (state.totalInfections < 75)
+        return "Infect 75 systems.";
+
+    if (state.region < 6)
+        return "Reach the CLOUD network.";
+
+    if (state.region < 8)
+        return "Continue evolving the virus.";
+
+    return "Discover what is hiding inside the UNKNOWN network.";
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+document.querySelectorAll(".nav").forEach(function (button) {
+
+    button.onclick = function () {
+
+        document
+            .querySelectorAll(".nav")
+            .forEach(function (b) {
+                b.classList.remove("active");
+            });
+
+        button.classList.add("active");
+
+        document
+            .querySelectorAll(".view")
+            .forEach(function (v) {
+                v.classList.remove("active");
+            });
+
+        const map = {
+            network: "networkView",
+            research: "researchView",
+            upgrades: "upgradesView",
+            achievements: "achievementsView",
+            logs: "logsView"
+        };
+
+        const target =
+            document.getElementById(
+                map[button.dataset.view]
+            );
+
+        if (target)
+            target.classList.add("active");
+    };
+});
+
+
+/* =========================================================
+   EVENT DISPLAY
+========================================================= */
+
+function networkEvent(text) {
+
+    const el =
+        document.getElementById("eventText");
+
+    if (el)
+        el.textContent = text;
+}
+
+
+/* =========================================================
+   DISTANCE
+========================================================= */
+
+function distance(a, b) {
+
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+
+    return Math.sqrt(
+        dx * dx + dy * dy
+    );
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+let toastTimer = null;
+
+function toast(text) {
+
+    const el =
+        document.getElementById("toast");
+
+    if (!el) return;
+
+    el.textContent = text;
+
+    el.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer = setTimeout(function () {
+        el.classList.remove("show");
+    }, 2500);
+}
+
+
+/* =========================================================
+   LOG
+========================================================= */
+
+function log(text, type = "") {
+
+    const logs =
+        document.getElementById("logs");
+
+    if (!logs) return;
+
+    const entry =
+        document.createElement("div");
+
+    entry.className =
+        "log " + type;
+
+    const time =
+        new Date().toLocaleTimeString();
+
+    entry.textContent =
+        `[${time}] ${text}`;
+
+    logs.prepend(entry);
+}
+
+
+/* =========================================================
+   RENDER EVERYTHING
+========================================================= */
+
+function render() {
+
+    const data =
+        Math.floor(state.data);
+
+    document.getElementById("data").textContent =
+        data + " MB";
+
+    document.getElementById("data2").textContent =
+        data + " MB";
+
+    document.getElementById("infected").textContent =
+        state.infected;
+
+    document.getElementById("infected2").textContent =
+        state.infected;
+
+    document.getElementById("research").textContent =
+        state.research;
+
+    document.getElementById("reputation").textContent =
+        state.reputation;
+
+    document.getElementById("threat").textContent =
+        state.threat;
+
+    document.getElementById("detection").textContent =
+        Math.floor(state.detection);
+
+    document.getElementById("detectionBar")
+        .style.width =
+        Math.min(
+            100,
+            state.detection
+        ) + "%";
+
+    document.getElementById("regionName")
+        .textContent =
+        regions[state.region].name;
+
+    const next =
+        regions[state.region + 1];
+
+    document.getElementById("regionProgress")
+        .style.width =
+        next
+            ? Math.min(
+                100,
+                state.infected /
+                next.unlock *
+                100
+            ) + "%"
+            : "100%";
+
+    document.getElementById("repLevel")
+        .textContent =
+        state.replication;
+
+    document.getElementById("stealthLevel")
+        .textContent =
+        state.stealth;
+
+    document.getElementById("dataLevel")
+        .textContent =
+        state.dataTheft;
+
+    document.getElementById("intelLevel")
+        .textContent =
+        state.intelligence;
+
+    document.getElementById("objective")
+        .textContent =
+        objective();
+
+    renderNetwork();
+    renderUpgrades();
+    renderResearch();
+    renderAchievements();
+
+    saveState();
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+setInterval(function () {
+
+    state.playTime++;
+
+    const minutes =
+        Math.floor(
+            state.playTime / 60
+        )
+        .toString()
+        .padStart(2, "0");
+
+    const seconds =
+        (state.playTime % 60)
+        .toString()
+        .padStart(2, "0");
+
+    document.getElementById("playTime")
+        .textContent =
+        `${minutes}:${seconds}`;
+
+    if (
+        state.playTime % 12 === 0 &&
+        state.infected > 0
+    ) {
+
+        randomEvent();
+
+        if (state.infected >= 10) {
+
+            state.research++;
+
+            log(
+                "Background analysis generated +1 research.",
+                "good"
+            );
+        }
+
+        render();
+    }
+
+}, 1000);
+
+
+/* =========================================================
+   AUTONOMOUS AI
+========================================================= */
+
+setInterval(function () {
+
+    if (
+        !state.researchUnlocked.includes("ai")
+    )
+        return;
+
+    if (Math.random() > 0.35)
+        return;
+
+    const targets =
+        nodes.filter(
+            n =>
+                !n.infected &&
+                !n.destroyed
+        );
+
+    if (!targets.length)
+        return;
+
+    const target =
+        targets[
+            Math.floor(
+                Math.random() *
+                targets.length
+            )
+        ];
+
+    log(
+        `AUTONOMOUS AI selected ${target.name}.`,
+        "special"
+    );
+
+    attemptNode(target);
+
+}, 15000);
+
+
+/* =========================================================
+   SAVE / LOAD
+========================================================= */
+
+function saveState() {
+
+    try {
+
+        localStorage.setItem(
+            "computerVirusFullSave",
+            JSON.stringify(state)
+        );
+
+    } catch (error) {
+
+        console.warn(
+            "Could not save game:",
+            error
+        );
+
+    }
+}
+
+
+function loadState() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                "computerVirusFullSave"
+            );
+
+        if (saved) {
+
+            const parsed =
+                JSON.parse(saved);
+
+            return Object.assign(
+                {},
+                defaultState,
+                parsed
+            );
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "Save data was invalid. Starting fresh.",
+            error
+        );
+    }
+
+    return Object.assign(
+        {},
+        defaultState
+    );
+}
+
+
+/* =========================================================
+   START GAME
+========================================================= */
+
+log(
+    "RON.WORM boot sequence initiated.",
+    "good"
+);
+
+log(
+    "Connecting to local network..."
+);
+
+log(
+    "Searching for vulnerable systems..."
+);
+
+log(
+    "WARNING: This program has no registered publisher.",
+    "warn"
+);
+
+generateNetwork();
+render();
+
+</script>
+
+</body>
+</html>
+```
