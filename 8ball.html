@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic 8-Ball | ron.cool</title>
+    <style>
+        .back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1000;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.05);
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0c1e 0%, #2d1b3d 50%, #1a0f2e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Animated background stars */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(20, 10, 35, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.3), inset 0 0 40px rgba(138, 43, 226, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: #d4a5ff;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+            text-shadow: 0 0 20px rgba(212, 165, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            color: #9d7ec4;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .ball-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 50px 0;
+            perspective: 1000px;
+            height: 300px;
+        }
+
+        .ball {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle at 30% 30%, #1a1a1a, #000000);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 30px rgba(138, 43, 226, 0.6),
+                inset -20px -20px 40px rgba(0, 0, 0, 0.8),
+                inset 10px 10px 20px rgba(200, 100, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ball:hover {
+            box-shadow: 
+                0 0 50px rgba(138, 43, 226, 0.8),
+                inset -20px -20px 40px rgba(0, 0, 0, 0.8),
+                inset 10px 10px 20px rgba(200, 100, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        .ball.shaking {
+            animation: shake 0.6s cubic-bezier(0.36, 0, 0.66, -0.56);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) rotateZ(0deg); }
+            10% { transform: translateX(-5px) rotateZ(-2deg); }
+            20% { transform: translateX(5px) rotateZ(2deg); }
+            30% { transform: translateX(-5px) rotateZ(-2deg); }
+            40% { transform: translateX(5px) rotateZ(2deg); }
+            50% { transform: translateX(-3px) rotateZ(-1deg); }
+            60% { transform: translateX(3px) rotateZ(1deg); }
+            70% { transform: translateX(-2px) rotateZ(0deg); }
+            80% { transform: translateX(2px) rotateZ(0deg); }
+            90% { transform: translateX(-1px) rotateZ(0deg); }
+        }
+
+        .window {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.2);
+        }
+
+        .window.glow {
+            animation: glow-pulse 1s ease-out;
+        }
+
+        @keyframes glow-pulse {
+            0% {
+                box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.2), 0 0 10px rgba(138, 43, 226, 0.3);
+            }
+            50% {
+                box-shadow: inset 0 0 30px rgba(138, 43, 226, 0.5), 0 0 30px rgba(138, 43, 226, 0.6);
+            }
+            100% {
+                box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.2), 0 0 10px rgba(138, 43, 226, 0.3);
+            }
+        }
+
+        .answer {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #a78bfa;
+            text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeIn 0.5s ease-out;
+            letter-spacing: 1px;
+        }
+
+        .answer.positive {
+            color: #4ade80;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+        }
+
+        .answer.negative {
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .answer.uncertain {
+            color: #fbbf24;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .question-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(138, 43, 226, 0.1);
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 10px;
+            color: #d4a5ff;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            font-style: italic;
+        }
+
+        .question-input:focus {
+            outline: none;
+            border-color: rgba(138, 43, 226, 0.6);
+            background: rgba(138, 43, 226, 0.15);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+        }
+
+        .question-input::placeholder {
+            color: #7c5d99;
+        }
+
+        .ask-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #8a2be2 0%, #6a0dad 100%);
+            color: white;
+            border: 2px solid rgba(138, 43, 226, 0.5);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+        }
+
+        .ask-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+            border-color: rgba(138, 43, 226, 0.8);
+        }
+
+        .ask-button:active {
+            transform: translateY(0);
+        }
+
+        .ask-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .history {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(138, 43, 226, 0.2);
+        }
+
+        .history-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #a78bfa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(167, 139, 250, 0.3);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: rgba(138, 43, 226, 0.1);
+            border-left: 3px solid rgba(138, 43, 226, 0.4);
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            color: #9d7ec4;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            background: rgba(138, 43, 226, 0.2);
+            border-left-color: rgba(138, 43, 226, 0.8);
+            transform: translateX(5px);
+        }
+
+        .history-question {
+            font-weight: bold;
+            color: #c4a5f0;
+            margin-bottom: 4px;
+        }
+
+        .history-answer {
+            color: #8d6eb9;
+            font-style: italic;
+        }
+
+        .clear-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .clear-btn:hover {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: rgba(255, 107, 107, 0.6);
+        }
+
+        .info-text {
+            text-align: center;
+            color: #7c5d99;
+            font-size: 12px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(138, 43, 226, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(138, 43, 226, 0.4);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(138, 43, 226, 0.6);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .ball {
+                width: 150px;
+                height: 150px;
+            }
+
+            .window {
+                width: 75px;
+                height: 75px;
+            }
+
+            .answer {
+                font-size: 16px;
+            }
+
+            .ball-container {
+                height: 220px;
+                margin: 30px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <!-- Background stars -->
+    <div class="stars" id="starfield"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🔮 Magic 8-Ball</h1>
+            <p>Ask the universe your deepest questions...</p>
+        </div>
+
+        <input 
+            type="text" 
+            class="question-input" 
+            id="questionInput" 
+            placeholder="Ask me anything... (press Enter or click Ask)"
+        >
+
+        <button class="ask-button" id="askBtn">Ask the Ball</button>
+
+        <div class="ball-container">
+            <div class="ball" id="ball">
+                <div class="window" id="window">
+                    <div class="answer" id="answer">
+                        🔮
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-text">Click the ball or press Enter to get your answer</div>
+
+        <div class="history">
+            <div class="history-title">📜 Your Questions</div>
+            <div class="history-list" id="history"></div>
+            <button class="clear-btn" id="clearBtn">Clear History</button>
+        </div>
+    </div>
+
+    <script>
+        // Responses organized by category
+        const responses = {
+            positive: [
+                "It is certain",
+                "Yes, definitely",
+                "The signs point to yes",
+                "Outlook good",
+                "Without a doubt",
+                "Most likely",
+                "As I see it, yes",
+                "Very good chance",
+                "The cosmos agrees",
+                "Absolutely",
+                "You may rely on it",
+                "Destiny says yes"
+            ],
+            negative: [
+                "Don't count on it",
+                "Very doubtful",
+                "My sources say no",
+                "The outlook is not so good",
+                "Not in your favor",
+                "Absolutely not",
+                "The signs are against you",
+                "Fate says no",
+                "Not a chance",
+                "Concentrate and ask again",
+                "Better not tell you now",
+                "The spirits are silent"
+            ],
+            uncertain: [
+                "Ask again later",
+                "Cannot predict now",
+                "The future is unclear",
+                "Concentrate and ask again",
+                "Better not tell you now",
+                "Uncertain at this time",
+                "The answer eludes me",
+                "Ask again when the moon is full",
+                "The spirits are confused",
+                "Seek clarity first",
+                "Perhaps, perhaps not",
+                "Try again soon"
+            ]
+        };
+
+        const state = {
+            questions: [],
+            isAnswering: false
+        };
+
+        const elements = {
+            questionInput: document.getElementById('questionInput'),
+            askBtn: document.getElementById('askBtn'),
+            ball: document.getElementById('ball'),
+            window: document.getElementById('window'),
+            answer: document.getElementById('answer'),
+            history: document.getElementById('history'),
+            clearBtn: document.getElementById('clearBtn')
+        };
+
+        // Initialize stars
+        function createStars() {
+            const starfield = document.getElementById('starfield');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 2 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starfield.appendChild(star);
+            }
+        }
+
+        createStars();
+
+        // Event listeners
+        elements.askBtn.addEventListener('click', askBall);
+        elements.questionInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !state.isAnswering) {
+                askBall();
+            }
+        });
+        elements.ball.addEventListener('click', askBall);
+        elements.clearBtn.addEventListener('click', clearHistory);
+
+        function askBall() {
+            if (state.isAnswering) return;
+
+            const question = elements.questionInput.value.trim();
+            if (!question) {
+                alert('Ask the ball a question first! 🔮');
+                return;
+            }
+
+            state.isAnswering = true;
+            elements.askBtn.disabled = true;
+
+            // Shake animation
+            elements.ball.classList.add('shaking');
+
+            // Haptic feedback
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100, 50, 100]);
+            }
+
+            // Play mysterious sound
+            playMysterySound();
+
+            setTimeout(() => {
+                const category = Math.random() > 0.6 
+                    ? (Math.random() > 0.5 ? 'positive' : 'negative')
+                    : 'uncertain';
+                
+                const answerList = responses[category];
+                const randomAnswer = answerList[Math.floor(Math.random() * answerList.length)];
+
+                // Remove shake and add glow
+                elements.ball.classList.remove('shaking');
+                elements.window.classList.add('glow');
+
+                // Set answer with category styling
+                elements.answer.textContent = randomAnswer;
+                elements.answer.className = `answer ${category}`;
+
+                // Add to history
+                state.questions.unshift({
+                    question: question,
+                    answer: randomAnswer,
+                    category: category,
+                    timestamp: new Date().toLocaleTimeString()
+                });
+
+                updateHistory();
+                elements.questionInput.value = '';
+                elements.askBtn.disabled = false;
+                state.isAnswering = false;
+
+                // Remove glow after animation
+                setTimeout(() => {
+                    elements.window.classList.remove('glow');
+                }, 1000);
+            }, 1800);
+        }
+
+        function updateHistory() {
+            elements.history.innerHTML = state.questions
+                .slice(0, 10)
+                .map((item, idx) => {
+                    return `
+                        <div class="history-item" onclick="replyToQuestion(${idx})">
+                            <div class="history-question">❓ ${escapeHtml(item.question)}</div>
+                            <div class="history-answer">✨ ${item.answer}</div>
+                            <div style="color: #5d4880; font-size: 10px;">${item.timestamp}</div>
+                        </div>
+                    `;
+                })
+                .join('');
+        }
+
+        function replyToQuestion(idx) {
+            const item = state.questions[idx];
+            elements.questionInput.value = item.question;
+            elements.questionInput.focus();
+        }
+
+        function clearHistory() {
+            if (confirm('Erase the ball\'s memory of your questions?')) {
+                state.questions = [];
+                updateHistory();
+                elements.answer.textContent = '🔮';
+                elements.answer.className = 'answer';
+            }
+        }
+
+        function playMysterySound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const frequencies = [196, 246.94, 329.63, 392, 493.88];
+
+            frequencies.forEach((freq, i) => {
+                setTimeout(() => {
+                    const osc = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+
+                    osc.connect(gain);
+                    gain.connect(audioContext.destination);
+
+                    osc.frequency.value = freq;
+                    osc.type = 'sine';
+
+                    gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+                    osc.start(audioContext.currentTime);
+                    osc.stop(audioContext.currentTime + 0.3);
+                }, i * 80);
+            });
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Initialize
+        updateHistory();
+        function goBack() {
+    window.location.href = "index.html";
+}
+    </script>
+</body>
+</html>

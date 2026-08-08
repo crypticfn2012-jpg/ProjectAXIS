@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin Wheel | ron.cool</title>
+    <style>
+        .back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1000;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.05);
+}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7aa8d1 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: #1e3c72;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-items: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header p {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        /* Left side - Wheel */
+        .wheel-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 20px 0;
+            perspective: 1000px;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 -2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.1s;
+            position: relative;
+        }
+
+        .wheel:hover {
+            transform: scale(1.02);
+        }
+
+        .wheel.spinning {
+            animation: spin 2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotateZ(0deg);
+            }
+            100% {
+                transform: rotateZ(1800deg);
+            }
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid #1e3c72;
+            z-index: 10;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+        }
+
+        .spin-button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 15px;
+        }
+
+        .spin-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(30, 60, 114, 0.4);
+        }
+
+        .spin-button:active {
+            transform: translateY(0);
+        }
+
+        .spin-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Right side - Options Editor */
+        .options-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .options-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+            margin-bottom: 15px;
+        }
+
+        .option-item {
+            display: grid;
+            grid-template-columns: 1fr 40px;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .option-input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .option-input:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 10px rgba(42, 82, 152, 0.2);
+        }
+
+        .option-delete {
+            padding: 8px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .option-delete:hover {
+            background: #ff5252;
+        }
+
+        .add-option-btn {
+            padding: 10px;
+            background: rgba(42, 82, 152, 0.1);
+            border: 2px dashed #2a5298;
+            border-radius: 8px;
+            color: #2a5298;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .add-option-btn:hover {
+            background: rgba(42, 82, 152, 0.2);
+        }
+
+        .preset-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .preset-btn {
+            padding: 8px;
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            color: #555;
+            transition: all 0.2s ease;
+        }
+
+        .preset-btn:hover {
+            background: #e8e8e8;
+            border-color: #2a5298;
+            color: #2a5298;
+        }
+
+        .result-display {
+            text-align: center;
+            padding: 20px;
+            background: rgba(42, 82, 152, 0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .result-text {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1e3c72;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            color: #2a5298;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .history-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .history-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #1e3c72;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 11px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            background: #2a5298;
+            color: white;
+            border-color: #2a5298;
+        }
+
+        .clear-history-btn {
+            padding: 8px 12px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .clear-history-btn:hover {
+            background: #ff5252;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #2a5298;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1e3c72;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            .wheel-container {
+                width: 220px;
+                height: 220px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .wheel-container {
+                width: 200px;
+                height: 200px;
+            }
+
+            .options-list {
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+    <div class="container">
+        <div class="header">
+            <h1>🎡 Spin Wheel</h1>
+            <p>Let fate decide - spin to get your answer</p>
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Wheel Section -->
+            <div class="wheel-section">
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <canvas id="wheelCanvas" width="250" height="250"></canvas>
+                </div>
+                <button class="spin-button" id="spinBtn">SPIN IT!</button>
+            </div>
+
+            <!-- Options Section -->
+            <div class="options-section">
+                <div class="options-title">Your Choices</div>
+                <div class="options-list" id="optionsList"></div>
+                <button class="add-option-btn" id="addOptionBtn">+ Add Option</button>
+
+                <div class="preset-buttons">
+                    <button class="preset-btn" id="preset1">⏰ What to do today?</button>
+                    <button class="preset-btn" id="preset2">🍕 What to eat?</button>
+                    <button class="preset-btn" id="preset3">🎮 How to chill?</button>
+                    <button class="preset-btn" id="preset4">💪 New habit?</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-display" id="resultDisplay">
+            <div class="result-label">🎯 Last Winner</div>
+            <div class="result-text" id="resultText">-</div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-label">Total Spins</div>
+                <div class="stat-value" id="spinCount">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Unique Options</div>
+                <div class="stat-value" id="optionCount">0</div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title">📜 Spin History</div>
+            <div class="history-list" id="history"></div>
+            <button class="clear-history-btn" id="clearHistoryBtn">Clear History</button>
+        </div>
+    </div>
+
+    <script>
+        // Default presets
+        const presets = {
+            preset1: {
+                name: 'What to do today?',
+                options: ['Sleep in', 'Go outside', 'Code', 'Exercise', 'Watch a movie', 'Read a book']
+            },
+            preset2: {
+                name: 'What to eat?',
+                options: ['Pizza', 'Tacos', 'Sushi', 'Pasta', 'Burgers', 'Salad', 'Ramen', 'Curry']
+            },
+            preset3: {
+                name: 'How to chill?',
+                options: ['Gaming', 'Music', 'Meditation', 'Streaming', 'Podcast', 'Draw', 'Write', 'Dance']
+            },
+            preset4: {
+                name: 'New habit?',
+                options: ['Drink water', 'Stretch', 'Walk', 'Meditate', 'Journal', 'Study', 'Workout']
+            }
+        };
+
+        const colors = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
+            '#F7DC6F', '#BB8FCE', '#85C1E9', '#F8B88B', '#82E0AA'
+        ];
+
+        const state = {
+            options: ['Pizza', 'Tacos', 'Sushi', 'Pasta', 'Burgers'],
+            spinCount: 0,
+            history: [],
+            isSpinning: false
+        };
+
+        const elements = {
+            wheelCanvas: document.getElementById('wheelCanvas'),
+            spinBtn: document.getElementById('spinBtn'),
+            optionsList: document.getElementById('optionsList'),
+            addOptionBtn: document.getElementById('addOptionBtn'),
+            resultText: document.getElementById('resultText'),
+            spinCount: document.getElementById('spinCount'),
+            optionCount: document.getElementById('optionCount'),
+            history: document.getElementById('history'),
+            clearHistoryBtn: document.getElementById('clearHistoryBtn')
+        };
+
+        const ctx = elements.wheelCanvas.getContext('2d');
+
+        // Event listeners
+        elements.spinBtn.addEventListener('click', spinWheel);
+        elements.addOptionBtn.addEventListener('click', addOption);
+        elements.clearHistoryBtn.addEventListener('click', clearHistory);
+
+        document.getElementById('preset1').addEventListener('click', () => loadPreset('preset1'));
+        document.getElementById('preset2').addEventListener('click', () => loadPreset('preset2'));
+        document.getElementById('preset3').addEventListener('click', () => loadPreset('preset3'));
+        document.getElementById('preset4').addEventListener('click', () => loadPreset('preset4'));
+
+        function drawWheel() {
+            const centerX = elements.wheelCanvas.width / 2;
+            const centerY = elements.wheelCanvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 5;
+            const sliceAngle = (Math.PI * 2) / state.options.length;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, elements.wheelCanvas.width, elements.wheelCanvas.height);
+
+            // Draw slices
+            state.options.forEach((option, i) => {
+                const startAngle = sliceAngle * i;
+                const endAngle = startAngle + sliceAngle;
+
+                // Draw slice
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.lineTo(centerX, centerY);
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+
+                // Draw border
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                // Draw text
+                const textAngle = startAngle + sliceAngle / 2;
+                const textX = centerX + Math.cos(textAngle) * (radius * 0.65);
+                const textY = centerY + Math.sin(textAngle) * (radius * 0.65);
+
+                ctx.save();
+                ctx.translate(textX, textY);
+                ctx.rotate(textAngle + Math.PI / 2);
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                // Split long text
+                const text = option;
+                const words = text.split(' ');
+                const lines = [];
+                let currentLine = '';
+
+                words.forEach(word => {
+                    if ((currentLine + word).length > 12) {
+                        if (currentLine) lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine += (currentLine ? ' ' : '') + word;
+                    }
+                });
+                if (currentLine) lines.push(currentLine);
+
+                lines.forEach((line, lineIdx) => {
+                    ctx.fillText(line, 0, (lineIdx - lines.length / 2) * 12);
+                });
+
+                ctx.restore();
+            });
+
+            // Draw center circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 20, 0, Math.PI * 2);
+            ctx.fillStyle = '#1e3c72';
+            ctx.fill();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Draw center dot
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 8, 0, Math.PI * 2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+        }
+
+        function spinWheel() {
+            if (state.isSpinning || state.options.length === 0) return;
+
+            state.isSpinning = true;
+            elements.spinBtn.disabled = true;
+
+            // Haptic feedback
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100]);
+            }
+
+            playSpinSound();
+
+            const duration = 2000;
+            const spins = 5;
+            const randomOffset = Math.random();
+            const totalRotation = spins * 360 + (randomOffset * 360);
+            const startTime = Date.now();
+
+            const animate = () => {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Easing function for spin
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+
+                elements.wheelCanvas.style.transform = `rotateZ(${totalRotation * easeProgress}deg)`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    // Get winner
+                    const normalizedRotation = totalRotation % 360;
+                    const sliceAngle = 360 / state.options.length;
+                    const pointerAngle = 0; // Top of wheel
+                    const winningSliceIndex = Math.floor(((360 - normalizedRotation + pointerAngle) % 360) / sliceAngle);
+                    const winner = state.options[winningSliceIndex];
+
+                    // Record winner
+                    state.spinCount++;
+                    state.history.push(winner);
+                    elements.resultText.textContent = winner;
+
+                    updateStats();
+                    updateHistory();
+
+                    state.isSpinning = false;
+                    elements.spinBtn.disabled = false;
+
+                    // More haptic feedback for win
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200]);
+                    }
+
+                    playWinSound();
+                }
+            };
+
+            animate();
+        }
+
+        function addOption() {
+            const newOption = prompt('Enter new option:', 'New Choice');
+            if (newOption && newOption.trim()) {
+                state.options.push(newOption.trim());
+                if (state.options.length > 10) {
+                    state.options.splice(0, 1); // Remove oldest if too many
+                }
+                drawWheel();
+                updateOptionsList();
+                updateStats();
+            }
+        }
+
+        function removeOption(index) {
+            state.options.splice(index, 1);
+            drawWheel();
+            updateOptionsList();
+            updateStats();
+        }
+
+        function updateOptionsList() {
+            elements.optionsList.innerHTML = state.options.map((opt, idx) => `
+                <div class="option-item">
+                    <div class="option-input" style="background: ${colors[idx % colors.length]}22; border-color: ${colors[idx % colors.length]}">${opt}</div>
+                    <button class="option-delete" onclick="removeOption(${idx})">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            elements.spinCount.textContent = state.spinCount;
+            elements.optionCount.textContent = state.options.length;
+        }
+
+        function updateHistory() {
+            elements.history.innerHTML = state.history
+                .slice()
+                .reverse()
+                .slice(0, 15)
+                .map((item, idx) => `
+                    <div class="history-item">${item}</div>
+                `)
+                .join('');
+        }
+
+        function clearHistory() {
+            if (confirm('Clear spin history?')) {
+                state.history = [];
+                state.spinCount = 0;
+                elements.resultText.textContent = '-';
+                updateStats();
+                updateHistory();
+            }
+        }
+
+        function loadPreset(presetKey) {
+            const preset = presets[presetKey];
+            state.options = [...preset.options];
+            drawWheel();
+            updateOptionsList();
+            updateStats();
+        }
+
+        function playSpinSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+
+            osc.frequency.setValueAtTime(400, audioContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.3);
+
+            gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.3);
+        }
+
+        function playWinSound() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const notes = [523, 659, 784];
+
+            notes.forEach((freq, i) => {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.2, audioContext.currentTime + i * 0.15);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + i * 0.15 + 0.2);
+
+                osc.start(audioContext.currentTime + i * 0.15);
+                osc.stop(audioContext.currentTime + i * 0.15 + 0.2);
+            });
+        }
+
+        // Initialize
+        drawWheel();
+        updateOptionsList();
+        updateStats();
+        updateHistory();
+        function goBack() {
+    window.location.href = "index.html";
+}
+    </script>
+</body>
+</html>

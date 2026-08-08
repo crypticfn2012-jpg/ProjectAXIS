@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ron.cool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+    .title-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    position: relative;
+    display: inline-block;
+}
+
+.title h1 {
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* Googly eyes */
+.googly-eyes {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    gap: 12px;
+
+    z-index: 5;
+    pointer-events: none;
+}
+
+.eye {
+    width: 30px;
+    height: 30px;
+
+    background: white;
+    border: 3px solid #111;
+    border-radius: 50%;
+
+    position: relative;
+
+    box-shadow: 0 3px 8px rgba(0,0,0,.25);
+}
+
+.pupil {
+    position: absolute;
+
+    width: 12px;
+    height: 12px;
+
+    background: #111;
+    border-radius: 50%;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    transition: transform 0.08s ease-out;
+}
+    .title-wrap {
+    position: relative;
+    display: inline-block;
+}
+
+.title-wrap h1 {
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* Googly eyes */
+.googly-eyes {
+    position: absolute;
+
+    /*
+        Adjust these if you want the eyes
+        higher/lower or more left/right.
+    */
+    top: -18px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    display: flex;
+    gap: 12px;
+
+    z-index: 5;
+    pointer-events: none;
+}
+
+.eye {
+    width: 30px;
+    height: 30px;
+
+    background: white;
+    border: 3px solid #111;
+    border-radius: 50%;
+
+    position: relative;
+
+    box-shadow:
+        0 3px 8px rgba(0,0,0,.25);
+}
+
+.pupil {
+    position: absolute;
+
+    width: 12px;
+    height: 12px;
+
+    background: #111;
+    border-radius: 50%;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    transition: transform 0.08s ease-out;
+}
+body {
+    margin: 0;
+    font-family: 'Fredoka', sans-serif;
+    text-align: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: #f8fafc;
+
+    background: #070b1b;
+}
+
+#spaceCanvas,
+.nebula,
+.stars {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#spaceCanvas {
+    z-index: -3;
+}
+
+.nebula {
+    z-index: -2;
+    opacity: .72;
+    background:
+        radial-gradient(ellipse at 15% 20%, rgba(58, 100, 220, .36), transparent 34%),
+        radial-gradient(ellipse at 85% 70%, rgba(205, 61, 176, .28), transparent 32%),
+        radial-gradient(ellipse at 48% 100%, rgba(24, 169, 181, .22), transparent 32%);
+    filter: blur(16px);
+    animation: drift 18s ease-in-out infinite alternate;
+}
+
+.stars {
+    z-index: -1;
+    opacity: .22;
+    background-image: radial-gradient(#fff 1px, transparent 1px);
+    background-size: 43px 43px;
+    animation: starDrift 26s linear infinite;
+}
+
+@keyframes drift {
+    from { transform: scale(1) translate3d(-1%, -1%, 0); }
+    to { transform: scale(1.12) translate3d(1%, 1%, 0); }
+}
+
+@keyframes starDrift {
+    to { background-position: 43px 86px; }
+}
+
+.orb {
+    position: fixed;
+    width: 180px;
+    height: 180px;
+    filter: blur(70px);
+    opacity: 0.26;
+    z-index: -1;
+    border-radius: 50%;
+    animation: floatOrb 12s ease-in-out infinite alternate;
+}
+
+.orb1 {
+    background: #60a5fa;
+    top: 10%;
+    left: 10%;
+}
+
+.orb2 {
+    background: #f472b6;
+    bottom: 10%;
+    right: 10%;
+    animation-delay: -5s;
+}
+
+@keyframes floatOrb {
+    to { transform: translate(35px, -28px) scale(1.2); }
+}
+
+/* HEADER */
+.header {
+    position: relative;
+    z-index: 1;
+    width: min(1100px, calc(100% - 32px));
+    margin: 52px auto 34px;
+}
+
+.site-tools {
+    position: fixed;
+    top: 18px;
+    right: 20px;
+    z-index: 3;
+}
+
+.blog-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid rgba(255, 255, 255, .24);
+    border-radius: 10px;
+    padding: 10px 13px;
+    color: #fff;
+    background: rgba(20, 27, 61, .72);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .18);
+    backdrop-filter: blur(12px);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform .2s, background .2s, border-color .2s;
+}
+
+.blog-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, .65);
+    background: rgba(63, 76, 145, .82);
+}
+
+/* LOGO */
+.logo {
+    width: 110px;
+    transition: 0.3s;
+}
+
+.logo:hover {
+    transform: scale(1.05) rotate(-2deg);
+}
+
+/* TITLE */
+h1 {
+    font-size: clamp(38px, 6vw, 62px);
+    margin: 10px 0;
+    letter-spacing: -0.04em;
+    text-shadow: 0 5px 28px rgba(126, 151, 255, .32);
+}
+
+.grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    width: min(1100px, calc(100% - 32px));
+    margin: 0 auto 60px;
+}
+
+.card {
+    min-width: 0;
+    padding: 22px 16px 18px;
+    border: 1px solid rgba(255, 255, 255, .16);
+    border-radius: 20px;
+    color: #f8fafc;
+    background: rgba(20, 27, 61, .64);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, .22), inset 0 1px rgba(255, 255, 255, .08);
+    backdrop-filter: blur(14px);
+    cursor: pointer;
+    transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
+}
+
+.card:hover {
+    transform: translateY(-7px) scale(1.02);
+    border-color: rgba(196, 211, 255, .7);
+    background: rgba(49, 61, 119, .7);
+    box-shadow: 0 20px 42px rgba(45, 54, 157, .35), 0 0 0 1px rgba(168, 185, 255, .12);
+}
+
+.card:active {
+    transform: translateY(-2px) scale(.99);
+}
+
+.icon {
+    display: block;
+    width: 82px;
+    height: 82px;
+    object-fit: contain;
+    margin: 0 auto 14px;
+    border-radius: 18px;
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .22));
+    transition: transform .25s ease;
+}
+
+.mood-icon {
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: linear-gradient(145deg, #78c894, #3e806e);
+    font-size: 42px;
+}
+
+.card:hover .icon {
+    transform: rotate(-4deg) scale(1.08);
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.subtitle {
+    margin-top: 5px;
+    color: #b9c4e7;
+    font-size: 12px;
+}
+
+@media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 500px) {
+    .header { margin-top: 34px; }
+    .grid { grid-template-columns: 1fr; gap: 13px; }
+    .card { display: grid; grid-template-columns: 64px 1fr; column-gap: 14px; align-items: center; padding: 13px 16px; text-align: left; }
+    .icon { grid-row: span 2; width: 64px; height: 64px; margin: 0; }
+    .title, .subtitle { align-self: end; }
+    .subtitle { align-self: start; }
+}
+
+</style>
+</head>
+
+<body>
+<canvas id="spaceCanvas" aria-hidden="true"></canvas>
+<div class="nebula" aria-hidden="true"></div>
+<div class="stars"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="site-tools"><a class="blog-link" href="blog.html">✎ My blog</a></div>
+<div class="header">
+
+    
+<div class="title-wrap">
+
+
+    <div class="title">
+        <h1>Ron.cool</h1>
+
+        <div class="googly-eyes">
+            <div class="eye">
+                <div class="pupil"></div>
+            </div>
+
+            <div class="eye">
+                <div class="pupil"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="grid">
+
+<div class="card" onclick="openGame('8ball.html')">
+    <img src="icons/8ball.png" class="icon">
+    <div class="title">Magic 8 Ball</div>
+    <div class="subtitle">Ask anything</div>
+</div>
+
+<div class="card" onclick="openGame('color.html')">
+    <img src="icons/color.png" class="icon">
+    <div class="title">Color Lab</div>
+    <div class="subtitle">Mix colors</div>
+</div>
+
+<div class="card" onclick="openGame('life.html')">
+    <img src="icons/life.png" class="icon" alt="Life Check">
+    <div class="title">Life Check</div>
+    <div class="subtitle">Collect good moments</div>
+</div>
+
+<div class="card" onclick="openGame('mood.html')">
+    <img src="icons/mood.png" class="icon" alt="Mood Garden">
+    <div class="title">Mood Garden</div>
+    <div class="subtitle">Plant your feelings</div>
+</div>
+
+<div class="card" onclick="openGame('aquarium.html')">
+    <img src="icons/aquarium.png" class="icon">
+    <div class="title">Pocket aquarium </div>
+    <div class="subtitle">Manage little fish</div>
+</div>
+
+<div class="card" onclick="openGame('compliment.html')">
+    <img src="icons/compliment.png" class="icon">
+    <div class="title">Compliment</div>
+    <div class="subtitle">Feel good</div>
+</div>
+
+<div class="card" onclick="openGame('dice.html')">
+    <img src="icons/dice.png" class="icon">
+    <div class="title">Dice</div>
+    <div class="subtitle">Roll it</div>
+</div>
+
+<div class="card" onclick="openGame('particle.html')">
+    <img src="icons/particles.png" class="icon">
+    <div class="title">Particles</div>
+    <div class="subtitle">Draw magic</div>
+</div>
+
+<div class="card" onclick="openGame('reaction.html')">
+    <img src="icons/reaction.png" class="icon">
+    <div class="title">Reaction</div>
+    <div class="subtitle">Test reflex</div>
+</div>
+
+<div class="card" onclick="openGame('slots.html')">
+    <img src="icons/slots.png" class="icon">
+    <div class="title">Slots</div>
+    <div class="subtitle">Try luck</div>
+</div>
+
+<div class="card" onclick="openGame('spinwheel.html')">
+    <img src="icons/wheel.png" class="icon">
+    <div class="title">Spin Wheel</div>
+    <div class="subtitle">Random pick</div>
+</div>
+
+<div class="card" onclick="openGame('typing.html')">
+    <img src="icons/typing.png" class="icon">
+    <div class="title">Typing</div>
+    <div class="subtitle">Speed test</div>
+</div>
+
+<div class="card" onclick="openGame('emoji.html')">
+    <img src="icons/emoji.png" class="icon">
+    <div class="title">Emoji Rain</div>
+    <div class="subtitle">Rain Emoji's</div>
+</div>
+
+<div class="card" onclick="openGame('memory.html')">
+    <img src="icons/memory.png" class="icon">
+    <div class="title">Memory Test</div>
+    <div class="subtitle">Test your memory</div>
+</div>
+
+<div class="card" onclick="openGame('space.html')">
+    <img src="icons/space.png" class="icon">
+    <div class="title">Explore Space</div>
+    <div class="subtitle">Have fun going around the galaxy</div>
+</div>
+
+</div>
+
+<script>
+function openGame(page) {
+    window.location.href = page;
+}
+
+const spaceCanvas = document.getElementById('spaceCanvas');
+const spaceContext = spaceCanvas.getContext('2d');
+const spaceStars = Array.from({ length: 150 }, () => ({
+    x: Math.random(),
+    y: Math.random(),
+    size: Math.random() * 1.8 + .35,
+    speed: Math.random() * .00018 + .00004,
+    phase: Math.random() * Math.PI * 2
+}));
+
+function resizeSpace() {
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    spaceCanvas.width = window.innerWidth * ratio;
+    spaceCanvas.height = window.innerHeight * ratio;
+    spaceCanvas.style.width = `${window.innerWidth}px`;
+    spaceCanvas.style.height = `${window.innerHeight}px`;
+    spaceContext.setTransform(ratio, 0, 0, ratio, 0, 0);
+}
+
+function animateSpace(time) {
+    spaceContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    spaceStars.forEach((star) => {
+        const x = star.x * window.innerWidth;
+        const y = ((star.y + time * star.speed) % 1) * window.innerHeight;
+        const pulse = .45 + Math.sin(time * .002 + star.phase) * .35;
+        spaceContext.fillStyle = `rgba(220, 231, 255, ${pulse})`;
+        spaceContext.beginPath();
+        spaceContext.arc(x, y, star.size, 0, Math.PI * 2);
+        spaceContext.fill();
+    });
+    requestAnimationFrame(animateSpace);
+}
+
+resizeSpace();
+window.addEventListener('resize', resizeSpace);
+requestAnimationFrame(animateSpace);
+</script>
+<script>
+const pupils = document.querySelectorAll(".pupil");
+
+document.addEventListener("mousemove", (event) => {
+
+    pupils.forEach((pupil) => {
+
+        const eye = pupil.parentElement;
+        const rect = eye.getBoundingClientRect();
+
+        const eyeX = rect.left + rect.width / 2;
+        const eyeY = rect.top + rect.height / 2;
+
+        const dx = event.clientX - eyeX;
+        const dy = event.clientY - eyeY;
+
+        const angle = Math.atan2(dy, dx);
+
+        // Maximum pupil movement
+        const distance = 7;
+
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
+
+        pupil.style.transform =
+            `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+    });
+
+});
+</script>
+</body>
+</html>

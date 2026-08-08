@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>How Rich Am I?</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #0a0f1f, #000);
+  color: white;
+  text-align: center;
+}
+
+.container {
+  margin-top: 100px;
+}
+
+h1 {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+input {
+  padding: 15px;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  width: 250px;
+  text-align: center;
+}
+
+button {
+  padding: 15px 25px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  margin-left: 10px;
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #45a049;
+}
+
+.result {
+  margin-top: 40px;
+  font-size: 22px;
+}
+
+.big {
+  font-size: 60px;
+  margin: 20px 0;
+  color: #00ffcc;
+}
+
+.fun {
+  margin-top: 20px;
+  opacity: 0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>💰 How Rich Are You?</h1>
+  <p>Enter your yearly income (£)</p>
+
+  <input id="income" type="number" placeholder="e.g. 30000">
+  <button onclick="calculate()">Check</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+function calculate() {
+  const income = parseFloat(document.getElementById("income").value);
+  const result = document.getElementById("result");
+
+  if (!income || income <= 0) {
+    result.innerHTML = "Enter a valid number 💀";
+    return;
+  }
+
+  // Rough global comparison (simple scaling)
+  let percentile = Math.min(99.9, (income / 50000) * 100);
+
+  let message = "";
+  if (percentile > 90) message = "You're in the global elite 💎";
+  else if (percentile > 70) message = "You're doing very well 👏";
+  else if (percentile > 50) message = "Above average 👍";
+  else message = "Below global average 🌍";
+
+  // Fun comparisons
+  const freddos = Math.floor(income / 0.25);
+  const netflixYears = Math.floor(income / 120);
+  const ps5s = Math.floor(income / 500);
+
+  result.innerHTML = `
+    <div class="big">Top ${percentile.toFixed(1)}%</div>
+    <div>${message}</div>
+
+    <div class="fun">
+      🐸 You could buy <b>${freddos.toLocaleString()}</b> Freddos<br>
+      📺 That's <b>${netflixYears}</b> years of Netflix<br>
+      🎮 Or <b>${ps5s}</b> PS5s
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>

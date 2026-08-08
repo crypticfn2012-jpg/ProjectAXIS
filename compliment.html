@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Compliment Generator | ron.cool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    .back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1000;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.05);
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+h1 { margin-bottom: 10px; }
+
+.input-box {
+    margin-bottom: 15px;
+}
+
+input, select {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 5px;
+    border: none;
+}
+
+.box {
+    max-width: 500px;
+    padding: 25px;
+    border-radius: 12px;
+    background: #1c1c1c;
+    border: 2px solid #00ffcc;
+    margin-bottom: 20px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: 0.2s;
+}
+
+button {
+    padding: 10px 18px;
+    margin: 5px;
+    border: none;
+    border-radius: 6px;
+    background: #00ffcc;
+    color: black;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #00ccaa;
+}
+
+.stats {
+    margin-top: 10px;
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.fade {
+    opacity: 0;
+    transform: translateY(10px);
+}
+</style>
+</head>
+
+<body>
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+<h1>💬 Compliment Generator</h1>
+
+<div class="input-box">
+    <input id="name" placeholder="Your name...">
+    <select id="mood">
+        <option value="default">Normal</option>
+        <option value="funny">Funny</option>
+        <option value="romantic">Romantic</option>
+        <option value="hype">Hype</option>
+    </select>
+</div>
+
+<div class="box" id="complimentBox">
+    Fill it in… this one’s personalised 😏
+</div>
+
+<div>
+    <button onclick="generate()">✨ Generate</button>
+    <button onclick="copyText()">📋 Copy</button>
+</div>
+
+<div class="stats" id="stats">
+    Generated: 0
+</div>
+
+<audio id="popSound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+
+<script>
+let count = parseInt(localStorage.getItem("count") || 0);
+
+const starters = ["Honestly,", "Real talk,", "No joke,", "Lowkey,"];
+const endings = ["and it shows.", "and people notice.", "and it's impressive.", "and that's rare."];
+
+const traits = {
+    default: [
+        "you're genuinely a good person",
+        "you've got a great vibe",
+        "you're smarter than you think",
+        "you bring good energy"
+    ],
+    funny: [
+        "you're cooler than your WiFi speed",
+        "you carry conversations harder than servers carry lag",
+        "you're illegally underrated",
+        "you're built different fr"
+    ],
+    romantic: [
+        "you've got a smile that could fix a bad day",
+        "you're actually kinda irresistible",
+        "you're the type people fall for",
+        "you make everything feel softer"
+    ],
+    hype: [
+        "you're actually unstoppable",
+        "you've got main character energy",
+        "you dominate without trying",
+        "you're next level"
+    ]
+};
+
+function random(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generate() {
+    const name = document.getElementById("name").value.trim();
+    const mood = document.getElementById("mood").value;
+
+    const traitList = traits[mood] || traits.default;
+
+    let compliment = `${random(starters)} ${name ? name + ", " : ""}${random(traitList)}, ${random(endings)}`;
+
+    const box = document.getElementById("complimentBox");
+    box.classList.add("fade");
+
+    setTimeout(() => {
+        box.textContent = compliment;
+        box.classList.remove("fade");
+    }, 150);
+
+    // play sound
+    const sound = document.getElementById("popSound");
+    sound.currentTime = 0;
+    sound.play();
+
+    // stats
+    count++;
+    localStorage.setItem("count", count);
+    updateStats();
+}
+
+function updateStats() {
+    document.getElementById("stats").textContent = `Generated: ${count}`;
+}
+
+function copyText() {
+    const text = document.getElementById("complimentBox").textContent;
+    navigator.clipboard.writeText(text);
+}
+
+updateStats();
+function goBack() {
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

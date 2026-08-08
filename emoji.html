@@ -1,0 +1,1568 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Emoji Rain | ron.cool</title>
+
+<style>
+    .back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1000;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.05);
+}
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #080812;
+    color: white;
+}
+
+
+/* ================================
+   BACKGROUND
+================================ */
+
+body {
+    background:
+        radial-gradient(
+            circle at 20% 20%,
+            rgba(100, 70, 255, .18),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 70%,
+            rgba(0, 180, 255, .12),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #080812,
+            #10101f 50%,
+            #080812
+        );
+}
+
+
+/* Stars */
+
+body::before {
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .45;
+
+    background-image:
+        radial-gradient(
+            circle,
+            white 1px,
+            transparent 1px
+        ),
+        radial-gradient(
+            circle,
+            white 1px,
+            transparent 1px
+        );
+
+    background-size:
+        90px 90px,
+        140px 140px;
+
+    background-position:
+        10px 20px,
+        50px 80px;
+
+    z-index: 0;
+}
+
+
+/* ================================
+   RAIN
+================================ */
+
+#rain {
+    position: fixed;
+    inset: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+
+    z-index: 1;
+}
+
+.emoji {
+    position: absolute;
+
+    top: -100px;
+
+    user-select: none;
+    pointer-events: none;
+
+    will-change: transform;
+
+    animation:
+        fall linear forwards;
+
+    filter:
+        drop-shadow(
+            0 5px 10px rgba(0,0,0,.25)
+        );
+}
+
+@keyframes fall {
+
+    from {
+        transform:
+            translateY(-120px)
+            rotate(0deg);
+    }
+
+    to {
+        transform:
+            translateY(110vh)
+            rotate(360deg);
+    }
+}
+
+
+/* ================================
+   MAIN APP
+================================ */
+
+.app {
+    position: relative;
+
+    z-index: 5;
+
+    width:
+        min(
+            700px,
+            calc(100% - 30px)
+        );
+
+    margin: auto;
+
+    padding-top: 9vh;
+
+    text-align: center;
+}
+
+
+/* Logo */
+
+.logo {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    opacity: .5;
+
+    margin-bottom: 14px;
+}
+
+
+/* Title */
+
+h1 {
+    font-size:
+        clamp(
+            42px,
+            8vw,
+            78px
+        );
+
+    letter-spacing: -4px;
+
+    line-height: .95;
+
+    margin-bottom: 15px;
+
+    text-shadow:
+        0 10px 40px
+        rgba(0,0,0,.5);
+}
+
+
+/* Subtitle */
+
+.subtitle {
+    color: #aaaabd;
+
+    font-size: 17px;
+
+    margin-bottom: 30px;
+}
+
+
+/* ================================
+   PANEL
+================================ */
+
+.panel {
+
+    width: 100%;
+
+    margin: auto;
+
+    padding: 20px;
+
+    border-radius: 22px;
+
+    background:
+        rgba(20,20,35,.72);
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    backdrop-filter:
+        blur(18px);
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.4),
+
+        inset 0 1px
+        rgba(255,255,255,.08);
+}
+
+
+/* ================================
+   EMOJI SELECTOR
+================================ */
+
+.emoji-selector {
+    position: relative;
+
+    width: 100%;
+
+    margin-bottom: 16px;
+}
+
+
+/* Selected emoji */
+
+.selected-emoji {
+
+    width: 100%;
+
+    height: 58px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    border-radius: 14px;
+
+    background:
+        rgba(255,255,255,.05);
+
+    color: white;
+
+    font-size: 30px;
+
+    cursor: pointer;
+
+    transition:
+        .15s ease;
+}
+
+.selected-emoji:hover {
+
+    background:
+        rgba(255,255,255,.09);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* ================================
+   EMOJI POPUP
+================================ */
+
+.emoji-menu {
+
+    display: none;
+
+    position: absolute;
+
+    z-index: 100;
+
+    top: 66px;
+
+    left: 0;
+    right: 0;
+
+    padding: 12px;
+
+    border-radius: 16px;
+
+    background:
+        rgba(18,18,30,.98);
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.55);
+
+    backdrop-filter:
+        blur(20px);
+}
+
+.emoji-menu.open {
+    display: block;
+}
+
+
+/* Search */
+
+#emojiSearch {
+
+    width: 100%;
+
+    padding:
+        11px 13px;
+
+    margin-bottom: 10px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    outline: none;
+
+    background:
+        rgba(255,255,255,.06);
+
+    color: white;
+
+    font-size: 14px;
+}
+
+#emojiSearch::placeholder {
+    color: #77778a;
+}
+
+
+/* Emoji grid */
+
+.emoji-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(8, 1fr);
+
+    gap: 5px;
+
+    max-height: 230px;
+
+    overflow-y: auto;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(255,255,255,.2)
+        transparent;
+}
+
+
+/* Emoji button */
+
+.emoji-btn {
+
+    width: 100%;
+
+    aspect-ratio: 1;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background:
+        transparent;
+
+    color: white;
+
+    font-size: 23px;
+
+    cursor: pointer;
+
+    transition:
+        .12s ease;
+}
+
+.emoji-btn:hover {
+
+    background:
+        rgba(255,255,255,.1);
+
+    transform:
+        scale(1.12);
+}
+
+.emoji-btn.active {
+
+    background:
+        rgba(136,117,255,.3);
+
+    box-shadow:
+        inset 0 0 0 1px
+        rgba(150,130,255,.5);
+}
+
+
+/* ================================
+   CONTROLS
+================================ */
+
+.controls {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+
+    text-align: left;
+}
+
+
+/* Control box */
+
+.control {
+
+    background:
+        rgba(255,255,255,.04);
+
+    border-radius: 15px;
+
+    padding: 14px;
+}
+
+
+/* Labels */
+
+label {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    color: #aaaabd;
+
+    font-size: 13px;
+
+    margin-bottom: 10px;
+}
+
+label span {
+
+    color: white;
+
+    font-weight: bold;
+}
+
+
+/* Range sliders */
+
+input[type="range"] {
+
+    width: 100%;
+
+    accent-color:
+        #8875ff;
+
+    cursor: pointer;
+}
+
+
+/* Select */
+
+select {
+
+    width: 100%;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.1);
+
+    background:
+        #171726;
+
+    color: white;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+
+/* ================================
+   BUTTONS
+================================ */
+
+.buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 14px;
+}
+
+
+button.action {
+
+    flex: 1;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background:
+        #8875ff;
+
+    color: white;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        .15s ease;
+}
+
+button.action:hover {
+
+    transform:
+        translateY(-2px);
+
+    filter:
+        brightness(1.1);
+}
+
+button.secondary {
+
+    background:
+        rgba(255,255,255,.08);
+}
+
+
+/* ================================
+   FOOTER
+================================ */
+
+.footer {
+
+    margin-top: 20px;
+
+    font-size: 12px;
+
+    color: #66667a;
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media (max-width: 600px) {
+
+    .app {
+
+        width:
+            calc(100% - 20px);
+
+        padding-top: 5vh;
+    }
+
+    .panel {
+
+        padding: 15px;
+    }
+
+    .controls {
+
+        grid-template-columns:
+            1fr;
+    }
+
+    h1 {
+
+        font-size: 48px;
+
+        letter-spacing: -3px;
+    }
+
+    .subtitle {
+
+        font-size: 15px;
+
+        margin-bottom: 22px;
+    }
+
+    .emoji-grid {
+
+        grid-template-columns:
+            repeat(7, 1fr);
+    }
+
+    .buttons {
+
+        flex-direction: column;
+    }
+}
+</style>
+</head>
+
+
+<body>
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+
+<!-- ================================
+     RAIN
+================================ -->
+
+<div id="rain"></div>
+
+
+<!-- ================================
+     APP
+================================ -->
+
+<main class="app">
+
+    <div class="logo">
+       
+    </div>
+
+
+    <h1>
+        Emoji Rain
+    </h1>
+
+
+    <p class="subtitle">
+        Pick an emoji. Make it rain.
+    </p>
+
+
+    <div class="panel">
+
+
+        <!-- ==========================
+             EMOJI PICKER
+        =========================== -->
+
+        <div class="emoji-selector">
+
+            <button
+                class="selected-emoji"
+                id="selectedEmoji"
+                aria-label="Choose emoji"
+            >
+                😀
+            </button>
+
+
+            <div
+                class="emoji-menu"
+                id="emojiMenu"
+            >
+
+                <input
+                    type="text"
+                    id="emojiSearch"
+                    placeholder="Search emojis..."
+                    autocomplete="off"
+                >
+
+
+                <div
+                    class="emoji-grid"
+                    id="emojiGrid"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================
+             CONTROLS
+        =========================== -->
+
+        <div class="controls">
+
+
+            <!-- Speed -->
+
+            <div class="control">
+
+                <label>
+                    Speed
+
+                    <span id="speedValue">
+                        5
+                    </span>
+                </label>
+
+                <input
+                    id="speed"
+                    type="range"
+                    min="1"
+                    max="10"
+                    value="5"
+                >
+
+            </div>
+
+
+            <!-- Amount -->
+
+            <div class="control">
+
+                <label>
+                    Amount
+
+                    <span id="amountValue">
+                        30
+                    </span>
+                </label>
+
+                <input
+                    id="amount"
+                    type="range"
+                    min="5"
+                    max="100"
+                    value="30"
+                >
+
+            </div>
+
+
+            <!-- Size -->
+
+            <div class="control">
+
+                <label>
+                    Size
+
+                    <span id="sizeValue">
+                        32px
+                    </span>
+                </label>
+
+                <input
+                    id="size"
+                    type="range"
+                    min="15"
+                    max="70"
+                    value="32"
+                >
+
+            </div>
+
+
+            <!-- Pattern -->
+
+            <div class="control">
+
+                <label>
+                    Pattern
+                </label>
+
+                <select id="pattern">
+
+                    <option value="normal">
+                        Normal
+                    </option>
+
+                    <option value="wave">
+                        Wave
+                    </option>
+
+                    <option value="chaos">
+                        Chaos
+                    </option>
+
+                    <option value="straight">
+                        Straight
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================
+             ACTION BUTTONS
+        =========================== -->
+
+        <div class="buttons">
+
+            <button
+                class="action"
+                onclick="startRain()"
+            >
+                🌧️ Make It Rain
+            </button>
+
+
+            <button
+                class="action secondary"
+                onclick="clearRain()"
+            >
+                Clear
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+        made with ☕ by ron.cool
+    </div>
+
+</main>
+
+
+<script>
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const rain =
+    document.getElementById("rain");
+
+const selectedEmojiButton =
+    document.getElementById("selectedEmoji");
+
+const emojiMenu =
+    document.getElementById("emojiMenu");
+
+const emojiGrid =
+    document.getElementById("emojiGrid");
+
+const emojiSearch =
+    document.getElementById("emojiSearch");
+
+
+/* =========================================
+   SELECTED EMOJI
+========================================= */
+
+let selectedEmoji = "😀";
+
+
+/* =========================================
+   EMOJIS
+========================================= */
+
+const allEmojis = [
+
+    /* Faces */
+
+    "😀","😃","😄","😁","😆","😅","😂","🤣",
+    "😊","😇","🙂","🙃","😉","😌","😍","🥰",
+    "😘","😗","😙","😚","😋","😛","😝","😜",
+    "🤪","🤨","🧐","🤓","😎","🥸","🤩","🥳",
+    "😏","😒","😞","😔","😟","😕","🙁","☹️",
+    "😣","😖","😫","😩","🥺","😢","😭","😤",
+    "😠","😡","🤬","🤯","😳","🥵","🥶","😱",
+    "😨","😰","😥","😓","🤗","🤔","🫣","🤭",
+    "🫢","🫡","🤫","🫠","🤥","😶","🫥","😐",
+    "🫤","😑","😬","🙄","😯","😦","😧","😮",
+    "😲","🥱","😴","🤤","😪","😵","🤐","🥴",
+    "🤢","🤮","🤧","😷","🤒","🤕","🤑","🤠",
+    "😈","👿","👹","👺","🤡","💩","👻","💀",
+    "☠️","👽","👾","🤖","🎃",
+
+    /* Cat faces */
+
+    "😺","😸","😹","😻","😼","😽","🙀","😿","😾",
+
+    /* Hearts */
+
+    "❤️","🧡","💛","💚","💙","💜","🖤","🩷",
+    "🩵","🩶","🤍","🤎","💔","❣️","💕","💞",
+    "💓","💗","💖","💘","💝","💟","💌","💋",
+    "💯","💢","💥","💫","💦","💨","💤",
+
+    /* Symbols */
+
+    "🔥","✨","⭐","🌟","💎","⚡","☀️","🌈",
+    "☁️","☔","❄️","☃️","🌙","🌞","🌝","🌚",
+    "🌕","🌑","☮️","☯️","☢️","☣️","⚠️",
+    "🚫","❌","⭕","✅","❗","❓","‼️","⁉️",
+
+    /* Hands */
+
+    "👋","🤚","🖐️","✋","🖖","👌","🤏","✌️",
+    "🤞","🤟","🤘","🤙","👈","👉","👆","👇",
+    "☝️","👍","👎","✊","👊","🤛","🤜","👏",
+    "🙌","👐","🤲","🙏","✍️","💅","🤳","💪",
+    "🫶","🫰","👀","👁️","👄","👅","🧠","🫀",
+
+    /* People */
+
+    "👶","🧒","👦","👧","🧑","👱","👨","👩",
+    "🧔","👴","👵","🙍","🙎","🙅","🙆","💁",
+    "🙋","🧏","🙇","🤦","🤷","👮","🕵️","💂",
+    "🥷","👷","🤴","👸","👳","👲","🎅","🤰",
+    "🧑‍🚀","🧑‍🎨","🧑‍💻","🧑‍🔬","🧑‍🍳","🧑‍🚒",
+
+    /* Animals */
+
+    "🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼",
+    "🐨","🐯","🦁","🐮","🐷","🐸","🐵","🙈",
+    "🙉","🙊","🐔","🐧","🐦","🐤","🐣","🦆",
+    "🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝",
+    "🐛","🦋","🐌","🐞","🐜","🪲","🪳","🕷️",
+    "🦂","🐢","🐍","🦎","🦖","🦕","🐙","🦑",
+    "🦀","🦞","🦐","🐠","🐟","🐡","🦈","🐳",
+    "🐋","🐬","🦭","🐊","🐘","🦏","🦛","🐪",
+    "🐫","🦒","🦘","🐃","🐂","🐄","🐎","🐖",
+    "🐏","🐑","🦙","🐐","🦌","🐕","🐩","🐈",
+    "🐓","🦃","🦚","🦜","🐇","🦔","🦥","🦦",
+    "🦨","🦡",
+
+    /* Food */
+
+    "🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇",
+    "🍓","🫐","🍈","🍒","🍑","🥭","🍍","🥥",
+    "🥝","🍅","🍆","🥑","🥦","🥬","🥒","🌶️",
+    "🫑","🌽","🥕","🧄","🧅","🥔","🍞","🥐",
+    "🥖","🧀","🥚","🍳","🧈","🥞","🧇","🥓",
+    "🥩","🍗","🍖","🌭","🍔","🍟","🍕","🥪",
+    "🌮","🌯","🥗","🍿","🍩","🍪","🎂","🍰",
+    "🧁","🍫","🍭","🍬","🍮","🍦","🍨","🍧",
+    "🥤","🧋","☕","🍵","🥛","🧃",
+
+    /* Sports */
+
+    "⚽","🏀","🏈","⚾","🥎","🎾","🏐","🏉",
+    "🥏","🎱","🏓","🏸","🥅","⛳","🎣","🎮",
+    "🕹️","🎲","🧩","♟️","🎯","🎳",
+
+    /* Music */
+
+    "🎨","🎭","🎤","🎧","🎸","🎹","🥁","🎷",
+    "🎺","🎻","🎼","🎵","🎶",
+
+    /* Technology */
+
+    "📱","💻","🖥️","⌨️","🖱️","📷","📺","📻",
+    "📚","📖","✏️","📝","📌","📎","🔑","🔒",
+    "🔓","🔨","🔧","⚙️","🧰","💡","🔦","🕯️",
+    "🧲",
+
+    /* Money */
+
+    "💰","💵","💴","💶","💷","💳","🪙","💲",
+
+    /* Gifts */
+
+    "🎁","🎈","🎉","🎊","🎂","🎄","🎃","🎆",
+    "🎇","🧨","🎟️","🎫",
+
+    /* Vehicles */
+
+    "🚀","✈️","🚗","🚕","🚌","🚓","🚑","🚒",
+    "🚚","🚜","🚲","🛴","🏎️","🚁","🚤","🚢",
+    "🚂","🚃","🚇","🚉","🛸",
+
+    /* Nature */
+
+    "🌱","🌿","☘️","🍀","🎋","🌴","🌵","🌲",
+    "🌳","🌺","🌸","🌼","🌻","🌹","🥀","🌷",
+    "💐","🍁","🍂","🍃","🌾","🌊","💧","🌋",
+    "🏔️","🏕️","🏝️",
+
+    /* Places */
+
+    "🏠","🏡","🏢","🏥","🏦","🏨","🏪","🏫",
+    "🏰","🏯","🗼","🗽","⛪","🕌","🛕","⛩️",
+    "🌁","🌃","🌆","🌇",
+
+    /* Clothing */
+
+    "👕","👖","🧥","👗","👔","👚","👒","🧢",
+    "🎩","👑","👓","🕶️","🥽","🧤","🧣","👟",
+    "👞","🥾","🩴","🎒",
+
+    /* Awards */
+
+    "🏆","🥇","🥈","🥉","🏅","🎖️",
+
+    /* Flags */
+
+    "🏴‍☠️","🚩","🏳️","🏁",
+
+    /* Colours */
+
+    "🔴","🟠","🟡","🟢","🔵","🟣","⚫","⚪","🟤",
+    "🟥","🟧","🟨","🟩","🟦","🟪","⬛","⬜",
+    "🟫",
+
+    /* Extra */
+
+    "🔮","🎃","🪄","🧿","🪐","🌌","🌍","🌎",
+    "🌏","🌍","☄️","🌠","🛰️","🔭","🕳️"
+];
+
+
+/* =========================================
+   RENDER EMOJIS
+========================================= */
+
+function renderEmojis(list) {
+
+    emojiGrid.innerHTML = "";
+
+    list.forEach(emoji => {
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "emoji-btn";
+
+        button.textContent =
+            emoji;
+
+        if (emoji === selectedEmoji) {
+
+            button.classList.add(
+                "active"
+            );
+
+        }
+
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                selectedEmoji =
+                    emoji;
+
+                selectedEmojiButton.textContent =
+                    emoji;
+
+
+                document
+                    .querySelectorAll(
+                        ".emoji-btn"
+                    )
+                    .forEach(btn => {
+
+                        btn.classList.remove(
+                            "active"
+                        );
+
+                    });
+
+
+                button.classList.add(
+                    "active"
+                );
+
+
+                emojiMenu.classList.remove(
+                    "open"
+                );
+
+
+                emojiSearch.value = "";
+
+            }
+        );
+
+
+        emojiGrid.appendChild(
+            button
+        );
+
+    });
+}
+
+
+/* =========================================
+   OPEN EMOJI MENU
+========================================= */
+
+selectedEmojiButton.addEventListener(
+    "click",
+    event => {
+
+        event.stopPropagation();
+
+        emojiMenu.classList.toggle(
+            "open"
+        );
+
+
+        if (
+            emojiMenu.classList.contains(
+                "open"
+            )
+        ) {
+
+            emojiSearch.focus();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+emojiSearch.addEventListener(
+    "input",
+    () => {
+
+        /*
+            Emoji themselves don't have searchable
+            names in this simple version, but this
+            allows searching for emoji characters.
+        */
+
+        const query =
+            emojiSearch.value.trim();
+
+
+        if (!query) {
+
+            renderEmojis(
+                allEmojis
+            );
+
+            return;
+        }
+
+
+        const filtered =
+            allEmojis.filter(
+                emoji =>
+                    emoji.includes(
+                        query
+                    )
+            );
+
+
+        renderEmojis(
+            filtered
+        );
+
+    }
+);
+
+
+/* =========================================
+   CLOSE MENU WHEN CLICKING OUTSIDE
+========================================= */
+
+document.addEventListener(
+    "click",
+    event => {
+
+        if (
+            !event.target.closest(
+                ".emoji-selector"
+            )
+        ) {
+
+            emojiMenu.classList.remove(
+                "open"
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   INITIAL EMOJIS
+========================================= */
+
+renderEmojis(
+    allEmojis
+);
+
+
+/* =========================================
+   CONTROLS
+========================================= */
+
+const speed =
+    document.getElementById(
+        "speed"
+    );
+
+const amount =
+    document.getElementById(
+        "amount"
+    );
+
+const size =
+    document.getElementById(
+        "size"
+    );
+
+
+const speedValue =
+    document.getElementById(
+        "speedValue"
+    );
+
+const amountValue =
+    document.getElementById(
+        "amountValue"
+    );
+
+const sizeValue =
+    document.getElementById(
+        "sizeValue"
+    );
+
+
+/* Speed */
+
+speed.addEventListener(
+    "input",
+    () => {
+
+        speedValue.textContent =
+            speed.value;
+
+    }
+);
+
+
+/* Amount */
+
+amount.addEventListener(
+    "input",
+    () => {
+
+        amountValue.textContent =
+            amount.value;
+
+    }
+);
+
+
+/* Size */
+
+size.addEventListener(
+    "input",
+    () => {
+
+        sizeValue.textContent =
+            size.value + "px";
+
+    }
+);
+
+
+/* =========================================
+   CREATE EMOJI
+========================================= */
+
+function createEmoji() {
+
+    const emoji =
+        document.createElement(
+            "div"
+        );
+
+
+    emoji.className =
+        "emoji";
+
+
+    emoji.textContent =
+        selectedEmoji;
+
+
+    const pattern =
+        document.getElementById(
+            "pattern"
+        ).value;
+
+
+    let x =
+        Math.random() *
+        window.innerWidth;
+
+
+    let rotation =
+        Math.random() * 360;
+
+
+    /* Straight */
+
+    if (
+        pattern === "straight"
+    ) {
+
+        x =
+            Math.floor(
+                Math.random() * 20
+            ) *
+            (
+                window.innerWidth / 20
+            );
+
+
+        rotation = 0;
+
+    }
+
+
+    /* Wave */
+
+    if (
+        pattern === "wave"
+    ) {
+
+        x =
+            Math.random() *
+            window.innerWidth;
+
+    }
+
+
+    /* Chaos */
+
+    if (
+        pattern === "chaos"
+    ) {
+
+        x =
+            Math.random() *
+            window.innerWidth;
+
+
+        rotation =
+            Math.random() *
+            1000 -
+            500;
+
+    }
+
+
+    emoji.style.left =
+        x + "px";
+
+
+    emoji.style.fontSize =
+        size.value + "px";
+
+
+    /*
+        Higher speed =
+        shorter animation.
+    */
+
+    const duration =
+        11 -
+        Number(speed.value) +
+        Math.random() * 2;
+
+
+    emoji.style.animationDuration =
+        duration + "s";
+
+
+    emoji.style.transform =
+        `rotate(${rotation}deg)`;
+
+
+    /*
+        Wave movement.
+    */
+
+    if (
+        pattern === "wave"
+    ) {
+
+        const waveAmount =
+            Math.random() * 180 -
+            90;
+
+
+        emoji.animate(
+            [
+                {
+                    transform:
+                        `translateY(-120px)
+                         translateX(0)
+                         rotate(0deg)`
+                },
+
+                {
+                    transform:
+                        `translateY(50vh)
+                         translateX(${waveAmount}px)
+                         rotate(180deg)`
+                },
+
+                {
+                    transform:
+                        `translateY(110vh)
+                         translateX(${-waveAmount}px)
+                         rotate(360deg)`
+                }
+            ],
+            {
+                duration:
+                    duration * 1000,
+
+                easing:
+                    "linear"
+            }
+        );
+
+    }
+
+
+    rain.appendChild(
+        emoji
+    );
+
+
+    setTimeout(
+        () => {
+
+            emoji.remove();
+
+        },
+        duration * 1000 + 500
+    );
+
+}
+
+
+/* =========================================
+   START RAIN
+========================================= */
+
+function startRain() {
+
+    clearRain();
+
+
+    const count =
+        Number(
+            amount.value
+        );
+
+
+    for (
+        let i = 0;
+        i < count;
+        i++
+    ) {
+
+        setTimeout(
+            () => {
+
+                createEmoji();
+
+            },
+            i * 40
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   CLEAR
+========================================= */
+
+function clearRain() {
+
+    rain.innerHTML = "";
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+startRain();
+function goBack() {
+    window.location.href = "index.html";
+}
+
+</script>
+
+</body>
+</html>
+

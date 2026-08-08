@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slot Machine | ron.cool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    .back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1000;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.05);
+}
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0f0f0f;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    h1 {
+        margin-bottom: 10px;
+    }
+
+    .money {
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+    .slot-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .reel {
+        width: 80px;
+        height: 80px;
+        background: #1c1c1c;
+        border: 3px solid #00ffcc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        border-radius: 10px;
+        transition: transform 0.2s;
+    }
+
+    button {
+        padding: 12px 25px;
+        font-size: 16px;
+        border: none;
+        background: #00ffcc;
+        color: black;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    button:hover {
+        background: #00ccaa;
+    }
+
+    .result {
+        margin-top: 15px;
+        height: 20px;
+    }
+</style>
+</head>
+
+<body>
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+<h1>🎰 Slot Machine</h1>
+<div class="money">Balance: $<span id="money">100</span></div>
+
+<div class="slot-container">
+    <div class="reel" id="r1">❓</div>
+    <div class="reel" id="r2">❓</div>
+    <div class="reel" id="r3">❓</div>
+</div>
+
+<button onclick="spin()">SPIN ($10)</button>
+
+<div class="result" id="result"></div>
+
+<script>
+const symbols = ["🍒","🍋","🍉","⭐","💎","7️⃣"];
+let money = 100;
+let spinning = false;
+
+function getRandomSymbol() {
+    return symbols[Math.floor(Math.random() * symbols.length)];
+}
+
+function updateMoney() {
+    document.getElementById("money").textContent = money;
+}
+
+function spin() {
+    if (spinning) return;
+    if (money < 10) {
+        showResult("💀 You're broke!");
+        return;
+    }
+
+    spinning = true;
+    money -= 10;
+    updateMoney();
+    showResult("Spinning...");
+
+    const reels = [
+        document.getElementById("r1"),
+        document.getElementById("r2"),
+        document.getElementById("r3")
+    ];
+
+    let spins = 15;
+
+    let interval = setInterval(() => {
+        reels.forEach(r => r.textContent = getRandomSymbol());
+        spins--;
+
+        if (spins <= 0) {
+            clearInterval(interval);
+            finishSpin(reels);
+        }
+    }, 80);
+}
+
+function finishSpin(reels) {
+    const results = reels.map(r => r.textContent);
+
+    if (results[0] === results[1] && results[1] === results[2]) {
+        money += 100;
+        showResult("💰 JACKPOT +$100");
+    }
+    else if (results[0] === results[1] || results[1] === results[2] || results[0] === results[2]) {
+        money += 20;
+        showResult("👍 Small Win +$20");
+    }
+    else {
+        showResult("😢 You lost");
+    }
+
+    updateMoney();
+    spinning = false;
+}
+
+function showResult(text) {
+    document.getElementById("result").textContent = text;
+}
+function goBack() {
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

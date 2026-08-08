@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Typing Test | ron.cool </title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    .back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1000;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.05);
+}
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+#text {
+    max-width: 700px;
+    margin: 20px auto;
+    font-size: 20px;
+    line-height: 1.6;
+}
+
+.correct { color: #22c55e; }
+.wrong { color: #ef4444; }
+
+#input {
+    width: 80%;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 6px;
+    border: none;
+}
+
+.stats {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background: #00ffcc;
+    color: black;
+    border-radius: 6px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+<h1>⌨️ Typing Test</h1>
+
+<div id="text"></div>
+
+<input id="input" placeholder="Start typing..." disabled>
+
+<div class="stats">
+    ⏱ Time: <span id="time">30</span>s  
+    ⚡ WPM: <span id="wpm">0</span>  
+    🎯 Accuracy: <span id="accuracy">100</span>%
+</div>
+
+<button onclick="startTest()">Start</button>
+<button onclick="resetTest()">Reset</button>
+
+<script>
+const sampleText = "the quick brown fox jumps over the lazy dog this is a simple typing test to measure your speed and accuracy";
+
+let timer = 30;
+let interval = null;
+let started = false;
+
+function renderText(input = "") {
+    const textEl = document.getElementById("text");
+    let html = "";
+
+    for (let i = 0; i < sampleText.length; i++) {
+        if (i < input.length) {
+            if (input[i] === sampleText[i]) {
+                html += `<span class="correct">${sampleText[i]}</span>`;
+            } else {
+                html += `<span class="wrong">${sampleText[i]}</span>`;
+            }
+        } else {
+            html += sampleText[i];
+        }
+    }
+
+    textEl.innerHTML = html;
+}
+
+function startTest() {
+    document.getElementById("input").disabled = false;
+    document.getElementById("input").focus();
+    started = true;
+
+    interval = setInterval(() => {
+        timer--;
+        document.getElementById("time").textContent = timer;
+
+        if (timer <= 0) {
+            clearInterval(interval);
+            document.getElementById("input").disabled = true;
+        }
+    }, 1000);
+}
+
+document.getElementById("input").addEventListener("input", function () {
+    if (!started) return;
+
+    const val = this.value;
+
+    renderText(val);
+
+    // WPM
+    const words = val.trim().split(" ").length;
+    const wpm = Math.round((words / (30 - timer)) * 60) || 0;
+
+    document.getElementById("wpm").textContent = wpm;
+
+    // Accuracy
+    let correct = 0;
+    for (let i = 0; i < val.length; i++) {
+        if (val[i] === sampleText[i]) correct++;
+    }
+
+    const accuracy = Math.round((correct / val.length) * 100) || 100;
+    document.getElementById("accuracy").textContent = accuracy;
+});
+
+function resetTest() {
+    clearInterval(interval);
+    timer = 30;
+    started = false;
+
+    document.getElementById("time").textContent = 30;
+    document.getElementById("wpm").textContent = 0;
+    document.getElementById("accuracy").textContent = 100;
+
+    document.getElementById("input").value = "";
+    document.getElementById("input").disabled = true;
+
+    renderText();
+}
+
+renderText();
+function goBack() {
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

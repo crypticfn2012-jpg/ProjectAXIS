@@ -1,0 +1,920 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Test | ron.cool</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle at 20% 20%, rgba(110,80,255,.18), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(0,210,255,.12), transparent 30%),
+        linear-gradient(135deg,#080812,#10101f 50%,#080812);
+}
+
+/* Stars */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .3;
+
+    background-image:
+        radial-gradient(circle,white 1px,transparent 1px),
+        radial-gradient(circle,white 1px,transparent 1px);
+
+    background-size: 90px 90px,140px 140px;
+    background-position: 10px 20px,50px 80px;
+}
+
+/* Back */
+
+.back-btn {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+
+    background: #00ffcc;
+    color: #000;
+
+    border: 0;
+    padding: 7px 12px;
+
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    cursor: pointer;
+    z-index: 100;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.04);
+}
+
+/* Main */
+
+.app {
+    position: relative;
+    z-index: 2;
+
+    width: min(390px,calc(100% - 24px));
+
+    text-align: center;
+}
+
+/* Header */
+
+.kicker {
+    color: #77778c;
+
+    font-size: 9px;
+    font-weight: bold;
+
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    margin-bottom: 6px;
+}
+
+h1 {
+    font-size: 42px;
+    letter-spacing: -3px;
+    line-height: .9;
+
+    margin-bottom: 7px;
+}
+
+.subtitle {
+    color: #85859b;
+
+    font-size: 11px;
+
+    margin-bottom: 13px;
+}
+
+/* Scores */
+
+.scoreboard {
+    display: flex;
+    gap: 8px;
+
+    margin-bottom: 9px;
+}
+
+.score {
+    flex: 1;
+
+    padding: 7px 10px;
+
+    background: rgba(20,20,35,.72);
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    border-radius: 11px;
+
+    backdrop-filter: blur(12px);
+}
+
+.score-label {
+    color: #77778c;
+
+    font-size: 8px;
+
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    margin-bottom: 1px;
+}
+
+.score-number {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* Game */
+
+.game-panel {
+    padding: 11px;
+
+    background: rgba(20,20,35,.72);
+
+    border: 1px solid rgba(255,255,255,.09);
+
+    border-radius: 16px;
+
+    backdrop-filter: blur(15px);
+
+    box-shadow:
+        0 18px 50px rgba(0,0,0,.4),
+        inset 0 1px rgba(255,255,255,.06);
+}
+
+/* Status */
+
+.status {
+    height: 30px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    margin-bottom: 7px;
+}
+
+.status-main {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-sub {
+    color: #77778c;
+
+    font-size: 8px;
+
+    margin-top: 2px;
+}
+
+/* Grid */
+
+.grid {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+
+    gap: 6px;
+}
+
+.tile {
+    width: 100%;
+    aspect-ratio: 1;
+
+    border: 1px solid rgba(255,255,255,.07);
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.07),
+            rgba(255,255,255,.025)
+        );
+
+    cursor: pointer;
+
+    transition:
+        transform .1s,
+        background .1s,
+        box-shadow .1s;
+}
+
+.tile:hover {
+    transform: scale(.97);
+    background: rgba(255,255,255,.1);
+}
+
+.tile.active {
+    background:
+        radial-gradient(
+            circle,
+            #a296ff,
+            #6654dc
+        );
+
+    border-color: #bdb4ff;
+
+    box-shadow:
+        0 0 18px rgba(125,105,255,.8),
+        inset 0 0 10px rgba(255,255,255,.2);
+
+    transform: scale(.94);
+}
+
+.tile.correct {
+    background: #42d99b;
+
+    border-color: #7dffc4;
+
+    box-shadow:
+        0 0 18px rgba(66,217,155,.6);
+}
+
+.tile.wrong {
+    background: #ff5268;
+
+    border-color: #ff8796;
+
+    box-shadow:
+        0 0 18px rgba(255,82,104,.7);
+
+    animation: shake .25s;
+}
+
+/* Start */
+
+.start-btn {
+    width: 100%;
+
+    margin-top: 8px;
+
+    padding: 9px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: #8875ff;
+
+    color: white;
+
+    font-size: 11px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .15s;
+}
+
+.start-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.start-btn:active {
+    transform: scale(.98);
+}
+
+/* Message */
+
+.message {
+    min-height: 13px;
+
+    margin-top: 6px;
+
+    color: #66667a;
+
+    font-size: 8px;
+}
+
+/* Footer */
+
+.footer {
+    margin-top: 9px;
+
+    color: #555568;
+
+    font-size: 9px;
+}
+
+/* Animation */
+
+@keyframes shake {
+
+    0%,100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+/* Smaller screens */
+
+@media(max-height:650px) {
+
+    .app {
+        transform: scale(.88);
+    }
+}
+
+@media(max-height:550px) {
+
+    .app {
+        transform: scale(.76);
+    }
+}
+
+@media(max-width:420px) {
+
+    .app {
+        width: calc(100% - 18px);
+    }
+
+    h1 {
+        font-size: 36px;
+    }
+
+    .game-panel {
+        padding: 9px;
+    }
+
+    .grid {
+        gap: 5px;
+    }
+
+    .tile {
+        border-radius: 6px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<button
+    class="back-btn"
+    onclick="window.location.href='index.html'">
+    ← Back
+</button>
+
+
+<main class="app">
+
+    <div class="kicker">
+        ron.cool / brain test
+    </div>
+
+    <h1>Memory.</h1>
+
+    <p class="subtitle">
+        Watch the pattern. Remember it.
+    </p>
+
+
+    <!-- SCORE -->
+
+    <div class="scoreboard">
+
+        <div class="score">
+
+            <div class="score-label">
+                Current
+            </div>
+
+            <div
+                class="score-number"
+                id="currentScore">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="score">
+
+            <div class="score-label">
+                Best
+            </div>
+
+            <div
+                class="score-number"
+                id="bestScore">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- GAME -->
+
+    <div class="game-panel">
+
+        <div class="status">
+
+            <div
+                class="status-main"
+                id="status">
+                Ready?
+            </div>
+
+            <div
+                class="status-sub"
+                id="statusSub">
+                Press start to begin
+            </div>
+
+        </div>
+
+
+        <div
+            class="grid"
+            id="grid">
+        </div>
+
+
+        <button
+            class="start-btn"
+            id="startButton">
+            ▶ Start Game
+        </button>
+
+
+        <div
+            class="message"
+            id="message">
+            Your sequence gets longer every round.
+        </div>
+
+    </div>
+
+
+    <div class="footer">
+        made with ☕ by ron.cool
+    </div>
+
+</main>
+
+
+<script>
+
+/* ================================
+   ELEMENTS
+================================ */
+
+const grid =
+    document.getElementById("grid");
+
+const statusText =
+    document.getElementById("status");
+
+const statusSub =
+    document.getElementById("statusSub");
+
+const currentScore =
+    document.getElementById("currentScore");
+
+const bestScore =
+    document.getElementById("bestScore");
+
+const startButton =
+    document.getElementById("startButton");
+
+const message =
+    document.getElementById("message");
+
+
+/* ================================
+   GAME SETTINGS
+================================ */
+
+const GRID_SIZE = 16;
+
+let tiles = [];
+
+let sequence = [];
+
+let playerSequence = [];
+
+let currentRound = 0;
+
+let acceptingInput = false;
+
+let best =
+    Number(
+        localStorage.getItem("ron-memory-best") || 0
+    );
+
+
+bestScore.textContent = best;
+
+
+/* ================================
+   CREATE GRID
+================================ */
+
+for (let i = 0; i < GRID_SIZE; i++) {
+
+    const tile =
+        document.createElement("button");
+
+    tile.className = "tile";
+
+    tile.dataset.index = i;
+
+    tile.addEventListener(
+        "click",
+        () => handleTileClick(i)
+    );
+
+    grid.appendChild(tile);
+
+    tiles.push(tile);
+}
+
+
+/* ================================
+   RANDOM TILE
+================================ */
+
+function randomTile() {
+
+    return Math.floor(
+        Math.random() * GRID_SIZE
+    );
+
+}
+
+
+/* ================================
+   START
+================================ */
+
+function startGame() {
+
+    sequence = [];
+
+    playerSequence = [];
+
+    currentRound = 0;
+
+    acceptingInput = false;
+
+    currentScore.textContent = "0";
+
+    message.textContent =
+        "Watch carefully...";
+
+    startButton.textContent =
+        "Restart Game";
+
+    statusText.textContent =
+        "Get ready...";
+
+    statusSub.textContent =
+        "Watch the lights";
+
+    clearTiles();
+
+
+    setTimeout(() => {
+
+        nextRound();
+
+    }, 500);
+
+}
+
+
+/* ================================
+   NEXT ROUND
+================================ */
+
+async function nextRound() {
+
+    acceptingInput = false;
+
+    playerSequence = [];
+
+    currentRound++;
+
+
+    currentScore.textContent =
+        currentRound - 1;
+
+
+    statusText.textContent =
+        `Round ${currentRound}`;
+
+    statusSub.textContent =
+        `Remember ${currentRound === 1
+            ? "1 tile"
+            : currentRound + " tiles"}`;
+
+
+    sequence.push(
+        randomTile()
+    );
+
+
+    await sleep(450);
+
+
+    /*
+        SHOW SEQUENCE
+    */
+
+    for (const index of sequence) {
+
+        await lightTile(index);
+
+        await sleep(130);
+
+    }
+
+
+    playerSequence = [];
+
+    acceptingInput = true;
+
+
+    statusText.textContent =
+        "Your turn";
+
+    statusSub.textContent =
+        `Click ${sequence.length === 1
+            ? "the tile"
+            : "the tiles"} in order`;
+
+}
+
+
+/* ================================
+   LIGHT TILE
+================================ */
+
+function lightTile(index) {
+
+    return new Promise(resolve => {
+
+        const tile = tiles[index];
+
+        tile.classList.add("active");
+
+
+        setTimeout(() => {
+
+            tile.classList.remove("active");
+
+            resolve();
+
+        }, 350);
+
+    });
+
+}
+
+
+/* ================================
+   CLICK
+================================ */
+
+function handleTileClick(index) {
+
+    if (!acceptingInput) {
+        return;
+    }
+
+
+    const tile = tiles[index];
+
+    const expected =
+        sequence[playerSequence.length];
+
+
+    /*
+        WRONG
+    */
+
+    if (index !== expected) {
+
+        tile.classList.add("wrong");
+
+        acceptingInput = false;
+
+
+        setTimeout(() => {
+
+            tile.classList.remove("wrong");
+
+        }, 300);
+
+
+        gameOver();
+
+        return;
+    }
+
+
+    /*
+        CORRECT
+    */
+
+    playerSequence.push(index);
+
+    tile.classList.add("correct");
+
+
+    setTimeout(() => {
+
+        tile.classList.remove("correct");
+
+    }, 150);
+
+
+    /*
+        FINISHED ROUND
+    */
+
+    if (
+        playerSequence.length ===
+        sequence.length
+    ) {
+
+        acceptingInput = false;
+
+        currentScore.textContent =
+            currentRound;
+
+
+        /*
+            New best
+        */
+
+        if (currentRound > best) {
+
+            best = currentRound;
+
+            bestScore.textContent =
+                best;
+
+            localStorage.setItem(
+                "ron-memory-best",
+                best
+            );
+
+            message.textContent =
+                "🔥 NEW BEST SCORE!";
+
+        } else {
+
+            message.textContent =
+                "Nice! Next round...";
+
+        }
+
+
+        setTimeout(() => {
+
+            nextRound();
+
+        }, 550);
+
+    }
+
+}
+
+
+/* ================================
+   GAME OVER
+================================ */
+
+function gameOver() {
+
+    const score =
+        currentRound - 1;
+
+
+    currentScore.textContent =
+        score;
+
+
+    statusText.textContent =
+        "Game Over 💀";
+
+    statusSub.textContent =
+        `You reached ${score}`;
+
+
+    message.textContent =
+        score > 0
+            ? `Best score: ${best}`
+            : "Better luck next time!";
+
+
+    startButton.textContent =
+        "Try Again";
+
+}
+
+
+/* ================================
+   CLEAR
+================================ */
+
+function clearTiles() {
+
+    tiles.forEach(tile => {
+
+        tile.classList.remove(
+            "active",
+            "correct",
+            "wrong"
+        );
+
+    });
+
+}
+
+
+/* ================================
+   SLEEP
+================================ */
+
+function sleep(ms) {
+
+    return new Promise(
+        resolve =>
+            setTimeout(resolve, ms)
+    );
+
+}
+
+
+/* ================================
+   START BUTTON
+================================ */
+
+startButton.addEventListener(
+    "click",
+    startGame
+);
+
+
+
+
+statusText.textContent =
+    "Ready?";
+
+statusSub.textContent =
+    "Press start to begin";
+
+bestScore.textContent =
+    best;
+
+</script>
+
+</body>
+</html>
+

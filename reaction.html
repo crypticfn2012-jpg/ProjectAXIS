@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reaction Time | ron.cool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    .back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1000;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.05);
+}
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+}
+
+.screen {
+    display: none;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.active {
+    display: flex;
+}
+
+#waitScreen { background: #dc2626; }
+#goScreen { background: #16a34a; }
+#resultScreen { background: #1e293b; }
+
+button {
+    padding: 12px 20px;
+    border: none;
+    background: #00ffcc;
+    color: black;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+<!-- Start -->
+<div id="startScreen" class="screen active">
+    <h1>⚡ Reaction Time Test</h1>
+    <p>Click when green appears</p>
+    <button id="startBtn">Start</button>
+</div>
+
+<!-- Wait -->
+<div id="waitScreen" class="screen">
+    <h1>Wait for green...</h1>
+</div>
+
+<!-- Go -->
+<div id="goScreen" class="screen">
+    <h1>CLICK!</h1>
+</div>
+
+<!-- Result -->
+<div id="resultScreen" class="screen">
+    <h1 id="resultText"></h1>
+    <button id="retryBtn">🔄 Try Again</button>
+</div>
+
+<script>
+let startTime = 0;
+let timeout = null;
+let state = "start"; // start, wait, ready, result
+
+function show(id) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+// START BUTTON
+document.getElementById("startBtn").onclick = function (e) {
+    e.stopPropagation();
+    state = "wait";
+    show("waitScreen");
+
+    const delay = Math.random() * 3000 + 2000;
+
+    timeout = setTimeout(() => {
+        state = "ready";
+        startTime = Date.now();
+        show("goScreen");
+    }, delay);
+};
+
+// GAME CLICK AREA
+["waitScreen", "goScreen"].forEach(id => {
+    document.getElementById(id).onclick = function () {
+
+        // clicked too early
+        if (state === "wait") {
+            clearTimeout(timeout);
+            state = "result";
+            show("resultScreen");
+            document.getElementById("resultText").textContent = "Too early 😭";
+            return;
+        }
+
+        // correct click
+        if (state === "ready") {
+            const time = Date.now() - startTime;
+            state = "result";
+            show("resultScreen");
+            document.getElementById("resultText").textContent = time + " ms";
+        }
+    };
+});
+
+// RESET BUTTON
+document.getElementById("retryBtn").onclick = function (e) {
+    e.stopPropagation();
+    state = "start";
+    show("startScreen");
+};
+function goBack() {
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

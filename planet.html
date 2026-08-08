@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Little Planet | ron.cool</title>
+<style>
+:root{--bg:#0d171e;--panel:#17272e;--line:#ffffff1c;--ink:#edf4e7;--muted:#8da09f;--lime:#c6eb70;--gold:#f5c568;--coral:#ff9874}*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--ink);font-family:"Avenir Next","Segoe UI",sans-serif;background:radial-gradient(circle at 75% 5%,#294452,transparent 32rem),linear-gradient(135deg,#0d171e,#16272c 55%,#10181e)}button,input{font:inherit}button{cursor:pointer}.app{width:min(1350px,calc(100% - 32px));margin:auto;padding:24px 0 38px}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.brand{display:flex;gap:12px;align-items:center}.mark{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;color:#17211c;background:var(--lime);font-size:22px}.eyebrow{color:var(--lime);font-size:10px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}h1{margin:3px 0 0;font-size:23px;letter-spacing:-.05em}.head-actions{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:11px}.save-dot{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 9px var(--lime)}.ghost,.buy{padding:9px 12px;border:1px solid var(--line);border-radius:8px;color:var(--ink);background:#ffffff09;font-size:11px;font-weight:800}.dashboard{display:grid;grid-template-columns:minmax(440px,1.2fr) minmax(330px,.8fr);gap:16px}.panel{border:1px solid var(--line);border-radius:16px;background:#17272edb;box-shadow:0 24px 70px #0004;backdrop-filter:blur(16px)}.world{position:relative;min-height:680px;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle,#62aa9a22,transparent 48%),#132128}.world:before,.world:after{content:"";position:absolute;width:2px;height:2px;border-radius:50%;background:#e5f0ca;box-shadow:90px 55px #e5f0ca,-120px 110px #e5f0ca,185px -80px #e5f0ca,-205px -58px #e5f0ca,230px 120px #e5f0ca;opacity:.28}.world:before{top:14%;left:13%}.world:after{right:15%;bottom:18%}#planet{width:min(72vw,660px);height:min(72vw,660px);display:block;outline:0}.caption{position:absolute;left:23px;bottom:20px}.caption p{margin:5px 0 0;color:var(--muted);font-size:11px}.hint{position:absolute;right:20px;bottom:20px;padding:7px 9px;border:1px solid var(--line);border-radius:7px;color:var(--muted);background:#09111688;font-size:10px}.stack{display:grid;gap:13px}.card{padding:19px}.card-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:16px}h2{margin:0;font-size:15px;letter-spacing:-.03em}.sub{margin:5px 0 0;color:var(--muted);font-size:11px;line-height:1.45}.name{display:flex;align-items:center;gap:8px}.name input{width:140px;border:0;border-bottom:1px dashed var(--line);outline:0;color:var(--ink);background:transparent;font-size:15px;font-weight:800}.age{padding:5px 8px;border-radius:5px;color:#18221d;background:var(--lime);font-size:9px;font-weight:900;text-transform:uppercase}.treasury{color:var(--gold);font:700 20px monospace}.treasury small{color:var(--muted);font:10px sans-serif}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.stat{padding:10px 8px;border:1px solid var(--line);border-radius:8px;background:#ffffff06}.stat label{display:block;color:var(--muted);font-size:9px;text-transform:uppercase}.stat strong{display:block;margin-top:6px;font:700 15px monospace}.stat small{display:block;margin-top:4px;color:var(--lime);font-size:9px}.buildings{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.building{position:relative;min-height:86px;padding:10px;text-align:left;border:1px solid var(--line);border-radius:9px;color:var(--ink);background:#ffffff07;transition:.2s}.building:hover:not(:disabled){transform:translateY(-2px);border-color:var(--lime);background:#c6eb7015}.building:disabled{opacity:.38;cursor:not-allowed}.building .icon{display:block;margin-bottom:6px;color:var(--coral);font-size:21px}.building b{display:block;font-size:11px}.building small{display:block;margin-top:5px;color:var(--gold);font:700 10px monospace}.building em{position:absolute;top:8px;right:7px;color:var(--muted);font-size:9px;font-style:normal}.expand{display:flex;justify-content:space-between;align-items:center;gap:9px;margin-top:9px;padding:10px;border:1px solid #c6eb7055;border-radius:8px;background:#c6eb700c}.expand p{margin:3px 0 0;color:var(--muted);font-size:10px}.expand strong{font-size:11px}.buy{color:#17211c;background:var(--lime);border:0}.evolution{padding:13px;border:1px solid var(--line);border-radius:9px;background:#ffffff05}.evo-row{display:flex;justify-content:space-between;font-size:12px}.evo-row span{color:var(--muted);font:10px monospace}.bar{height:7px;margin:10px 0 6px;border-radius:7px;background:#ffffff0d}.bar i{display:block;width:12%;height:100%;border-radius:7px;background:linear-gradient(90deg,var(--coral),var(--lime))}.ages{display:flex;justify-content:space-between;color:var(--muted);font-size:9px}.ages b{color:var(--lime)}.people{display:flex;align-items:center;gap:12px}.people-art{display:flex;align-items:end;height:42px}.person{position:relative;width:25px;height:37px;margin-left:-5px}.person:first-child{margin:0}.person i{position:absolute;top:0;left:6px;width:13px;height:13px;border-radius:50%;background:#dfad7e}.person b{position:absolute;bottom:0;left:2px;width:21px;height:26px;border-radius:11px 11px 5px 5px;background:#5cad7c}.person:nth-child(2) b{background:#d99555}.person:nth-child(3) b{background:#b7e3e8}.person:nth-child(4) b{background:#9b79c8}.people strong{font:700 20px monospace}.people span{display:block;color:var(--muted);font-size:10px}.feed{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.feed .panel{min-height:150px;padding:18px}.events{display:grid;gap:9px;max-height:105px;overflow:auto}.event{display:flex;gap:8px;font-size:10px}.event i{width:7px;height:7px;flex:none;margin-top:3px;border-radius:50%;background:var(--coral)}.event time{display:block;margin-top:3px;color:var(--muted);font-size:9px}.ledger{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.ledger div{padding:10px 8px;border:1px solid var(--line);border-radius:8px;background:#ffffff05}.ledger b{font-size:10px}.ledger span{display:block;margin-top:5px;color:var(--muted);font-size:9px;line-height:1.4}.toast{position:fixed;bottom:20px;left:50%;z-index:5;padding:11px 15px;border-radius:8px;color:#18221b;background:var(--lime);font-size:11px;font-weight:900;opacity:0;transform:translate(-50%,12px);transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
++@media(max-width:900px){.dashboard{grid-template-columns:1fr}.world{min-height:84vw}}@media(max-width:600px){.app{width:calc(100% - 22px);padding-top:16px}.head-actions span{display:none}.world{min-height:calc(100vw - 22px)}#planet{width:96vw;height:96vw}.card{padding:16px}.stats{grid-template-columns:repeat(2,1fr)}.feed{display:block;margin-top:12px}.feed .panel{margin-bottom:12px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header><div class="brand"><div class="mark">✦</div><div><div class="eyebrow">ron.cool / world 01</div><h1>Little planet</h1></div></div><div class="head-actions"><div class="save-dot"></div><span id="status">Autosaved</span><button class="ghost" id="new">New planet</button></div></header>
+<section class="dashboard">
+<section class="panel world"><canvas id="planet" tabindex="0" aria-label="Interactive 3D planet"></canvas><div class="caption"><div class="eyebrow">Year <span id="year">018</span> · orbit mode</div><p>Drag to orbit. Click the world to earn money.</p></div><div class="hint">buildings anchor to the surface</div></section>
+<aside class="stack">
+<section class="panel card"><div class="card-head"><div><div class="name"><input id="name" value="Verdant-01" maxlength="18" aria-label="Planet name"><span class="age" id="age">Stone Age</span></div><p class="sub">A small, curious world. Entirely yours.</p></div><div class="treasury"><small>treasury</small><br>$<span id="money">386</span></div></div><div class="stats"><div class="stat"><label>Population</label><strong id="pop">1,240</strong><small>+<span id="rate">2</span> / sec</small></div><div class="stat"><label>Technology</label><strong id="tech">12%</strong><small>evolution</small></div><div class="stat"><label>Happiness</label><strong id="happy">78%</strong><small id="mood">thriving</small></div><div class="stat"><label>Land</label><strong><span id="used">0</span>/<span id="land">6</span></strong><small>plots used</small></div></div></section>
+<section class="panel card"><div class="card-head"><div><h2>Build something</h2><p class="sub">Every action costs money. Every building changes the world.</p></div><span class="eyebrow">catalog</span></div><div class="buildings" id="catalog"></div><div class="expand"><div><div class="eyebrow">frontier</div><strong>Expand the planet</strong><p>Unlock 4 more surface plots.</p></div><button class="buy" id="expand">$<span id="expandCost">240</span> Expand</button></div></section>
+<section class="panel card"><div class="card-head"><div><h2>Evolution</h2><p class="sub">Technology unlocks new ways to live.</p></div><span class="eyebrow" id="evo">12 / 100</span></div><div class="evolution"><div class="evo-row"><b id="ageName">Stone Age</b><span id="next">100 tech to evolve</span></div><div class="bar"><i id="bar"></i></div><div class="ages"><b>Stone</b><span>Medieval</span><span>Industrial</span><span>Space</span></div></div></section>
+<section class="panel card"><div class="card-head"><div><h2>People of Verdant-01</h2><p class="sub">Citizens dress for the biome they call home.</p></div><span class="eyebrow" id="biome">forest</span></div><div class="people"><div class="people-art"><div class="person"><i></i><b></b></div><div class="person"><i></i><b></b></div><div class="person"><i></i><b></b></div><div class="person"><i></i><b></b></div></div><div><strong id="citizens">124</strong><span>visible citizens · <span id="outfit">green cloaks</span></span></div></div></section>
++</aside></section>
++<section class="feed"><article class="panel"><div class="card-head"><h2>Planet history</h2><span class="eyebrow">latest</span></div><div class="events" id="events"></div></article><article class="panel"><div class="card-head"><h2>World ledger</h2><span class="eyebrow">milestones</span></div><div class="ledger"><div><b>First settlement</b><span>Place your first building</span></div><div><b>Growing pains</b><span>Reach 2,000 population</span></div><div><b>New horizon</b><span>Enter the Medieval Age</span></div></div></article></section>
++</main><div class="toast" id="toast" role="status" aria-live="polite"></div>
+<!-- Remote WebGL library is optional; local-file mode uses the renderer fallback below. -->
++<script>
++const $=id=>document.getElementById(id);const types={hut:{n:"Sun hut",i:"⌂",c:80,t:0,p:12,h:2,col:0xd9985f},grove:{n:"Canopy grove",i:"♣",c:120,t:0,p:8,h:5,col:0x58b87c},ice:{n:"Ice lodge",i:"❄",c:160,t:0,p:10,h:3,col:0xb7e8ed},forge:{n:"Stone forge",i:"◆",c:250,t:30,p:25,h:-1,col:0x9a77c2},library:{n:"Sky library",i:"▤",c:420,t:100,p:45,h:6,col:0xe8c36c},launch:{n:"Launch pad",i:"✧",c:900,t:400,p:100,h:4,col:0xe7f1f5}};const looks={forest:["forest","green cloaks"],grasslands:["grasslands","linen layers & sun hats"],desert:["desert","wrapped scarves & sun cloth"],ice:["ice","fur collars & parkas"],mountain:["mountains","heavy wool & violet dyes"]};const s={name:"Verdant-01",money:386,population:1240,tech:12,happy:78,age:"Stone Age",year:18,biome:"forest",maxLand:6,buildings:[],events:["A quiet world begins to stir."]};let scene,camera,renderer,planet,group,ray,drag={on:false,x:0},toastTimer;try{Object.assign(s,JSON.parse(localStorage.getItem("ron-planet-state")||"{}"))}catch{}$("name").value=s.name;function save(){s.name=$("name").value||"Verdant-01";localStorage.setItem("ron-planet-state",JSON.stringify(s));$("status").textContent="Autosaved just now"}function fmt(n){return Math.floor(n).toLocaleString()}function note(text){s.events.unshift(text);s.events=s.events.slice(0,6);$("events").innerHTML=s.events.map((e,i)=>`<div class="event"><i></i><div>${e}<time>${i?i*2+" min ago":"just now"}</time></div></div>`).join("");clearTimeout(toastTimer);$("toast").textContent=text;$("toast").classList.add("show");toastTimer=setTimeout(()=>$("toast").classList.remove("show"),1800)}function catalog(){$("catalog").innerHTML=Object.entries(types).map(([k,b])=>`<button class="building" data-key="${k}" ${s.tech<b.t?"disabled":""}><em>${s.tech<b.t?"tech "+b.t:"build"}</em><span class="icon">${b.i}</span><b>${b.n}</b><small>$${b.c}</small></button>`).join("");document.querySelectorAll("[data-key]").forEach(b=>b.onclick=()=>build(b.dataset.key))}function render(){const count=s.buildings.length,threshold=s.tech<100?100:s.tech<220?220:s.tech<400?400:1000;$("money").textContent=fmt(s.money);$("pop").textContent=fmt(s.population);$("rate").textContent=2+count*2;$("tech").textContent=Math.floor(s.tech)+"%";$("happy").textContent=Math.floor(s.happy)+"%";$("mood").textContent=s.happy>70?"thriving":s.happy>45?"finding balance":"needs care";$("used").textContent=count;$("land").textContent=s.maxLand;$("expandCost").textContent=240+Math.max(0,s.maxLand-6)*140;$("year").textContent=String(Math.floor(s.year)).padStart(3,"0");const old=s.age;s.age=s.tech>=400?"Space Age":s.tech>=220?"Industrial Age":s.tech>=100?"Medieval Age":"Stone Age";$("age").textContent=s.age;$("ageName").textContent=s.age;$("evo").textContent=Math.floor(s.tech)+" / "+threshold;$("next").textContent=s.tech>=400?"mastery":threshold+" tech to evolve";$("bar").style.width=Math.min(100,s.tech/threshold*100)+"%";$("citizens").textContent=fmt(Math.max(12,Math.floor(s.population/10)));$("biome").textContent=looks[s.biome][0];$("outfit").textContent=looks[s.biome][1];if(old!==s.age)note("Your civilization entered the "+s.age+".");catalog();save()}function build(key){const b=types[key];if(s.buildings.length>=s.maxLand)return note("Expand your planet before building more.");if(s.money<b.c)return note("You need $"+(b.c-s.money)+" more.");s.money-=b.c;s.population+=b.p;s.happy=Math.max(0,Math.min(100,s.happy+b.h));s.tech+=key==="library"?8:key==="launch"?18:3;const item={type:key,lat:(Math.random()-.5)*1.4,lon:Math.random()*Math.PI*2};s.buildings.push(item);note("$"+b.c+" spent: "+b.n+" completed.");addMesh(item,b);render()}$("expand").onclick=()=>{const c=240+Math.max(0,s.maxLand-6)*140;if(s.money<c)return note("You need $"+(c-s.money)+" more to expand.");s.money-=c;s.maxLand+=4;note("$"+c+" spent: new land rose from the horizon.");render()};$("name").onchange=save;$("new").onclick=()=>{if(confirm("Start a new planet? This clears the current save.")){localStorage.removeItem("ron-planet-state");location.reload()}};
++function pos(lat,lon){return new THREE.Vector3(Math.cos(lat)*Math.cos(lon),Math.sin(lat),Math.cos(lat)*Math.sin(lon)).multiplyScalar(1.57)}function addMesh(item,b){if(!group)return;const p=pos(item.lat,item.lon),g=new THREE.Group(),up=p.clone().normalize();g.position.copy(p);g.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),up);const base=new THREE.Mesh(new THREE.CylinderGeometry(.07,.1,.16,6),new THREE.MeshStandardMaterial({color:b.col}));base.position.y=.07;g.add(base);const roof=new THREE.Mesh(new THREE.ConeGeometry(.12,.14,5),new THREE.MeshStandardMaterial({color:0xffc76e}));roof.position.y=.2;g.add(roof);for(let i=0;i<3;i++){const person=new THREE.Mesh(new THREE.CapsuleGeometry(.018,.06,3,5),new THREE.MeshStandardMaterial({color:[0x5dbb79,0xe5ad68,0xc9edf0,0x9b84c8][i%4]}));person.position.set((i-1)*.065,.08,.11);g.add(person)}group.add(g)}function init(){scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(38,1,.1,100);camera.position.z=4.5;renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.setSize(640,640,false);scene.add(new THREE.AmbientLight(0xa9e1d4,1.5));const sun=new THREE.DirectionalLight(0xffe8bd,3);sun.position.set(-3,2,4);scene.add(sun);group=new THREE.Group();scene.add(group);planet=new THREE.Mesh(new THREE.SphereGeometry(1.55,64,64),new THREE.MeshStandardMaterial({color:0x369789,roughness:.84}));group.add(planet);group.add(new THREE.Mesh(new THREE.SphereGeometry(1.61,64,64),new THREE.MeshBasicMaterial({color:0x7ce4dc,transparent:true,opacity:.12,side:THREE.BackSide})));ray=new THREE.Raycaster();s.buildings.forEach(item=>addMesh(item,types[item.type]));animate()}function animate(){requestAnimationFrame(animate);group.rotation.y+=.0018;renderer.render(scene,camera)}function clickWorld(e){const r=planet.getWorldPosition(new THREE.Vector3());const rect=planetCanvas.getBoundingClientRect(),x=(e.clientX-rect.left)/rect.width*2-1,y=-(e.clientY-rect.top)/rect.height*2+1;ray.setFromCamera({x,y},camera);if(!ray.intersectObject(planet)[0])return;s.money+=8;s.population+=3;s.happy=Math.min(100,s.happy+.2);render();note("+$8 growth bonus")}const planetCanvas=$("planet");planetCanvas.onclick=clickWorld;planetCanvas.onpointerdown=e=>{drag.on=true;drag.x=e.clientX};window.onpointerup=()=>drag.on=false;window.onpointermove=e=>{if(drag.on&&group){group.rotation.y+=(e.clientX-drag.x)*.008;drag.x=e.clientX}};setInterval(()=>{s.money+=1+s.buildings.length*2;s.population+=2+s.buildings.length*2;s.tech+=.08+s.buildings.length*.02;s.year+=.01;render()},1000);render();init();
+</script>
+<script>
+if (!window.THREE) {
+	const fallbackCanvas = document.getElementById("planet");
+	const fallbackContext = fallbackCanvas.getContext("2d");
+	let fallbackAngle = 0;
+	function drawFallbackPlanet() {
+		const width = fallbackCanvas.width = 640;
+		const height = fallbackCanvas.height = 640;
+		const center = width / 2;
+		const radius = 205;
+		fallbackContext.clearRect(0, 0, width, height);
+		const glow = fallbackContext.createRadialGradient(center, center, radius, center, center, radius * 1.35);
+		glow.addColorStop(0, "rgba(105, 232, 204, .22)");
+		glow.addColorStop(1, "rgba(105, 232, 204, 0)");
+		fallbackContext.fillStyle = glow;
+		fallbackContext.beginPath();
+		fallbackContext.arc(center, center, radius * 1.35, 0, Math.PI * 2);
+		fallbackContext.fill();
+		const sphere = fallbackContext.createRadialGradient(center - 72, center - 82, 20, center + 82, center + 80, radius * 1.2);
+		sphere.addColorStop(0, "#9ce9bd");
+		sphere.addColorStop(.3, "#3eae95");
+		sphere.addColorStop(.72, "#176677");
+		sphere.addColorStop(1, "#091c35");
+		fallbackContext.save();
+		fallbackContext.beginPath();
+		fallbackContext.arc(center, center, radius, 0, Math.PI * 2);
+		fallbackContext.clip();
+		fallbackContext.fillStyle = sphere;
+		fallbackContext.fillRect(center - radius, center - radius, radius * 2, radius * 2);
+		fallbackContext.globalAlpha = .58;
+		for (let index = 0; index < 12; index += 1) {
+			const longitude = (index * 1.7 + fallbackAngle) % (Math.PI * 2);
+			const x = center + Math.sin(longitude) * radius * .72;
+			const y = center + Math.cos(index * 2.1) * radius * .42;
+			fallbackContext.fillStyle = ["#75d47c", "#d5c276", "#b2ddcf", "#9d85cf"][index % 4];
+			fallbackContext.beginPath();
+			fallbackContext.ellipse(x, y, radius * (.08 + index % 3 * .025), radius * .05, longitude, 0, Math.PI * 2);
+			fallbackContext.fill();
+		}
+		fallbackContext.globalAlpha = .25;
+		fallbackContext.strokeStyle = "#d8fff0";
+		for (let index = -2; index <= 2; index += 1) {
+			fallbackContext.beginPath();
+			fallbackContext.ellipse(center + index * 32, center, radius * (.2 + Math.abs(index) * .16), radius, 0, 0, Math.PI * 2);
+			fallbackContext.stroke();
+		}
+		const shade = fallbackContext.createLinearGradient(center - radius, center, center + radius, center);
+		shade.addColorStop(0, "rgba(2, 12, 28, .04)");
+		shade.addColorStop(.65, "rgba(0, 0, 0, 0)");
+		shade.addColorStop(1, "rgba(0, 0, 0, .52)");
+		fallbackContext.globalAlpha = 1;
+		fallbackContext.fillStyle = shade;
+		fallbackContext.fillRect(center - radius, center - radius, radius * 2, radius * 2);
+		fallbackContext.restore();
+		fallbackContext.strokeStyle = "rgba(176, 247, 224, .65)";
+		fallbackContext.lineWidth = 3;
+		fallbackContext.beginPath();
+		fallbackContext.arc(center, center, radius, 0, Math.PI * 2);
+		fallbackContext.stroke();
+		fallbackAngle += .012;
+		requestAnimationFrame(drawFallbackPlanet);
+	}
+	drawFallbackPlanet();
+}
+</script>
+<script>
+const offlineTypes = [{ name: "Sun hut", icon: "⌂", cost: 80, pop: 12 }, { name: "Canopy grove", icon: "♣", cost: 120, pop: 8 }, { name: "Ice lodge", icon: "❄", cost: 160, pop: 10 }, { name: "Stone forge", icon: "◆", cost: 250, pop: 25 }, { name: "Sky library", icon: "▤", cost: 420, pop: 45 }, { name: "Launch pad", icon: "✧", cost: 900, pop: 100 }];
+const offlineState = { money: 386, population: 1240, buildings: 0, land: 6 };
+window.$ = window.$ || (id => document.getElementById(id));
+function offlineNote(message) { clearTimeout(window.offlineToastTimer); $("toast").textContent = message; $("toast").classList.add("show"); window.offlineToastTimer = setTimeout(() => $("toast").classList.remove("show"), 1800); }
+function offlineRender() {
+	$("catalog").innerHTML = offlineTypes.map((item, index) => `<button class="building" data-offline="${index}"><em>build</em><span class="icon">${item.icon}</span><b>${item.name}</b><small>$${item.cost}</small></button>`).join("");
+	document.querySelectorAll("[data-offline]").forEach((button) => button.addEventListener("click", () => {
+		const item = offlineTypes[Number(button.dataset.offline)];
+		if (offlineState.buildings >= offlineState.land) return offlineNote("Expand your planet before building more.");
+		if (offlineState.money < item.cost) return offlineNote(`You need $${item.cost - offlineState.money} more.`);
+		offlineState.money -= item.cost;
+		offlineState.population += item.pop;
+		offlineState.buildings += 1;
+		$("money").textContent = offlineState.money.toLocaleString();
+		$("pop").textContent = offlineState.population.toLocaleString();
+		$("used").textContent = offlineState.buildings;
+		offlineNote(`$${item.cost} spent: ${item.name} completed.`);
+	}));
+}
+$("expand").addEventListener("click", () => {
+	const cost = 240 + Math.max(0, offlineState.land - 6) * 140;
+	if (offlineState.money < cost) return offlineNote(`You need $${cost - offlineState.money} more to expand.`);
+	offlineState.money -= cost;
+	offlineState.land += 4;
+	$("money").textContent = offlineState.money.toLocaleString();
+	$("land").textContent = offlineState.land;
+	offlineNote(`$${cost} spent: four new surface plots unlocked.`);
+});
+offlineRender();
+setInterval(() => { offlineState.money += 1 + offlineState.buildings * 2; offlineState.population += 2 + offlineState.buildings * 2; $("money").textContent = offlineState.money.toLocaleString(); $("pop").textContent = offlineState.population.toLocaleString(); }, 1000);
+</script></body></html>

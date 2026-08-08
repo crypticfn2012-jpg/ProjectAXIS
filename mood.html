@@ -1,0 +1,1467 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mood Garden | ron.cool</title>
+
+<style>
+:root{
+    --ink:#27313e;
+    --muted:#788493;
+    --paper:#f4f8f3;
+    --panel:#ffffffd9;
+    --line:#dfe9df;
+    --green:#6eaf86;
+    --deep:#365d52;
+    --shadow:0 18px 55px #3c554116;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    min-height:100%;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    color:var(--ink);
+    font-family:"Avenir Next","Segoe UI",Arial,sans-serif;
+    background:
+        radial-gradient(circle at 4% 12%,#ffe5ce 0,transparent 22rem),
+        radial-gradient(circle at 94% 35%,#d4e9ff 0,transparent 25rem),
+        linear-gradient(160deg,#f8fbf5,#edf6f0);
+}
+
+button,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.back-btn{
+    position:fixed;
+    top:15px;
+    left:15px;
+    background:#00ffcc;
+    color:#000;
+    border:0;
+    padding:8px 14px;
+    border-radius:6px;
+    font-weight:bold;
+    z-index:1000;
+    transition:.2s;
+}
+
+.back-btn:hover{
+    background:#00ddb3;
+    transform:scale(1.05);
+}
+
+/* APP */
+
+.app{
+    width:min(1100px,calc(100% - 32px));
+    margin:auto;
+    padding:70px 0 60px;
+}
+
+/* HERO */
+
+.hero{
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+    gap:20px;
+    margin-bottom:26px;
+}
+
+.kicker{
+    color:#4f9275;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+}
+
+.hero h1{
+    margin:8px 0;
+    font-size:clamp(42px,6vw,70px);
+    line-height:.9;
+    letter-spacing:-.07em;
+}
+
+.hero p{
+    max-width:570px;
+    margin:0;
+    color:var(--muted);
+    font-size:14px;
+    line-height:1.55;
+}
+
+.butterfly{
+    font-size:62px;
+    filter:drop-shadow(0 8px 9px #90bda666);
+    animation:float 3.5s ease-in-out infinite;
+}
+
+/* LAYOUT */
+
+.layout{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:17px;
+}
+
+.panel{
+    border:1px solid #fff;
+    background:var(--panel);
+    border-radius:20px;
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(15px);
+}
+
+/* GARDEN */
+
+.garden-card{
+    min-height:535px;
+    padding:15px;
+    position:relative;
+    overflow:hidden;
+}
+
+.garden{
+    height:100%;
+    min-height:505px;
+    position:relative;
+    overflow:hidden;
+    border-radius:14px;
+    background:
+        linear-gradient(
+            175deg,
+            #d9eff1 0 43%,
+            #b8dfbc 43% 58%,
+            #80ba84 58%
+        );
+    isolation:isolate;
+    transition:background .5s ease;
+}
+
+.garden:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(
+            ellipse at 50% 85%,
+            #4c926d55,
+            transparent 42%
+        ),
+        linear-gradient(
+            120deg,
+            transparent 35%,
+            #fff5 36%,
+            transparent 37%
+        );
+    z-index:-1;
+}
+
+/* WEATHER */
+
+.sun{
+    position:absolute;
+    top:35px;
+    right:45px;
+    width:62px;
+    height:62px;
+    border-radius:50%;
+    background:#ffe2a1;
+    box-shadow:0 0 35px #ffe2a1;
+    animation:sunPulse 4s ease-in-out infinite;
+}
+
+.cloud{
+    position:absolute;
+    top:70px;
+    left:12%;
+    font-size:40px;
+    opacity:.65;
+    animation:cloudMove 18s linear infinite;
+}
+
+.cloud.two{
+    top:130px;
+    left:65%;
+    font-size:30px;
+    animation-duration:24s;
+    animation-direction:reverse;
+}
+
+/* HILLS */
+
+.hill{
+    position:absolute;
+    bottom:38%;
+    width:75%;
+    height:32%;
+    border-radius:50% 50% 0 0;
+    background:#94c995;
+    transform:translateX(-12%);
+    z-index:-1;
+}
+
+.hill.two{
+    right:-30%;
+    bottom:39%;
+    background:#abd7a4;
+    transform:scale(1.1);
+}
+
+/* GROUND */
+
+.ground{
+    position:absolute;
+    inset:auto 0 0;
+    height:42%;
+    background:
+        repeating-radial-gradient(
+            ellipse at 20% 20%,
+            #fff3 0 1px,
+            transparent 2px 26px
+        ),
+        linear-gradient(#80bd83,#5c9d71);
+}
+
+/* LABELS */
+
+.garden-title{
+    position:absolute;
+    top:22px;
+    left:23px;
+    color:#fff;
+    font-size:11px;
+    font-weight:900;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    text-shadow:0 1px 4px #2a635588;
+}
+
+.garden-message{
+    position:absolute;
+    bottom:20px;
+    left:22px;
+    right:22px;
+    color:#fff;
+    font-size:12px;
+    text-shadow:0 1px 4px #2a635588;
+}
+
+/* PLANTS */
+
+.plant{
+    position:absolute;
+    bottom:17%;
+    left:50%;
+    width:125px;
+    height:220px;
+    transform:translateX(-50%);
+    transform-origin:bottom center;
+    animation:sway 4s ease-in-out infinite;
+}
+
+.stem{
+    position:absolute;
+    left:59px;
+    bottom:0;
+    width:10px;
+    height:145px;
+    border-radius:8px;
+    background:#4d9765;
+}
+
+.leaf{
+    position:absolute;
+    width:64px;
+    height:37px;
+    border-radius:100% 0 100% 0;
+    background:var(--plant,#6eaf86);
+    transition:.4s;
+}
+
+.leaf.one{
+    left:5px;
+    bottom:78px;
+}
+
+.leaf.two{
+    right:0;
+    bottom:104px;
+    transform:scaleX(-1) rotate(-32deg);
+}
+
+.leaf.three{
+    left:13px;
+    bottom:125px;
+    transform:scale(.8) rotate(-18deg);
+}
+
+/* FLOWER */
+
+.flower{
+    position:absolute;
+    left:36px;
+    top:13px;
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    background:var(--flower,#f59bb0);
+    box-shadow:
+        0 -17px 0 -2px var(--flower,#f59bb0),
+        0 17px 0 -2px var(--flower,#f59bb0),
+        17px 0 0 -2px var(--flower,#f59bb0),
+        -17px 0 0 -2px var(--flower,#f59bb0);
+    transition:.5s;
+}
+
+.flower:after{
+    content:"";
+    position:absolute;
+    inset:17px;
+    border-radius:50%;
+    background:#ffd87d;
+}
+
+/* EXTRA PLANTS */
+
+.plant.small{
+    left:25%;
+    transform:scale(.55);
+}
+
+.plant.tiny{
+    left:78%;
+    transform:scale(.38);
+}
+
+/* EXTRA PLANTS UNLOCKED */
+
+.extra-plant{
+    position:absolute;
+    bottom:15%;
+    font-size:38px;
+    opacity:0;
+    transform:translateY(20px) scale(.7);
+    transition:.6s;
+}
+
+.extra-plant.visible{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+
+.extra-one{
+    left:12%;
+}
+
+.extra-two{
+    right:12%;
+}
+
+.extra-three{
+    left:42%;
+    bottom:10%;
+}
+
+/* BUTTERFLY */
+
+.butterfly-small{
+    position:absolute;
+    left:27%;
+    top:45%;
+    font-size:24px;
+    animation:fly 6s ease-in-out infinite;
+}
+
+/* FIREFLIES */
+
+.firefly{
+    position:absolute;
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:#fff2a8;
+    box-shadow:0 0 12px #fff2a8;
+    animation:firefly 3s ease-in-out infinite;
+    opacity:.8;
+}
+
+/* CONTROLS */
+
+.controls{
+    display:grid;
+    gap:17px;
+}
+
+.panel-inner{
+    padding:21px;
+}
+
+.section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:start;
+    gap:10px;
+    margin-bottom:17px;
+}
+
+.section-head h2{
+    margin:0;
+    font-size:16px;
+    letter-spacing:-.03em;
+}
+
+.section-head p{
+    margin:4px 0 0;
+    color:var(--muted);
+    font-size:11px;
+}
+
+/* MOODS */
+
+.moods{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+}
+
+.mood{
+    min-height:76px;
+    border:1px solid var(--line);
+    border-radius:11px;
+    color:var(--ink);
+    background:#fff8;
+    padding:9px 4px;
+    font-size:10px;
+    font-weight:800;
+    transition:.2s;
+}
+
+.mood strong{
+    display:block;
+    margin-bottom:6px;
+    font-size:25px;
+}
+
+.mood:hover,
+.mood.active{
+    border-color:var(--mood-color);
+    background:color-mix(
+        in srgb,
+        var(--mood-color) 16%,
+        white
+    );
+    transform:translateY(-2px);
+}
+
+.mood.active{
+    box-shadow:
+        0 0 0 2px
+        color-mix(
+            in srgb,
+            var(--mood-color) 30%,
+            transparent
+        );
+}
+
+/* NOTE */
+
+textarea{
+    width:100%;
+    min-height:84px;
+    resize:vertical;
+    border:1px solid var(--line);
+    border-radius:10px;
+    outline:0;
+    padding:11px;
+    color:var(--ink);
+    background:#fff;
+    font-size:12px;
+}
+
+textarea:focus{
+    border-color:var(--green);
+    box-shadow:0 0 0 3px #6eaf8624;
+}
+
+/* BUTTON */
+
+.plant-button{
+    width:100%;
+    border:0;
+    border-radius:10px;
+    padding:13px;
+    color:#fff;
+    background:var(--deep);
+    font-size:12px;
+    font-weight:900;
+    transition:.2s;
+    margin-top:10px;
+}
+
+.plant-button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 16px #365d5244;
+}
+
+/* STREAK */
+
+.streak{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:var(--muted);
+    font-size:11px;
+}
+
+.streak strong{
+    color:var(--deep);
+    font:700 22px monospace;
+}
+
+/* HISTORY */
+
+.history{
+    max-height:220px;
+    overflow:auto;
+}
+
+.history-item{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:9px 0;
+    border-bottom:1px solid var(--line);
+    font-size:11px;
+}
+
+.history-item:last-child{
+    border:0;
+}
+
+.history-icon{
+    font-size:20px;
+}
+
+.history-item span{
+    display:block;
+    color:var(--muted);
+    font-size:9px;
+    margin-top:3px;
+}
+
+.empty{
+    padding:12px 0;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.5;
+}
+
+/* RESET */
+
+.reset-button{
+    width:100%;
+    margin-top:10px;
+    padding:9px;
+    border:1px solid #eadcdc;
+    border-radius:9px;
+    background:#fff7f7;
+    color:#a36b6b;
+    font-size:10px;
+    font-weight:800;
+}
+
+.reset-button:hover{
+    background:#fff0f0;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    z-index:100;
+    bottom:22px;
+    left:50%;
+    padding:11px 15px;
+    border-radius:8px;
+    color:#fff;
+    background:var(--deep);
+    font-size:11px;
+    font-weight:900;
+    opacity:0;
+    transform:translate(-50%,12px);
+    transition:.2s;
+    pointer-events:none;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translate(-50%,0);
+}
+
+/* ANIMATIONS */
+
+@keyframes sway{
+    50%{
+        transform:translateX(-50%) rotate(2deg);
+    }
+}
+
+@keyframes float{
+    50%{
+        transform:translateY(-9px) rotate(5deg);
+    }
+}
+
+@keyframes sunPulse{
+    50%{
+        box-shadow:0 0 52px #ffe2a1;
+    }
+}
+
+@keyframes fly{
+    50%{
+        transform:translate(80px,-30px) rotate(12deg);
+    }
+}
+
+@keyframes cloudMove{
+    from{
+        transform:translateX(-30px);
+    }
+    to{
+        transform:translateX(100px);
+    }
+}
+
+@keyframes firefly{
+    50%{
+        transform:translate(10px,-15px);
+        opacity:.2;
+    }
+}
+
+/* MOBILE */
+
+@media(max-width:800px){
+
+    .layout{
+        grid-template-columns:1fr;
+    }
+
+    .garden-card{
+        min-height:450px;
+    }
+
+    .garden{
+        min-height:420px;
+    }
+}
+
+@media(max-width:520px){
+
+    .app{
+        width:calc(100% - 22px);
+        padding-top:62px;
+    }
+
+    .hero{
+        align-items:start;
+    }
+
+    .butterfly{
+        font-size:40px;
+    }
+
+    .garden-card{
+        padding:9px;
+    }
+
+    .garden{
+        min-height:390px;
+    }
+
+    .moods{
+        gap:5px;
+    }
+
+    .mood{
+        font-size:9px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<button class="back-btn" onclick="window.location.href='index.html'">
+    ← Back
+</button>
+
+<main class="app">
+
+<header class="hero">
+
+    <div>
+        <div class="kicker">ron.cool / daily side quest</div>
+
+        <h1>Mood garden.</h1>
+
+        <p>
+            Plant a little piece of today.
+            Come back tomorrow and see what your weather has grown.
+        </p>
+    </div>
+
+    <div class="butterfly" aria-hidden="true">
+        🦋
+    </div>
+
+</header>
+
+
+<section class="layout">
+
+<!-- GARDEN -->
+
+<section class="panel garden-card">
+
+<div class="garden" id="garden">
+
+    <div class="sun"></div>
+
+    <div class="cloud">☁️</div>
+    <div class="cloud two">☁️</div>
+
+    <div class="hill"></div>
+    <div class="hill two"></div>
+
+    <div class="ground"></div>
+
+    <div class="garden-title">
+        Today, in your garden
+    </div>
+
+    <div class="butterfly-small">
+        🦋
+    </div>
+
+    <div class="plant" id="mainPlant">
+
+        <div class="stem"></div>
+
+        <div class="leaf one"></div>
+        <div class="leaf two"></div>
+        <div class="leaf three"></div>
+
+        <div class="flower"></div>
+
+    </div>
+
+    <div class="plant small">
+
+        <div class="stem"></div>
+
+        <div class="leaf one"></div>
+        <div class="leaf two"></div>
+
+        <div class="flower"></div>
+
+    </div>
+
+    <div class="plant tiny">
+
+        <div class="stem"></div>
+
+        <div class="leaf one"></div>
+
+        <div class="flower"></div>
+
+    </div>
+
+    <!-- Unlockable garden decorations -->
+
+    <div class="extra-plant extra-one" id="extra1">
+        🌱
+    </div>
+
+    <div class="extra-plant extra-two" id="extra2">
+        🌷
+    </div>
+
+    <div class="extra-plant extra-three" id="extra3">
+        🌻
+    </div>
+
+    <div class="garden-message" id="gardenMessage">
+        Your garden is waiting for today's weather.
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- CONTROLS -->
+
+<aside class="controls">
+
+
+<section class="panel panel-inner">
+
+<div class="section-head">
+
+<div>
+
+<h2>How are you feeling?</h2>
+
+<p>
+There is no wrong weather.
+</p>
+
+</div>
+
+<span class="kicker" id="entryCount">
+0 days
+</span>
+
+</div>
+
+
+<div class="moods">
+
+<button class="mood active"
+data-mood="calm"
+style="--mood-color:#8bd6a8">
+
+<strong>🌿</strong>
+
+Calm
+
+</button>
+
+
+<button class="mood"
+data-mood="bright"
+style="--mood-color:#ffd166">
+
+<strong>☀️</strong>
+
+Bright
+
+</button>
+
+
+<button class="mood"
+data-mood="loved"
+style="--mood-color:#f59bb0">
+
+<strong>🌷</strong>
+
+Loved
+
+</button>
+
+
+<button class="mood"
+data-mood="tired"
+style="--mood-color:#a9b7d6">
+
+<strong>🌙</strong>
+
+Tired
+
+</button>
+
+
+<button class="mood"
+data-mood="stormy"
+style="--mood-color:#9d8bd4">
+
+<strong>🌧️</strong>
+
+Stormy
+
+</button>
+
+
+<button class="mood"
+data-mood="curious"
+style="--mood-color:#83c5ff">
+
+<strong>🔭</strong>
+
+Curious
+
+</button>
+
+</div>
+
+</section>
+
+
+<section class="panel panel-inner">
+
+<div class="section-head">
+
+<div>
+
+<h2>Leave a little note</h2>
+
+<p>
+Optional. Just for future you.
+</p>
+
+</div>
+
+</div>
+
+
+<textarea
+id="note"
+maxlength="180"
+placeholder="Today I noticed..."
+></textarea>
+
+
+<button class="plant-button" id="plantButton">
+🌱 Plant today's feeling
+</button>
+
+</section>
+
+
+<section class="panel panel-inner">
+
+<div class="section-head">
+
+<div>
+
+<h2>Garden history</h2>
+
+<p>
+Every check-in helps it grow.
+</p>
+
+</div>
+
+<div class="streak">
+
+<strong id="streak">
+0
+</strong>
+
+check-ins
+
+</div>
+
+</div>
+
+
+<div class="history" id="history">
+
+<div class="empty">
+No entries yet. Your first seed is waiting.
+</div>
+
+</div>
+
+
+<button
+class="reset-button"
+id="resetButton">
+
+Reset garden
+
+</button>
+
+</section>
+
+</aside>
+
+</section>
+
+</main>
+
+
+<div
+class="toast"
+id="toast"
+role="status"
+aria-live="polite">
+</div>
+
+
+<script>
+
+const moodData = {
+
+    calm:{
+        icon:"🌿",
+        color:"#6eaf86",
+        message:"A soft day has settled over the garden."
+    },
+
+    bright:{
+        icon:"☀️",
+        color:"#f0b94e",
+        message:"The garden is wearing its brightest colours."
+    },
+
+    loved:{
+        icon:"🌷",
+        color:"#f28ea7",
+        message:"Everything seems a little more in bloom today."
+    },
+
+    tired:{
+        icon:"🌙",
+        color:"#8998bb",
+        message:"The garden has made a quiet place to rest."
+    },
+
+    stormy:{
+        icon:"🌧️",
+        color:"#8b75be",
+        message:"Rain is still part of growing."
+    },
+
+    curious:{
+        icon:"🔭",
+        color:"#66aee2",
+        message:"Something new is peeking through the soil."
+    }
+
+};
+
+
+const $ = id => document.getElementById(id);
+
+
+let currentMood = "calm";
+
+let entries = JSON.parse(
+    localStorage.getItem("ron-mood-garden") || "[]"
+);
+
+let toastTimer;
+
+
+/* SAVE */
+
+function save(){
+
+    localStorage.setItem(
+        "ron-mood-garden",
+        JSON.stringify(entries)
+    );
+
+}
+
+
+/* TOAST */
+
+function showToast(message){
+
+    clearTimeout(toastTimer);
+
+    $("toast").textContent = message;
+
+    $("toast").classList.add("show");
+
+    toastTimer = setTimeout(() => {
+
+        $("toast").classList.remove("show");
+
+    },1800);
+
+}
+
+
+/* STREAK */
+
+function calculateStreak(){
+
+    if(!entries.length) return 0;
+
+    const dates = entries
+        .map(entry => entry.isoDate)
+        .filter(Boolean);
+
+    const uniqueDates = [...new Set(dates)].sort().reverse();
+
+    let streak = 0;
+
+    let current = new Date();
+
+    current.setHours(0,0,0,0);
+
+    for(const dateString of uniqueDates){
+
+        const date = new Date(dateString);
+
+        date.setHours(0,0,0,0);
+
+        const difference =
+            Math.round(
+                (current - date) /
+                86400000
+            );
+
+        if(
+            difference === streak ||
+            (streak === 0 && difference === 0)
+        ){
+
+            streak++;
+
+            current = date;
+
+        }else{
+
+            break;
+
+        }
+
+    }
+
+    return streak;
+
+}
+
+
+/* GARDEN GROWTH */
+
+function updateGrowth(){
+
+    const count = entries.length;
+
+    $("extra1").classList.toggle(
+        "visible",
+        count >= 2
+    );
+
+    $("extra2").classList.toggle(
+        "visible",
+        count >= 5
+    );
+
+    $("extra3").classList.toggle(
+        "visible",
+        count >= 10
+    );
+
+}
+
+
+/* FIREFLIES */
+
+function createFireflies(){
+
+    const garden = $("garden");
+
+    for(let i=0;i<12;i++){
+
+        const firefly =
+            document.createElement("div");
+
+        firefly.className = "firefly";
+
+        firefly.style.left =
+            Math.random()*100 + "%";
+
+        firefly.style.top =
+            45 + Math.random()*45 + "%";
+
+        firefly.style.animationDelay =
+            Math.random()*3 + "s";
+
+        garden.appendChild(firefly);
+
+    }
+
+}
+
+
+/* RENDER */
+
+function render(){
+
+    const total = entries.length;
+
+    $("entryCount").textContent =
+        `${total} day${total === 1 ? "" : "s"}`;
+
+    $("streak").textContent =
+        calculateStreak();
+
+
+    const mood =
+        moodData[currentMood];
+
+
+    $("mainPlant").style.setProperty(
+        "--flower",
+        mood.color
+    );
+
+    $("mainPlant").style.setProperty(
+        "--plant",
+        mood.color
+    );
+
+
+    $("gardenMessage").textContent =
+        total
+        ? moodData[entries[0].mood].message
+        : "Your garden is waiting for today's weather.";
+
+
+    $("history").innerHTML =
+        entries.length
+
+        ?
+
+        entries
+        .slice(0,12)
+        .map(entry => {
+
+            const moodInfo =
+                moodData[entry.mood];
+
+            return `
+                <div class="history-item">
+
+                    <div class="history-icon">
+                        ${moodInfo.icon}
+                    </div>
+
+                    <div>
+
+                        <b>
+                            ${
+                                entry.mood
+                                .charAt(0)
+                                .toUpperCase()
+                                +
+                                entry.mood.slice(1)
+                            }
+                            day
+                        </b>
+
+                        <span>
+                            ${
+                                entry.note ||
+                                "A feeling planted without words."
+                            }
+                            ·
+                            ${entry.date}
+                        </span>
+
+                    </div>
+
+                </div>
+            `;
+
+        })
+        .join("")
+
+        :
+
+        `
+            <div class="empty">
+                No entries yet.
+                Your first seed is waiting.
+            </div>
+        `;
+
+
+    updateGrowth();
+
+}
+
+
+/* MOOD BUTTONS */
+
+document
+.querySelectorAll(".mood")
+.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            document
+            .querySelectorAll(".mood")
+            .forEach(item =>
+                item.classList.remove("active")
+            );
+
+
+            button.classList.add("active");
+
+
+            currentMood =
+                button.dataset.mood;
+
+
+            render();
+
+        }
+    );
+
+});
+
+
+/* PLANT */
+
+$("plantButton")
+.addEventListener(
+    "click",
+    () => {
+
+        const today =
+            new Date();
+
+        const isoDate =
+            today
+            .toISOString()
+            .split("T")[0];
+
+
+        /*
+            Prevent multiple entries
+            on the same day.
+        */
+
+        const alreadyToday =
+            entries.some(
+                entry =>
+                    entry.isoDate === isoDate
+            );
+
+
+        if(alreadyToday){
+
+            showToast(
+                "You've already planted today's feeling 🌱"
+            );
+
+            return;
+
+        }
+
+
+        entries.unshift({
+
+            mood:currentMood,
+
+            note:
+                $("note")
+                .value
+                .trim(),
+
+            date:
+                today.toLocaleDateString(
+                    undefined,
+                    {
+                        month:"short",
+                        day:"numeric",
+                        year:"numeric"
+                    }
+                ),
+
+            isoDate:isoDate
+
+        });
+
+
+        entries =
+            entries.slice(0,60);
+
+
+        save();
+
+
+        $("note").value = "";
+
+
+        render();
+
+
+        showToast(
+            "🌱 A new feeling has taken root."
+        );
+
+    }
+);
+
+
+/* RESET */
+
+$("resetButton")
+.addEventListener(
+    "click",
+    () => {
+
+        if(!entries.length){
+
+            showToast(
+                "Your garden is already empty."
+            );
+
+            return;
+
+        }
+
+
+        const confirmed =
+            confirm(
+                "Are you sure you want to reset your garden?"
+            );
+
+
+        if(!confirmed) return;
+
+
+        entries = [];
+
+        save();
+
+        render();
+
+        showToast(
+            "Garden cleared 🌱"
+        );
+
+    }
+);
+
+
+/* START */
+
+createFireflies();
+
+render();
+
+</script>
+
+</body>
+</html>
+
