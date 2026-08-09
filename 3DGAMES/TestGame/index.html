@@ -1,40 +1,658 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>3D Playground | ron.cool</title>
-  <style>
-    * { box-sizing: border-box; }
-    html, body { margin:0; width:100%; height:100%; overflow:hidden; background:#071018; color:#eafff8; font-family:Inter,system-ui,sans-serif; }
-    canvas { display:block; }
-    #hud, #message { position:fixed; z-index:20; pointer-events:none; }
-    #hud { left:18px; bottom:18px; max-width:275px; padding:15px 17px; border:1px solid #42e8bb66; border-radius:13px; background:#06141cbd; box-shadow:0 12px 50px #0008; font-size:12px; line-height:1.65; }
-    #hud h1 { margin:0 0 5px; color:#54ffcc; letter-spacing:.13em; font-size:12px; } #hud strong { color:#fff; }
-    #back { position:fixed; z-index:30; top:16px; left:16px; padding:10px 14px; border:1px solid #54ffcc; border-radius:9px; background:#06241f; color:#baffea; font-weight:800; cursor:pointer; text-decoration:none; }
-    #back:hover { background:#54ffcc; color:#04130f; }
-    #crosshair { position:fixed; left:50%; top:50%; width:14px; height:14px; margin:-7px; z-index:15; pointer-events:none; } #crosshair:before,#crosshair:after { content:""; position:absolute; background:#d8fff4; box-shadow:0 0 5px #00ffbb; } #crosshair:before { width:14px;height:2px;top:6px; } #crosshair:after { height:14px;width:2px;left:6px; }
-    #message { top:18px; left:50%; transform:translateX(-50%); padding:10px 16px; border-radius:9px; background:#071d22e8; border:1px solid #50f4c999; opacity:0; transition:opacity .2s; font-weight:700; }
-    #pause { position:fixed; inset:0; display:none; place-items:center; z-index:25; background:#02070abb; text-align:center; } #pause.visible { display:grid; } #pause h2 { font-size:38px; margin:0; color:#55ffcc; }
-    #startup-error { display:none; position:fixed; inset:20px; z-index:100; overflow:auto; padding:20px; border:1px solid #ff6688; border-radius:12px; background:#240811f2; color:#ffe8ed; font:13px/1.55 ui-monospace,monospace; white-space:pre-wrap; }
-  </style>
-  <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.158.0/build/three.module.js"}}</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>3D Playground | ron.cool</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background: #071018;
+    color: #eafff8;
+
+    font-family: Inter, system-ui, sans-serif;
+}
+
+canvas {
+    display: block;
+}
+
+
+/* =========================================================
+   RON ENGINE LOADING SCREEN
+   ========================================================= */
+
+#loading {
+
+    position: fixed;
+    inset: 0;
+
+    z-index: 100000;
+
+    display: grid;
+    place-items: center;
+
+    background:
+        radial-gradient(
+            circle at 50% 42%,
+            #12354b,
+            #04080d 65%
+        );
+
+    transition:
+        opacity .55s ease,
+        visibility .55s ease;
+
+}
+
+#loading.done {
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+}
+
+.load {
+
+    text-align: center;
+    user-select: none;
+
+}
+
+.load b {
+
+    display: block;
+
+    color: #62ffd1;
+
+    letter-spacing: .22em;
+
+    font-size: 12px;
+
+}
+
+.load h1 {
+
+    margin: 10px 0 20px;
+
+    color: #fff;
+
+    font-size: 34px;
+
+    letter-spacing: .08em;
+
+}
+
+.bar {
+
+    width: 220px;
+    height: 5px;
+
+    margin: auto;
+
+    border-radius: 99px;
+
+    background: #193443;
+
+    overflow: hidden;
+
+}
+
+.bar::after {
+
+    content: "";
+
+    display: block;
+
+    width: 45%;
+    height: 100%;
+
+    background: #65ffd3;
+
+    border-radius: 99px;
+
+    animation:
+        ronEngineLoad 1.1s
+        infinite
+        ease-in-out;
+
+}
+
+@keyframes ronEngineLoad {
+
+    0% {
+        transform: translateX(-120%);
+    }
+
+    50% {
+        transform: translateX(125%);
+    }
+
+    100% {
+        transform: translateX(250%);
+    }
+
+}
+
+
+/* =========================================================
+   HUD
+   ========================================================= */
+
+#hud,
+#message {
+
+    position: fixed;
+
+    z-index: 20;
+
+    pointer-events: none;
+
+}
+
+#hud {
+
+    left: 18px;
+    bottom: 18px;
+
+    max-width: 275px;
+
+    padding: 15px 17px;
+
+    border:
+        1px solid #42e8bb66;
+
+    border-radius: 13px;
+
+    background: #06141cbd;
+
+    box-shadow:
+        0 12px 50px #0008;
+
+    font-size: 12px;
+
+    line-height: 1.65;
+
+}
+
+#hud h1 {
+
+    margin: 0 0 5px;
+
+    color: #54ffcc;
+
+    letter-spacing: .13em;
+
+    font-size: 12px;
+
+}
+
+#hud strong {
+
+    color: #fff;
+
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+#back {
+
+    position: fixed;
+
+    z-index: 30;
+
+    top: 16px;
+    left: 16px;
+
+    padding: 10px 14px;
+
+    border:
+        1px solid #54ffcc;
+
+    border-radius: 9px;
+
+    background: #06241f;
+
+    color: #baffea;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    transition: .2s;
+
+}
+
+#back:hover {
+
+    background: #54ffcc;
+
+    color: #04130f;
+
+    transform: scale(1.04);
+
+}
+
+
+/* =========================================================
+   CROSSHAIR
+   ========================================================= */
+
+#crosshair {
+
+    position: fixed;
+
+    left: 50%;
+    top: 50%;
+
+    width: 14px;
+    height: 14px;
+
+    margin: -7px;
+
+    z-index: 15;
+
+    pointer-events: none;
+
+}
+
+#crosshair::before,
+#crosshair::after {
+
+    content: "";
+
+    position: absolute;
+
+    background: #d8fff4;
+
+    box-shadow:
+        0 0 5px #00ffbb;
+
+}
+
+#crosshair::before {
+
+    width: 14px;
+    height: 2px;
+
+    top: 6px;
+
+}
+
+#crosshair::after {
+
+    height: 14px;
+    width: 2px;
+
+    left: 6px;
+
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+#message {
+
+    top: 18px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    padding: 10px 16px;
+
+    border-radius: 9px;
+
+    background: #071d22e8;
+
+    border:
+        1px solid #50f4c999;
+
+    opacity: 0;
+
+    transition:
+        opacity .2s;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================================
+   PAUSE
+   ========================================================= */
+
+#pause {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    place-items: center;
+
+    z-index: 25;
+
+    background: #02070abb;
+
+    text-align: center;
+
+}
+
+#pause.visible {
+
+    display: grid;
+
+}
+
+#pause h2 {
+
+    font-size: 38px;
+
+    margin: 0;
+
+    color: #55ffcc;
+
+}
+
+
+/* =========================================================
+   STARTUP ERROR
+   ========================================================= */
+
+#startup-error {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 20px;
+
+    z-index: 200000;
+
+    overflow: auto;
+
+    padding: 20px;
+
+    border:
+        1px solid #ff6688;
+
+    border-radius: 12px;
+
+    background: #240811f2;
+
+    color: #ffe8ed;
+
+    font:
+        13px/1.55
+        ui-monospace,
+        monospace;
+
+    white-space: pre-wrap;
+
+}
+
+</style>
+
+
+<!-- =======================================================
+     THREE.JS IMPORT MAP
+     ======================================================= -->
+
+<script type="importmap">
+
+{
+    "imports": {
+        "three":
+            "https://unpkg.com/three@0.158.0/build/three.module.js"
+    }
+}
+
+</script>
+
 </head>
+
+
 <body>
-  <div id="startup-error"></div>
-  <a id="back" href="../../index.html">← BACK</a>
-  <div id="hud"><h1>RON.ENGINE • 3D PLAYGROUND</h1><strong>WASD</strong> Move &nbsp; <strong>SHIFT</strong> Sprint<br><strong>SPACE</strong> Jump &nbsp; <strong>E</strong> Interact<br><strong>R</strong> Reset &nbsp; <strong>ESC</strong> Pause<br><strong>F3</strong> Advanced engine diagnostics</div>
-  <div id="crosshair"></div><div id="message"></div><div id="pause"><div><h2>PAUSED</h2><p>Press Esc to return to the playground.</p></div></div>
-  <script>
-    const startupError = document.querySelector("#startup-error");
-    const showStartupError = event => {
-      const detail = event.reason?.stack || event.reason?.message || event.message || "Unknown startup error";
-      startupError.textContent = "RON.ENGINE PLAYGROUND COULD NOT START\n\n" + detail + "\n\nOpen the browser console (F12) and send this message to Ron.";
-      startupError.style.display = "block";
+
+
+<!-- =======================================================
+     RON ENGINE LOADING SCREEN
+     ======================================================= -->
+
+<div id="loading">
+
+    <div class="load">
+
+        <b>POWERED BY RON ENGINE</b>
+
+        <h1>3D PLAYGROUND</h1>
+
+        <div class="bar"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     STARTUP ERROR
+     ======================================================= -->
+
+<div id="startup-error"></div>
+
+
+<!-- =======================================================
+     BACK BUTTON
+     ======================================================= -->
+
+<a
+    id="back"
+    href="../../index.html"
+>
+    ← BACK
+</a>
+
+
+<!-- =======================================================
+     HUD
+     ======================================================= -->
+
+<div id="hud">
+
+    <h1>
+        RON.ENGINE • 3D PLAYGROUND
+    </h1>
+
+    <strong>WASD</strong>
+    Move &nbsp;
+
+    <strong>SHIFT</strong>
+    Sprint
+
+    <br>
+
+    <strong>SPACE</strong>
+    Jump &nbsp;
+
+    <strong>E</strong>
+    Interact
+
+    <br>
+
+    <strong>R</strong>
+    Reset &nbsp;
+
+    <strong>ESC</strong>
+    Pause
+
+    <br>
+
+    <strong>F3</strong>
+    Advanced engine diagnostics
+
+</div>
+
+
+<!-- =======================================================
+     CROSSHAIR
+     ======================================================= -->
+
+<div id="crosshair"></div>
+
+
+<!-- =======================================================
+     MESSAGE
+     ======================================================= -->
+
+<div id="message"></div>
+
+
+<!-- =======================================================
+     PAUSE
+     ======================================================= -->
+
+<div id="pause">
+
+    <div>
+
+        <h2>PAUSED</h2>
+
+        <p>
+            Press Esc to return to the playground.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =======================================================
+     STARTUP ERROR HANDLING
+     ======================================================= -->
+
+<script>
+
+const startupError =
+    document.querySelector("#startup-error");
+
+
+const loading =
+    document.querySelector("#loading");
+
+
+function showStartupError(event) {
+
+    const detail =
+        event.reason?.stack ||
+        event.reason?.message ||
+        event.message ||
+        "Unknown startup error";
+
+
+    startupError.textContent =
+        "RON.ENGINE PLAYGROUND COULD NOT START\n\n" +
+        detail +
+        "\n\n" +
+        "Open the browser console (F12) " +
+        "and send this message to Ron.";
+
+
+    startupError.style.display =
+        "block";
+
+}
+
+
+window.addEventListener(
+    "error",
+    showStartupError
+);
+
+
+window.addEventListener(
+    "unhandledrejection",
+    showStartupError
+);
+
+
+/*
+    Ron.Engine calls this when
+    its initialisation is complete.
+*/
+
+window.ronEngineReady =
+    function() {
+
+        loading.classList.add("done");
+
     };
-    window.addEventListener("error", showStartupError);
-    window.addEventListener("unhandledrejection", showStartupError);
-  </script>
-  <script type="module" src="./main.js"></script>
+
+
+/*
+    Fallback so an older version of
+    main.js doesn't leave the screen
+    stuck forever.
+*/
+
+window.addEventListener(
+    "load",
+    function() {
+
+        setTimeout(
+            function() {
+
+                if (
+                    !loading.classList.contains("done")
+                ) {
+
+                    loading.classList.add("done");
+
+                }
+
+            },
+            500
+        );
+
+    }
+);
+
+</script>
+
+
+<!-- =======================================================
+     RON ENGINE / GAME
+     ======================================================= -->
+
+<script
+    type="module"
+    src="./main.js"
+></script>
+
+
 </body>
+
 </html>
