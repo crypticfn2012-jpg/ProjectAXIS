@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>3D Shape Playground</title>
+
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        font-family: sans-serif;
+        background: #111;
+    }
+
+    /* BACK BUTTON */
+    .back-btn {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        background: #00ffcc;
+        color: black;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        z-index: 9999;
+        transition: 0.2s;
+    }
+
+    .back-btn:hover {
+        background: #00ddb3;
+        transform: scale(1.05);
+    }
+
+    .back-btn:active {
+        transform: scale(0.95);
+    }
+
+    /* UI */
+    #ui {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 12px;
+        border-radius: 8px;
+        color: white;
+        z-index: 1000;
+    }
+
+    button,
+    input {
+        margin: 4px;
+        padding: 6px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button {
+        background: #222;
+        color: white;
+    }
+
+    button:hover {
+        background: #444;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- BACK BUTTON -->
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+
+<!-- 3D CONTROLS -->
+<div id="ui">
+
+    <div>
+        <b>3D Shape Playground</b>
+    </div>
+
+    <div>
+        <button onclick="setShape('cube')">
+            Cube
+        </button>
+
+        <button onclick="setShape('sphere')">
+            Sphere
+        </button>
+
+        <button onclick="setShape('torus')">
+            Torus
+        </button>
+
+        <button onclick="setShape('cone')">
+            Cone
+        </button>
+    </div>
+
+    <div>
+        Color:
+        <input
+            type="color"
+            id="colorPicker"
+            value="#00ffcc"
+        >
+    </div>
+
+</div>
+
+
+<!-- THREE.JS -->
+<script type="module" src="./main.js"></script>
+
+
+<!-- BACK BUTTON SCRIPT -->
+<script>
+function goBack() {
+    window.location.href = "../../index.html";
+}
+</script>
+
+</body>
+</html>
