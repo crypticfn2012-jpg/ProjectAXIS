@@ -1,436 +1,248 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Press The Button</title>
+<title>Do Not Press The Button</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
+body {
+    margin: 0;
+    font-family: Arial;
+    background: #111;
+    color: white;
+    text-align: center;
+}
 
-    body {
-        margin: 0;
-        min-height: 100vh;
-        background: #080808;
-        color: white;
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+/* BACK BUTTON */
+.back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1000;
+}
+.back-btn:hover {
+    background: #00ddb3;
+}
 
-    .game {
-        text-align: center;
-        width: 90%;
-        max-width: 800px;
-    }
+/* MAIN */
+h1 {
+    margin-top: 80px;
+}
 
-    h1 {
-        font-size: 55px;
-        margin: 0 0 10px;
-    }
+#button {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: none;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    margin-top: 40px;
+    box-shadow: 0 0 30px currentColor;
+    transition: 0.15s;
+}
 
-    p {
-        color: #888;
-    }
+#button:active {
+    transform: scale(0.9);
+}
 
-    #button {
-        width: 250px;
-        height: 250px;
-        border-radius: 50%;
-        border: 12px solid #500000;
-        background: #e00000;
-        color: white;
-        font-size: 30px;
-        font-weight: bold;
-        cursor: pointer;
-        margin: 50px auto;
-        display: block;
-        box-shadow: 0 0 50px rgba(255, 0, 0, .4);
-    }
+#message {
+    margin-top: 40px;
+    font-size: 22px;
+    min-height: 40px;
+}
 
-    #button:hover {
-        background: #ff2222;
-        transform: scale(1.04);
-    }
+#stats {
+    margin-top: 20px;
+}
 
-    #button:active {
-        transform: scale(.94);
-    }
+/* unlock panel */
+#shop {
+    margin-top: 30px;
+}
 
-    .result {
-        background: #111;
-        border: 1px solid #292929;
-        border-radius: 15px;
-        padding: 25px;
-    }
-
-    #message {
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    #stats {
-        margin-top: 20px;
-        color: #aaa;
-    }
+.colorBtn {
+    padding: 6px 10px;
+    margin: 4px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="game">
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
 
-    <h1>PRESS THE BUTTON</h1>
+<h1>DO NOT PRESS</h1>
 
-    <p>Every click causes a random event.</p>
+<button id="button">PRESS</button>
 
-    <button id="button">PRESS</button>
+<div id="message">I wouldn't do that...</div>
 
-    <div class="result">
+<div id="stats">
+Clicks: <span id="clicks">0</span> |
+Money: £<span id="money">0</span>
+</div>
 
-        <div id="message">
-            What will happen?
-        </div>
-
-        <div id="stats">
-            Clicks: <span id="clicks">0</span>
-            &nbsp; | &nbsp;
-            Money: £<span id="money">100</span>
-        </div>
-
-    </div>
-
+<div id="shop">
+<h3>Unlock Colors</h3>
+<div id="colors"></div>
 </div>
 
 <script>
-
 let clicks = 0;
-let money = 100;
+let money = 0;
+let unlockedColors = ["red"];
+let currentColor = "red";
 
-const button = document.getElementById("button");
-const message = document.getElementById("message");
-const clicksText = document.getElementById("clicks");
-const moneyText = document.getElementById("money");
+const btn = document.getElementById("button");
+const msg = document.getElementById("message");
 
-const outcomes = [
+/* ========= LOAD SAVE ========= */
+function load() {
+    const save = JSON.parse(localStorage.getItem("buttonGame"));
+    if(save){
+        clicks = save.clicks;
+        money = save.money;
+        unlockedColors = save.colors;
+        currentColor = save.current;
+    }
+}
+load();
 
-    {
-        text: "You gained £10 💰",
-        action: function() {
-            money += 10;
-        }
-    },
+/* ========= SAVE ========= */
+function save(){
+    localStorage.setItem("buttonGame", JSON.stringify({
+        clicks, money, colors: unlockedColors, current: currentColor
+    }));
+}
 
-    {
-        text: "Nothing happened.",
-        action: function() {}
-    },
+/* ========= SMART EVENTS ========= */
+function getEvent() {
+    if(clicks < 5){
+        return "You’re just getting started...";
+    }
 
-    {
-        text: "You lost £5 💸",
-        action: function() {
-            money -= 5;
-        }
-    },
+    if(clicks > 50 && Math.random() < 0.2){
+        return "You’ve clicked this WAY too much...";
+    }
 
-    {
-        text: "A duck appeared. 🦆",
-        action: function() {}
-    },
+    if(money < 0){
+        return "You're broke 💀";
+    }
 
-    {
-        text: "👁️ You are being watched.",
-        action: function() {}
-    },
+    const pool = [
+        {text:"+£10", val:10},
+        {text:"-£5", val:-5},
+        {text:"+£50 JACKPOT", val:50},
+        {text:"Nothing happened"},
+        {text:"The button is watching you 👁️"},
+        {text:"You feel lucky 🍀"},
+        {text:"You feel cursed 💀", val:-10},
+    ];
 
-    {
-        text: "The button blinked.",
-        action: function() {}
-    },
+    return pool[Math.floor(Math.random()*pool.length)];
+}
 
-    {
-        text: "You found £100!",
-        action: function() {
-            money += 100;
-        }
-    },
-
-    {
-        text: "The button laughed.",
-        action: function() {}
-    },
-
-    {
-        text: "STOP PRESSING.",
-        action: function() {}
-    },
-
-    {
-        text: "You hear knocking...",
-        action: function() {}
-    },
-
-     {
-        text: "Hello......",
-        action: function() {}
-    },
-
-    {
-        text: "You lost £50 💸",
-        action: function() {
-            money -= 50;
-        }
-    },
-
-    {
-        text: "The button is now red.",
-        action: function() {
-            button.style.background = "#ff0000";
-        }
-    },
-
-    {
-        text: "The button is now green.",
-        action: function() {
-            button.style.background = "#00ff00";
-        }
-    },
-
-    {
-        text: "The button is now blue.",
-        action: function() {
-            button.style.background = "#0000ff";
-        }
-    },
-    {
-        text: "The button is now yellow.",
-        action: function() {
-            button.style.background = "#ffff00";
-        }
-    },
-
-    {
-        text: "The button is now purple.",
-        action: function() {
-            button.style.background = "#800080";
-        }
-    },
-
-    {
-        text: "The button is now orange.",
-        action: function() {
-            button.style.background = "#ffa500";
-        }
-    },
-    {
-        text: "The button is now pink.",
-        action: function() {
-            button.style.background = "#ff69b4";
-        }
-    },
-
-    {
-        text: "The button is now cyan.",
-        action: function() {
-            button.style.background = "#00ffff";
-        }
-    },
-
-    {
-        text: "The button is now white.",
-        action: function() {
-            button.style.background = "#ffffff";
-            button.style.color = "#000000";
-        }
-    },
-
-    {
-        text: "The button is now black.",
-        action: function() {
-            button.style.background = "#000000";
-            button.style.color = "#ffffff";
-        }
-    },
-    {
-        text: "The button is now rainbow.",
-        action: function() {
-            button.style.background = "linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet)";
-            button.style.color = "#ffffff";
-        }
-    },
-    {
-        text: "The button is now random colors.",
-        action: function() {
-            const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-            button.style.background = randomColor;
-            button.style.color = "#ffffff";
-        }
-    },
-    {
-        text: "The button is now invisible.",
-        action: function() {
-            button.style.background = "transparent";
-            button.style.border = "none";
-            button.style.color = "transparent";
-        }
-    },
-    {
-        text: "The button is now normal.",
-        action: function() {
-            button.style.background = "#e00000";
-            button.style.border = "12px solid #500000";
-            button.style.color = "#ffffff";
-        }
-    },
-    {
-        text: "The button is now huge.",
-        action: function() {
-            button.style.width = "400px";
-            button.style.height = "400px";
-        }
-    },
-    {
-        text: "The button is now tiny.",
-        action: function() {
-            button.style.width = "100px";
-            button.style.height = "100px";
-        }
-    },
-    {
-        text: "The button is now normal size.",
-        action: function() {
-            button.style.width = "250px";
-            button.style.height = "250px";
-        }
-    },
-    {
-        text: "The button is now shaking.",
-        action: function() {
-            button.style.animation = "shake 0.5s infinite";
-        }
-    },
-    {
-        text: "The button stopped shaking.",
-        action: function() {
-            button.style.animation = "none";
-        }
-    },
-    {
-        text: "The button is now spinning.",
-        action: function() {
-            button.style.animation = "spin 2s linear infinite";
-        }
-    },
-    {
-        text: "The button stopped spinning.",
-        action: function() {
-            button.style.animation = "none";
-        }
-    },
-    { 
-        text: "The button is now glowing.",
-        action: function() {
-            button.style.boxShadow = "0 0 50px rgba(255, 0, 0, .8)";
-        }
-    },
-    {
-        text: "The button stopped glowing.",
-        action: function() {
-            button.style.boxShadow = "0 0 50px rgba(255, 0, 0, .4)";
-        }
-    },
-    {
-        text: "The button is now pulsating.",
-        action: function() {
-            button.style.animation = "pulse 1s infinite";
-        }
-    },
-    {
-        text: "The button stopped pulsating.",
-        action: function() {
-            button.style.animation = "none";
-        }
-    },
-    {
-        text: "The button is now rainbow pulsating.",
-        action: function() {
-            button.style.animation = "rainbowPulse 1s infinite";
-        }
-    },
-    {
-        text: "The button stopped rainbow pulsating.",
-        action: function() {
-            button.style.animation = "none";
-        }
-    },
-    {
-        text: "The button is now rainbow spinning.",
-        action: function() {
-            button.style.animation = "rainbowSpin 2s linear infinite";
-        }
-    },
-    {
-        text: "The button stopped rainbow spinning.",
-        action: function() {
-            button.style.animation = "none";
-        }
-    },
-    {
-        text: "The button is now rainbow shaking.",
-        action: function() {
-            button.style.animation = "rainbowShake 0.5s infinite";
-        }
-    },
-    {
-        text: "The button stopped rainbow shaking.",
-        action: function() {
-            button.style.animation = "none";
-        }
-    },
-    {
-        text: "The button is now rainbow glowing.",
-        action: function() {
-            button.style.boxShadow = "0 0 50px rgba(255, 0, 0, .8), 0 0 50px rgba(255, 127, 0, .8), 0 0 50px rgba(255, 255, 0, .8), 0 0 50px rgba(0, 255, 0, .8), 0 0 50px rgba(0, 0, 255, .8), 0 0 50px rgba(75, 0, 130, .8), 0 0 50px rgba(148, 0, 211, .8)";
-        }
-    },
-    {
-        text: "The button stopped rainbow glowing.",
-        action: function() {
-            button.style.boxShadow = "none";
-        }
-    },
-    {
-        text: "The button is now rainbow.",
-        action: function() {
-            button.style.background = "linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet)";
-            button.style.color = "#ffffff";
-        }
-    },
-];
-
-button.addEventListener("click", function() {
-
+/* ========= CLICK ========= */
+btn.onclick = () => {
     clicks++;
 
-    const outcome =
-        outcomes[Math.floor(Math.random() * outcomes.length)];
+    const event = getEvent();
 
-    outcome.action();
+    if(typeof event === "string"){
+        msg.innerText = event;
+    } else {
+        msg.innerText = event.text;
+        money += event.val || 0;
+    }
 
-    message.textContent = outcome.text;
+    /* dynamic weirdness */
+    if(clicks === 10){
+        msg.innerText = "Why are you still pressing it?";
+    }
+    if(clicks === 25){
+        msg.innerText = "It won’t stop you know...";
+    }
+    if(clicks === 100){
+        msg.innerText = "You need help.";
+    }
 
-    clicksText.textContent = clicks;
+    update();
+    unlockColorsCheck();
+    save();
+};
 
-    moneyText.textContent = Math.floor(money);
+/* ========= COLORS ========= */
+const colorList = [
+    {name:"blue", cost:50},
+    {name:"green", cost:100},
+    {name:"purple", cost:200},
+    {name:"gold", cost:500}
+];
 
-});
+function unlockColorsCheck(){
+    const container = document.getElementById("colors");
+    container.innerHTML = "";
 
+    colorList.forEach(c=>{
+        const b = document.createElement("button");
+        b.className = "colorBtn";
+        b.innerText = c.name + " (£"+c.cost+")";
+
+        if(unlockedColors.includes(c.name)){
+            b.innerText = "Use " + c.name;
+            b.onclick = () => {
+                currentColor = c.name;
+                applyColor();
+                save();
+            };
+        } else {
+            b.onclick = () => {
+                if(money >= c.cost){
+                    money -= c.cost;
+                    unlockedColors.push(c.name);
+                    save();
+                    unlockColorsCheck();
+                } else {
+                    msg.innerText = "Not enough money!";
+                }
+            };
+        }
+
+        container.appendChild(b);
+    });
+}
+
+function applyColor(){
+    btn.style.background = currentColor;
+    btn.style.color = (currentColor === "gold") ? "black" : "white";
+}
+
+function update(){
+    document.getElementById("clicks").innerText = clicks;
+    document.getElementById("money").innerText = money;
+}
+
+/* ========= BACK ========= */
+function goBack(){
+    window.location.href = "../../index.html";
+}
+
+/* init */
+applyColor();
+update();
+unlockColorsCheck();
 </script>
 
 </body>
 </html>
-
