@@ -1,12 +1,20 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>ron.cool / blog</title>
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
 
@@ -16,304 +24,254 @@
 
         body {
             margin: 0;
+            padding: 40px 20px;
             font-family: Arial, Helvetica, sans-serif;
-            background: #0b0b0b;
-            color: #fff;
+            background: #f7f7f7;
+            color: #111;
         }
 
-        a {
-            color: inherit;
-        }
-
-        .page {
-            width: min(1100px, calc(100% - 30px));
+        .container {
+            max-width: 1000px;
             margin: auto;
-            padding: 30px 0 60px;
-        }
-
-        .back {
-            display: inline-block;
-            margin-bottom: 40px;
-            text-decoration: none;
-            opacity: .6;
-        }
-
-        .back:hover {
-            opacity: 1;
         }
 
         .kicker {
-            color: #00ff9d;
             font-size: 13px;
-            font-weight: bold;
+            color: #777;
             margin-bottom: 10px;
         }
 
         h1 {
-            font-size: clamp(45px, 8vw, 80px);
-            margin: 0;
-            letter-spacing: -4px;
-        }
-
-        .subtitle {
-            opacity: .6;
-            font-size: 18px;
-            margin-top: 10px;
-            margin-bottom: 40px;
-        }
-
-        /* =========================
-           ANNOUNCEMENTS
-        ========================= */
-
-        .announcements {
-            margin-bottom: 45px;
-        }
-
-        .announcements-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .announcements-header h2 {
-            margin: 0;
-        }
-
-        .live {
-            font-size: 10px;
-            font-weight: bold;
-            background: #00ff9d;
-            color: #000;
-            padding: 4px 8px;
-            border-radius: 20px;
-        }
-
-        .announcement {
-            padding: 20px;
-            margin-bottom: 12px;
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 14px;
-            background: rgba(255,255,255,.03);
-        }
-
-        .announcement-top {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .announcement-tag {
-            font-size: 11px;
-            font-weight: bold;
-            padding: 5px 9px;
-            border-radius: 6px;
-            background: rgba(0,255,157,.12);
-            color: #00ff9d;
-        }
-
-        .announcement-date {
-            font-size: 12px;
-            opacity: .5;
-        }
-
-        .announcement h3 {
-            margin: 0 0 8px;
-            font-size: 21px;
-        }
-
-        .announcement p {
-            margin: 0;
-            line-height: 1.6;
-            opacity: .75;
-        }
-
-        .loading,
-        .no-announcements {
-            padding: 15px 0;
-            opacity: .5;
-        }
-
-        /* =========================
-           FILTERS
-        ========================= */
-
-        .filters {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 25px;
-        }
-
-        .filter {
-            border: 1px solid rgba(255,255,255,.12);
-            background: transparent;
-            color: white;
-            padding: 8px 13px;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .filter:hover {
-            background: rgba(255,255,255,.08);
-        }
-
-        .filter.active {
-            background: #fff;
-            color: #000;
-        }
-
-        /* =========================
-           POSTS
-        ========================= */
-
-        .posts {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-        }
-
-        .post-card {
-            animation: fadeUp .4s ease both;
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .post-open {
-            width: 100%;
-            text-align: left;
-            padding: 0;
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: 14px;
-            overflow: hidden;
-            background: rgba(255,255,255,.03);
-            color: white;
-            cursor: pointer;
-        }
-
-        .post-open:hover {
-            background: rgba(255,255,255,.06);
-        }
-
-        .post-image {
-            display: block;
-            width: 100%;
-            max-height: 240px;
-            object-fit: cover;
-        }
-
-        .post-content {
-            padding: 20px;
-        }
-
-        .post-meta {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            font-size: 12px;
-            opacity: .55;
-            margin-bottom: 10px;
-        }
-
-        .post-tag {
-            display: inline-block;
-            color: #00ff9d;
-            background: rgba(0,255,157,.1);
-            padding: 4px 8px;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-
-        .post-content h2 {
+            font-size: 52px;
             margin: 0 0 10px;
         }
 
-        .excerpt {
-            opacity: .65;
-            line-height: 1.5;
+        .subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 35px;
         }
-
-        .read {
-            color: #00ff9d;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        /* =========================
-           READER
-        ========================= */
 
         .hidden {
             display: none !important;
         }
 
-        .reader {
-            max-width: 800px;
-            margin: auto;
-        }
+        /* FILTERS */
 
-        .reader-image {
-            width: 100%;
-            max-height: 500px;
-            object-fit: cover;
-            border-radius: 15px;
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
             margin-bottom: 25px;
         }
 
-        .reader-top {
+        .filter {
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 999px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .filter:hover {
+            background: #eee;
+        }
+
+        .filter.active {
+            background: #111;
+            color: white;
+            border-color: #111;
+        }
+
+        /* POSTS */
+
+        .posts {
+            display: grid;
+            gap: 15px;
+        }
+
+        .post-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .post-open {
+            width: 100%;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .post-content {
+            padding: 22px;
+        }
+
+        .post-meta {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
-            margin-bottom: 15px;
+            flex-wrap: wrap;
             font-size: 13px;
-            opacity: .6;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        .post-tag {
+            background: #111;
+            color: white;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 12px;
+        }
+
+        .post-content h2 {
+            margin: 5px 0 10px;
+            font-size: 25px;
+        }
+
+        .excerpt {
+            color: #666;
+            line-height: 1.6;
+            margin: 0 0 12px;
+        }
+
+        .read {
+            font-weight: bold;
+            color: #111;
+        }
+
+        /* ANNOUNCEMENTS */
+
+        .announcement-section {
+            margin-bottom: 35px;
+        }
+
+        .announcement-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .announcement-title h2 {
+            margin: 0;
+        }
+
+        .live {
+            background: #00b86b;
+            color: white;
+            border-radius: 999px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .announcement-card {
+            background: #111;
+            color: white;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 12px;
+        }
+
+        .announcement-card .post-meta {
+            color: #aaa;
+        }
+
+        .announcement-card .post-tag {
+            background: #00c878;
+            color: #111;
+        }
+
+        .announcement-card h3 {
+            margin: 10px 0;
+            font-size: 24px;
+        }
+
+        .announcement-content {
+            white-space: pre-wrap;
+            line-height: 1.7;
+            color: #ddd;
+        }
+
+        .announcement-error {
+            padding: 15px;
+            background: #fff0f0;
+            color: #b00020;
+            border: 1px solid #ffcaca;
+            border-radius: 12px;
+        }
+
+        /* READER */
+
+        .reader {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .back-btn {
+            border: 1px solid #ddd;
+            background: white;
+            padding: 9px 14px;
+            border-radius: 9px;
+            cursor: pointer;
+            margin-bottom: 25px;
+        }
+
+        .back-btn:hover {
+            background: #eee;
         }
 
         .reader h2 {
-            font-size: clamp(35px, 6vw, 60px);
-            margin: 0 0 25px;
-            letter-spacing: -2px;
+            font-size: 40px;
+            margin: 12px 0 25px;
         }
 
         .reader-body {
-            font-size: 17px;
-            line-height: 1.8;
-            opacity: .85;
             white-space: pre-wrap;
-        }
-
-        .reader-back {
-            margin-bottom: 30px;
-            cursor: pointer;
-            border: 0;
-            background: transparent;
-            color: white;
-            opacity: .6;
-            font-size: 15px;
-        }
-
-        .reader-back:hover {
-            opacity: 1;
+            line-height: 1.8;
+            color: #333;
+            font-size: 17px;
         }
 
         .footer {
-            margin-top: 60px;
             text-align: center;
-            opacity: .4;
+            margin-top: 50px;
+            color: #999;
             font-size: 13px;
+        }
+
+        .loading {
+            color: #777;
+            padding: 15px 0;
+        }
+
+        .empty {
+            color: #777;
+            padding: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 25px 15px;
+            }
+
+            h1 {
+                font-size: 40px;
+            }
+
+            .reader h2 {
+                font-size: 30px;
+            }
+
         }
 
     </style>
@@ -323,14 +281,12 @@
 
 <body>
 
-<div class="page">
-
-    <a href="index.html" class="back">
-        ← Back
-    </a>
+<div class="container">
 
 
-    <main id="archive">
+    <!-- HEADER -->
+
+    <div id="archive">
 
         <div class="kicker">
             ron.cool / blog
@@ -341,35 +297,28 @@
         </h1>
 
         <p class="subtitle">
-            Random thoughts, experiments and things I've made.
+            Experiments, updates, ideas and random stuff.
         </p>
 
 
-        <!-- =====================================
-             SUPABASE ANNOUNCEMENTS
-        ====================================== -->
+        <!-- SUPABASE ANNOUNCEMENTS -->
 
-        <section
-            class="announcements"
-            id="announcements"
-        >
+        <section class="announcement-section">
 
-            <div class="announcements-header">
-
-                <span>📢</span>
+            <div class="announcement-title">
 
                 <h2>
-                    Site Announcements
+                    📢 Announcements
                 </h2>
 
-                <span class="live">
+                <div class="live">
                     LIVE
-                </span>
+                </div>
 
             </div>
 
 
-            <div id="announcementList">
+            <div id="announcements">
 
                 <div class="loading">
                     Loading announcements...
@@ -380,53 +329,53 @@
         </section>
 
 
-        <!-- =====================================
-             BLOG FILTERS
-        ====================================== -->
-
-        <div id="filters" class="filters"></div>
-
+        <!-- FILTERS -->
 
         <div
-            id="postCount"
-            style="display:none;"
-        >
-            0
+            class="filters"
+            id="filters">
         </div>
 
 
-        <!-- =====================================
-             BLOG POSTS
-        ====================================== -->
+        <!-- POST COUNT -->
 
-        <section
-            id="posts"
+        <p
+            style="color:#777;font-size:13px;"
+        >
+            <span id="postCount">0</span>
+            posts
+        </p>
+
+
+        <!-- POSTS -->
+
+        <div
             class="posts"
-        ></section>
+            id="posts">
+        </div>
 
-    </main>
+    </div>
 
 
-    <!-- =====================================
-         BLOG READER
-    ====================================== -->
+    <!-- READER -->
 
-    <main
-        id="reader"
+    <div
         class="reader hidden"
+        id="reader"
     >
 
         <button
+            class="back-btn"
             id="backArchive"
-            class="reader-back"
         >
-            ← Back to blog
+            ← Back
         </button>
 
 
-        <div id="readerContent"></div>
+        <div id="readerContent">
+        </div>
 
-    </main>
+    </div>
 
 
     <div class="footer">
@@ -438,9 +387,7 @@
 
 <script>
 
-/* =====================================================
-   SUPABASE
-===================================================== */
+
 
 const SUPABASE_URL =
     "https://rldidvwcylirjyfktvtg.supabase.co";
@@ -449,24 +396,11 @@ const SUPABASE_ANON_KEY =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZGlkdndjeWxpcmp5Zmt0dnRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyMjM0OTAsImV4cCI6MjEwMTc5OTQ5MH0.YO5zeu5uL3siDDPVfsPc9v_VCETHixTWXjzotVOEp0U";
 
 
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHtml(value) {
-
-    return String(value).replace(
-        /[&<>"']/g,
-        character => ({
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#039;"
-        }[character])
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
     );
-
-}
 
 
 /* =====================================================
@@ -487,7 +421,7 @@ const BLOG_POSTS = [
         body:
 `This is where new thoughts, tiny experiments, and curious discoveries will live.
 
-`
+Add your next post by copying the object in BLOG_POSTS above.`
     },
 
 
@@ -505,35 +439,45 @@ const BLOG_POSTS = [
 
 I like making small web experiments, building weird little projects, and sharing the things I learn along the way.
 
-This blog is where I write about what I'm working on, what I'm curious about, and whatever happens to be on my mind. Expect a mix of experiments, ideas, development stuff, random discoveries, and probably a few things that don't fit anywhere else.
+This blog is where I write about what I'm working on, what I'm curious about, and whatever happens to be on my mind.
 
-The design and overall idea of this site are heavily inspired by Neal.fun, which has been a huge inspiration for me. You may notice some similarities in the style, name, and experimental approach.
+Expect a mix of experiments, ideas, development stuff, random discoveries, and probably a few things that don't fit anywhere else.
 
-This isn't meant to be a copy of Neal's work, though. I'm using that inspiration to build something that feels like me and to experiment with my own ideas.
+The design and overall idea of this site are heavily inspired by Neal.fun, which has been a huge inspiration for me.
+
+You may notice some similarities in the style, name, and experimental approach.
+
+This isn't meant to be a copy of Neal's work, though.
+
+I'm using that inspiration to build something that feels like me and to experiment with my own ideas.
 
 Thanks for stopping by. I hope you find something interesting here. :)`
     },
 
 
     {
-        title: "Addresing my ai useage for the sites",
+        title: "Addressing my AI usage for the sites",
 
         date: "August 8, 2026",
 
-        tag: "Addresing my ai useage for the sites",
+        tag: "AI & Development",
 
         image: "",
 
         body:
-`First off i would like to say that i do use ai to help me with the sites, but i do not use it to make the sites for me. I use it to help me with ideas, code, and design.
+`First off I would like to say that I do use AI to help me with the sites, but I do not use it to make the sites for me.
 
-I do not use it to make the sites for me because i want to learn and improve my skills. I want to be able to make the sites myself, and i want to be able to understand how they work.
+I use it to help me with ideas, code, and design.
+
+I do not use it to make the sites for me because I want to learn and improve my skills.
+
+I want to be able to make the sites myself, and I want to be able to understand how they work.
 
 I also want to be able to fix them if something goes wrong.
 
-Now hopefully in the future i will be able to make things with 0% ai, but right now im still learning and improving my skills, so i use ai to help me with that.
+Hopefully in the future I will be able to make things with 0% AI, but right now I'm still learning and improving my skills, so I use AI to help me with that.
 
-I hope this clears up any confusion about my use of ai on the sites.`
+I hope this clears up any confusion about my use of AI on the sites.`
     },
 
 
@@ -547,15 +491,15 @@ I hope this clears up any confusion about my use of ai on the sites.`
         image: "",
 
         body:
-`Just letting everyone reading know: the reason so many apps get added so often is because i have so many unfinished (and finished) projects on my computer that i have made over my time learning HTML, that it is so easy for me to just add them to the site.
+`Just letting everyone reading know: the reason so many apps get added so often is because I have so many unfinished and finished projects on my computer that I have made over my time learning HTML.
 
-I have so many ideas that i want to make, and i want to make them all, so i just add them to the site as i make them.
+It is so easy for me to just add them to the site.
 
-I also want to be able to share my work with others, and i want to be able to get feedback on my work.
+I have so many ideas that I want to make, and I want to make them all.
 
-I also want to be able to learn from others, and i want to be able to improve my skills.
+I also want to be able to share my work with others, get feedback, learn from others, and improve my skills.
 
-So i just add them to the site as i make them.`
+So I just add them to the site as I make them.`
     },
 
 
@@ -571,11 +515,15 @@ So i just add them to the site as i make them.`
         body:
 `I've recently ramped up the security on ron.cool to make it a safer and more trustworthy space for everyone who stops by.
 
-Now, the site is equipped with HTTPS encryption, which means your connection to ron.cool is secure. You should spot that little padlock 🔒 in your browser when you visit.
+Now, the site is equipped with HTTPS encryption, which means your connection to ron.cool is secure.
+
+You should spot that little padlock 🔒 in your browser when you visit.
 
 I've also set up Cloudflare for ron.cool, adding an extra layer of defense against things like malicious traffic, bots, and DDoS attacks, all while helping the site load quickly for you.
 
-I’m still on my journey to learn more about web security, so I don’t want to give the impression that ron.cool is completely bulletproof. Honestly, no website can make that claim.
+I'm still on my journey to learn more about web security, so I don't want to give the impression that ron.cool is completely bulletproof.
+
+Honestly, no website can make that claim.
 
 What I can do is keep learning, stay updated, and utilize the security tools at my disposal to make the site as safe and reliable as possible.
 
@@ -583,16 +531,18 @@ I want ron.cool to be a place where you can explore freely without worrying abou
 
 The projects and games featured on the site are all created by me, and I'm continuously working on improving how everything is hosted and secured.
 
-So, if you’ve been curious whether ron.cool is a legitimate site or just some random GitHub Pages project — yes, it did start that way 😂, but I’m gradually transforming it into something much more substantial.
+So, if you've been curious whether ron.cool is a legitimate site or just some random GitHub Pages project — yes, it did start that way 😂, but I'm gradually transforming it into something much more substantial.
 
-Thanks for stopping by and supporting ron.cool. There’s still so much more I want to create!`
+Thanks for stopping by and supporting ron.cool.
+
+There's still so much more I want to create!`
     }
 
 ];
 
 
 /* =====================================================
-   BLOG ELEMENTS
+   ELEMENTS
 ===================================================== */
 
 const postsElement =
@@ -610,23 +560,70 @@ const readerElement =
 const readerContent =
     document.getElementById("readerContent");
 
+const announcementsElement =
+    document.getElementById("announcements");
+
+
 let activeTag = "All";
 
 
 /* =====================================================
-   BLOG FUNCTIONS
+   ESCAPE HTML
 ===================================================== */
 
-function formatBody(value) {
+function escapeHtml(value) {
 
-    return escapeHtml(value)
-        .replace(
-            /\n/g,
-            "<br>"
-        );
+    return String(value).replace(
+        /[&<>"']/g,
+
+        character => {
+
+            const entities = {
+
+                "&": "&amp;",
+
+                "<": "&lt;",
+
+                ">": "&gt;",
+
+                '"': "&quot;",
+
+                "'": "&#039;"
+
+            };
+
+            return entities[character];
+
+        }
+    );
 
 }
 
+
+/* =====================================================
+   IMAGE
+===================================================== */
+
+function imageMarkup(post, className) {
+
+    if (!post.image) {
+        return "";
+    }
+
+    return `
+        <img
+            class="${className}"
+            src="${escapeHtml(post.image)}"
+            alt=""
+        >
+    `;
+
+}
+
+
+/* =====================================================
+   TAGS
+===================================================== */
 
 function tags() {
 
@@ -642,60 +639,44 @@ function tags() {
 }
 
 
+/* =====================================================
+   FILTER
+===================================================== */
+
 function filteredPosts() {
 
     return BLOG_POSTS.filter(
+
         post =>
             activeTag === "All" ||
             post.tag === activeTag
+
     );
 
 }
 
 
-function imageMarkup(
-    post,
-    className
-) {
-
-    return post.image
-
-        ? `
-            <img
-                class="${className}"
-                src="${escapeHtml(post.image)}"
-                alt=""
-            >
-          `
-
-        : "";
-
-}
-
-
 /* =====================================================
-   FILTERS
+   RENDER FILTERS
 ===================================================== */
 
 function renderFilters() {
 
     filtersElement.innerHTML =
-        tags()
-            .map(
-                tag => `
-                    <button
-                        class="filter ${
-                            tag === activeTag
-                                ? "active"
-                                : ""
-                        }"
-                        data-tag="${escapeHtml(tag)}"
-                    >
-                        ${escapeHtml(tag)}
-                    </button>
-                `
-            )
-            .join("");
+        tags().map(tag => `
+
+            <button
+                class="filter ${
+                    tag === activeTag
+                        ? "active"
+                        : ""
+                }"
+                data-tag="${escapeHtml(tag)}"
+            >
+                ${escapeHtml(tag)}
+            </button>
+
+        `).join("");
 
 
     document
@@ -722,7 +703,7 @@ function renderFilters() {
 
 
 /* =====================================================
-   POSTS
+   RENDER POSTS
 ===================================================== */
 
 function renderPosts() {
@@ -731,106 +712,105 @@ function renderPosts() {
         filteredPosts();
 
 
-    document
-        .getElementById("postCount")
-        .textContent =
+    document.getElementById(
+        "postCount"
+    ).textContent =
         BLOG_POSTS.length;
 
 
+    if (!posts.length) {
+
+        postsElement.innerHTML =
+            `<div class="empty">
+                No posts in this corner yet.
+            </div>`;
+
+        return;
+
+    }
+
+
     postsElement.innerHTML =
-        posts.length
+        posts.map((post, index) => {
 
-            ? posts
-                .map(
-                    (post, index) => `
-
-                        <article
-                            class="post-card"
-                            style="
-                                animation-delay:
-                                ${Math.min(
-                                    index * 45,
-                                    220
-                                )}ms
-                            "
-                        >
-
-                            <button
-                                class="post-open"
-                                data-post="${
-                                    BLOG_POSTS.indexOf(post)
-                                }"
-                            >
-
-                                ${imageMarkup(
-                                    post,
-                                    "post-image"
-                                )}
-
-                                <div
-                                    class="post-content"
-                                >
-
-                                    <div
-                                        class="post-meta"
-                                    >
-
-                                        <span
-                                            class="post-tag"
-                                        >
-                                            ${escapeHtml(
-                                                post.tag
-                                            )}
-                                        </span>
-
-                                        <span>
-                                            ${escapeHtml(
-                                                post.date
-                                            )}
-                                        </span>
-
-                                    </div>
+            const originalIndex =
+                BLOG_POSTS.indexOf(post);
 
 
-                                    <h2>
-                                        ${escapeHtml(
-                                            post.title
-                                        )}
-                                    </h2>
+            const firstLine =
+                post.body
+                    .split("\n")
+                    .find(line => line.trim())
+                    || "";
 
 
-                                    <p
-                                        class="excerpt"
-                                    >
-                                        ${escapeHtml(
-                                            post.body
-                                                .split("\n")[0]
-                                                .slice(0,150)
-                                        )}
-                                        ${
-                                            post.body.length > 150
-                                                ? "..."
-                                                : ""
-                                        }
-                                    </p>
+            const excerpt =
+                firstLine
+                    .replace(/^#+\s*/, "")
+                    .slice(0, 150);
 
 
-                                    <span
-                                        class="read"
-                                    >
-                                        Read post →
-                                    </span>
+            return `
 
-                                </div>
+                <article class="post-card">
 
-                            </button>
+                    <button
+                        class="post-open"
+                        data-post="${originalIndex}"
+                        aria-label="Read ${escapeHtml(post.title)}"
+                    >
 
-                        </article>
-                    `
-                )
-                .join("")
+                        ${imageMarkup(
+                            post,
+                            "post-image"
+                        )}
 
-            : "No posts in this corner yet.";
+                        <div class="post-content">
+
+                            <div class="post-meta">
+
+                                <span class="post-tag">
+                                    ${escapeHtml(post.tag)}
+                                </span>
+
+                                <span>
+                                    ${escapeHtml(post.date)}
+                                </span>
+
+                            </div>
+
+
+                            <h2>
+                                ${escapeHtml(post.title)}
+                            </h2>
+
+
+                            <p class="excerpt">
+
+                                ${escapeHtml(excerpt)}
+
+                                ${
+                                    post.body.length > 150
+                                        ? "..."
+                                        : ""
+                                }
+
+                            </p>
+
+
+                            <span class="read">
+                                Read post →
+                            </span>
+
+                        </div>
+
+                    </button>
+
+                </article>
+
+            `;
+
+        }).join("");
 
 
     document
@@ -864,7 +844,10 @@ function openPost(index) {
     const post =
         BLOG_POSTS[index];
 
-    if (!post) return;
+
+    if (!post) {
+        return;
+    }
 
 
     archiveElement
@@ -883,6 +866,7 @@ function openPost(index) {
             post,
             "reader-image"
         )}
+
 
         <div class="reader-top">
 
@@ -903,17 +887,14 @@ function openPost(index) {
 
 
         <div class="reader-body">
-
-            ${formatBody(post.body)}
-
+            ${escapeHtml(post.body)}
         </div>
+
     `;
 
 
     history.pushState(
-        {
-            post: index
-        },
+        { post: index },
         "",
         `?post=${index}`
     );
@@ -958,101 +939,66 @@ function closePost() {
 }
 
 
-document
-    .getElementById("backArchive")
-    .addEventListener(
-        "click",
-        closePost
-    );
-
-
-window.addEventListener(
-    "popstate",
-    closePost
-);
-
-
 /* =====================================================
-   SUPABASE ANNOUNCEMENTS
+   ANNOUNCEMENTS
 ===================================================== */
 
 async function loadAnnouncements() {
 
-    const list =
-        document.getElementById(
-            "announcementList"
-        );
-
-
-    if (!list) return;
+    announcementsElement.innerHTML =
+        `<div class="loading">
+            Loading announcements...
+        </div>`;
 
 
     try {
 
-        const response =
-            await fetch(
+        const {
+            data,
+            error
+        } = await supabaseClient
 
-                `${SUPABASE_URL}/rest/v1/site_announcements` +
+            .from("site_announcements")
 
-                `?select=id,title,content,tag,created_at` +
+            .select(
+                "id,title,content,date,published,tag"
+            )
 
-                `&published=eq.true` +
+            .eq(
+                "published",
+                true
+            )
 
-                `&order=created_at.desc`,
-
+            .order(
+                "date",
                 {
-
-                    method: "GET",
-
-                    headers: {
-
-                        "apikey":
-                            SUPABASE_ANON_KEY,
-
-                        "Authorization":
-                            `Bearer ${SUPABASE_ANON_KEY}`,
-
-                        "Content-Type":
-                            "application/json"
-
-                    }
-
+                    ascending: false
                 }
-
             );
 
 
-        if (!response.ok) {
-
-            const error =
-                await response.text();
+        if (error) {
 
             console.error(
-                "Supabase error:",
+                "Supabase announcement error:",
                 error
             );
 
-            throw new Error(
-                "Failed to load announcements"
-            );
+            announcementsElement.innerHTML = `
 
-        }
+                <div class="announcement-error">
 
+                    Unable to load announcements.
 
-        const announcements =
-            await response.json();
+                    <br><br>
 
+                    <small>
+                        ${escapeHtml(
+                            error.message ||
+                            "Unknown Supabase error"
+                        )}
+                    </small>
 
-        if (
-            announcements.length === 0
-        ) {
-
-            list.innerHTML = `
-
-                <div
-                    class="no-announcements"
-                >
-                    No announcements right now.
                 </div>
 
             `;
@@ -1062,78 +1008,89 @@ async function loadAnnouncements() {
         }
 
 
-        list.innerHTML =
-            announcements
-                .map(
-                    announcement => {
+        if (
+            !data ||
+            data.length === 0
+        ) {
 
-                        const date =
-                            new Date(
-                                announcement.created_at
-                            )
-                            .toLocaleDateString(
-                                "en-GB",
-                                {
-                                    day: "numeric",
-                                    month: "long",
-                                    year: "numeric"
-                                }
-                            );
+            announcementsElement.innerHTML =
+                `<div class="empty">
+                    No announcements yet.
+                </div>`;
+
+            return;
+
+        }
 
 
-                        return `
+        announcementsElement.innerHTML =
+            data.map(post => {
 
-                            <article
-                                class="announcement"
-                            >
-
-                                <div
-                                    class="announcement-top"
-                                >
-
-                                    <span
-                                        class="announcement-tag"
-                                    >
-                                        ${escapeHtml(
-                                            announcement.tag ||
-                                            "Update"
-                                        )}
-                                    </span>
-
-                                    <span
-                                        class="announcement-date"
-                                    >
-                                        ${escapeHtml(
-                                            date
-                                        )}
-                                    </span>
-
-                                </div>
+                let formattedDate =
+                    post.date;
 
 
-                                <h3>
-                                    ${escapeHtml(
-                                        announcement.title
-                                    )}
-                                </h3>
+                try {
+
+                    formattedDate =
+                        new Date(
+                            post.date
+                        ).toLocaleDateString(
+                            "en-GB",
+                            {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric"
+                            }
+                        );
+
+                } catch (_) {}
 
 
-                                <p>
-                                    ${escapeHtml(
-                                        announcement.content
-                                    ).replace(
-                                        /\n/g,
-                                        "<br>"
-                                    )}
-                                </p>
+                return `
 
-                            </article>
+                    <article
+                        class="announcement-card"
+                    >
 
-                        `;
+                        <div class="post-meta">
 
-                    }
-                )
-                .join("");
+                            <span class="post-tag">
+                                ${escapeHtml(
+                                    post.tag ||
+                                    "Update"
+                                )}
+                            </span>
+
+                            <span>
+                                ${escapeHtml(
+                                    formattedDate
+                                )}
+                            </span>
+
+                        </div>
+
+
+                        <h3>
+                            ${escapeHtml(
+                                post.title
+                            )}
+                        </h3>
+
+
+                        <div
+                            class="announcement-content"
+                        >
+                            ${escapeHtml(
+                                post.content
+                            )}
+                        </div>
+
+                    </article>
+
+                `;
+
+            }).join("");
 
 
     } catch (error) {
@@ -1144,12 +1101,21 @@ async function loadAnnouncements() {
         );
 
 
-        list.innerHTML = `
+        announcementsElement.innerHTML = `
 
-            <div
-                class="no-announcements"
-            >
-                Unable to load announcements.
+            <div class="announcement-error">
+
+                Unable to connect to Supabase.
+
+                <br><br>
+
+                <small>
+                    ${escapeHtml(
+                        error.message ||
+                        String(error)
+                    )}
+                </small>
+
             </div>
 
         `;
@@ -1160,7 +1126,56 @@ async function loadAnnouncements() {
 
 
 /* =====================================================
-   START BLOG
+   BUTTONS
+===================================================== */
+
+document
+    .getElementById("backArchive")
+    .addEventListener(
+        "click",
+        closePost
+    );
+
+
+window.addEventListener(
+    "popstate",
+    () => {
+
+        const params =
+            new URLSearchParams(
+                location.search
+            );
+
+
+        const index =
+            params.get("post");
+
+
+        if (index !== null) {
+
+            openPost(
+                Number(index)
+            );
+
+        } else {
+
+            readerElement
+                .classList
+                .add("hidden");
+
+
+            archiveElement
+                .classList
+                .remove("hidden");
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   START
 ===================================================== */
 
 renderFilters();
@@ -1168,16 +1183,6 @@ renderFilters();
 renderPosts();
 
 loadAnnouncements();
-
-
-/* =====================================================
-   AUTO REFRESH ANNOUNCEMENTS
-===================================================== */
-
-setInterval(
-    loadAnnouncements,
-    30000
-);
 
 
 /* =====================================================
@@ -1190,9 +1195,7 @@ const sharedIndex =
     ).get("post");
 
 
-if (
-    sharedIndex !== null
-) {
+if (sharedIndex !== null) {
 
     openPost(
         Number(sharedIndex)
@@ -1204,3 +1207,4 @@ if (
 
 </body>
 </html>
+
