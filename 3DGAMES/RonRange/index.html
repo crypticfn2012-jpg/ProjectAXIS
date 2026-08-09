@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ron Range | ron.cool</title>
+  <style>
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#04080d;color:#edfaff;font-family:Inter,system-ui,sans-serif}canvas{display:block}
+    #loading{position:fixed;inset:0;z-index:100;display:grid;place-items:center;background:radial-gradient(circle at 50% 42%,#12354b,#04080d 65%);transition:opacity .55s}#loading.done{opacity:0;pointer-events:none}.load{text-align:center}.load b{display:block;color:#62ffd1;letter-spacing:.22em;font-size:12px}.load h1{margin:10px 0 20px;font-size:34px;letter-spacing:.08em}.bar{width:220px;height:5px;border-radius:99px;background:#193443;overflow:hidden}.bar:after{content:"";display:block;width:45%;height:100%;background:#65ffd3;animation:load 1.1s infinite ease-in-out}@keyframes load{50%{transform:translateX(125%)}}
+    #hud{position:fixed;inset:0;z-index:10;pointer-events:none}#top{position:absolute;top:17px;left:50%;transform:translateX(-50%);text-align:center;text-shadow:0 2px 5px #000}#score{font-weight:900;font-size:28px;letter-spacing:.09em}#combo{font-size:12px;color:#66ffd4;letter-spacing:.13em}.panel{position:absolute;left:17px;bottom:17px;padding:12px 15px;border:1px solid #4dffd066;border-radius:10px;background:#07151bbb;font-size:12px;line-height:1.65}.panel strong{color:#65ffd3}.right{left:auto;right:17px;text-align:right}.right b{font-size:25px;color:#fff}.hint{position:absolute;bottom:145px;width:100%;text-align:center;font-size:13px;color:#dbfff6;text-shadow:0 2px 4px #000;opacity:.9}.cross{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px}.cross:before,.cross:after{content:"";position:absolute;background:#f1ffff;box-shadow:0 0 6px #54ffcc}.cross:before{width:18px;height:2px;top:8px}.cross:after{height:18px;width:2px;left:8px}.cross.fire{transform:scale(1.65);opacity:.5}
+    #back{position:fixed;z-index:20;top:15px;left:15px;padding:9px 13px;border:1px solid #61ffd2;border-radius:8px;color:#c4ffed;background:#082820;text-decoration:none;font-size:12px;font-weight:800}#back:hover{background:#61ffd2;color:#03100c}#pause{position:fixed;inset:0;z-index:30;display:none;place-items:center;background:#020609bd;text-align:center}#pause.show{display:grid}#pause h2{font-size:42px;color:#65ffd3;margin:0}.error{position:fixed;inset:20px;display:none;z-index:120;padding:20px;border:1px solid #ff6688;background:#260812;color:#fff;white-space:pre-wrap;font:13px/1.5 monospace}
+  </style>
+  <script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.158.0/build/three.module.js"}}</script>
+</head>
+<body>
+  <div id="loading"><div class="load"><b>POWERED BY RON ENGINE</b><h1>RON RANGE</h1><div class="bar"></div></div></div><div class="error" id="error"></div>
+  <a id="back" href="../../index.html">← BACK</a><div id="hud"><div id="top"><div id="score">000000</div><div id="combo">RANGE ONLINE</div></div><div class="panel"><strong>RON RANGE</strong><br>WASD move · SHIFT sprint · SPACE jump<br>CLICK fire · R reload · ESC pause · F3 debug</div><div class="panel right">AMMO<br><b id="ammo">12 / 12</b></div><div class="hint" id="hint">Click to enter the range</div><div class="cross" id="cross"></div></div><div id="pause"><div><h2>PAUSED</h2><p>Press Esc to continue.</p></div></div>
+  <script>const e=document.querySelector('#error');const fail=x=>{e.textContent='RON RANGE FAILED TO START\n\n'+(x.reason?.stack||x.reason?.message||x.message||'Unknown error');e.style.display='block'};addEventListener('error',fail);addEventListener('unhandledrejection',fail)</script>
+  <script type="module" src="./main.js"></script>
+</body></html>
