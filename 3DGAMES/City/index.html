@@ -1,127 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>3D Shape Playground</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-    body {
-        margin: 0;
-        overflow: hidden;
-        font-family: sans-serif;
-        background: #111;
-    }
+    <title>3D Shape Playground | ron.cool</title>
 
-    /* BACK BUTTON */
-    .back-btn {
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        background: #00ffcc;
-        color: black;
-        border: none;
-        padding: 8px 14px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-        z-index: 9999;
-        transition: 0.2s;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    .back-btn:hover {
-        background: #00ddb3;
-        transform: scale(1.05);
-    }
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
 
-    .back-btn:active {
-        transform: scale(0.95);
-    }
+            font-family: Arial, sans-serif;
+            background: #111;
+        }
 
-    /* UI */
-    #ui {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
-        background: rgba(0, 0, 0, 0.7);
-        padding: 12px;
-        border-radius: 8px;
-        color: white;
-        z-index: 1000;
-    }
+        canvas {
+            display: block;
+        }
 
-    button,
-    input {
-        margin: 4px;
-        padding: 6px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
+        /* BACK BUTTON */
 
-    button {
-        background: #222;
-        color: white;
-    }
+        .back-btn {
+            position: fixed;
 
-    button:hover {
-        background: #444;
-    }
-</style>
+            top: 15px;
+            left: 15px;
+
+            background: #00ffcc;
+            color: black;
+
+            border: none;
+
+            padding: 8px 14px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+            z-index: 9999;
+
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #00ddb3;
+            transform: scale(1.05);
+        }
+
+        .back-btn:active {
+            transform: scale(0.95);
+        }
+
+
+        /* CONTROL PANEL */
+
+        #ui {
+            position: fixed;
+
+            left: 10px;
+            bottom: 10px;
+
+            background: rgba(0, 0, 0, 0.75);
+
+            padding: 14px;
+
+            border-radius: 10px;
+
+            color: white;
+
+            z-index: 9999;
+
+            backdrop-filter: blur(6px);
+
+            box-shadow:
+                0 5px 30px rgba(0, 0, 0, 0.4);
+        }
+
+
+        #ui-title {
+            font-size: 16px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+
+        #shape-buttons {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 5px;
+        }
+
+
+        #shape-buttons button {
+            background: #222;
+
+            color: white;
+
+            border: 1px solid #444;
+
+            padding: 7px 10px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            transition: 0.15s;
+        }
+
+
+        #shape-buttons button:hover {
+            background: #00ffcc;
+
+            color: black;
+        }
+
+
+        #color-row {
+            margin-top: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+
+        #colorPicker {
+            width: 45px;
+
+            height: 30px;
+
+            padding: 0;
+
+            border: none;
+
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 
 <body>
 
-<!-- BACK BUTTON -->
-<button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+    <!-- BACK BUTTON -->
+
+    <button
+        class="back-btn"
+        id="backButton"
+        type="button"
+    >
+        ⬅ Back
+    </button>
 
 
-<!-- 3D CONTROLS -->
-<div id="ui">
+    <!-- CONTROL PANEL -->
 
-    <div>
-        <b>3D Shape Playground</b>
+    <div id="ui">
+
+        <div id="ui-title">
+            3D Shape Playground
+        </div>
+
+
+        <div id="shape-buttons">
+
+            <button
+                type="button"
+                onclick="setShape('cube')"
+            >
+                Cube
+            </button>
+
+
+            <button
+                type="button"
+                onclick="setShape('sphere')"
+            >
+                Sphere
+            </button>
+
+
+            <button
+                type="button"
+                onclick="setShape('torus')"
+            >
+                Torus
+            </button>
+
+
+            <button
+                type="button"
+                onclick="setShape('cone')"
+            >
+                Cone
+            </button>
+
+        </div>
+
+
+        <div id="color-row">
+
+            <span>Color:</span>
+
+            <input
+                type="color"
+                id="colorPicker"
+                value="#00ffcc"
+            >
+
+        </div>
+
     </div>
 
-    <div>
-        <button onclick="setShape('cube')">
-            Cube
-        </button>
 
-        <button onclick="setShape('sphere')">
-            Sphere
-        </button>
+    <!-- MAIN THREE.JS FILE -->
 
-        <button onclick="setShape('torus')">
-            Torus
-        </button>
-
-        <button onclick="setShape('cone')">
-            Cone
-        </button>
-    </div>
-
-    <div>
-        Color:
-        <input
-            type="color"
-            id="colorPicker"
-            value="#00ffcc"
-        >
-    </div>
-
-</div>
+    <script
+        type="module"
+        src="./main.js"
+    ></script>
 
 
-<!-- THREE.JS -->
-<script type="module" src="./main.js"></script>
+    <!-- BACK BUTTON -->
 
+    <script>
+        document
+            .getElementById("backButton")
+            .addEventListener("click", function () {
 
-<!-- BACK BUTTON SCRIPT -->
-<script>
-function goBack() {
-    window.location.href = "../../index.html";
-}
-</script>
+                window.location.href = "../../index.html";
+
+            });
+    </script>
+
 
 </body>
 </html>
