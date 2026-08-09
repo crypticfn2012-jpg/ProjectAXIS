@@ -1,254 +1,571 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>3D Shape Playground | ron.cool</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<title>3D Shape Playground | ron.cool</title>
 
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+<style>
 
-            font-family: Arial, sans-serif;
-            background: #111;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        canvas {
-            display: block;
-        }
+html,
+body {
+    margin: 0;
+    padding: 0;
 
-        /* BACK BUTTON */
+    width: 100%;
+    height: 100%;
 
-        .back-btn {
-            position: fixed;
+    overflow: hidden;
 
-            top: 15px;
-            left: 15px;
+    font-family: Arial, sans-serif;
 
-            background: #00ffcc;
-            color: black;
+    background: #111;
+}
 
-            border: none;
-
-            padding: 8px 14px;
-
-            border-radius: 6px;
-
-            cursor: pointer;
-
-            font-weight: bold;
-
-            z-index: 9999;
-
-            transition: 0.2s;
-        }
-
-        .back-btn:hover {
-            background: #00ddb3;
-            transform: scale(1.05);
-        }
-
-        .back-btn:active {
-            transform: scale(0.95);
-        }
+canvas {
+    display: block;
+}
 
 
-        /* CONTROL PANEL */
+/* =========================================================
+   RON ENGINE LOADING SCREEN
+   ========================================================= */
 
-        #ui {
-            position: fixed;
+#loading {
+    position: fixed;
 
-            left: 10px;
-            bottom: 10px;
+    inset: 0;
 
-            background: rgba(0, 0, 0, 0.75);
+    z-index: 100000;
 
-            padding: 14px;
+    display: grid;
 
-            border-radius: 10px;
+    place-items: center;
 
-            color: white;
+    background:
+        radial-gradient(
+            circle at 50% 42%,
+            #12354b,
+            #04080d 65%
+        );
 
-            z-index: 9999;
+    transition:
+        opacity 0.55s ease,
+        visibility 0.55s ease;
+}
 
-            backdrop-filter: blur(6px);
+#loading.done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
 
-            box-shadow:
-                0 5px 30px rgba(0, 0, 0, 0.4);
-        }
+.load {
+    text-align: center;
+    user-select: none;
+}
+
+.load b {
+    display: block;
+
+    color: #62ffd1;
+
+    letter-spacing: 0.22em;
+
+    font-size: 12px;
+}
+
+.load h1 {
+    margin: 10px 0 20px;
+
+    font-size: 34px;
+
+    letter-spacing: 0.08em;
+
+    color: white;
+}
+
+.bar {
+    width: 220px;
+    height: 5px;
+
+    margin: auto;
+
+    border-radius: 99px;
+
+    background: #193443;
+
+    overflow: hidden;
+}
+
+.bar::after {
+    content: "";
+
+    display: block;
+
+    width: 45%;
+    height: 100%;
+
+    background: #65ffd3;
+
+    border-radius: 99px;
+
+    animation:
+        ronEngineLoad 1.1s infinite ease-in-out;
+}
+
+@keyframes ronEngineLoad {
+
+    0% {
+        transform: translateX(-120%);
+    }
+
+    50% {
+        transform: translateX(125%);
+    }
+
+    100% {
+        transform: translateX(250%);
+    }
+
+}
 
 
-        #ui-title {
-            font-size: 16px;
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
 
-            font-weight: bold;
+.back-btn {
 
-            margin-bottom: 8px;
-        }
+    position: fixed;
 
+    top: 15px;
+    left: 15px;
 
-        #shape-buttons {
-            display: flex;
+    background: #00ffcc;
 
-            flex-wrap: wrap;
+    color: black;
 
-            gap: 5px;
-        }
+    border: none;
 
+    padding: 8px 14px;
 
-        #shape-buttons button {
-            background: #222;
+    border-radius: 6px;
 
-            color: white;
+    cursor: pointer;
 
-            border: 1px solid #444;
+    font-weight: bold;
 
-            padding: 7px 10px;
+    z-index: 9999;
 
-            border-radius: 6px;
+    transition: 0.2s;
 
-            cursor: pointer;
+}
 
-            transition: 0.15s;
-        }
+.back-btn:hover {
 
+    background: #00ddb3;
 
-        #shape-buttons button:hover {
-            background: #00ffcc;
+    transform: scale(1.05);
 
-            color: black;
-        }
+}
 
+.back-btn:active {
 
-        #color-row {
-            margin-top: 10px;
+    transform: scale(0.95);
 
-            display: flex;
-
-            align-items: center;
-
-            gap: 8px;
-        }
+}
 
 
-        #colorPicker {
-            width: 45px;
+/* =========================================================
+   CONTROL PANEL
+   ========================================================= */
 
-            height: 30px;
+#ui {
 
-            padding: 0;
+    position: fixed;
 
-            border: none;
+    left: 10px;
+    bottom: 10px;
 
-            cursor: pointer;
-        }
-    </style>
+    background: rgba(0, 0, 0, 0.75);
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    color: white;
+
+    z-index: 9999;
+
+    backdrop-filter: blur(6px);
+
+    box-shadow:
+        0 5px 30px rgba(0, 0, 0, 0.4);
+
+}
+
+#ui-title {
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    margin-bottom: 8px;
+
+}
+
+#shape-buttons {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+}
+
+#shape-buttons button {
+
+    background: #222;
+
+    color: white;
+
+    border: 1px solid #444;
+
+    padding: 7px 10px;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    transition: 0.15s;
+
+}
+
+#shape-buttons button:hover {
+
+    background: #00ffcc;
+
+    color: black;
+
+}
+
+#color-row {
+
+    margin-top: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+#colorPicker {
+
+    width: 45px;
+
+    height: 30px;
+
+    padding: 0;
+
+    border: none;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   LOADING ERROR
+   ========================================================= */
+
+#engineError {
+
+    position: fixed;
+
+    inset: 20px;
+
+    z-index: 200000;
+
+    display: none;
+
+    padding: 20px;
+
+    border: 1px solid #ff6688;
+
+    border-radius: 10px;
+
+    background: #260812;
+
+    color: white;
+
+    white-space: pre-wrap;
+
+    font:
+        13px/1.5
+        monospace;
+
+    overflow: auto;
+
+}
+
+</style>
+
 </head>
 
 
 <body>
 
 
-    <!-- BACK BUTTON -->
+<!-- =======================================================
+     RON ENGINE LOADING SCREEN
+     ======================================================= -->
 
-    <button
-        class="back-btn"
-        id="backButton"
-        type="button"
-    >
-        ⬅ Back
-    </button>
+<div id="loading">
 
+    <div class="load">
 
-    <!-- CONTROL PANEL -->
+        <b>POWERED BY RON ENGINE</b>
 
-    <div id="ui">
+        <h1>3D SHAPE PLAYGROUND</h1>
 
-        <div id="ui-title">
-            3D Shape Playground
-        </div>
+        <div class="bar"></div>
 
+    </div>
 
-        <div id="shape-buttons">
-
-            <button
-                type="button"
-                onclick="setShape('cube')"
-            >
-                Cube 
-            </button>
+</div>
 
 
-            <button
-                type="button"
-                onclick="setShape('sphere')"
-            >
-                Sphere (coming soon)
-            </button>
+<!-- ENGINE ERROR -->
+
+<div id="engineError"></div>
 
 
-            <button
-                type="button"
-                onclick="setShape('torus')"
-            >
-                Torus (coming soon)
-            </button>
+<!-- =======================================================
+     BACK BUTTON
+     ======================================================= -->
+
+<button
+    class="back-btn"
+    id="backButton"
+    type="button"
+>
+    ⬅ Back
+</button>
 
 
-            <button
-                type="button"
-                onclick="setShape('cone')"
-            >
-                Cone (coming soon)
-            </button>
+<!-- =======================================================
+     CONTROL PANEL
+     ======================================================= -->
 
-        </div>
+<div id="ui">
+
+    <div id="ui-title">
+        3D Shape Playground
+    </div>
 
 
-        <div id="color-row">
+    <div id="shape-buttons">
 
-            <span>Color:</span>
+        <button
+            type="button"
+            onclick="setShape('cube')"
+        >
+            Cube
+        </button>
 
-            <input
-                type="color"
-                id="colorPicker"
-                value="#00ffcc"
-            >
 
-        </div>
+        <button
+            type="button"
+            onclick="setShape('sphere')"
+        >
+            Sphere (coming soon)
+        </button>
+
+
+        <button
+            type="button"
+            onclick="setShape('torus')"
+        >
+            Torus (coming soon)
+        </button>
+
+
+        <button
+            type="button"
+            onclick="setShape('cone')"
+        >
+            Cone (coming soon)
+        </button>
 
     </div>
 
 
-    <!-- MAIN THREE.JS FILE -->
+    <div id="color-row">
 
-    <script
-        type="module"
-        src="./main.js"
-    ></script>
+        <span>Color:</span>
+
+        <input
+            type="color"
+            id="colorPicker"
+            value="#00ffcc"
+        >
+
+    </div>
+
+</div>
 
 
-    <!-- BACK BUTTON -->
+<!-- =======================================================
+     ENGINE ERROR HANDLER
+     ======================================================= -->
 
-    <script>
-        document
-            .getElementById("backButton")
-            .addEventListener("click", function () {
+<script>
 
-                window.location.href = "../../index.html";
+const loading =
+    document.getElementById("loading");
 
-            });
-    </script>
+const engineError =
+    document.getElementById("engineError");
+
+
+function hideLoading() {
+
+    loading.classList.add("done");
+
+}
+
+
+function showEngineError(error) {
+
+    console.error(error);
+
+    engineError.textContent =
+        "RON ENGINE FAILED TO START\n\n" +
+        (
+            error?.stack ||
+            error?.message ||
+            String(error)
+        );
+
+    engineError.style.display = "block";
+
+}
+
+
+window.addEventListener(
+    "error",
+    function(event) {
+
+        showEngineError(
+            event.error || event.message
+        );
+
+    }
+);
+
+
+window.addEventListener(
+    "unhandledrejection",
+    function(event) {
+
+        showEngineError(
+            event.reason
+        );
+
+    }
+);
+
+
+/*
+    Give the Three.js module a moment to initialise.
+
+    main.js can also call:
+
+        window.ronEngineReady();
+
+    when the engine has actually finished loading.
+*/
+
+window.ronEngineReady =
+    function() {
+
+        hideLoading();
+
+    };
+
+
+/*
+    Fallback.
+
+    If main.js doesn't call ronEngineReady(),
+    the loader will still disappear after the
+    page has finished loading.
+*/
+
+window.addEventListener(
+    "load",
+    function() {
+
+        setTimeout(
+            function() {
+
+                if (
+                    !loading.classList.contains("done")
+                ) {
+
+                    hideLoading();
+
+                }
+
+            },
+            350
+        );
+
+    }
+);
+
+</script>
+
+
+<!-- =======================================================
+     MAIN THREE.JS FILE
+     ======================================================= -->
+
+<script
+    type="module"
+    src="./main.js"
+></script>
+
+
+<!-- =======================================================
+     BACK BUTTON
+     ======================================================= -->
+
+<script>
+
+document
+    .getElementById("backButton")
+    .addEventListener(
+        "click",
+        function() {
+
+            window.location.href =
+                "../../index.html";
+
+        }
+    );
+
+</script>
 
 
 </body>
