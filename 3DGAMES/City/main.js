@@ -318,9 +318,7 @@ renderer.domElement.addEventListener(
 );
 
 
-// ==========================================
-// ANIMATION
-// ==========================================
+
 
 function animate() {
 
@@ -340,9 +338,7 @@ function animate() {
 animate();
 
 
-// ==========================================
-// RESIZE
-// ==========================================
+
 
 window.addEventListener(
     "resize",
