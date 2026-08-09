@@ -1,80 +1,1206 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>My Blog</title>
-<style>
-:root{--ink:#202334;--muted:#777d91;--paper:#fffaf3;--line:#e9e2d9;--pink:#e986a1;--purple:#8c78d9;--dark:#30364e;--shadow:0 18px 55px #55412d12}*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--ink);font-family:"Avenir Next","Segoe UI",sans-serif;background:var(--paper);background-image:radial-gradient(circle at 8% 5%,#ffd9e3 0,transparent 25rem),radial-gradient(circle at 95% 70%,#d7e8ff 0,transparent 28rem)}button{font:inherit;cursor:pointer}.back-btn{position:fixed;top:15px;left:15px;background:#00ffcc;color:#000;border:0;padding:8px 14px;border-radius:6px;font-weight:bold;z-index:10;transition:.2s}.back-btn:hover{background:#00ddb3;transform:scale(1.05)}.app{width:min(1100px,calc(100% - 32px));margin:auto;padding:72px 0 70px}.hero{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:29px}.kicker{color:#c45d79;font-size:10px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}.hero h1{margin:8px 0;font-size:clamp(42px,6vw,70px);line-height:.9;letter-spacing:-.07em}.hero p{max-width:600px;margin:0;color:var(--muted);font-size:14px;line-height:1.55}.hero-mark{font-size:58px;filter:drop-shadow(0 7px 9px #e8b2c155);animation:float 3s ease-in-out infinite}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.toolbar p{margin:0;color:var(--muted);font-size:11px}.tag-filter{display:flex;gap:7px;flex-wrap:wrap}.filter{border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--muted);background:#ffffffa8;font-size:10px;font-weight:800}.filter.active,.filter:hover{color:var(--ink);border-color:var(--pink);background:#ffe7ed}.posts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.post-card{overflow:hidden;border:1px solid #fff;border-radius:17px;background:#ffffffc7;box-shadow:var(--shadow);backdrop-filter:blur(15px);animation:rise .35s both;transition:transform .2s,box-shadow .2s}.post-card:hover{transform:translateY(-4px);box-shadow:0 22px 55px #55412d1c}.post-image{display:block;width:100%;height:185px;object-fit:cover;background:linear-gradient(135deg,#ffd8e2,#d9d2ff)}.post-content{padding:18px}.post-meta{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:10px}.post-tag{color:#8066a1;font-weight:900;text-transform:uppercase;letter-spacing:.1em}.post-card h2{margin:10px 0 8px;font-size:21px;line-height:1.05;letter-spacing:-.04em}.excerpt{margin:0;color:#686f80;font-size:12px;line-height:1.55}.read{display:inline-block;margin-top:15px;color:var(--purple);font-size:11px;font-weight:900}.empty{grid-column:1/-1;padding:55px 20px;text-align:center;border:1px dashed #d8ccc4;border-radius:14px;color:var(--muted)}.reader{max-width:800px;margin:0 auto}.reader-image{width:100%;max-height:390px;object-fit:cover;border-radius:17px;margin-bottom:23px}.reader-top{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11px}.reader h2{margin:11px 0 16px;font-size:clamp(32px,5vw,52px);line-height:.95;letter-spacing:-.06em}.reader-body{color:#565e70;font-size:15px;line-height:1.8;white-space:pre-wrap}.back-archive{margin-bottom:16px;border:0;border-radius:8px;padding:9px 11px;color:var(--muted);background:#fff;font-size:11px;font-weight:800}.hidden{display:none!important}@keyframes float{50%{transform:translateY(-8px) rotate(4deg)}}@keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}@media(max-width:620px){.app{width:calc(100% - 22px);padding-top:70px}.hero{align-items:start}.hero-mark{font-size:40px}.toolbar{display:block}.tag-filter{margin-top:12px;overflow:auto;flex-wrap:nowrap}.filter{white-space:nowrap}.posts{grid-template-columns:1fr}.post-image{height:160px}}
-</style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ron.cool / blog</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0b0b0b;
+            color: #fff;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .page {
+            width: min(1100px, calc(100% - 30px));
+            margin: auto;
+            padding: 30px 0 60px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 40px;
+            text-decoration: none;
+            opacity: .6;
+        }
+
+        .back:hover {
+            opacity: 1;
+        }
+
+        .kicker {
+            color: #00ff9d;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: clamp(45px, 8vw, 80px);
+            margin: 0;
+            letter-spacing: -4px;
+        }
+
+        .subtitle {
+            opacity: .6;
+            font-size: 18px;
+            margin-top: 10px;
+            margin-bottom: 40px;
+        }
+
+        /* =========================
+           ANNOUNCEMENTS
+        ========================= */
+
+        .announcements {
+            margin-bottom: 45px;
+        }
+
+        .announcements-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .announcements-header h2 {
+            margin: 0;
+        }
+
+        .live {
+            font-size: 10px;
+            font-weight: bold;
+            background: #00ff9d;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+
+        .announcement {
+            padding: 20px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 14px;
+            background: rgba(255,255,255,.03);
+        }
+
+        .announcement-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .announcement-tag {
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px 9px;
+            border-radius: 6px;
+            background: rgba(0,255,157,.12);
+            color: #00ff9d;
+        }
+
+        .announcement-date {
+            font-size: 12px;
+            opacity: .5;
+        }
+
+        .announcement h3 {
+            margin: 0 0 8px;
+            font-size: 21px;
+        }
+
+        .announcement p {
+            margin: 0;
+            line-height: 1.6;
+            opacity: .75;
+        }
+
+        .loading,
+        .no-announcements {
+            padding: 15px 0;
+            opacity: .5;
+        }
+
+        /* =========================
+           FILTERS
+        ========================= */
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .filter {
+            border: 1px solid rgba(255,255,255,.12);
+            background: transparent;
+            color: white;
+            padding: 8px 13px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .filter:hover {
+            background: rgba(255,255,255,.08);
+        }
+
+        .filter.active {
+            background: #fff;
+            color: #000;
+        }
+
+        /* =========================
+           POSTS
+        ========================= */
+
+        .posts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .post-card {
+            animation: fadeUp .4s ease both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .post-open {
+            width: 100%;
+            text-align: left;
+            padding: 0;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 14px;
+            overflow: hidden;
+            background: rgba(255,255,255,.03);
+            color: white;
+            cursor: pointer;
+        }
+
+        .post-open:hover {
+            background: rgba(255,255,255,.06);
+        }
+
+        .post-image {
+            display: block;
+            width: 100%;
+            max-height: 240px;
+            object-fit: cover;
+        }
+
+        .post-content {
+            padding: 20px;
+        }
+
+        .post-meta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            font-size: 12px;
+            opacity: .55;
+            margin-bottom: 10px;
+        }
+
+        .post-tag {
+            display: inline-block;
+            color: #00ff9d;
+            background: rgba(0,255,157,.1);
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .post-content h2 {
+            margin: 0 0 10px;
+        }
+
+        .excerpt {
+            opacity: .65;
+            line-height: 1.5;
+        }
+
+        .read {
+            color: #00ff9d;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* =========================
+           READER
+        ========================= */
+
+        .hidden {
+            display: none !important;
+        }
+
+        .reader {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .reader-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .reader-top {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 13px;
+            opacity: .6;
+        }
+
+        .reader h2 {
+            font-size: clamp(35px, 6vw, 60px);
+            margin: 0 0 25px;
+            letter-spacing: -2px;
+        }
+
+        .reader-body {
+            font-size: 17px;
+            line-height: 1.8;
+            opacity: .85;
+            white-space: pre-wrap;
+        }
+
+        .reader-back {
+            margin-bottom: 30px;
+            cursor: pointer;
+            border: 0;
+            background: transparent;
+            color: white;
+            opacity: .6;
+            font-size: 15px;
+        }
+
+        .reader-back:hover {
+            opacity: 1;
+        }
+
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            opacity: .4;
+            font-size: 13px;
+        }
+
+    </style>
+
 </head>
+
+
 <body>
-<button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
-<main class="app">
-<header class="hero"><div><div class="kicker">ron.cool / thoughts &amp; things</div><h1>Ron.cool blog.</h1><p>A small corner of the internet for ideas, experiments, discoveries, and extremely specific opinions.</p></div><div class="hero-mark" aria-hidden="true">✎</div></header>
-<section id="archive"><div class="toolbar"><p><strong id="postCount">0</strong> posts from ron.cool</p><div class="tag-filter" id="filters"></div></div><section class="posts" id="posts"></section></section>
-<article class="reader hidden" id="reader"><button class="back-archive" id="backArchive">← All posts</button><div id="readerContent"></div></article>
-</main>
+
+<div class="page">
+
+    <a href="index.html" class="back">
+        ← Back
+    </a>
+
+
+    <main id="archive">
+
+        <div class="kicker">
+            ron.cool / blog
+        </div>
+
+        <h1>
+            Thoughts.
+        </h1>
+
+        <p class="subtitle">
+            Random thoughts, experiments and things I've made.
+        </p>
+
+
+        <!-- =====================================
+             SUPABASE ANNOUNCEMENTS
+        ====================================== -->
+
+        <section
+            class="announcements"
+            id="announcements"
+        >
+
+            <div class="announcements-header">
+
+                <span>📢</span>
+
+                <h2>
+                    Site Announcements
+                </h2>
+
+                <span class="live">
+                    LIVE
+                </span>
+
+            </div>
+
+
+            <div id="announcementList">
+
+                <div class="loading">
+                    Loading announcements...
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================
+             BLOG FILTERS
+        ====================================== -->
+
+        <div id="filters" class="filters"></div>
+
+
+        <div
+            id="postCount"
+            style="display:none;"
+        >
+            0
+        </div>
+
+
+        <!-- =====================================
+             BLOG POSTS
+        ====================================== -->
+
+        <section
+            id="posts"
+            class="posts"
+        ></section>
+
+    </main>
+
+
+    <!-- =====================================
+         BLOG READER
+    ====================================== -->
+
+    <main
+        id="reader"
+        class="reader hidden"
+    >
+
+        <button
+            id="backArchive"
+            class="reader-back"
+        >
+            ← Back to blog
+        </button>
+
+
+        <div id="readerContent"></div>
+
+    </main>
+
+
+    <div class="footer">
+        made with ☕ by ron.cool
+    </div>
+
+</div>
+
+
 <script>
 
-const BLOG_POSTS = [
-  {
-    title: "Welcome to the ron.cool blog",
-    date: "August 8, 2026",
-    tag: "Updates",
-    image: "",
-    body: "This is where new thoughts, tiny experiments, and curious discoveries will live.\n\nAdd your next post by copying the object in BLOG_POSTS above."
-  },
-  {
-    title: "About me",
-    date: "August 8, 2026",
-    tag: "Talking about myself",
-    image: "",
-    body: "# Hi, I'm Ron 👋\n\nI like making small web experiments, building weird little projects, and sharing the things I learn along the way.\n\nThis blog is where I write about what I'm working on, what I'm curious about, and whatever happens to be on my mind. Expect a mix of experiments, ideas, development stuff, random discoveries, and probably a few things that don't fit anywhere else.\n\nThe design and overall idea of this site are heavily inspired by Neal.fun, which has been a huge inspiration for me. You may notice some similarities in the style, name, and experimental approach.\n\nThis isn't meant to be a copy of Neal's work, though. I'm using that inspiration to build something that feels like me and to experiment with my own ideas.\n\nThanks for stopping by. I hope you find something interesting here. :)"
-  },
-  {
-    title: "Addresing my ai useage for the sites",
-    date: "August 8, 2026",
-    tag: "Addresing my ai useage for the sites",
-    image: "",
-    body: "First off i would like to say that i <b> do </b> use ai to help me with the sites, but i do not use it to make the sites for me. I use it to help me with ideas, code, and design. I do not use it to make the sites for me because i want to learn and improve my skills. I want to be able to make the sites myself, and i want to be able to understand how they work. I also want to be able to fix them if something goes wrong. I want to be able to make the sites myself, and i want to be able to understand how they work. I also want to be able to fix them if something goes wrong. Now hopefully in the future i will be able to make things with 0% ai, but right now im still learning and improving my skills, so i use ai to help me with that. I hope this clears up any confusion about my use of ai on the sites."
-  },
-  {
-    title: "Info",
-    date: "August 8, 2026",
-    tag: "Some information",
-    image: "",
-    body: "Just letting everyone reading know: the reason so many apps get added so often is because i have so many unfinished (and finished) projects on my computer that i have made over my time learning HTML, that it is so easy for me to just add them to the site. I have so many ideas that i want to make, and i want to make them all, so i just add them to the site as i make them. I also want to be able to share my work with others, and i want to be able to get feedback on my work. I also want to be able to learn from others, and i want to be able to improve my skills. So i just add them to the site as i make them."
-  },
-{
-    title: "Keeping ron.cool safe",
-    date: "August 9, 2026",
-    tag: "Site & Security",
-    image: "",
-    body: "I've recently ramped up the security on ron.cool to make it a safer and more trustworthy space for everyone who stops by.\n\nNow, the site is equipped with HTTPS encryption, which means your connection to ron.cool is secure. You should spot that little padlock 🔒 in your browser when you visit.\n\nI've also set up Cloudflare for ron.cool, adding an extra layer of defense against things like malicious traffic, bots, and DDoS attacks, all while helping the site load quickly for you.\n\nI’m still on my journey to learn more about web security, so I don’t want to give the impression that ron.cool is completely bulletproof. Honestly, no website can make that claim. What I can do is keep learning, stay updated, and utilize the security tools at my disposal to make the site as safe and reliable as possible.\n\nI want ron.cool to be a place where you can explore freely without worrying about where you might end up. The projects and games featured on the site are all created by me, and I'm continuously working on improving how everything is hosted and secured.\n\nSo, if you’ve been curious whether ron.cool is a legitimate site or just some random GitHub Pages project — yes, it did start that way 😂, but I’m gradually transforming it into something much more substantial.\n\nThanks for stopping by and supporting ron.cool. There’s still so much more I want to create!"
-},
+/* =====================================================
+   SUPABASE
+===================================================== */
 
+const SUPABASE_URL =
+    "https://rldidvwcylirjyfktvtg.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZGlkdndjeWxpcmp5Zmt0dnRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyMjM0OTAsImV4cCI6MjEwMTc5OTQ5MH0.YO5zeu5uL3siDDPVfsPc9v_VCETHixTWXjzotVOEp0U";
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value) {
+
+    return String(value).replace(
+        /[&<>"']/g,
+        character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;"
+        }[character])
+    );
+
+}
+
+
+/* =====================================================
+   BLOG POSTS
+===================================================== */
+
+const BLOG_POSTS = [
+
+    {
+        title: "Welcome to the ron.cool blog",
+
+        date: "August 8, 2026",
+
+        tag: "Updates",
+
+        image: "",
+
+        body:
+`This is where new thoughts, tiny experiments, and curious discoveries will live.
+
+Add your next post by copying the object in BLOG_POSTS above.`
+    },
+
+
+    {
+        title: "About me",
+
+        date: "August 8, 2026",
+
+        tag: "Talking about myself",
+
+        image: "",
+
+        body:
+`# Hi, I'm Ron 👋
+
+I like making small web experiments, building weird little projects, and sharing the things I learn along the way.
+
+This blog is where I write about what I'm working on, what I'm curious about, and whatever happens to be on my mind. Expect a mix of experiments, ideas, development stuff, random discoveries, and probably a few things that don't fit anywhere else.
+
+The design and overall idea of this site are heavily inspired by Neal.fun, which has been a huge inspiration for me. You may notice some similarities in the style, name, and experimental approach.
+
+This isn't meant to be a copy of Neal's work, though. I'm using that inspiration to build something that feels like me and to experiment with my own ideas.
+
+Thanks for stopping by. I hope you find something interesting here. :)`
+    },
+
+
+    {
+        title: "Addresing my ai useage for the sites",
+
+        date: "August 8, 2026",
+
+        tag: "Addresing my ai useage for the sites",
+
+        image: "",
+
+        body:
+`First off i would like to say that i do use ai to help me with the sites, but i do not use it to make the sites for me. I use it to help me with ideas, code, and design.
+
+I do not use it to make the sites for me because i want to learn and improve my skills. I want to be able to make the sites myself, and i want to be able to understand how they work.
+
+I also want to be able to fix them if something goes wrong.
+
+Now hopefully in the future i will be able to make things with 0% ai, but right now im still learning and improving my skills, so i use ai to help me with that.
+
+I hope this clears up any confusion about my use of ai on the sites.`
+    },
+
+
+    {
+        title: "Info",
+
+        date: "August 8, 2026",
+
+        tag: "Some information",
+
+        image: "",
+
+        body:
+`Just letting everyone reading know: the reason so many apps get added so often is because i have so many unfinished (and finished) projects on my computer that i have made over my time learning HTML, that it is so easy for me to just add them to the site.
+
+I have so many ideas that i want to make, and i want to make them all, so i just add them to the site as i make them.
+
+I also want to be able to share my work with others, and i want to be able to get feedback on my work.
+
+I also want to be able to learn from others, and i want to be able to improve my skills.
+
+So i just add them to the site as i make them.`
+    },
+
+
+    {
+        title: "Keeping ron.cool safe",
+
+        date: "August 9, 2026",
+
+        tag: "Site & Security",
+
+        image: "",
+
+        body:
+`I've recently ramped up the security on ron.cool to make it a safer and more trustworthy space for everyone who stops by.
+
+Now, the site is equipped with HTTPS encryption, which means your connection to ron.cool is secure. You should spot that little padlock 🔒 in your browser when you visit.
+
+I've also set up Cloudflare for ron.cool, adding an extra layer of defense against things like malicious traffic, bots, and DDoS attacks, all while helping the site load quickly for you.
+
+I’m still on my journey to learn more about web security, so I don’t want to give the impression that ron.cool is completely bulletproof. Honestly, no website can make that claim.
+
+What I can do is keep learning, stay updated, and utilize the security tools at my disposal to make the site as safe and reliable as possible.
+
+I want ron.cool to be a place where you can explore freely without worrying about where you might end up.
+
+The projects and games featured on the site are all created by me, and I'm continuously working on improving how everything is hosted and secured.
+
+So, if you’ve been curious whether ron.cool is a legitimate site or just some random GitHub Pages project — yes, it did start that way 😂, but I’m gradually transforming it into something much more substantial.
+
+Thanks for stopping by and supporting ron.cool. There’s still so much more I want to create!`
+    }
 
 ];
 
-const postsElement = document.getElementById("posts");
-const filtersElement = document.getElementById("filters");
-const archiveElement = document.getElementById("archive");
-const readerElement = document.getElementById("reader");
-const readerContent = document.getElementById("readerContent");
+
+/* =====================================================
+   BLOG ELEMENTS
+===================================================== */
+
+const postsElement =
+    document.getElementById("posts");
+
+const filtersElement =
+    document.getElementById("filters");
+
+const archiveElement =
+    document.getElementById("archive");
+
+const readerElement =
+    document.getElementById("reader");
+
+const readerContent =
+    document.getElementById("readerContent");
+
 let activeTag = "All";
 
-function escapeHtml(value) { return String(value).replace(/[&<>"']/g, (character) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[character])); }
-function formatBody(value) { return escapeHtml(value).replace(/&lt;(\/)?(b|strong|i|em|u|br)&gt;/gi, "<$1$2>"); }
-function tags() { return ["All", ...new Set(BLOG_POSTS.map((post) => post.tag))]; }
-function filteredPosts() { return BLOG_POSTS.filter((post) => activeTag === "All" || post.tag === activeTag); }
-function imageMarkup(post, className) { return post.image ? `<img class="${className}" src="${escapeHtml(post.image)}" alt="">` : ""; }
-function renderFilters() { filtersElement.innerHTML = tags().map((tag) => `<button class="filter ${tag === activeTag ? "active" : ""}" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>`).join(""); document.querySelectorAll("[data-tag]").forEach((button) => button.addEventListener("click", () => { activeTag = button.dataset.tag; renderFilters(); renderPosts(); })); }
-function renderPosts() { const posts = filteredPosts(); document.getElementById("postCount").textContent = BLOG_POSTS.length; postsElement.innerHTML = posts.length ? posts.map((post, index) => `<article class="post-card" style="animation-delay:${Math.min(index * 45, 220)}ms"><button class="post-open" data-post="${BLOG_POSTS.indexOf(post)}" aria-label="Read ${escapeHtml(post.title)}">${imageMarkup(post, "post-image")}<div class="post-content"><div class="post-meta"><span class="post-tag">${escapeHtml(post.tag)}</span><span>${escapeHtml(post.date)}</span></div><h2>${escapeHtml(post.title)}</h2><p class="excerpt">${escapeHtml(post.body.split("\n")[0].slice(0, 150))}${post.body.length > 150 ? "..." : ""}</p><span class="read">Read post →</span></div></button></article>`).join("") : '<div class="empty">No posts in this corner yet.</div>'; document.querySelectorAll(".post-open").forEach((button) => button.addEventListener("click", () => openPost(Number(button.dataset.post)))); }
-function openPost(index) { const post = BLOG_POSTS[index]; if (!post) return; archiveElement.classList.add("hidden"); readerElement.classList.remove("hidden"); readerContent.innerHTML = `${imageMarkup(post, "reader-image")}<div class="reader-top"><span class="post-tag">${escapeHtml(post.tag)}</span><span>${escapeHtml(post.date)}</span></div><h2>${escapeHtml(post.title)}</h2><div class="reader-body">${formatBody(post.body)}</div>`; history.pushState({ post: index }, "", `?post=${index}`); window.scrollTo(0, 0); }
-function closePost() { readerElement.classList.add("hidden"); archiveElement.classList.remove("hidden"); history.pushState({}, "", "blog.html"); window.scrollTo(0, 0); }
-document.getElementById("backArchive").addEventListener("click", closePost);window.addEventListener("popstate", closePost);renderFilters();renderPosts();
-const sharedIndex = new URLSearchParams(location.search).get("post"); if (sharedIndex !== null) openPost(Number(sharedIndex));
+
+/* =====================================================
+   BLOG FUNCTIONS
+===================================================== */
+
+function formatBody(value) {
+
+    return escapeHtml(value)
+        .replace(
+            /\n/g,
+            "<br>"
+        );
+
+}
+
+
+function tags() {
+
+    return [
+        "All",
+        ...new Set(
+            BLOG_POSTS.map(
+                post => post.tag
+            )
+        )
+    ];
+
+}
+
+
+function filteredPosts() {
+
+    return BLOG_POSTS.filter(
+        post =>
+            activeTag === "All" ||
+            post.tag === activeTag
+    );
+
+}
+
+
+function imageMarkup(
+    post,
+    className
+) {
+
+    return post.image
+
+        ? `
+            <img
+                class="${className}"
+                src="${escapeHtml(post.image)}"
+                alt=""
+            >
+          `
+
+        : "";
+
+}
+
+
+/* =====================================================
+   FILTERS
+===================================================== */
+
+function renderFilters() {
+
+    filtersElement.innerHTML =
+        tags()
+            .map(
+                tag => `
+                    <button
+                        class="filter ${
+                            tag === activeTag
+                                ? "active"
+                                : ""
+                        }"
+                        data-tag="${escapeHtml(tag)}"
+                    >
+                        ${escapeHtml(tag)}
+                    </button>
+                `
+            )
+            .join("");
+
+
+    document
+        .querySelectorAll("[data-tag]")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    activeTag =
+                        button.dataset.tag;
+
+                    renderFilters();
+
+                    renderPosts();
+
+                }
+            );
+
+        });
+
+}
+
+
+/* =====================================================
+   POSTS
+===================================================== */
+
+function renderPosts() {
+
+    const posts =
+        filteredPosts();
+
+
+    document
+        .getElementById("postCount")
+        .textContent =
+        BLOG_POSTS.length;
+
+
+    postsElement.innerHTML =
+        posts.length
+
+            ? posts
+                .map(
+                    (post, index) => `
+
+                        <article
+                            class="post-card"
+                            style="
+                                animation-delay:
+                                ${Math.min(
+                                    index * 45,
+                                    220
+                                )}ms
+                            "
+                        >
+
+                            <button
+                                class="post-open"
+                                data-post="${
+                                    BLOG_POSTS.indexOf(post)
+                                }"
+                            >
+
+                                ${imageMarkup(
+                                    post,
+                                    "post-image"
+                                )}
+
+                                <div
+                                    class="post-content"
+                                >
+
+                                    <div
+                                        class="post-meta"
+                                    >
+
+                                        <span
+                                            class="post-tag"
+                                        >
+                                            ${escapeHtml(
+                                                post.tag
+                                            )}
+                                        </span>
+
+                                        <span>
+                                            ${escapeHtml(
+                                                post.date
+                                            )}
+                                        </span>
+
+                                    </div>
+
+
+                                    <h2>
+                                        ${escapeHtml(
+                                            post.title
+                                        )}
+                                    </h2>
+
+
+                                    <p
+                                        class="excerpt"
+                                    >
+                                        ${escapeHtml(
+                                            post.body
+                                                .split("\n")[0]
+                                                .slice(0,150)
+                                        )}
+                                        ${
+                                            post.body.length > 150
+                                                ? "..."
+                                                : ""
+                                        }
+                                    </p>
+
+
+                                    <span
+                                        class="read"
+                                    >
+                                        Read post →
+                                    </span>
+
+                                </div>
+
+                            </button>
+
+                        </article>
+                    `
+                )
+                .join("")
+
+            : "No posts in this corner yet.";
+
+
+    document
+        .querySelectorAll(".post-open")
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    openPost(
+                        Number(
+                            button.dataset.post
+                        )
+                    );
+
+                }
+            );
+
+        });
+
+}
+
+
+/* =====================================================
+   OPEN POST
+===================================================== */
+
+function openPost(index) {
+
+    const post =
+        BLOG_POSTS[index];
+
+    if (!post) return;
+
+
+    archiveElement
+        .classList
+        .add("hidden");
+
+
+    readerElement
+        .classList
+        .remove("hidden");
+
+
+    readerContent.innerHTML = `
+
+        ${imageMarkup(
+            post,
+            "reader-image"
+        )}
+
+        <div class="reader-top">
+
+            <span class="post-tag">
+                ${escapeHtml(post.tag)}
+            </span>
+
+            <span>
+                ${escapeHtml(post.date)}
+            </span>
+
+        </div>
+
+
+        <h2>
+            ${escapeHtml(post.title)}
+        </h2>
+
+
+        <div class="reader-body">
+
+            ${formatBody(post.body)}
+
+        </div>
+    `;
+
+
+    history.pushState(
+        {
+            post: index
+        },
+        "",
+        `?post=${index}`
+    );
+
+
+    window.scrollTo(
+        0,
+        0
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE POST
+===================================================== */
+
+function closePost() {
+
+    readerElement
+        .classList
+        .add("hidden");
+
+
+    archiveElement
+        .classList
+        .remove("hidden");
+
+
+    history.pushState(
+        {},
+        "",
+        "blog.html"
+    );
+
+
+    window.scrollTo(
+        0,
+        0
+    );
+
+}
+
+
+document
+    .getElementById("backArchive")
+    .addEventListener(
+        "click",
+        closePost
+    );
+
+
+window.addEventListener(
+    "popstate",
+    closePost
+);
+
+
+/* =====================================================
+   SUPABASE ANNOUNCEMENTS
+===================================================== */
+
+async function loadAnnouncements() {
+
+    const list =
+        document.getElementById(
+            "announcementList"
+        );
+
+
+    if (!list) return;
+
+
+    try {
+
+        const response =
+            await fetch(
+
+                `${SUPABASE_URL}/rest/v1/site_announcements` +
+
+                `?select=id,title,content,tag,created_at` +
+
+                `&published=eq.true` +
+
+                `&order=created_at.desc`,
+
+                {
+
+                    method: "GET",
+
+                    headers: {
+
+                        "apikey":
+                            SUPABASE_ANON_KEY,
+
+                        "Authorization":
+                            `Bearer ${SUPABASE_ANON_KEY}`,
+
+                        "Content-Type":
+                            "application/json"
+
+                    }
+
+                }
+
+            );
+
+
+        if (!response.ok) {
+
+            const error =
+                await response.text();
+
+            console.error(
+                "Supabase error:",
+                error
+            );
+
+            throw new Error(
+                "Failed to load announcements"
+            );
+
+        }
+
+
+        const announcements =
+            await response.json();
+
+
+        if (
+            announcements.length === 0
+        ) {
+
+            list.innerHTML = `
+
+                <div
+                    class="no-announcements"
+                >
+                    No announcements right now.
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        list.innerHTML =
+            announcements
+                .map(
+                    announcement => {
+
+                        const date =
+                            new Date(
+                                announcement.created_at
+                            )
+                            .toLocaleDateString(
+                                "en-GB",
+                                {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric"
+                                }
+                            );
+
+
+                        return `
+
+                            <article
+                                class="announcement"
+                            >
+
+                                <div
+                                    class="announcement-top"
+                                >
+
+                                    <span
+                                        class="announcement-tag"
+                                    >
+                                        ${escapeHtml(
+                                            announcement.tag ||
+                                            "Update"
+                                        )}
+                                    </span>
+
+                                    <span
+                                        class="announcement-date"
+                                    >
+                                        ${escapeHtml(
+                                            date
+                                        )}
+                                    </span>
+
+                                </div>
+
+
+                                <h3>
+                                    ${escapeHtml(
+                                        announcement.title
+                                    )}
+                                </h3>
+
+
+                                <p>
+                                    ${escapeHtml(
+                                        announcement.content
+                                    ).replace(
+                                        /\n/g,
+                                        "<br>"
+                                    )}
+                                </p>
+
+                            </article>
+
+                        `;
+
+                    }
+                )
+                .join("");
+
+
+    } catch (error) {
+
+        console.error(
+            "Announcement loading failed:",
+            error
+        );
+
+
+        list.innerHTML = `
+
+            <div
+                class="no-announcements"
+            >
+                Unable to load announcements.
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* =====================================================
+   START BLOG
+===================================================== */
+
+renderFilters();
+
+renderPosts();
+
+loadAnnouncements();
+
+
+/* =====================================================
+   AUTO REFRESH ANNOUNCEMENTS
+===================================================== */
+
+setInterval(
+    loadAnnouncements,
+    30000
+);
+
+
+/* =====================================================
+   OPEN POST FROM URL
+===================================================== */
+
+const sharedIndex =
+    new URLSearchParams(
+        location.search
+    ).get("post");
+
+
+if (
+    sharedIndex !== null
+) {
+
+    openPost(
+        Number(sharedIndex)
+    );
+
+}
+
 </script>
+
 </body>
 </html>
