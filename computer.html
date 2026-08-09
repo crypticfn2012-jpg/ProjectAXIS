@@ -4,9 +4,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>COMPUTER VIRUS SIM</title>
+<title>COMPUTER VIRUS</title>
 
 <style>
+    .back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 9999;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.05);
+}
+
+.back-btn:active {
+    transform: scale(0.95);
+}
 *{box-sizing:border-box}
 
 :root{
@@ -588,6 +611,7 @@ h1{
 </head>
 
 <body>
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
 
 <header id="top">
 
@@ -849,6 +873,10 @@ h1{
 
 
 <script>
+    function goBack() {
+    window.location.href = "../../index.html";
+}
+    
 /* =========================================================
    GAME STATE
 ========================================================= */
