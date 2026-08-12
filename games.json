@@ -2,6 +2,6 @@
   "id": "crack-the-code",
   "name": "Crack the Code",
   "file": "codeCracker.html",
-  "icon": "icons/crack-the-code.png",
+  "icon": "icons/code.png",
   "description": "Crack today's 4-digit code before everyone else."
 }
