@@ -2,8 +2,7 @@
   {
     "id": "crack-the-code",
     "name": "Crack the Code",
-    "file": "codeCracker.html",
-    "icon": "icons/code.png",
-    "description": "Crack today's 4-digit code before everyone else."
+    "html": "codeCracker.html",
+    "image": "https://roncool.cc.cd/images/code.png",
+    "description": "Crack today's secret code before everyone else!"
   }
-]
