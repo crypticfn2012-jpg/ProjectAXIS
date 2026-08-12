@@ -1,0 +1,360 @@
+name: New Game Discord Announcement
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "games.json"
+
+permissions:
+  contents: read
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ==========================================
+      # CHECKOUT
+      # ==========================================
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+
+      # ==========================================
+      # CHECK FOR NEW GAME
+      # ==========================================
+
+      - name: Detect new game
+        id: game
+        shell: python
+        run: |
+
+          import json
+          import subprocess
+          import os
+
+
+          # --------------------------------------
+          # Read current games.json
+          # --------------------------------------
+
+          with open(
+              "games.json",
+              "r",
+              encoding="utf-8"
+          ) as f:
+
+              current = json.load(f)
+
+
+          # --------------------------------------
+          # Read previous games.json
+          # --------------------------------------
+
+          try:
+
+              old_raw = subprocess.check_output(
+                  [
+                      "git",
+                      "show",
+                      "HEAD^:games.json"
+                  ],
+                  text=True
+              )
+
+              old = json.loads(old_raw)
+
+          except Exception:
+
+              old = None
+
+
+          # --------------------------------------
+          # Convert either format into a list
+          # --------------------------------------
+
+          def normalise(data):
+
+              if data is None:
+                  return []
+
+              if isinstance(data, list):
+                  return data
+
+              if isinstance(data, dict):
+
+                  return [data]
+
+              return []
+
+
+          old_games = normalise(old)
+          new_games = normalise(current)
+
+
+          # --------------------------------------
+          # Find new games
+          # --------------------------------------
+
+          old_ids = set()
+
+          for game in old_games:
+
+              if isinstance(game, dict):
+
+                  game_id = game.get("id")
+
+                  if game_id:
+                      old_ids.add(str(game_id))
+
+
+          added_games = []
+
+
+          for game in new_games:
+
+              if not isinstance(game, dict):
+                  continue
+
+              game_id = game.get("id")
+
+              if not game_id:
+                  continue
+
+              if str(game_id) not in old_ids:
+
+                  added_games.append(game)
+
+
+          print("Old games:", old_games)
+          print("Current games:", new_games)
+          print("New games:", added_games)
+
+
+          # --------------------------------------
+          # GitHub outputs
+          # --------------------------------------
+
+          with open(
+              os.environ["GITHUB_OUTPUT"],
+              "a",
+              encoding="utf-8"
+          ) as output:
+
+              output.write(
+                  "count="
+                  + str(len(added_games))
+                  + "\n"
+              )
+
+              output.write(
+                  "games<<EOF\n"
+              )
+
+              output.write(
+                  json.dumps(
+                      added_games
+                  )
+              )
+
+              output.write(
+                  "\nEOF\n"
+              )
+
+
+      # ==========================================
+      # DISCORD
+      # ==========================================
+
+      - name: Send Discord announcement
+        if: steps.game.outputs.count != '0'
+        shell: python
+        env:
+
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+
+          NEW_GAMES: ${{ steps.game.outputs.games }}
+
+        run: |
+
+          import json
+          import os
+          import urllib.request
+          import urllib.parse
+
+
+          webhook = os.environ.get(
+              "DISCORD_WEBHOOK"
+          )
+
+
+          if not webhook:
+
+              raise Exception(
+                  "DISCORD_WEBHOOK secret is missing!"
+              )
+
+
+          games = json.loads(
+              os.environ["NEW_GAMES"]
+          )
+
+
+          for game in games:
+
+              # ----------------------------------
+              # Game information
+              # ----------------------------------
+
+              name = game.get(
+                  "name",
+                  "New Game"
+              )
+
+
+              description = game.get(
+                  "description",
+                  "A new game has been added to Ron.cool!"
+              )
+
+
+              file = game.get(
+                  "file",
+                  ""
+              )
+
+
+              icon = game.get(
+                  "icon",
+                  ""
+              )
+
+
+              # ----------------------------------
+              # URLs
+              # ----------------------------------
+
+              base_url = (
+                  "https://roncool.cc.cd/"
+              )
+
+
+              game_url = (
+                  base_url
+                  + file
+              )
+
+
+              icon_url = (
+                  base_url
+                  + icon
+              )
+
+
+              # ----------------------------------
+              # Discord embed
+              # ----------------------------------
+
+              payload = {
+
+                  "username":
+                      "Ron.cool",
+
+                  "avatar_url":
+                      "https://roncool.cc.cd/favicon.ico",
+
+                  "embeds": [
+
+                      {
+
+                          "title":
+                              "🎮 New Game Released!",
+
+                          "description":
+                              (
+                                  "**"
+                                  + name
+                                  + "**\n\n"
+                                  + description
+                                  + "\n\n"
+                                  + "👉 **[Play Now]("
+                                  + game_url
+                                  + ")**"
+                              ),
+
+                          "url":
+                              game_url,
+
+                          "color":
+                              5630156,
+
+                          "thumbnail": {
+
+                              "url":
+                                  icon_url
+
+                          },
+
+                          "footer": {
+
+                              "text":
+                                  "Ron.cool • New Game"
+
+                          }
+
+                      }
+
+                  ]
+
+              }
+
+
+              data = json.dumps(
+                  payload
+              ).encode("utf-8")
+
+
+              request = urllib.request.Request(
+
+                  webhook,
+
+                  data=data,
+
+                  headers={
+
+                      "Content-Type":
+                          "application/json",
+
+                      "User-Agent":
+                          "Ron.cool GitHub Actions"
+
+                  },
+
+                  method="POST"
+
+              )
+
+
+              print(
+                  "Sending Discord announcement:"
+              )
+
+              print(
+                  name
+              )
+
+
+              with urllib.request.urlopen(
+                  request
+              ) as response:
+
+                  print(
+                      "Discord response:",
+                      response.status
+                  )
