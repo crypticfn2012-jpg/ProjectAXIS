@@ -14,141 +14,237 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
-      - name: Detect new HTML games
+      - name: Detect new games
         id: games
-        shell: python
+        shell: bash
         run: |
+          python3 <<'PY'
           import json
           import os
           import subprocess
 
-          # Get files changed in this commit
+          print("================================")
+          print("RON.COOL GAME DETECTOR")
+          print("================================")
+
+          # Get files added in this commit
           try:
-              changed = subprocess.check_output(
+              result = subprocess.run(
                   ["git", "diff", "--name-status", "HEAD^", "HEAD"],
-                  text=True
-              ).splitlines()
-          except Exception:
-              changed = []
+                  capture_output=True,
+                  text=True,
+                  check=True
+              )
 
-          new_games = []
+              changed_files = result.stdout.splitlines()
 
-          # Find newly added .html files
-          for line in changed:
+          except Exception as e:
+              print("Could not check git changes:", e)
+              changed_files = []
+
+          print("Changed files:")
+          print(changed_files)
+
+          new_html_files = []
+
+          for line in changed_files:
+
               parts = line.split("\t")
 
               if len(parts) < 2:
                   continue
 
               status = parts[0]
-              file = parts[-1]
+              filename = parts[-1]
 
-              if status == "A" and file.endswith(".html"):
-                  # Ignore index.html
-                  if file.lower() == "index.html":
+              if status == "A" and filename.lower().endswith(".html"):
+
+                  # Ignore website homepage
+                  if filename.lower() == "index.html":
                       continue
 
-                  # Ignore blog if wanted
-                  if file.lower() == "blog.html":
-                      continue
+                  print("New HTML game found:", filename)
 
-                  new_games.append({
-                      "file": file
-                  })
+                  new_html_files.append(filename)
 
-          # Read games.json if it exists
+          # Load games.json
           try:
-              with open("games.json", "r", encoding="utf-8") as f:
+
+              with open(
+                  "games.json",
+                  "r",
+                  encoding="utf-8"
+              ) as f:
+
                   games_data = json.load(f)
-          except Exception:
-              games_data = {}
 
-          # Convert single object into list
+          except Exception as e:
+
+              print("Could not load games.json:", e)
+
+              games_data = []
+
+          # games.json can be either:
+          #
+          # {
+          #   "name": "...",
+          #   ...
+          # }
+          #
+          # OR:
+          #
+          # [
+          #   {...},
+          #   {...}
+          # ]
+
           if isinstance(games_data, dict):
-              games_list = [games_data]
+
+              games = [games_data]
+
           elif isinstance(games_data, list):
-              games_list = games_data
+
+              games = [
+                  game
+                  for game in games_data
+                  if isinstance(game, dict)
+              ]
+
           else:
-              games_list = []
 
-          # Match newly added HTML files against games.json
-          final_games = []
+              games = []
 
-          for new_game in new_games:
+          print("Games in games.json:", len(games))
 
-              file = new_game["file"]
+          detected_games = []
 
-              matching = None
+          for filename in new_html_files:
 
-              for game in games_list:
+              matching_game = None
 
-                  if not isinstance(game, dict):
-                      continue
+              for game in games:
 
-                  if game.get("file") == file:
-                      matching = game
+                  if game.get("file") == filename:
+
+                      matching_game = game
                       break
 
-              if matching:
-                  final_games.append(matching)
+              if matching_game:
+
+                  print(
+                      "Matched:",
+                      matching_game.get("name"),
+                      "->",
+                      filename
+                  )
+
+                  detected_games.append(
+                      matching_game
+                  )
 
               else:
-                  # Fallback if games.json wasn't updated
-                  filename = os.path.splitext(
-                      os.path.basename(file)
+
+                  print(
+                      "WARNING: No games.json entry for",
+                      filename
+                  )
+
+                  # Create fallback game
+                  filename_without_extension = os.path.splitext(
+                      os.path.basename(filename)
                   )[0]
 
-                  readable_name = filename.replace("-", " ").replace("_", " ").title()
+                  fallback_name = (
+                      filename_without_extension
+                      .replace("_", " ")
+                      .replace("-", " ")
+                      .title()
+                  )
 
-                  final_games.append({
-                      "name": readable_name,
-                      "file": file,
+                  detected_games.append({
+
+                      "id": filename_without_extension,
+
+                      "name": fallback_name,
+
+                      "file": filename,
+
                       "icon": "favicon.ico",
-                      "description": "A new game has been added to Ron.cool!"
+
+                      "description":
+                          "A new game has been added to Ron.cool!"
+
                   })
 
-          output_file = os.environ["GITHUB_OUTPUT"]
+          output = os.environ["GITHUB_OUTPUT"]
 
-          with open(output_file, "a", encoding="utf-8") as output:
+          with open(
+              output,
+              "a",
+              encoding="utf-8"
+          ) as f:
 
-              output.write(
-                  "games=" +
-                  json.dumps(final_games) +
-                  "\n"
+              f.write(
+                  "games="
+                  + json.dumps(detected_games)
+                  + "\n"
               )
 
-              output.write(
-                  "count=" +
-                  str(len(final_games)) +
-                  "\n"
+              f.write(
+                  "count="
+                  + str(len(detected_games))
+                  + "\n"
               )
 
-          print("New games detected:")
-          print(json.dumps(final_games, indent=2))
+          print("")
+          print("Detected games:")
+          print(
+              json.dumps(
+                  detected_games,
+                  indent=2
+              )
+          )
 
+          PY
 
-      - name: Announce new games
+      - name: Send Discord announcements
         if: steps.games.outputs.count != '0'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           NEW_GAMES: ${{ steps.games.outputs.games }}
-        shell: python
+        shell: bash
         run: |
+          python3 <<'PY'
 
           import json
           import os
           import urllib.request
 
-          webhook = os.environ["DISCORD_WEBHOOK"]
+          webhook = os.environ.get(
+              "DISCORD_WEBHOOK"
+          )
+
+          if not webhook:
+
+              print(
+                  "ERROR: DISCORD_WEBHOOK secret is missing!"
+              )
+
+              raise SystemExit(1)
 
           games = json.loads(
               os.environ["NEW_GAMES"]
+          )
+
+          print(
+              "Sending",
+              len(games),
+              "game announcement(s)..."
           )
 
           for game in games:
@@ -163,7 +259,7 @@ jobs:
                   "A new game has been added to Ron.cool!"
               )
 
-              file = game.get(
+              filename = game.get(
                   "file",
                   ""
               )
@@ -173,13 +269,17 @@ jobs:
                   "favicon.ico"
               )
 
-              # Game URL
+              # Remove accidental leading slash
+              filename = filename.lstrip("/")
+              icon = icon.lstrip("/")
+
+              # Your actual game URL
               game_url = (
                   "https://roncool.cc.cd/"
-                  + file
+                  + filename
               )
 
-              # Icon URL
+              # Your actual icon URL
               icon_url = (
                   "https://roncool.cc.cd/"
                   + icon
@@ -187,23 +287,24 @@ jobs:
 
               payload = {
 
-                  "username": "Ron.cool",
+                  "username":
+                      "Ron.cool",
 
                   "avatar_url":
                       "https://roncool.cc.cd/favicon.ico",
+
+                  "content":
+                      "🎮 **A new game just dropped on Ron.cool!**",
 
                   "embeds": [
 
                       {
 
                           "title":
-                              "🎮 New Game Released!",
+                              "🎮 " + name,
 
                           "description":
-                              "**"
-                              + name
-                              + "**\n\n"
-                              + description,
+                              description,
 
                           "url":
                               game_url,
@@ -217,6 +318,23 @@ jobs:
                                   icon_url
 
                           },
+
+                          "fields": [
+
+                              {
+
+                                  "name":
+                                      "🎮 Play Game",
+
+                                  "value":
+                                      f"[**Open {name} →**]({game_url})",
+
+                                  "inline":
+                                      False
+
+                              }
+
+                          ],
 
                           "footer": {
 
@@ -250,11 +368,24 @@ jobs:
 
               )
 
-              with urllib.request.urlopen(
-                  request
-              ) as response:
+              try:
+
+                  with urllib.request.urlopen(
+                      request
+                  ) as response:
+
+                      print(
+                          "Discord response:",
+                          response.status
+                      )
+
+              except Exception as e:
 
                   print(
-                      "Discord response:",
-                      response.status
+                      "Discord webhook failed:",
+                      e
                   )
+
+                  raise
+
+          PY
