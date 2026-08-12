@@ -17,20 +17,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
 
-      - name: Detect and announce new game
+      - name: Announce latest game
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          BEFORE_SHA: ${{ github.event.before }}
-          AFTER_SHA: ${{ github.sha }}
         run: |
           python3 <<'PY'
           import json
           import os
-          import subprocess
           import urllib.request
+
+          # ============================================
+          # GET DISCORD WEBHOOK
+          # ============================================
 
           webhook = os.environ.get("DISCORD_WEBHOOK")
 
@@ -38,181 +37,123 @@ jobs:
               print("ERROR: DISCORD_WEBHOOK secret is missing.")
               exit(1)
 
-          before = os.environ.get("BEFORE_SHA")
-          after = os.environ.get("AFTER_SHA")
+          # ============================================
+          # LOAD games.json
+          # ============================================
 
-          # Get games.json before the commit
           try:
-              old_json = subprocess.check_output(
-                  ["git", "show", f"{before}:games.json"],
-                  text=True
-              )
-              old_games = json.loads(old_json)
-          except Exception:
-              old_games = []
-
-          # Get current games.json
-          with open("games.json", "r", encoding="utf-8") as f:
-              new_games = json.load(f)
-
-          # Make sure both are lists
-          if not isinstance(old_games, list):
-              old_games = []
-
-          if not isinstance(new_games, list):
-              print("ERROR: games.json must contain an array.")
+              with open("games.json", "r", encoding="utf-8") as f:
+                  game = json.load(f)
+          except FileNotFoundError:
+              print("ERROR: games.json was not found.")
+              exit(1)
+          except json.JSONDecodeError as e:
+              print("ERROR: games.json contains invalid JSON.")
+              print(e)
               exit(1)
 
-          # Create IDs from the actual game objects.
-          # This does NOT care what the HTML filename is.
-          def game_key(game):
-              if isinstance(game, dict):
-                  return (
-                      game.get("id")
-                      or game.get("slug")
-                      or game.get("url")
-                      or game.get("link")
-                      or game.get("html")
-                      or game.get("file")
-                      or game.get("name")
-                      or game.get("title")
-                  )
+          # ============================================
+          # MAKE SURE IT IS AN OBJECT
+          # ============================================
 
-              return str(game)
+          if not isinstance(game, dict):
+              print("ERROR: games.json must contain ONE game object.")
+              exit(1)
 
-          old_keys = {
-              game_key(game)
-              for game in old_games
-          }
+          # ============================================
+          # GAME NAME
+          # ============================================
 
-          new_games_found = [
-              game
-              for game in new_games
-              if game_key(game) not in old_keys
-          ]
+          name = game.get("name")
 
-          if not new_games_found:
-              print("No new games detected.")
-              exit(0)
+          if not name:
+              print("ERROR: games.json is missing 'name'.")
+              exit(1)
 
-          print(f"Found {len(new_games_found)} new game(s).")
+          # ============================================
+          # GAME LINK
+          # ============================================
 
-          for game in new_games_found:
+          link = game.get("link")
 
-              if not isinstance(game, dict):
-                  print("Skipping invalid game entry:", game)
-                  continue
+          if not link:
+              html = game.get("html")
 
-              # ==============================
-              # GAME NAME
-              # ==============================
-
-              name = (
-                  game.get("name")
-                  or game.get("title")
-                  or "New Game"
-              )
-
-              # ==============================
-              # GAME LINK
-              # ==============================
-
-              link = (
-                  game.get("link")
-                  or game.get("url")
-                  or game.get("href")
-              )
-
-              if not link:
-                  html = (
-                      game.get("html")
-                      or game.get("file")
-                      or game.get("page")
-                  )
-
-                  if html:
-                      link = f"https://roncool.cc.cd/{html}"
-
-              if not link:
+              if html:
+                  link = f"https://roncool.cc.cd/{html}"
+              else:
                   link = "https://roncool.cc.cd/"
 
-              # ==============================
-              # GAME IMAGE
-              # ==============================
+          # ============================================
+          # IMAGE
+          # ============================================
 
-              image = (
-                  game.get("image")
-                  or game.get("icon")
-                  or game.get("pfp")
-                  or game.get("thumbnail")
-                  or game.get("logo")
-              )
+          image = game.get("image")
 
-              if image and image.startswith("/"):
-                  image = "https://roncool.cc.cd" + image
+          # ============================================
+          # DESCRIPTION
+          # ============================================
 
-              # ==============================
-              # DESCRIPTION
-              # ==============================
+          description = game.get(
+              "description",
+              "A new game has just been added to Ron.cool!"
+          )
 
-              description = (
-                  game.get("description")
-                  or "A new game has just been added to Ron.cool!"
-              )
+          # ============================================
+          # DISCORD EMBED
+          # ============================================
 
-              # ==============================
-              # DISCORD EMBED
-              # ==============================
-
-              embed = {
-                  "title": f"🎮 New Game Added — {name}",
-                  "description": description,
-                  "url": link,
-                  "color": 5569484,
-                  "fields": [
-                      {
-                          "name": "🎯 Play Now",
-                          "value": f"[Open {name}]({link})",
-                          "inline": True
-                      }
-                  ],
-                  "footer": {
-                      "text": "Ron.cool • New Game"
+          embed = {
+              "title": f"🎮 New Game Added — {name}",
+              "description": description,
+              "url": link,
+              "color": 5569484,
+              "fields": [
+                  {
+                      "name": "🎯 Play Now",
+                      "value": f"[Play {name}]({link})",
+                      "inline": True
                   }
+              ],
+              "footer": {
+                  "text": "Ron.cool • New Game"
+              }
+          }
+
+          # Add game PFP
+          if image:
+              embed["thumbnail"] = {
+                  "url": image
               }
 
-              if image:
-                  embed["thumbnail"] = {
-                      "url": image
-                  }
+          payload = {
+              "username": "Ron.cool",
+              "embeds": [embed]
+          }
 
-              payload = {
-                  "username": "Ron.cool",
-                  "embeds": [embed]
-              }
+          # ============================================
+          # SEND TO DISCORD
+          # ============================================
 
-              data = json.dumps(payload).encode("utf-8")
+          data = json.dumps(payload).encode("utf-8")
 
-              request = urllib.request.Request(
-                  webhook,
-                  data=data,
-                  headers={
-                      "Content-Type": "application/json",
-                      "User-Agent": "Ron.cool GitHub Action"
-                  },
-                  method="POST"
-              )
+          request = urllib.request.Request(
+              webhook,
+              data=data,
+              headers={
+                  "Content-Type": "application/json",
+                  "User-Agent": "Ron.cool Game Announcer"
+              },
+              method="POST"
+          )
 
-              try:
-                  with urllib.request.urlopen(request) as response:
-                      print(
-                          f"Discord response: {response.status}"
-                      )
+          try:
+              with urllib.request.urlopen(request) as response:
+                  print("Discord announcement sent!")
+                  print("HTTP status:", response.status)
 
-              except Exception as e:
-                  print("Discord webhook failed:")
-                  print(e)
-                  exit(1)
-
-          print("Announcement complete.")
+          except Exception as e:
+              print("ERROR: Failed to send Discord announcement.")
+              print(e)
+              exit(1)
           PY
