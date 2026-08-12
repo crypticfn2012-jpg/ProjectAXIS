@@ -1,1 +1,174 @@
+name: New Game Discord Announcement
 
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "games.json"
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect new games
+        id: games
+        shell: bash
+        run: |
+          python3 <<'PY'
+          import json
+          import subprocess
+          import os
+
+          try:
+              old_json = subprocess.check_output(
+                  ["git", "show", "HEAD^:games.json"],
+                  text=True
+              )
+              old_games = json.loads(old_json)
+          except Exception:
+              old_games = []
+
+          with open("games.json", "r", encoding="utf-8") as f:
+              new_games = json.load(f)
+
+          old_ids = {
+              game.get("id")
+              for game in old_games
+          }
+
+          added_games = [
+              game
+              for game in new_games
+              if game.get("id") not in old_ids
+          ]
+
+          with open(
+              os.environ["GITHUB_OUTPUT"],
+              "a",
+              encoding="utf-8"
+          ) as output:
+
+              output.write(
+                  "games="
+                  + json.dumps(added_games)
+                  + "\n"
+              )
+
+              output.write(
+                  "count="
+                  + str(len(added_games))
+                  + "\n"
+              )
+          PY
+
+      - name: Announce new games
+        if: steps.games.outputs.count != '0'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          NEW_GAMES: ${{ steps.games.outputs.games }}
+        shell: bash
+        run: |
+          python3 <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          webhook = os.environ["DISCORD_WEBHOOK"]
+          games = json.loads(os.environ["NEW_GAMES"])
+
+          for game in games:
+
+              name = game.get(
+                  "name",
+                  "New Game"
+              )
+
+              description = game.get(
+                  "description",
+                  "A new game has been added to Ron.cool!"
+              )
+
+              file = game.get(
+                  "file",
+                  ""
+              )
+
+              icon = game.get(
+                  "icon",
+                  ""
+              )
+
+              game_url = (
+                  "https://roncool.cc.cd/"
+                  + file
+              )
+
+              icon_url = (
+                  "https://roncool.cc.cd/"
+                  + icon
+              )
+
+              payload = {
+                  "username": "Ron.cool",
+                  "avatar_url": "https://roncool.cc.cd/favicon.ico",
+
+                  "embeds": [
+                      {
+                          "title": "🎮 New Game Released!",
+                          "description": (
+                              "**"
+                              + name
+                              + "**\n\n"
+                              + description
+                          ),
+
+                          "url": game_url,
+
+                          "color": 5630156,
+
+                          "thumbnail": {
+                              "url": icon_url
+                          },
+
+                          "image": {
+                              "url": icon_url
+                          },
+
+                          "footer": {
+                              "text": "Ron.cool • New Game"
+                          }
+                      }
+                  ]
+              }
+
+              data = json.dumps(
+                  payload
+              ).encode("utf-8")
+
+              request = urllib.request.Request(
+                  webhook,
+                  data=data,
+                  headers={
+                      "Content-Type":
+                          "application/json"
+                  },
+                  method="POST"
+              )
+
+              with urllib.request.urlopen(
+                  request
+              ) as response:
+
+                  print(
+                      "Discord response:",
+                      response.status
+                  )
+          PY
