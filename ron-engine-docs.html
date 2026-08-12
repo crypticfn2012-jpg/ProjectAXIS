@@ -1,0 +1,4205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Ron Engine Documentation — learn how Ron Engine works and how to build with it.">
+<title>Ron Engine Documentation | Ron.cool</title>
+
+<style>
+:root{
+  --bg:#05090d;
+  --panel:#09131a;
+  --panel2:#0c1921;
+  --line:#1b313b;
+  --text:#dce9ed;
+  --muted:#8ca0a6;
+  --cyan:#54ffcc;
+  --cyan2:#2ed9ad;
+  --red:#ff607f;
+  --yellow:#ffd166;
+  --shadow:0 20px 70px rgba(0,0,0,.32)
+}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  background:radial-gradient(circle at 70% -10%,#123442 0,#071016 36%,#03070a 75%);
+  color:var(--text);
+  font:15px/1.75 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Arial,sans-serif
+}
+
+a{
+  color:var(--cyan);
+  text-decoration:none
+}
+
+a:hover{text-decoration:underline}
+
+.wrap{
+  max-width:1400px;
+  margin:auto;
+  padding:0 24px
+}
+
+.top{
+  position:sticky;
+  top:0;
+  z-index:100;
+  border-bottom:1px solid #18303a;
+  background:rgba(3,8,11,.82);
+  backdrop-filter:blur(14px)
+}
+
+.topin{
+  height:64px;
+  display:flex;
+  align-items:center;
+  gap:18px
+}
+
+.brand{
+  font-weight:900;
+  font-size:18px;
+  letter-spacing:-.04em;
+  color:#fff
+}
+
+.brand span{color:var(--cyan)}
+
+.tag{
+  font-size:11px;
+  color:var(--muted);
+  padding:5px 9px;
+  border:1px solid #1a3038;
+  border-radius:999px
+}
+
+.search{
+  margin-left:auto;
+  width:min(340px,38vw);
+  position:relative
+}
+
+.search input{
+  width:100%;
+  background:#081119;
+  border:1px solid #1a3038;
+  color:#dce9ed;
+  border-radius:9px;
+  padding:9px 12px;
+  outline:0
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:260px minmax(0,1fr) 220px;
+  gap:28px;
+  align-items:start
+}
+
+.side{
+  position:sticky;
+  top:84px;
+  height:calc(100vh - 104px);
+  overflow:auto;
+  padding:18px 0 30px
+}
+
+.side h4{
+  margin:18px 0 7px;
+  color:#6f858c;
+  font-size:10px;
+  letter-spacing:.16em;
+  text-transform:uppercase
+}
+
+.side a{
+  display:block;
+  padding:6px 10px;
+  border-radius:7px;
+  color:#a9bbc0;
+  font-size:13px
+}
+
+.side a:hover,
+.side a.active{
+  background:#0b2028;
+  color:#fff;
+  text-decoration:none
+}
+
+.main{
+  padding:42px 0 80px;
+  min-width:0
+}
+
+.crumb{
+  font-size:12px;
+  color:#6f858c;
+  margin-bottom:12px
+}
+
+.hero h1{
+  font-size:56px;
+  line-height:1.02;
+  letter-spacing:-.055em;
+  margin:0 0 14px
+}
+
+.hero h1 span{color:var(--cyan)}
+
+.lead{
+  font-size:18px;
+  color:#9eb0b5;
+  max-width:800px
+}
+
+.card{
+  background:linear-gradient(145deg,rgba(12,28,36,.92),rgba(5,13,18,.85));
+  border:1px solid #18313b;
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:24px;
+  margin:22px 0
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px
+}
+
+.mini{
+  background:#09141b;
+  border:1px solid #17303a;
+  border-radius:12px;
+  padding:18px
+}
+
+.mini h3{
+  margin:0 0 7px;
+  font-size:16px
+}
+
+.mini p{
+  margin:0;
+  color:#8fa3a8;
+  font-size:13px
+}
+
+.code{
+  background:#03070a;
+  border:1px solid #1a2c34;
+  border-radius:10px;
+  padding:16px;
+  overflow:auto;
+  color:#d8f8ef;
+  font:13px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace
+}
+
+.note{
+  border-left:3px solid var(--cyan);
+  background:#08211d;
+  padding:12px 15px;
+  border-radius:0 10px 10px 0
+}
+
+.warn{
+  border-left-color:var(--yellow);
+  background:#211b0a
+}
+
+.danger{
+  border-left-color:var(--red);
+  background:#210b12
+}
+
+.api{
+  width:100%;
+  border-collapse:collapse;
+  margin:14px 0
+}
+
+.api th,
+.api td{
+  border-bottom:1px solid #1a2d35;
+  padding:9px 8px;
+  text-align:left;
+  vertical-align:top
+}
+
+.api th{
+  color:#9fbdc0;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.08em
+}
+
+.api td{
+  font-size:13px;
+  color:#c3d2d5
+}
+
+.pill{
+  display:inline-block;
+  padding:3px 8px;
+  border:1px solid #23404a;
+  border-radius:999px;
+  color:var(--cyan);
+  font-size:11px
+}
+
+.toc a{
+  display:block;
+  padding:5px 0;
+  color:#9fb1b6;
+  font-size:13px
+}
+
+.right{
+  position:sticky;
+  top:90px;
+  padding-top:34px
+}
+
+.right .toc{
+  border-left:1px solid #1b313b;
+  padding-left:14px
+}
+
+.right small{color:#64777d}
+
+.next{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:45px
+}
+
+.next a{
+  flex:1;
+  background:#08131a;
+  border:1px solid #19313a;
+  border-radius:12px;
+  padding:15px
+}
+
+.footer{
+  border-top:1px solid #172a33;
+  color:#64777d;
+  padding:30px 0 55px;
+  font-size:12px
+}
+
+.footer a{color:#7daaa1}
+
+.hidden{display:none!important}
+
+:root{
+  --accent:#54ffcc;
+  --text:#dce8eb
+}
+
+body{
+  background:radial-gradient(circle at 50% -20%,#123447 0%,#071017 36%,#03070a 75%);
+  color:var(--text);
+  min-height:100vh
+}
+
+.docs-shell{
+  display:grid;
+  grid-template-columns:280px minmax(0,1fr);
+  min-height:100vh
+}
+
+.docs-sidebar{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:auto;
+  padding:24px 18px;
+  background:rgba(3,8,12,.86);
+  border-right:1px solid rgba(84,255,204,.1);
+  backdrop-filter:blur(16px)
+}
+
+.brand{
+  padding:4px 10px 20px
+}
+
+.brand strong{
+  font-size:21px;
+  letter-spacing:-.04em
+}
+
+.brand strong span{color:var(--accent)}
+
+.brand small{
+  display:block;
+  color:#617277;
+  font-size:11px;
+  letter-spacing:.14em;
+  margin-top:4px
+}
+
+.docs-search{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid rgba(84,255,204,.13);
+  border-radius:9px;
+  background:#071017;
+  color:#fff;
+  outline:none;
+  margin:0 0 18px
+}
+
+.docs-search:focus{
+  border-color:var(--accent)
+}
+
+.nav-group{
+  margin:14px 0
+}
+
+.nav-label{
+  padding:8px 10px;
+  color:#5f7076;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-size:10px;
+  font-weight:800
+}
+
+.nav-group a{
+  display:block;
+  padding:8px 10px;
+  border-radius:7px;
+  color:#9fb0b5;
+  text-decoration:none;
+  font-size:13px
+}
+
+.nav-group a:hover,
+.nav-group a.active{
+  background:rgba(84,255,204,.08);
+  color:#fff
+}
+
+.nav-group a.active{
+  box-shadow:inset 2px 0 var(--accent)
+}
+
+.docs-main{min-width:0}
+
+.docs-top{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  padding:14px 28px;
+  background:rgba(4,9,13,.72);
+  border-bottom:1px solid rgba(84,255,204,.08);
+  backdrop-filter:blur(12px)
+}
+
+.docs-top a{
+  color:var(--accent);
+  text-decoration:none;
+  font-size:13px
+}
+
+.doc-wrap{
+  width:min(960px,calc(100% - 48px));
+  margin:0 auto;
+  padding:42px 0 90px
+}
+
+.doc-page{
+  display:none;
+  scroll-margin-top:80px
+}
+
+.doc-page.active{
+  display:block
+}
+
+.doc-page h1{
+  font-size:clamp(36px,6vw,62px);
+  margin:0 0 14px;
+  letter-spacing:-.05em
+}
+
+.doc-page h2{
+  margin-top:38px;
+  color:#fff
+}
+
+.doc-page h3{
+  margin-top:26px;
+  color:#dce8eb
+}
+
+.doc-page p,
+.doc-page li{
+  color:#97a9ae;
+  line-height:1.78
+}
+
+.doc-page code{
+  background:#0d171e;
+  border:1px solid #1e3038;
+  border-radius:6px;
+  padding:2px 5px;
+  color:#b9ffe9
+}
+
+.doc-page pre{
+  background:#050b10;
+  border:1px solid #1b2b33;
+  border-radius:12px;
+  padding:16px;
+  overflow:auto;
+  color:#d8fff4;
+  line-height:1.6
+}
+
+.doc-page table{
+  width:100%;
+  border-collapse:collapse;
+  margin:20px 0
+}
+
+.doc-page th,
+.doc-page td{
+  border:1px solid #203039;
+  padding:10px;
+  text-align:left;
+  color:#a9b8bc
+}
+
+.doc-page th{
+  color:#dffaf2;
+  background:#0a151b
+}
+
+.doc-page blockquote{
+  margin:18px 0;
+  padding:12px 16px;
+  border-left:3px solid var(--accent);
+  background:#07151a;
+  color:#9cb3b7;
+  border-radius:0 9px 9px 0
+}
+
+.download-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 18px;
+  background:var(--accent);
+  color:#03100c!important;
+  border-radius:9px;
+  font-weight:800;
+  text-decoration:none!important;
+  transition:transform .15s ease,filter .15s ease
+}
+
+.download-button:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.08)
+}
+
+.github-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 18px;
+  background:#08131a;
+  color:var(--accent)!important;
+  border:1px solid #23404a;
+  border-radius:9px;
+  font-weight:700;
+  text-decoration:none!important;
+  transition:background .15s ease,border-color .15s ease
+}
+
+.github-button:hover{
+  background:#0d2028;
+  border-color:var(--accent)
+}
+
+.button-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:20px
+}
+
+.setup-step{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
+  color:#c9d9dc
+}
+
+.setup-number{
+  width:28px;
+  height:28px;
+  flex:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:rgba(84,255,204,.1);
+  border:1px solid rgba(84,255,204,.25);
+  color:var(--accent);
+  font-weight:800;
+  font-size:12px
+}
+
+.mobile-nav{
+  display:none;
+  align-items:center;
+  gap:8px;
+  padding:8px 11px;
+  border:1px solid rgba(84,255,204,.2);
+  border-radius:8px;
+  background:#071219;
+  color:#c8fff1;
+  cursor:pointer
+}
+
+.no-results{
+  display:none;
+  padding:18px;
+  border:1px solid #25343c;
+  border-radius:10px;
+  color:#8fa1a7;
+  background:#071017
+}
+
+@media(max-width:900px){
+
+  .docs-shell{
+    grid-template-columns:1fr
+  }
+
+  .docs-sidebar{
+    position:fixed;
+    left:-310px;
+    top:0;
+    width:290px;
+    z-index:50;
+    transition:left .2s ease
+  }
+
+  .docs-sidebar.open{
+    left:0
+  }
+
+  .mobile-nav{
+    display:inline-flex
+  }
+
+  .doc-wrap{
+    width:min(960px,calc(100% - 28px));
+    padding-top:30px
+  }
+
+  .docs-top{
+    padding:12px 14px
+  }
+}
+
+@media(max-width:1050px){
+
+  .layout{
+    grid-template-columns:220px minmax(0,1fr)
+  }
+
+  .right{
+    display:none
+  }
+}
+
+@media(max-width:760px){
+
+  .wrap{
+    padding:0 15px
+  }
+
+  .layout{
+    display:block
+  }
+
+  .side{
+    position:static;
+    height:auto;
+    padding:10px 0 0;
+    border-bottom:1px solid #162a32
+  }
+
+  .side nav{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+
+  .side h4{
+    margin-top:10px
+  }
+
+  .main{
+    padding-top:28px
+  }
+
+  .hero h1{
+    font-size:42px
+  }
+
+  .grid2{
+    grid-template-columns:1fr
+  }
+
+  .search{
+    width:150px
+  }
+
+  .topin{
+    gap:10px
+  }
+
+  .tag{
+    display:none
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="docs-shell">
+
+<aside class="docs-sidebar" id="sidebar">
+
+  <div class="brand">
+    <strong>Ron<span>.</span>cool</strong>
+    <small>RON ENGINE DOCUMENTATION</small>
+  </div>
+
+  <input
+    class="docs-search"
+    id="search"
+    placeholder="Search documentation…"
+    aria-label="Search documentation"
+  >
+
+  <div class="nav-group">
+
+    <div class="nav-label">Start Here</div>
+
+    <a href="#index" data-page="index">
+      Documentation Home
+    </a>
+
+    <a href="#history" data-page="history">
+      History & Backstory
+    </a>
+
+    <a href="#install" data-page="install">
+      Setup & Project Structure
+    </a>
+
+    <a href="#first-project" data-page="first-project">
+      Your First Project
+    </a>
+
+  </div>
+
+
+  <div class="nav-group">
+
+    <div class="nav-label">Download</div>
+
+    <a href="#download" data-page="download">
+      Download Ron Engine
+    </a>
+
+    <a href="#setup" data-page="setup">
+      Setup & Installation
+    </a>
+
+  </div>
+
+
+  <div class="nav-group">
+
+    <div class="nav-label">Engine Guide</div>
+
+    <a href="#architecture" data-page="architecture">
+      Engine Architecture
+    </a>
+
+    <a href="#runtime" data-page="runtime">
+      Runtime & Game Loop
+    </a>
+
+    <a href="#scenes" data-page="scenes">
+      Scenes & Entities
+    </a>
+
+    <a href="#rendering" data-page="rendering">
+      Rendering
+    </a>
+
+    <a href="#input" data-page="input">
+      Input
+    </a>
+
+    <a href="#physics" data-page="physics">
+      Physics & Collision
+    </a>
+
+    <a href="#animation" data-page="animation">
+      Animation
+    </a>
+
+    <a href="#audio" data-page="audio">
+      Audio
+    </a>
+
+    <a href="#ui" data-page="ui">
+      UI & HUD
+    </a>
+
+    <a href="#assets" data-page="assets">
+      Assets & Content
+    </a>
+
+  </div>
+
+
+  <div class="nav-group">
+
+    <div class="nav-label">Production</div>
+
+    <a href="#browser" data-page="browser">
+      Browser Deployment
+    </a>
+
+    <a href="#debugging" data-page="debugging">
+      Debugging
+    </a>
+
+    <a href="#performance" data-page="performance">
+      Performance
+    </a>
+
+    <a href="#security" data-page="security">
+      Security
+    </a>
+
+    <a href="#examples" data-page="examples">
+      Examples & Patterns
+    </a>
+
+  </div>
+
+
+  <div class="nav-group">
+
+    <div class="nav-label">Reference</div>
+
+    <a href="#api" data-page="api">
+      API Reference
+    </a>
+
+    <a href="#glossary" data-page="glossary">
+      Glossary
+    </a>
+
+    <a href="#contributing" data-page="contributing">
+      Contributing
+    </a>
+
+    <a href="#changelog" data-page="changelog">
+      Changelog
+    </a>
+
+  </div>
+
+</aside>
+
+
+<section class="docs-main">
+
+  <div class="docs-top">
+
+    <button
+      class="mobile-nav"
+      id="menuBtn"
+      type="button"
+    >
+      ☰ Docs
+    </button>
+
+    <a class="backlink" href="/">
+      ← Back to Ron.cool
+    </a>
+
+  </div>
+
+
+  <div class="doc-wrap">
+
+    <div class="no-results" id="noResults">
+      No documentation pages matched your search.
+    </div>
+
+
+    <!-- HOME -->
+
+    <section
+      class="doc-page"
+      id="index"
+      data-title="Documentation Home"
+    >
+
+      <div class="crumb">
+        Ron Engine / Ron Engine Documentation
+      </div>
+
+      <section class="hero">
+
+        <h1>
+          Ron<span> Engine</span> Documentation
+        </h1>
+
+        <p class="lead">
+          The engine used by Ron.cool projects. This is where the runtime,
+          systems and project conventions are documented.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Welcome</h2>
+
+        <p>
+          Ron Engine is a project built for Ron.cool with a simple goal:
+          make it possible to create interactive browser experiences without
+          fighting a huge toolchain. The engine grew from hands-on
+          experimentation with games, first-person systems, 2D experiments,
+          UI, loading screens, asset pipelines and reusable browser code.
+        </p>
+
+        <p style="margin-top:12px">
+          Start with the setup guide, then work through the engine systems.
+          Use the reference pages when you need a specific detail.
+        </p>
+
+      </div>
+
+
+      <div class="grid2">
+
+        <div class="mini">
+
+          <h3>New to Ron Engine</h3>
+
+          <p>
+            Start with
+            <a href="#setup" data-page="setup">Setup</a>,
+            then build the
+            <a href="#first-project" data-page="first-project">
+              first project
+            </a>.
+          </p>
+
+        </div>
+
+
+        <div class="mini">
+
+          <h3>Understanding the engine</h3>
+
+          <p>
+            Read
+            <a href="#architecture" data-page="architecture">
+              Architecture
+            </a>
+            and
+            <a href="#runtime" data-page="runtime">
+              Runtime &amp; Game Loop
+            </a>.
+          </p>
+
+        </div>
+
+
+        <div class="mini">
+
+          <h3>Building a game</h3>
+
+          <p>
+            Jump into
+            <a href="#rendering" data-page="rendering">
+              Rendering
+            </a>,
+            <a href="#input" data-page="input">
+              Input
+            </a>,
+            <a href="#physics" data-page="physics">
+              Physics
+            </a>
+            and
+            <a href="#animation" data-page="animation">
+              Animation
+            </a>.
+          </p>
+
+        </div>
+
+
+        <div class="mini">
+
+          <h3>Looking up an API detail</h3>
+
+          <p>
+            Use the
+            <a href="#api" data-page="api">
+              API Reference
+            </a>
+            and
+            <a href="#glossary" data-page="glossary">
+              Glossary
+            </a>.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Ready to build?</h2>
+
+        <p>
+          Download the Ron Engine source and follow the setup guide to get
+          your first project running.
+        </p>
+
+        <div class="button-row">
+
+          <a
+            href="#download"
+            data-page="download"
+            class="download-button"
+          >
+            ↓ Download Ron Engine
+          </a>
+
+          <a
+            href="#setup"
+            data-page="setup"
+            class="github-button"
+          >
+            Setup Guide →
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Documentation philosophy</h2>
+
+        <p>
+          The docs are split the same way most engine manuals are:
+          a setup path, system guides, examples and reference material.
+          Ron Engine follows the same principle: explain the mental model
+          first, show it in a tutorial, then document the precise interfaces.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <span></span>
+
+        <a href="#history" data-page="history">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          History & Backstory
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- HISTORY -->
+
+    <section
+      class="doc-page"
+      id="history"
+      data-title="History & Backstory"
+    >
+
+      <div class="crumb">
+        Ron Engine / History &amp; Backstory
+      </div>
+
+      <section class="hero">
+
+        <h1>History &amp; Backstory</h1>
+
+        <p class="lead">
+          Where the engine came from and why the current structure exists.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>The beginning</h2>
+
+        <p>
+          The engine started as project code. The same problems kept coming
+          back — loading, input, cameras, HUDs, collision, assets and
+          animation — so the shared parts were pulled out and reused.
+        </p>
+
+        <p style="margin-top:12px">
+          As Ron.cool projects got larger, copying the same systems between
+          projects became harder to maintain. That pushed the shared code
+          toward a proper engine structure.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>The people</h2>
+
+        <p>
+          <strong>Ron / Ron.cool</strong> is the project's creator and
+          driving force. The engine's direction comes from the projects
+          built for Ron.cool and the problems those projects exposed.
+        </p>
+
+        <div class="note" style="margin-top:16px">
+
+          Contributor names should only be added here when they have actually
+          contributed to the engine or when Ron.cool has chosen to credit them
+          publicly.
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>From experiments to systems</h2>
+
+        <table class="api">
+
+          <tr>
+            <th>Phase</th>
+            <th>What changed</th>
+          </tr>
+
+          <tr>
+            <td>Experiments</td>
+            <td>
+              Small HTML games and interactive pages established the
+              browser-first direction.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Reusable code</td>
+            <td>
+              Input, rendering, HUD and loading patterns started moving
+              into reusable modules.
+            </td>
+          </tr>
+
+          <tr>
+            <td>3D groundwork</td>
+            <td>
+              Three.js-based projects drove camera, player, lighting,
+              asset and animation work.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Engine mindset</td>
+            <td>
+              Shared systems became a deliberate platform instead of
+              one-off code.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Ron.cool ecosystem</td>
+            <td>
+              Apps, games and experiments became the primary testbed
+              for the engine.
+            </td>
+          </tr>
+
+        </table>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Why browser-first?</h2>
+
+        <p>
+          Ron.cool is a web platform. That changes the engine's priorities:
+          instant loading, simple deployment, URL-addressable projects,
+          familiar web tooling, progressive enhancement, and no mandatory
+          desktop launcher.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#index" data-page="index">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Documentation Home
+
+        </a>
+
+        <a href="#install" data-page="install">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Setup & Project Structure
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- DOWNLOAD -->
+
+    <section
+      class="doc-page"
+      id="download"
+      data-title="Download Ron Engine"
+    >
+
+      <div class="crumb">
+        Ron Engine / Download
+      </div>
+
+      <section class="hero">
+
+        <h1>
+          Download Ron<span> Engine</span>
+        </h1>
+
+        <p class="lead">
+          Get the complete Ron Engine source code and start building
+          your own browser project.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Download the engine</h2>
+
+        <p>
+          Ron Engine is hosted inside the ProjectAXIS repository.
+          The engine directory contains the core runtime, rendering,
+          input, physics, audio, UI and utility systems.
+        </p>
+
+        <div class="button-row">
+
+          <a
+            class="download-button"
+            href="https://cold2.gofile.io/download/web/b7520646-9d1e-45cd-94b1-913fefffd64b/R.CEngine.zip"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ↓ Download Ron Engine
+          </a>
+
+          <a
+            class="github-button"
+            href="https://github.com/crypticfn2012-jpg/ProjectAXIS/tree/main/engine"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Engine on GitHub →
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>What's included?</h2>
+
+        <table class="api">
+
+          <tr>
+            <th>Folder / File</th>
+            <th>Purpose</th>
+          </tr>
+
+          <tr>
+            <td><code>assets/</code></td>
+            <td>Engine assets.</td>
+          </tr>
+
+          <tr>
+            <td><code>audio/</code></td>
+            <td>Audio systems and resources.</td>
+          </tr>
+
+          <tr>
+            <td><code>core/</code></td>
+            <td>Core engine functionality.</td>
+          </tr>
+
+          <tr>
+            <td><code>engine/</code></td>
+            <td>Engine-level systems.</td>
+          </tr>
+
+          <tr>
+            <td><code>graphics/</code></td>
+            <td>Graphics and rendering functionality.</td>
+          </tr>
+
+          <tr>
+            <td><code>input/</code></td>
+            <td>Keyboard, pointer and input handling.</td>
+          </tr>
+
+          <tr>
+            <td><code>physics/</code></td>
+            <td>Physics and collision systems.</td>
+          </tr>
+
+          <tr>
+            <td><code>ui/</code></td>
+            <td>User-interface systems.</td>
+          </tr>
+
+          <tr>
+            <td><code>utils/</code></td>
+            <td>Shared utilities.</td>
+          </tr>
+
+          <tr>
+            <td><code>README.md</code></td>
+            <td>Engine documentation and API information.</td>
+          </tr>
+
+          <tr>
+            <td><code>RonEngine.js</code></td>
+            <td>Main engine entry point.</td>
+          </tr>
+
+        </table>
+
+      </div>
+
+
+      <div class="note">
+
+        <strong>Important:</strong>
+        The GitHub ZIP downloads the repository's current main branch.
+        After extracting it, use the <code>engine</code> directory inside
+        the repository for your project.
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Direct source</h2>
+
+        <p>
+          Want to inspect the source before downloading it?
+        </p>
+
+        <a
+          class="github-button"
+          href="https://github.com/crypticfn2012-jpg/ProjectAXIS/tree/main/engine"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Open engine source →
+        </a>
+
+      </div>
+
+
+      <div class="next">
+
+        <span></span>
+
+        <a href="#setup" data-page="setup">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Setup & Installation
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- SETUP -->
+
+    <section
+      class="doc-page"
+      id="setup"
+      data-title="Setup & Installation"
+    >
+
+      <div class="crumb">
+        Ron Engine / Setup &amp; Installation
+      </div>
+
+      <section class="hero">
+
+        <h1>
+          Setup &amp; <span>Installation</span>
+        </h1>
+
+        <p class="lead">
+          Download Ron Engine, create a project and get it running
+          in your browser.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>1. Download Ron Engine</h2>
+
+        <p>
+          Download the ProjectAXIS repository and extract it.
+        </p>
+
+        <div class="button-row">
+
+          <a
+            class="download-button"
+            href="https://github.com/crypticfn2012-jpg/ProjectAXIS/archive/refs/heads/main.zip"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ↓ Download Ron Engine
+          </a>
+
+          <a
+            class="github-button"
+            href="https://github.com/crypticfn2012-jpg/ProjectAXIS/tree/main/engine"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View source →
+          </a>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>2. Find the engine folder</h2>
+
+        <p>
+          After extracting the repository, open the
+          <code>engine</code> folder.
+        </p>
+
+        <pre class="code">ProjectAXIS/
+└── engine/
+    ├── assets/
+    ├── audio/
+    ├── core/
+    ├── engine/
+    ├── graphics/
+    ├── input/
+    ├── physics/
+    ├── ui/
+    ├── utils/
+    ├── README.md
+    └── RonEngine.js</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>3. Create your project</h2>
+
+        <p>
+          Make a new folder for your game.
+          Copy the entire <code>engine</code> folder into it.
+        </p>
+
+        <pre class="code">my-ron-game/
+├── index.html
+├── main.js
+└── engine/
+    ├── assets/
+    ├── audio/
+    ├── core/
+    ├── engine/
+    ├── graphics/
+    ├── input/
+    ├── physics/
+    ├── ui/
+    ├── utils/
+    └── RonEngine.js</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>4. Create index.html</h2>
+
+        <pre class="code">&lt;!doctype html&gt;
+&lt;html lang="en"&gt;
+
+&lt;head&gt;
+
+  &lt;meta charset="UTF-8"&gt;
+
+  &lt;meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  &gt;
+
+  &lt;title&gt;My Ron Engine Game&lt;/title&gt;
+
+&lt;/head&gt;
+
+&lt;body&gt;
+
+  &lt;canvas id="game"&gt;&lt;/canvas&gt;
+
+  &lt;script
+    type="module"
+    src="./main.js"
+  &gt;&lt;/script&gt;
+
+&lt;/body&gt;
+
+&lt;/html&gt;</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>5. Create main.js</h2>
+
+        <p>
+          Ron Engine exposes <code>RonEngine</code> and
+          <code>BoxCollider</code> from <code>RonEngine.js</code>.
+        </p>
+
+        <pre class="code">import {
+  RonEngine,
+  BoxCollider
+} from "./engine/RonEngine.js";
+
+const canvas = document.querySelector("#game");
+
+const engine = new RonEngine({
+  canvas,
+  quality: "high"
+});
+
+const player = engine.createEntity("Player");
+
+player.addComponent(
+  new BoxCollider(player)
+);
+
+engine.start();</pre>
+
+        <p style="margin-top:14px">
+          This is the startup pattern documented by the current Ron Engine
+          source.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>6. Use a local web server</h2>
+
+        <p>
+          Do not open the project by double-clicking
+          <code>index.html</code>.
+        </p>
+
+        <p>
+          Ron Engine uses JavaScript modules and browser requests, so
+          the project needs to be served over HTTP.
+        </p>
+
+        <h3>Python</h3>
+
+        <pre class="code">python -m http.server 8000</pre>
+
+        <p>
+          Then open:
+        </p>
+
+        <pre class="code">http://localhost:8000</pre>
+
+        <h3>VS Code</h3>
+
+        <p>
+          Alternatively, install the Live Server extension in VS Code,
+          right-click <code>index.html</code> and choose
+          <strong>Open with Live Server</strong>.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>7. Test the engine</h2>
+
+        <p>
+          Open the browser developer tools with
+          <code>F12</code> and check the Console.
+        </p>
+
+        <p>
+          If the engine loads correctly, you should not have module,
+          asset or JavaScript errors.
+        </p>
+
+        <div class="note">
+
+          <strong>If you get a blank screen:</strong>
+          check the browser console first. The most common causes are
+          incorrect import paths, missing files or opening the project
+          without a local server.
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>How the engine starts</h2>
+
+        <pre class="code">index.html
+     ↓
+main.js
+     ↓
+RonEngine.js
+     ↓
+RonEngine
+     ├── render loop
+     ├── scene
+     ├── renderer
+     ├── input
+     ├── physics
+     ├── assets
+     ├── UI
+     └── lifecycle
+     ↓
+engine.start()
+     ↓
+Game running</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Common problems</h2>
+
+        <table class="api">
+
+          <tr>
+            <th>Problem</th>
+            <th>Solution</th>
+          </tr>
+
+          <tr>
+            <td>Module not found</td>
+            <td>
+              Check the import path and make sure the project is being
+              served through HTTP.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Blank page</td>
+            <td>
+              Open DevTools and inspect the Console.
+            </td>
+          </tr>
+
+          <tr>
+            <td>404 error</td>
+            <td>
+              Check the filename, folder name and relative path.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Engine doesn't start</td>
+            <td>
+              Make sure <code>engine.start()</code> is called.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Canvas isn't found</td>
+            <td>
+              Make sure <code>&lt;canvas id="game"&gt;</code> exists before
+              the JavaScript runs.
+            </td>
+          </tr>
+
+        </table>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#download" data-page="download">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Download Ron Engine
+
+        </a>
+
+        <a href="#install" data-page="install">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Setup & Project Structure
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- INSTALL / PROJECT STRUCTURE -->
+
+    <section
+      class="doc-page"
+      id="install"
+      data-title="Setup & Project Structure"
+    >
+
+      <div class="crumb">
+        Ron Engine / Setup &amp; Project Structure
+      </div>
+
+      <section class="hero">
+
+        <h1>Setup &amp; Project Structure</h1>
+
+        <p class="lead">
+          How a Ron Engine project is organized and the minimum
+          environment you need.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Requirements</h2>
+
+        <ul>
+
+          <li>
+            A modern browser with JavaScript modules, Canvas and Web APIs.
+          </li>
+
+          <li>
+            A local HTTP server during development.
+          </li>
+
+          <li>
+            The Ron Engine source folder.
+          </li>
+
+          <li>
+            A project folder containing your game's entry page.
+          </li>
+
+        </ul>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Recommended structure</h2>
+
+        <pre class="code">my-project/
+├── index.html
+├── main.js
+├── style.css
+├── engine/
+│   ├── assets/
+│   ├── audio/
+│   ├── core/
+│   ├── engine/
+│   ├── graphics/
+│   ├── input/
+│   ├── physics/
+│   ├── ui/
+│   ├── utils/
+│   └── RonEngine.js
+├── assets/
+│   ├── textures/
+│   ├── models/
+│   ├── audio/
+│   └── fonts/
+└── scenes/</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Local development</h2>
+
+        <p>
+          Use a static server such as VS Code Live Server,
+          Python's <code>http.server</code>, or another development server.
+        </p>
+
+        <pre class="code">python -m http.server 8000</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>First launch checklist</h2>
+
+        <ol>
+
+          <li>
+            Open
+            <code>http://localhost:8000</code>.
+          </li>
+
+          <li>
+            Confirm the engine entry point loads.
+          </li>
+
+          <li>
+            Confirm the renderer creates a canvas.
+          </li>
+
+          <li>
+            Confirm assets resolve.
+          </li>
+
+          <li>
+            Open DevTools and check for startup errors.
+          </li>
+
+        </ol>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#history" data-page="history">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          History & Backstory
+
+        </a>
+
+        <a href="#first-project" data-page="first-project">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Your First Project
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- FIRST PROJECT -->
+
+    <section
+      class="doc-page"
+      id="first-project"
+      data-title="Your First Project"
+    >
+
+      <div class="crumb">
+        Ron Engine / Your First Ron Engine Project
+      </div>
+
+      <section class="hero">
+
+        <h1>
+          Your First Ron<span> Engine</span> Project
+        </h1>
+
+        <p class="lead">
+          Build a minimal project, verify the runtime, then expand it
+          one system at a time.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Step 1 — HTML shell</h2>
+
+        <pre class="code">&lt;!doctype html&gt;
+&lt;html&gt;
+&lt;body&gt;
+
+  &lt;canvas id="game"&gt;&lt;/canvas&gt;
+
+  &lt;script
+    type="module"
+    src="./main.js"
+  &gt;&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Step 2 — bootstrap</h2>
+
+        <pre class="code">import {
+  RonEngine,
+  BoxCollider
+} from "./engine/RonEngine.js";
+
+const canvas = document.querySelector("#game");
+
+const engine = new RonEngine({
+  canvas,
+  quality: "high"
+});
+
+const player = engine.createEntity("Player");
+
+player.addComponent(
+  new BoxCollider(player)
+);
+
+engine.start();</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Step 3 — add one system at a time</h2>
+
+        <p>
+          Do not start by building a complete game. Add the renderer,
+          then input, then a player, then collision, then UI.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#install" data-page="install">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Setup & Project Structure
+
+        </a>
+
+        <a href="#architecture" data-page="architecture">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Engine Architecture
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ARCHITECTURE -->
+
+    <section
+      class="doc-page"
+      id="architecture"
+      data-title="Engine Architecture"
+    >
+
+      <div class="crumb">
+        Ron Engine / Engine Architecture
+      </div>
+
+      <section class="hero">
+
+        <h1>Engine Architecture</h1>
+
+        <p class="lead">
+          How the runtime is split into systems and how those systems fit together.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>High-level architecture</h2>
+
+        <pre class="code">Application
+   ↓
+Ron Engine Runtime
+   ├── Time / Game Loop
+   ├── Scene / Entity Model
+   ├── Input
+   ├── Rendering
+   ├── Physics / Collision
+   ├── Animation
+   ├── Audio
+   ├── UI
+   └── Asset Loading
+          ↓
+       Browser APIs
+  Canvas · Web Audio · DOM · Fetch · Pointer/Keyboard APIs</pre>
+
+      </div>
+
+
+      <div class="grid2">
+
+        <div class="mini">
+
+          <h3>Runtime layer</h3>
+
+          <p>
+            Owns timing, update order, lifecycle and coordination.
+          </p>
+
+        </div>
+
+        <div class="mini">
+
+          <h3>Systems layer</h3>
+
+          <p>
+            Rendering, physics, audio and input provide focused systems.
+          </p>
+
+        </div>
+
+        <div class="mini">
+
+          <h3>Game layer</h3>
+
+          <p>
+            Projects define gameplay rules, content and presentation.
+          </p>
+
+        </div>
+
+        <div class="mini">
+
+          <h3>Platform layer</h3>
+
+          <p>
+            The browser supplies the low-level primitives.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Design principle: systems over monoliths</h2>
+
+        <p>
+          Ron Engine should prefer small systems with explicit
+          responsibilities. That makes bugs easier to isolate and allows
+          projects to use only the features they need.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#first-project" data-page="first-project">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Your First Project
+
+        </a>
+
+        <a href="#runtime" data-page="runtime">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Runtime & Game Loop
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- RUNTIME -->
+
+    <section
+      class="doc-page"
+      id="runtime"
+      data-title="Runtime & Game Loop"
+    >
+
+      <div class="crumb">
+        Ron Engine / Runtime &amp; Game Loop
+      </div>
+
+      <section class="hero">
+
+        <h1>Runtime &amp; Game Loop</h1>
+
+        <p class="lead">
+          Understand time, updates, rendering and lifecycle before building
+          complex mechanics.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>The main loop</h2>
+
+        <pre class="code">requestAnimationFrame(frame)
+        ↓
+calculate delta time
+        ↓
+process input
+        ↓
+update gameplay
+        ↓
+update physics
+        ↓
+update animations
+        ↓
+render
+        ↓
+request next frame</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Delta time</h2>
+
+        <p>
+          Use elapsed time rather than assuming a fixed monitor refresh rate.
+          Movement should generally be expressed as velocity × delta time.
+        </p>
+
+        <pre class="code">position.x += velocity.x * dt;</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Lifecycle</h2>
+
+        <p>
+          A clean runtime distinguishes initialization, active simulation,
+          pause, resume and shutdown.
+        </p>
+
+      </div>
+
+
+      <div class="note">
+
+        <strong>Rule of thumb:</strong>
+        if a system is changing state every frame, make its update
+        responsibility explicit.
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#architecture" data-page="architecture">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Engine Architecture
+
+        </a>
+
+        <a href="#scenes" data-page="scenes">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Scenes & Entities
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- SCENES -->
+
+    <section
+      class="doc-page"
+      id="scenes"
+      data-title="Scenes & Entities"
+    >
+
+      <div class="crumb">
+        Ron Engine / Scenes &amp; Entities
+      </div>
+
+      <section class="hero">
+
+        <h1>Scenes &amp; Entities</h1>
+
+        <p class="lead">
+          How projects organise worlds, players, enemies and other game objects.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>What is a scene?</h2>
+
+        <p>
+          A Ron Engine scene is a structured collection of entities and
+          systems that can be loaded, unloaded or instanced.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Entity model</h2>
+
+        <pre class="code">Entity
+├── Transform
+├── Renderable
+├── Collider
+├── Animator
+├── AudioEmitter
+└── Gameplay Components</pre>
+
+        <p>
+          Not every entity needs every component.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Reusable content</h2>
+
+        <p>
+          Build one player definition, one enemy definition and one door
+          definition, then instance them.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#runtime" data-page="runtime">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Runtime & Game Loop
+
+        </a>
+
+        <a href="#rendering" data-page="rendering">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Rendering
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- RENDERING -->
+
+    <section
+      class="doc-page"
+      id="rendering"
+      data-title="Rendering"
+    >
+
+      <div class="crumb">
+        Ron Engine / Rendering
+      </div>
+
+      <section class="hero">
+
+        <h1>Rendering</h1>
+
+        <p class="lead">
+          The rendering layer, cameras, layers and the boundary between
+          drawing and game logic.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Rendering responsibilities</h2>
+
+        <ul>
+
+          <li>Turn engine state into pixels.</li>
+          <li>Manage cameras and view transforms.</li>
+          <li>Resolve render order and layers.</li>
+          <li>Apply lighting and materials where supported.</li>
+          <li>Keep rendering separate from gameplay rules.</li>
+
+        </ul>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>2D</h2>
+
+        <p>
+          Canvas 2D is a natural foundation for lightweight Ron.cool
+          experiences.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>3D</h2>
+
+        <p>
+          Ron Engine uses Three.js for browser-based 3D work. Three.js
+          is loaded from a CDN rather than requiring a large native toolchain.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Render order</h2>
+
+        <pre class="code">background
+→ world
+→ transparent effects
+→ characters
+→ particles
+→ UI</pre>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#scenes" data-page="scenes">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Scenes & Entities
+
+        </a>
+
+        <a href="#input" data-page="input">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Input
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- INPUT -->
+
+    <section
+      class="doc-page"
+      id="input"
+      data-title="Input"
+    >
+
+      <div class="crumb">
+        Ron Engine / Input
+      </div>
+
+      <section class="hero">
+
+        <h1>Input</h1>
+
+        <p class="lead">
+          Reading keyboard, mouse, touch and gamepad input.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Input actions</h2>
+
+        <p>
+          Prefer semantic actions over hard-coding every gameplay system
+          directly to physical keys.
+        </p>
+
+        <pre class="code">if (input.pressed("jump")) {
+  player.jump();
+}</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Keyboard and mouse</h2>
+
+        <p>
+          Browser projects commonly use KeyboardEvent and PointerEvent.
+          First-person games may use Pointer Lock for camera look.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Touch</h2>
+
+        <p>
+          For mobile, map touch gestures to the same semantic actions.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#rendering" data-page="rendering">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Rendering
+
+        </a>
+
+        <a href="#physics" data-page="physics">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Physics & Collision
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- PHYSICS -->
+
+    <section
+      class="doc-page"
+      id="physics"
+      data-title="Physics & Collision"
+    >
+
+      <div class="crumb">
+        Ron Engine / Physics &amp; Collision
+      </div>
+
+      <section class="hero">
+
+        <h1>Physics &amp; Collision</h1>
+
+        <p class="lead">
+          Movement, collision and simple physics concepts for browser games.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Collision comes before polish</h2>
+
+        <p>
+          Build collision early, then add animation and effects on top.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Simple collision</h2>
+
+        <pre class="code">tryX = position.x + velocity.x * dt;
+
+if (!world.blocked(tryX, position.y)) {
+  position.x = tryX;
+}
+
+tryY = position.y + velocity.y * dt;
+
+if (!world.blocked(position.x, tryY)) {
+  position.y = tryY;
+}</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Triggers</h2>
+
+        <p>
+          Separate solid collision from triggers.
+        </p>
+
+      </div>
+
+
+      <div class="note">
+
+        <strong>Practical rule:</strong>
+        solve movement and collision as predictable state transitions
+        before introducing complicated impulses or character controllers.
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#input" data-page="input">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Input
+
+        </a>
+
+        <a href="#animation" data-page="animation">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Animation
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ANIMATION -->
+
+    <section
+      class="doc-page"
+      id="animation"
+      data-title="Animation"
+    >
+
+      <div class="crumb">
+        Ron Engine / Animation
+      </div>
+
+      <section class="hero">
+
+        <h1>Animation</h1>
+
+        <p class="lead">
+          Character clips, sprite animation and procedural effects.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Animation types</h2>
+
+        <table class="api">
+
+          <tr>
+            <th>Type</th>
+            <th>Use</th>
+          </tr>
+
+          <tr>
+            <td>Keyframe / clip</td>
+            <td>
+              Imported character and first-person animations.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Sprite sheet</td>
+            <td>
+              2D frame-based animation.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Procedural</td>
+            <td>
+              Weapon sway, recoil, camera bob and UI motion.
+            </td>
+          </tr>
+
+          <tr>
+            <td>State-driven</td>
+            <td>
+              Idle → walk → run → jump → fall → land.
+            </td>
+          </tr>
+
+        </table>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Animation state machine</h2>
+
+        <pre class="code">IDLE
+ ↓ movement
+WALK
+ ↓ sprint
+RUN
+ ↓ jump
+AIRBORNE
+ ↓ landing
+LAND
+ ↓ no movement
+IDLE</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Blend, don't snap</h2>
+
+        <p>
+          Use interpolation when changing animation weights, camera FOV,
+          weapon sway, UI panels and other visual state.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#physics" data-page="physics">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Physics & Collision
+
+        </a>
+
+        <a href="#audio" data-page="audio">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Audio
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- AUDIO -->
+
+    <section
+      class="doc-page"
+      id="audio"
+      data-title="Audio"
+    >
+
+      <div class="crumb">
+        Ron Engine / Audio
+      </div>
+
+      <section class="hero">
+
+        <h1>Audio</h1>
+
+        <p class="lead">
+          Sound playback, ambience, effects and browser audio APIs.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Audio layers</h2>
+
+        <ul>
+
+          <li>Music</li>
+          <li>Ambience</li>
+          <li>Effects</li>
+          <li>Mixing</li>
+
+        </ul>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Browser audio</h2>
+
+        <p>
+          Use HTMLAudioElement for simple playback or Web Audio API
+          when you need routing, spatialization or more detailed mixing.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Gameplay-driven audio</h2>
+
+        <p>
+          Good game audio changes with state. Sprinting can increase
+          footstep intensity and danger can change the mix.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#animation" data-page="animation">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Animation
+
+        </a>
+
+        <a href="#ui" data-page="ui">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          UI & HUD
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- UI -->
+
+    <section
+      class="doc-page"
+      id="ui"
+      data-title="UI & HUD"
+    >
+
+      <div class="crumb">
+        Ron Engine / UI &amp; HUD
+      </div>
+
+      <section class="hero">
+
+        <h1>UI &amp; HUD</h1>
+
+        <p class="lead">
+          HUDs, menus, prompts and browser UI.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Two UI worlds</h2>
+
+        <p>
+          Ron Engine projects can use Canvas-rendered UI, DOM UI,
+          or a hybrid.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>HUD rule</h2>
+
+        <p>
+          Only show information that helps the current decision.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>State-driven menus</h2>
+
+        <pre class="code">TITLE
+ ↓ Play
+GAME
+ ↓ Escape
+PAUSED
+ ↓ Resume
+GAME
+ ↓ Game Over
+RESULTS</pre>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#audio" data-page="audio">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Audio
+
+        </a>
+
+        <a href="#assets" data-page="assets">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Assets & Content
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ASSETS -->
+
+    <section
+      class="doc-page"
+      id="assets"
+      data-title="Assets & Content"
+    >
+
+      <div class="crumb">
+        Ron Engine / Assets &amp; Content
+      </div>
+
+      <section class="hero">
+
+        <h1>Assets &amp; Content</h1>
+
+        <p class="lead">
+          Where project assets live and how the runtime loads them.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Paths are part of the pipeline</h2>
+
+        <p>
+          Use predictable relative asset paths and keep content close
+          to the project that consumes it.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Suggested folders</h2>
+
+        <pre class="code">assets/
+├── images/
+├── sprites/
+├── models/
+├── animations/
+├── audio/
+├── fonts/
+└── data/</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Loading strategy</h2>
+
+        <p>
+          Small projects can load assets on demand. Larger projects
+          should preload critical content and provide progress feedback.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#ui" data-page="ui">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          UI & HUD
+
+        </a>
+
+        <a href="#browser" data-page="browser">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Browser Deployment
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- BROWSER -->
+
+    <section
+      class="doc-page"
+      id="browser"
+      data-title="Browser Deployment"
+    >
+
+      <div class="crumb">
+        Ron Engine / Browser Deployment
+      </div>
+
+      <section class="hero">
+
+        <h1>Browser Deployment</h1>
+
+        <p class="lead">
+          Deploying a project as static files.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Deployment model</h2>
+
+        <p>
+          Ron Engine is designed for static web deployment.
+          Projects can be hosted on GitHub Pages, Cloudflare Pages
+          and similar services.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Production checklist</h2>
+
+        <ul>
+
+          <li>Use HTTPS.</li>
+          <li>Verify asset paths on the deployed URL.</li>
+          <li>Test hard refreshes.</li>
+          <li>Check console and network errors.</li>
+          <li>Keep user data requests minimal.</li>
+          <li>Use appropriate caching.</li>
+
+        </ul>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Ron.cool integration</h2>
+
+        <p>
+          Each project should have a stable entry point, clear title,
+          back navigation if needed and mobile behaviour where practical.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#assets" data-page="assets">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Assets & Content
+
+        </a>
+
+        <a href="#debugging" data-page="debugging">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Debugging
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- DEBUGGING -->
+
+    <section
+      class="doc-page"
+      id="debugging"
+      data-title="Debugging"
+    >
+
+      <div class="crumb">
+        Ron Engine / Debugging
+      </div>
+
+      <section class="hero">
+
+        <h1>Debugging</h1>
+
+        <p class="lead">
+          A simple checklist for tracking down common browser and engine errors.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Debug in layers</h2>
+
+        <ol>
+
+          <li><strong>Boot:</strong> did the module load?</li>
+          <li><strong>Assets:</strong> did files resolve?</li>
+          <li><strong>Runtime:</strong> is the update loop running?</li>
+          <li><strong>State:</strong> are values changing?</li>
+          <li><strong>Rendering:</strong> is the state visible?</li>
+          <li><strong>Input:</strong> are events firing?</li>
+
+        </ol>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Error messages</h2>
+
+        <pre class="code">RON ENGINE: Loading first-person arms
+RON ENGINE: Arms model loaded successfully
+RON ENGINE: Found animations: 18</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Common browser failures</h2>
+
+        <table class="api">
+
+          <tr>
+            <th>Error</th>
+            <th>Likely cause</th>
+          </tr>
+
+          <tr>
+            <td>Module not found</td>
+            <td>
+              Wrong relative path or file:// usage.
+            </td>
+          </tr>
+
+          <tr>
+            <td>404 asset</td>
+            <td>
+              Incorrect filename, folder or case.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Null DOM element</td>
+            <td>
+              Selector is wrong or script ran too early.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Pointer lock not working</td>
+            <td>
+              Not triggered from a user gesture or focus is elsewhere.
+            </td>
+          </tr>
+
+        </table>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#browser" data-page="browser">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Browser Deployment
+
+        </a>
+
+        <a href="#performance" data-page="performance">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Performance
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- PERFORMANCE -->
+
+    <section
+      class="doc-page"
+      id="performance"
+      data-title="Performance"
+    >
+
+      <div class="crumb">
+        Ron Engine / Performance
+      </div>
+
+      <section class="hero">
+
+        <h1>Performance</h1>
+
+        <p class="lead">
+          Where frame time usually goes and what to measure.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Measure before optimizing</h2>
+
+        <p>
+          Use DevTools Performance, FPS counters, render statistics
+          and targeted timers.
+        </p>
+
+      </div>
+
+
+      <div class="grid2">
+
+        <div class="mini">
+
+          <h3>Object pooling</h3>
+
+          <p>
+            Reuse short-lived particles, projectiles and effects.
+          </p>
+
+        </div>
+
+        <div class="mini">
+
+          <h3>Spatial partitioning</h3>
+
+          <p>
+            Limit collision and AI checks to nearby objects.
+          </p>
+
+        </div>
+
+        <div class="mini">
+
+          <h3>DOM discipline</h3>
+
+          <p>
+            Don't update large DOM trees every frame.
+          </p>
+
+        </div>
+
+        <div class="mini">
+
+          <h3>Asset budget</h3>
+
+          <p>
+            Large textures, models and audio can dominate load time.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Frame-time thinking</h2>
+
+        <pre class="code">Frame budget
+├── Input
+├── Simulation
+├── Physics
+├── Animation
+├── Rendering prep
+└── Present</pre>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#debugging" data-page="debugging">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Debugging
+
+        </a>
+
+        <a href="#security" data-page="security">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Security
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- SECURITY -->
+
+    <section
+      class="doc-page"
+      id="security"
+      data-title="Security"
+    >
+
+      <div class="crumb">
+        Ron Engine / Security
+      </div>
+
+      <section class="hero">
+
+        <h1>Security</h1>
+
+        <p class="lead">
+          Rules for keeping browser projects and connected services safe.
+        </p>
+
+      </section>
+
+
+      <div class="danger">
+
+        <strong>Never put secrets in browser JavaScript.</strong>
+
+        API keys, private tokens and privileged credentials belong on
+        a server.
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Ron.cool safety baseline</h2>
+
+        <ul>
+
+          <li>Minimize collection of personal information.</li>
+          <li>Validate user-generated input.</li>
+          <li>Do not trust client-side authorization.</li>
+          <li>Use appropriate database access controls.</li>
+          <li>Provide a security reporting path.</li>
+
+        </ul>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Security.txt</h2>
+
+        <p>
+          Ron.cool can publish a
+          <code>/.well-known/security.txt</code>
+          file pointing researchers to a security reporting page.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#performance" data-page="performance">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Performance
+
+        </a>
+
+        <a href="#examples" data-page="examples">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Examples & Patterns
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- EXAMPLES -->
+
+    <section
+      class="doc-page"
+      id="examples"
+      data-title="Examples & Patterns"
+    >
+
+      <div class="crumb">
+        Ron Engine / Examples &amp; Patterns
+      </div>
+
+      <section class="hero">
+
+        <h1>Examples &amp; Patterns</h1>
+
+        <p class="lead">
+          Small code patterns used throughout projects.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Pattern: game state</h2>
+
+        <pre class="code">const state = {
+  paused: false,
+  score: 0,
+  player: {
+    health: 100
+  }
+};</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Pattern: safe asset loading</h2>
+
+        <pre class="code">loadAsset(path)
+  .then(asset =&gt; use(asset))
+  .catch(error =&gt; showAssetError(path, error));</pre>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#security" data-page="security">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Security
+
+        </a>
+
+        <a href="#api" data-page="api">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          API Reference
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- API -->
+
+    <section
+      class="doc-page"
+      id="api"
+      data-title="API Reference"
+    >
+
+      <div class="crumb">
+        Ron Engine / API Reference
+      </div>
+
+      <section class="hero">
+
+        <h1>API Reference</h1>
+
+        <p class="lead">
+          A quick reference for the core engine concepts.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Core modules</h2>
+
+        <table class="api">
+
+          <tr>
+            <th>Module</th>
+            <th>Purpose</th>
+          </tr>
+
+          <tr>
+            <td><span class="pill">RonEngine</span></td>
+            <td>
+              Main engine runtime and lifecycle.
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="pill">BoxCollider</span></td>
+            <td>
+              Box collision component.
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="pill">Scene</span></td>
+            <td>
+              Scene and entity management.
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="pill">Renderer</span></td>
+            <td>
+              Rendering and presentation.
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="pill">Input</span></td>
+            <td>
+              Keyboard, pointer and other input.
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="pill">Physics</span></td>
+            <td>
+              Collision and physics.
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="pill">Assets</span></td>
+            <td>
+              Content loading.
+            </td>
+          </tr>
+
+          <tr>
+            <td><span class="pill">UI</span></td>
+            <td>
+              User interface systems.
+            </td>
+          </tr>
+
+        </table>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Current startup API</h2>
+
+        <pre class="code">import {
+  RonEngine,
+  BoxCollider
+} from "./engine/RonEngine.js";
+
+const engine = new RonEngine({
+  canvas,
+  quality: "high"
+});
+
+const player = engine.createEntity("Player");
+
+player.addComponent(
+  new BoxCollider(player)
+);
+
+engine.start();</pre>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>API stability</h2>
+
+        <p>
+          Ron Engine is still evolving. When implementing against the
+          current engine, the actual source exports should be treated
+          as authoritative.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#examples" data-page="examples">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Examples & Patterns
+
+        </a>
+
+        <a href="#glossary" data-page="glossary">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Glossary
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- GLOSSARY -->
+
+    <section
+      class="doc-page"
+      id="glossary"
+      data-title="Glossary"
+    >
+
+      <div class="crumb">
+        Ron Engine / Glossary
+      </div>
+
+      <section class="hero">
+
+        <h1>Glossary</h1>
+
+        <p class="lead">
+          Terms used throughout the engine and its projects.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <table class="api">
+
+          <tr>
+            <th>Term</th>
+            <th>Meaning</th>
+          </tr>
+
+          <tr>
+            <td>Entity</td>
+            <td>
+              A game-world object with components or behaviour.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Scene</td>
+            <td>
+              A structured collection of entities.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Component</td>
+            <td>
+              A focused piece of state or functionality.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Runtime</td>
+            <td>
+              The engine process that advances and renders the game.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Delta time</td>
+            <td>
+              Time elapsed since the previous update.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Trigger</td>
+            <td>
+              Non-solid interaction region.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Pointer lock</td>
+            <td>
+              Browser input mode used by first-person camera systems.
+            </td>
+          </tr>
+
+          <tr>
+            <td>HUD</td>
+            <td>
+              Heads-up display showing gameplay information.
+            </td>
+          </tr>
+
+          <tr>
+            <td>Asset</td>
+            <td>
+              Image, model, animation, sound, font or data resource.
+            </td>
+          </tr>
+
+        </table>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#api" data-page="api">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          API Reference
+
+        </a>
+
+        <a href="#contributing" data-page="contributing">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Contributing
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- CONTRIBUTING -->
+
+    <section
+      class="doc-page"
+      id="contributing"
+      data-title="Contributing"
+    >
+
+      <div class="crumb">
+        Ron Engine / Contributing
+      </div>
+
+      <section class="hero">
+
+        <h1>Contributing</h1>
+
+        <p class="lead">
+          A few rules for changes to the engine and documentation.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>Start small</h2>
+
+        <p>
+          Good contributions fix real problems. Documentation fixes,
+          reproducible bug reports, focused utilities and performance
+          measurements are valuable contributions.
+        </p>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Contribution checklist</h2>
+
+        <ol>
+
+          <li>Describe the problem first.</li>
+          <li>Keep one change focused.</li>
+          <li>Don't silently break existing projects.</li>
+          <li>Include reproduction steps for bugs.</li>
+          <li>Update documentation when behaviour changes.</li>
+          <li>Prefer clear names over clever abstractions.</li>
+
+        </ol>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Documentation contributions</h2>
+
+        <p>
+          When adding a page, answer four questions:
+          what is it, why does it exist, how do I use it,
+          and how do I know it is working?
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#glossary" data-page="glossary">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Glossary
+
+        </a>
+
+        <a href="#changelog" data-page="changelog">
+
+          <span class="nextlabel">
+            Next
+          </span>
+
+          Changelog
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- CHANGELOG -->
+
+    <section
+      class="doc-page"
+      id="changelog"
+      data-title="Changelog"
+    >
+
+      <div class="crumb">
+        Ron Engine / Changelog
+      </div>
+
+      <section class="hero">
+
+        <h1>Changelog</h1>
+
+        <p class="lead">
+          Major changes to the engine and documentation.
+        </p>
+
+      </section>
+
+
+      <div class="card">
+
+        <h2>0.x — Experimental Era</h2>
+
+        <ul>
+
+          <li>Browser-first experiments across Ron.cool.</li>
+          <li>Reusable loading and HUD patterns.</li>
+          <li>Initial 3D foundations using Three.js.</li>
+          <li>Player, camera and input systems.</li>
+          <li>First-person animation workflows.</li>
+
+        </ul>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>0.x — Engine Consolidation</h2>
+
+        <ul>
+
+          <li>Shared project structure.</li>
+          <li>More explicit runtime lifecycle.</li>
+          <li>Reusable rendering and input patterns.</li>
+          <li>Better startup and error reporting.</li>
+          <li>Documentation initiative.</li>
+
+        </ul>
+
+      </div>
+
+
+      <div class="card">
+
+        <h2>Next</h2>
+
+        <p>
+          Future releases should be versioned once the public module
+          boundaries and compatibility promises are stable.
+        </p>
+
+      </div>
+
+
+      <div class="next">
+
+        <a href="#contributing" data-page="contributing">
+
+          <span class="nextlabel">
+            Previous
+          </span>
+
+          Contributing
+
+        </a>
+
+        <span></span>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</section>
+
+</div>
+
+
+<script>
+
+const pages = [...document.querySelectorAll(".doc-page")];
+
+const pageLinks = [
+  ...document.querySelectorAll("[data-page]")
+];
+
+const sidebar = document.getElementById("sidebar");
+
+const menuBtn = document.getElementById("menuBtn");
+
+const search = document.getElementById("search");
+
+const noResults = document.getElementById("noResults");
+
+
+function setActiveLink(id){
+
+  pageLinks.forEach(link => {
+
+    link.classList.toggle(
+      "active",
+      link.dataset.page === id
+    );
+
+  });
+
+}
+
+
+function showPage(id, push = true){
+
+  const target =
+    document.getElementById(id) ||
+    document.getElementById("index");
+
+  pages.forEach(page => {
+
+    page.classList.toggle(
+      "active",
+      page === target
+    );
+
+  });
+
+  setActiveLink(target.id);
+
+  if(push){
+
+    history.pushState(
+      null,
+      "",
+      "#" + target.id
+    );
+
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+  if(sidebar){
+
+    sidebar.classList.remove("open");
+
+  }
+
+}
+
+
+pageLinks.forEach(link => {
+
+  link.addEventListener("click", event => {
+
+    event.preventDefault();
+
+    const id = link.dataset.page;
+
+    if(!id) return;
+
+    search.value = "";
+
+    noResults.style.display = "none";
+
+    showPage(id);
+
+  });
+
+});
+
+
+menuBtn?.addEventListener("click", () => {
+
+  sidebar.classList.toggle("open");
+
+});
+
+
+search?.addEventListener("input", () => {
+
+  const query =
+    search.value
+      .trim()
+      .toLowerCase();
+
+  if(!query){
+
+    noResults.style.display = "none";
+
+    showPage(
+      location.hash.slice(1) || "index",
+      false
+    );
+
+    return;
+
+  }
+
+  let matches = [];
+
+  pages.forEach(page => {
+
+    const matched =
+      page.dataset.title
+        .toLowerCase()
+        .includes(query)
+      ||
+      page.textContent
+        .toLowerCase()
+        .includes(query);
+
+    page.classList.toggle(
+      "active",
+      matched
+    );
+
+    if(matched){
+
+      matches.push(page);
+
+    }
+
+  });
+
+
+  pageLinks.forEach(link => {
+
+    link.classList.remove("active");
+
+  });
+
+
+  noResults.style.display =
+    matches.length
+      ? "none"
+      : "block";
+
+});
+
+
+window.addEventListener("hashchange", () => {
+
+  if(!search.value){
+
+    showPage(
+      location.hash.slice(1) || "index",
+      false
+    );
+
+  }
+
+});
+
+
+showPage(
+  location.hash.slice(1) || "index",
+  false
+);
+
+</script>
+
+</body>
+</html>
