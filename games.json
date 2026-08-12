@@ -1,8 +1,7 @@
 [
   {
-    "id": "crack-the-code",
-    "name": "Crack the Code",
-    "html": "codeCracker.html",
-    "image": "https://roncool.cc.cd/images/code.png",
-    "description": "Crack today's secret code before everyone else!"
+    "name": "Crack The Code",
+    "link": "https://roncool.cc.cd/codeCracker",
+    "icon": "icons/code.png"
   }
+]
