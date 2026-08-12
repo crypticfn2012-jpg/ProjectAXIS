@@ -1,0 +1,87 @@
+name: Discord Game Announcement
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "games.json"
+
+permissions:
+  contents: read
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Send latest game to Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          python3 <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          with open("games.json", "r", encoding="utf-8") as f:
+              games = json.load(f)
+
+          if not isinstance(games, list):
+              raise SystemExit("games.json must contain an array of games.")
+
+          if len(games) == 0:
+              raise SystemExit("games.json contains no games.")
+
+          game = games[-1]
+
+          name = game["name"]
+          link = game["link"]
+          icon = game.get("icon", "")
+
+          embed = {
+              "title": "New Game Added!",
+              "description": f"**{name}** has just been added to Ron.cool!",
+              "url": link,
+              "color": 5564364,
+              "fields": [
+                  {
+                      "name": "Play Now",
+                      "value": f"[Open {name}]({link})"
+                  }
+              ],
+              "footer": {
+                  "text": "Ron.cool • New Game"
+              }
+          }
+
+          if icon:
+              embed["thumbnail"] = {
+                  "url": icon
+              }
+
+          payload = {
+              "username": "Ron.cool",
+              "embeds": [embed]
+          }
+
+          data = json.dumps(payload).encode("utf-8")
+
+          request = urllib.request.Request(
+              os.environ["DISCORD_WEBHOOK"],
+              data=data,
+              headers={
+                  "Content-Type": "application/json",
+                  "User-Agent": "Ron.cool GitHub Action"
+              },
+              method="POST"
+          )
+
+          with urllib.request.urlopen(request) as response:
+              print("Discord response:", response.status)
+
+          print(f"Announced: {name}")
+          PY
