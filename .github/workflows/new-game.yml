@@ -5,7 +5,9 @@ on:
     branches:
       - main
     paths:
+      - "*.html"
       - "games.json"
+      - "icons/**"
 
 jobs:
   announce:
@@ -18,71 +20,136 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: Detect new games
+      - name: Detect new HTML games
         id: games
-        shell: bash
+        shell: python
         run: |
-          python3 <<'PY'
           import json
-          import subprocess
           import os
+          import subprocess
 
+          # Get files changed in this commit
           try:
-              old_json = subprocess.check_output(
-                  ["git", "show", "HEAD^:games.json"],
+              changed = subprocess.check_output(
+                  ["git", "diff", "--name-status", "HEAD^", "HEAD"],
                   text=True
-              )
-              old_games = json.loads(old_json)
+              ).splitlines()
           except Exception:
-              old_games = []
+              changed = []
 
-          with open("games.json", "r", encoding="utf-8") as f:
-              new_games = json.load(f)
+          new_games = []
 
-          old_ids = {
-              game.get("id")
-              for game in old_games
-          }
+          # Find newly added .html files
+          for line in changed:
+              parts = line.split("\t")
 
-          added_games = [
-              game
-              for game in new_games
-              if game.get("id") not in old_ids
-          ]
+              if len(parts) < 2:
+                  continue
 
-          with open(
-              os.environ["GITHUB_OUTPUT"],
-              "a",
-              encoding="utf-8"
-          ) as output:
+              status = parts[0]
+              file = parts[-1]
+
+              if status == "A" and file.endswith(".html"):
+                  # Ignore index.html
+                  if file.lower() == "index.html":
+                      continue
+
+                  # Ignore blog if wanted
+                  if file.lower() == "blog.html":
+                      continue
+
+                  new_games.append({
+                      "file": file
+                  })
+
+          # Read games.json if it exists
+          try:
+              with open("games.json", "r", encoding="utf-8") as f:
+                  games_data = json.load(f)
+          except Exception:
+              games_data = {}
+
+          # Convert single object into list
+          if isinstance(games_data, dict):
+              games_list = [games_data]
+          elif isinstance(games_data, list):
+              games_list = games_data
+          else:
+              games_list = []
+
+          # Match newly added HTML files against games.json
+          final_games = []
+
+          for new_game in new_games:
+
+              file = new_game["file"]
+
+              matching = None
+
+              for game in games_list:
+
+                  if not isinstance(game, dict):
+                      continue
+
+                  if game.get("file") == file:
+                      matching = game
+                      break
+
+              if matching:
+                  final_games.append(matching)
+
+              else:
+                  # Fallback if games.json wasn't updated
+                  filename = os.path.splitext(
+                      os.path.basename(file)
+                  )[0]
+
+                  readable_name = filename.replace("-", " ").replace("_", " ").title()
+
+                  final_games.append({
+                      "name": readable_name,
+                      "file": file,
+                      "icon": "favicon.ico",
+                      "description": "A new game has been added to Ron.cool!"
+                  })
+
+          output_file = os.environ["GITHUB_OUTPUT"]
+
+          with open(output_file, "a", encoding="utf-8") as output:
 
               output.write(
-                  "games="
-                  + json.dumps(added_games)
-                  + "\n"
+                  "games=" +
+                  json.dumps(final_games) +
+                  "\n"
               )
 
               output.write(
-                  "count="
-                  + str(len(added_games))
-                  + "\n"
+                  "count=" +
+                  str(len(final_games)) +
+                  "\n"
               )
-          PY
+
+          print("New games detected:")
+          print(json.dumps(final_games, indent=2))
+
 
       - name: Announce new games
         if: steps.games.outputs.count != '0'
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           NEW_GAMES: ${{ steps.games.outputs.games }}
-        shell: bash
+        shell: python
         run: |
-          python3 <<'PY'
+
           import json
           import os
           import urllib.request
 
           webhook = os.environ["DISCORD_WEBHOOK"]
-          games = json.loads(os.environ["NEW_GAMES"])
+
+          games = json.loads(
+              os.environ["NEW_GAMES"]
+          )
 
           for game in games:
 
@@ -103,50 +170,65 @@ jobs:
 
               icon = game.get(
                   "icon",
-                  ""
+                  "favicon.ico"
               )
 
+              # Game URL
               game_url = (
                   "https://roncool.cc.cd/"
                   + file
               )
 
+              # Icon URL
               icon_url = (
                   "https://roncool.cc.cd/"
                   + icon
               )
 
               payload = {
+
                   "username": "Ron.cool",
-                  "avatar_url": "https://roncool.cc.cd/favicon.ico",
+
+                  "avatar_url":
+                      "https://roncool.cc.cd/favicon.ico",
 
                   "embeds": [
+
                       {
-                          "title": "🎮 New Game Released!",
-                          "description": (
+
+                          "title":
+                              "🎮 New Game Released!",
+
+                          "description":
                               "**"
                               + name
                               + "**\n\n"
-                              + description
-                          ),
+                              + description,
 
-                          "url": game_url,
+                          "url":
+                              game_url,
 
-                          "color": 5630156,
+                          "color":
+                              5630156,
 
                           "thumbnail": {
-                              "url": icon_url
-                          },
 
-                          "image": {
-                              "url": icon_url
+                              "url":
+                                  icon_url
+
                           },
 
                           "footer": {
-                              "text": "Ron.cool • New Game"
+
+                              "text":
+                                  "Ron.cool • New Game"
+
                           }
+
                       }
+
                   ]
+
               }
 
               data = json.dumps(
@@ -154,13 +236,18 @@ jobs:
               ).encode("utf-8")
 
               request = urllib.request.Request(
+
                   webhook,
+
                   data=data,
+
                   headers={
                       "Content-Type":
                           "application/json"
                   },
+
                   method="POST"
+
               )
 
               with urllib.request.urlopen(
@@ -171,4 +258,3 @@ jobs:
                       "Discord response:",
                       response.status
                   )
-          PY
