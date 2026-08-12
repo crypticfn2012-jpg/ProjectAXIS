@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Crack the Code | Ron.cool</title>
+
+<meta
+    name="description"
+    content="Crack today's code before everyone else."
+>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            #123b35 0%,
+            #071411 35%,
+            #030706 75%
+        );
+
+    color: #eafff8;
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    overflow-x: hidden;
+}
+
+/* BACKGROUND */
+
+.background {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.grid {
+    position: absolute;
+    inset: 0;
+
+    background-image:
+        linear-gradient(
+            rgba(84,255,204,.025) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(84,255,204,.025) 1px,
+            transparent 1px
+        );
+
+    background-size: 40px 40px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent
+        );
+}
+
+/* HEADER */
+
+header {
+    height: 70px;
+
+    border-bottom:
+        1px solid rgba(84,255,204,.1);
+
+    background:
+        rgba(3,8,10,.7);
+
+    backdrop-filter:
+        blur(18px);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 28px;
+}
+
+.logo {
+    color: white;
+    text-decoration: none;
+
+    font-weight: 900;
+    font-size: 19px;
+    letter-spacing: -.05em;
+}
+
+.logo span {
+    color: #54ffcc;
+}
+
+.back {
+    color: #718b87;
+    text-decoration: none;
+    font-size: 13px;
+    transition: .2s;
+}
+
+.back:hover {
+    color: #54ffcc;
+}
+
+/* MAIN */
+
+.container {
+    width: min(900px, calc(100% - 30px));
+    margin: auto;
+    padding: 60px 0 100px;
+}
+
+/* HERO */
+
+.hero {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 6px 11px;
+
+    border:
+        1px solid rgba(84,255,204,.18);
+
+    background:
+        rgba(84,255,204,.05);
+
+    border-radius: 999px;
+
+    color: #54ffcc;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: .1em;
+    text-transform: uppercase;
+
+    margin-bottom: 18px;
+}
+
+.badge-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #54ffcc;
+
+    box-shadow:
+        0 0 10px #54ffcc;
+}
+
+h1 {
+    font-size:
+        clamp(45px, 8vw, 76px);
+
+    line-height: .95;
+    letter-spacing: -.065em;
+
+    margin: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #91aaa5
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+.hero p {
+    max-width: 540px;
+
+    margin:
+        20px auto 0;
+
+    color: #829893;
+
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+/* GAME CARD */
+
+.game-card {
+    background:
+        linear-gradient(
+            145deg,
+            rgba(10,28,25,.95),
+            rgba(4,12,10,.95)
+        );
+
+    border:
+        1px solid rgba(84,255,204,.13);
+
+    border-radius: 20px;
+
+    padding: 28px;
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.4);
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+.stat {
+    padding: 14px;
+
+    border:
+        1px solid #162c28;
+
+    background:
+        rgba(5,15,13,.7);
+
+    border-radius: 12px;
+
+    text-align: center;
+}
+
+.stat-label {
+    color: #627a75;
+
+    text-transform: uppercase;
+
+    font-size: 9px;
+
+    letter-spacing: .12em;
+
+    font-weight: 800;
+}
+
+.stat-value {
+    margin-top: 4px;
+
+    color: #eafff8;
+
+    font-size: 19px;
+
+    font-weight: 800;
+}
+
+/* CODE */
+
+.code-display {
+    min-height: 100px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    margin:
+        15px 0 25px;
+}
+
+.code-slot {
+    width: 62px;
+    height: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid #1d3832;
+
+    background:
+        #050d0b;
+
+    border-radius: 13px;
+
+    font-size: 34px;
+    font-weight: 900;
+
+    color: #dffef5;
+
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Consolas,
+        monospace;
+
+    transition: .2s;
+}
+
+.code-slot.correct {
+    border-color: #54ffcc;
+    color: #54ffcc;
+
+    background:
+        rgba(84,255,204,.08);
+
+    box-shadow:
+        0 0 25px rgba(84,255,204,.12);
+}
+
+.code-slot.wrong-position {
+    border-color: #ffd166;
+    color: #ffd166;
+
+    background:
+        rgba(255,209,102,.07);
+}
+
+.code-slot.incorrect {
+    border-color: #26322f;
+    color: #53635f;
+    background: #070b0a;
+}
+
+/* INPUT */
+
+.input-area {
+    display: flex;
+    gap: 10px;
+}
+
+#guess {
+    flex: 1;
+    min-width: 0;
+
+    height: 56px;
+
+    border:
+        1px solid #1d3832;
+
+    border-radius: 11px;
+
+    background:
+        #050d0b;
+
+    color: white;
+
+    outline: none;
+
+    padding:
+        0 17px;
+
+    font-size: 21px;
+
+    font-family:
+        ui-monospace,
+        SFMono-Regular,
+        Consolas,
+        monospace;
+
+    letter-spacing: .25em;
+
+    text-align: center;
+
+    transition: .2s;
+}
+
+#guess:focus {
+    border-color:
+        rgba(84,255,204,.5);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(84,255,204,.07);
+}
+
+#submit {
+    height: 56px;
+
+    padding:
+        0 24px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    background: #54ffcc;
+
+    color: #03100c;
+
+    font-weight: 900;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+#submit:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 30px
+        rgba(84,255,204,.15);
+}
+
+#submit:disabled {
+    opacity: .4;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+/* MESSAGE */
+
+.message {
+    min-height: 25px;
+
+    text-align: center;
+
+    margin:
+        18px 0 0;
+
+    color: #81948f;
+
+    font-size: 13px;
+}
+
+.message.success {
+    color: #54ffcc;
+}
+
+.message.error {
+    color: #ff7089;
+}
+
+/* HISTORY */
+
+.history {
+    margin-top: 25px;
+}
+
+.guess-row {
+    display: flex;
+    justify-content: center;
+
+    gap: 6px;
+
+    margin-bottom: 6px;
+}
+
+.guess-digit {
+    width: 35px;
+    height: 35px;
+
+    border-radius: 7px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-family:
+        ui-monospace,
+        monospace;
+
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.guess-digit.correct {
+    background:
+        rgba(84,255,204,.13);
+
+    color: #54ffcc;
+
+    border:
+        1px solid rgba(84,255,204,.2);
+}
+
+.guess-digit.wrong-position {
+    background:
+        rgba(255,209,102,.1);
+
+    color: #ffd166;
+
+    border:
+        1px solid rgba(255,209,102,.18);
+}
+
+.guess-digit.incorrect {
+    background:
+        #09100e;
+
+    color: #556762;
+
+    border:
+        1px solid #17231f;
+}
+
+/* LEADERBOARD */
+
+.leaderboard {
+    margin-top: 35px;
+
+    background:
+        rgba(4,11,9,.7);
+
+    border:
+        1px solid #142722;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+}
+
+.leaderboard-header {
+    padding:
+        15px 17px;
+
+    border-bottom:
+        1px solid #142722;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.leaderboard-header strong {
+    font-size: 13px;
+}
+
+.leaderboard-header span {
+    color: #627a75;
+    font-size: 11px;
+}
+
+.leader-row {
+    display: grid;
+
+    grid-template-columns:
+        40px 1fr 80px 80px;
+
+    padding:
+        12px 17px;
+
+    border-bottom:
+        1px solid rgba(20,39,34,.6);
+
+    font-size: 12px;
+}
+
+.leader-row:last-child {
+    border-bottom: 0;
+}
+
+.rank {
+    color: #536762;
+}
+
+.player {
+    color: #cbe0db;
+    font-weight: 700;
+}
+
+.score {
+    text-align: right;
+    color: #54ffcc;
+}
+
+.time {
+    text-align: right;
+    color: #71857f;
+}
+
+/* WIN */
+
+.win {
+    display: none;
+
+    text-align: center;
+
+    padding:
+        35px 15px;
+}
+
+.win.show {
+    display: block;
+}
+
+.win-icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.win h2 {
+    font-size: 34px;
+
+    margin: 0;
+
+    letter-spacing: -.04em;
+}
+
+.win p {
+    color: #81958f;
+    line-height: 1.7;
+}
+
+.win-code {
+    color: #54ffcc;
+
+    font-family:
+        ui-monospace,
+        monospace;
+
+    font-size: 35px;
+
+    font-weight: 900;
+
+    letter-spacing: .2em;
+
+    margin: 20px 0;
+}
+
+.name-input {
+    width: min(300px,100%);
+
+    height: 48px;
+
+    padding:
+        0 14px;
+
+    border:
+        1px solid #1d3832;
+
+    background:
+        #050d0b;
+
+    border-radius: 9px;
+
+    color: white;
+
+    outline: none;
+
+    text-align: center;
+}
+
+.save-score {
+    margin-top: 10px;
+
+    height: 48px;
+
+    padding:
+        0 22px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    background: #54ffcc;
+
+    color: #03100c;
+
+    font-weight: 900;
+
+    cursor: pointer;
+}
+
+/* INFO */
+
+.info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 12px;
+
+    margin-top: 18px;
+}
+
+.info-box {
+    border:
+        1px solid #142722;
+
+    border-radius: 12px;
+
+    padding: 17px;
+
+    background:
+        rgba(5,13,11,.6);
+}
+
+.info-box strong {
+    display: block;
+
+    font-size: 12px;
+
+    margin-bottom: 5px;
+}
+
+.info-box span {
+    color: #687d77;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:650px) {
+
+    header {
+        padding: 0 16px;
+    }
+
+    .container {
+        padding-top: 40px;
+    }
+
+    .game-card {
+        padding: 17px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat:last-child {
+        grid-column: span 2;
+    }
+
+    .code-slot {
+        width: 53px;
+        height: 64px;
+        font-size: 27px;
+    }
+
+    .input-area {
+        flex-direction: column;
+    }
+
+    #submit {
+        width: 100%;
+    }
+
+    .info {
+        grid-template-columns: 1fr;
+    }
+
+    .leader-row {
+        grid-template-columns:
+            35px 1fr 60px;
+    }
+
+    .leader-row .time {
+        display: none;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="background">
+    <div class="grid"></div>
+</div>
+
+<header>
+
+    <a class="logo" href="/">
+        Ron<span>.</span>cool
+    </a>
+
+    <a class="back" href="/">
+        ← Back to Ron.cool
+    </a>
+
+</header>
+
+<main class="container">
+
+<section class="hero">
+
+    <div class="badge">
+        <span class="badge-dot"></span>
+        Daily Challenge
+    </div>
+
+    <h1>Crack the Code.</h1>
+
+    <p>
+        Everyone gets the same code.
+        A new challenge appears every day.
+        Can you crack it before everyone else?
+    </p>
+
+</section>
+
+<div class="game-card">
+
+<div class="stats">
+
+    <div class="stat">
+        <div class="stat-label">
+            Attempts
+        </div>
+
+        <div
+            class="stat-value"
+            id="attempts"
+        >
+            0
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">
+            Time
+        </div>
+
+        <div
+            class="stat-value"
+            id="timer"
+        >
+            00:00
+        </div>
+    </div>
+
+    <div class="stat">
+        <div class="stat-label">
+            Next Code
+        </div>
+
+        <div
+            class="stat-value"
+            id="countdown"
+        >
+            --:--:--
+        </div>
+    </div>
+
+</div>
+
+<div
+    class="code-display"
+    id="codeDisplay"
+>
+
+    <div class="code-slot">?</div>
+    <div class="code-slot">?</div>
+    <div class="code-slot">?</div>
+    <div class="code-slot">?</div>
+
+</div>
+
+<div class="input-area">
+
+    <input
+        id="guess"
+        type="text"
+        inputmode="numeric"
+        maxlength="4"
+        placeholder="ENTER CODE"
+        autocomplete="off"
+    >
+
+    <button
+        id="submit"
+        disabled
+    >
+        CRACK
+    </button>
+
+</div>
+
+<div
+    class="message"
+    id="message"
+>
+    Loading today's challenge...
+</div>
+
+<div
+    class="history"
+    id="history"
+></div>
+
+<div
+    class="win"
+    id="win"
+>
+
+    <div class="win-icon">
+        🔓
+    </div>
+
+    <h2>Code Cracked!</h2>
+
+    <p>
+        You cracked today's challenge.
+    </p>
+
+    <div
+        class="win-code"
+        id="winCode"
+    >
+        ----
+    </div>
+
+    <p>
+        Attempts:
+        <strong id="winAttempts">0</strong>
+
+        <br>
+
+        Time:
+        <strong id="winTime">0s</strong>
+    </p>
+
+    <input
+        class="name-input"
+        id="playerName"
+        maxlength="20"
+        placeholder="Your name"
+    >
+
+    <br>
+
+    <button
+        class="save-score"
+        id="saveScore"
+    >
+        SAVE SCORE
+    </button>
+
+</div>
+
+<div class="leaderboard">
+
+    <div class="leaderboard-header">
+
+        <strong>
+            Today's leaderboard
+        </strong>
+
+        <span>
+            Best attempts
+        </span>
+
+    </div>
+
+    <div id="leaderboard">
+
+        <div
+            style="
+                padding:18px;
+                text-align:center;
+                color:#566b66;
+            "
+        >
+            Loading...
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<div class="info">
+
+    <div class="info-box">
+
+        <strong>🟩 Correct</strong>
+
+        <span>
+            Correct number in the correct position.
+        </span>
+
+    </div>
+
+    <div class="info-box">
+
+        <strong>🟨 Close</strong>
+
+        <span>
+            The number exists but is in another position.
+        </span>
+
+    </div>
+
+    <div class="info-box">
+
+        <strong>⬛ Wrong</strong>
+
+        <span>
+            That number isn't in today's code.
+        </span>
+
+    </div>
+
+</div>
+
+</main>
+
+<script>
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+    "https://rldidvwcylirjyfktvtg.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZGlkdndjeWxpcmp5Zmt0dnRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyMjM0OTAsImV4cCI6MjEwMTc5OTQ5MH0.YO5zeu5uL3siDDPVfsPc9v_VCETHixTWXjzotVOEp0U";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =========================================
+   GAME STATE
+========================================= */
+
+let dailyCode = null;
+
+let attempts = 0;
+
+let startTime = null;
+
+let timerInterval = null;
+
+let countdownInterval = null;
+
+let gameWon = false;
+
+const today = getDate();
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const guessInput =
+    document.getElementById("guess");
+
+const submitButton =
+    document.getElementById("submit");
+
+const message =
+    document.getElementById("message");
+
+const attemptsElement =
+    document.getElementById("attempts");
+
+const timerElement =
+    document.getElementById("timer");
+
+const countdownElement =
+    document.getElementById("countdown");
+
+const historyElement =
+    document.getElementById("history");
+
+const winElement =
+    document.getElementById("win");
+
+const winCode =
+    document.getElementById("winCode");
+
+const winAttempts =
+    document.getElementById("winAttempts");
+
+const winTime =
+    document.getElementById("winTime");
+
+const playerName =
+    document.getElementById("playerName");
+
+const saveScoreButton =
+    document.getElementById("saveScore");
+
+const leaderboard =
+    document.getElementById("leaderboard");
+
+
+/* =========================================
+   DATE
+========================================= */
+
+function getDate() {
+
+    const now = new Date();
+
+    return now
+        .toISOString()
+        .split("T")[0];
+
+}
+
+
+/* =========================================
+   DAILY CODE GENERATOR
+========================================= */
+
+function generateDailyCode(date) {
+
+    let hash = 0;
+
+    for (
+        let i = 0;
+        i < date.length;
+        i++
+    ) {
+
+        hash =
+            ((hash << 5) - hash)
+            + date.charCodeAt(i);
+
+        hash |= 0;
+    }
+
+    hash =
+        Math.abs(hash);
+
+    const code =
+        (hash * 9301 + 49297)
+        % 233280;
+
+    const result =
+        Math.floor(
+            code / 233280 * 10000
+        );
+
+    return String(result)
+        .padStart(4, "0");
+}
+
+
+/* =========================================
+   LOAD / CREATE DAILY CODE
+========================================= */
+
+async function loadDailyCode() {
+
+    console.log(
+        "Loading challenge:",
+        today
+    );
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("daily_codes")
+        .select("code")
+        .eq("date", today)
+        .maybeSingle();
+
+
+    if (error) {
+
+        console.error(
+            "Supabase error loading daily code:",
+            error
+        );
+
+        showMessage(
+            "Supabase error: " +
+            error.message,
+            "error"
+        );
+
+        return false;
+    }
+
+
+    /*
+       CODE ALREADY EXISTS
+    */
+
+    if (data) {
+
+        dailyCode =
+            String(data.code)
+                .padStart(4, "0");
+
+        console.log(
+            "Today's challenge loaded."
+        );
+
+        return true;
+    }
+
+
+    /*
+       CODE DOESN'T EXIST
+       CREATE IT
+    */
+
+    const generated =
+        generateDailyCode(today);
+
+    console.log(
+        "Generating today's challenge."
+    );
+
+
+    const {
+        data: inserted,
+        error: insertError
+    } = await supabaseClient
+        .from("daily_codes")
+        .insert({
+            date: today,
+            code: generated
+        })
+        .select("code")
+        .single();
+
+
+    /*
+       INSERT FAILED
+    */
+
+    if (insertError) {
+
+        console.error(
+            "Could not create daily code:",
+            insertError
+        );
+
+
+        /*
+           Maybe another player created it
+           at exactly the same time.
+        */
+
+        const {
+            data: existing,
+            error: existingError
+        } = await supabaseClient
+            .from("daily_codes")
+            .select("code")
+            .eq("date", today)
+            .maybeSingle();
+
+
+        if (existing) {
+
+            dailyCode =
+                String(existing.code)
+                    .padStart(4, "0");
+
+            return true;
+        }
+
+
+        console.error(
+            "Could not retrieve existing code:",
+            existingError
+        );
+
+
+        showMessage(
+            "Couldn't create today's challenge.",
+            "error"
+        );
+
+        return false;
+    }
+
+
+    /*
+       CREATED SUCCESSFULLY
+    */
+
+    dailyCode =
+        String(inserted.code)
+            .padStart(4, "0");
+
+
+    console.log(
+        "Today's challenge created."
+    );
+
+    return true;
+}
+
+
+/* =========================================
+   START GAME
+========================================= */
+
+async function startGame() {
+
+    submitButton.disabled = true;
+
+    guessInput.disabled = true;
+
+
+    const loaded =
+        await loadDailyCode();
+
+
+    if (!loaded) {
+
+        console.error(
+            "Game failed to start."
+        );
+
+        return;
+    }
+
+
+    /*
+       Database is working.
+       Start the game.
+    */
+
+    submitButton.disabled = false;
+
+    guessInput.disabled = false;
+
+    startTime =
+        Date.now();
+
+
+    timerInterval =
+        setInterval(
+            updateTimer,
+            1000
+        );
+
+
+    countdownInterval =
+        setInterval(
+            updateCountdown,
+            1000
+        );
+
+
+    updateTimer();
+
+    updateCountdown();
+
+    loadLeaderboard();
+
+    showMessage(
+        "Enter a 4-digit code.",
+        ""
+    );
+
+    guessInput.focus();
+}
+
+
+/* =========================================
+   TIMER
+========================================= */
+
+function updateTimer() {
+
+    if (
+        !startTime ||
+        gameWon
+    ) {
+        return;
+    }
+
+
+    const seconds =
+        Math.floor(
+            (Date.now() - startTime)
+            / 1000
+        );
+
+
+    timerElement.textContent =
+        formatTime(seconds);
+}
+
+
+/* =========================================
+   COUNTDOWN
+========================================= */
+
+function updateCountdown() {
+
+    const now =
+        new Date();
+
+
+    const tomorrow =
+        new Date(now);
+
+
+    tomorrow.setDate(
+        tomorrow.getDate() + 1
+    );
+
+
+    tomorrow.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    const difference =
+        tomorrow - now;
+
+
+    const hours =
+        Math.floor(
+            difference / 3600000
+        );
+
+
+    const minutes =
+        Math.floor(
+            (difference % 3600000)
+            / 60000
+        );
+
+
+    const seconds =
+        Math.floor(
+            (difference % 60000)
+            / 1000
+        );
+
+
+    countdownElement.textContent =
+        `${String(hours).padStart(2,"0")}:` +
+        `${String(minutes).padStart(2,"0")}:` +
+        `${String(seconds).padStart(2,"0")}`;
+}
+
+
+/* =========================================
+   FORMAT TIME
+========================================= */
+
+function formatTime(seconds) {
+
+    const minutes =
+        Math.floor(
+            seconds / 60
+        );
+
+
+    const secs =
+        seconds % 60;
+
+
+    return (
+        String(minutes)
+            .padStart(2,"0")
+        +
+        ":"
+        +
+        String(secs)
+            .padStart(2,"0")
+    );
+}
+
+
+/* =========================================
+   CHECK GUESS
+========================================= */
+
+function checkGuess() {
+
+    if (
+        gameWon ||
+        !dailyCode
+    ) {
+        return;
+    }
+
+
+    const guess =
+        guessInput.value.trim();
+
+
+    if (
+        !/^\d{4}$/.test(guess)
+    ) {
+
+        showMessage(
+            "Enter exactly 4 numbers.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    attempts++;
+
+    attemptsElement.textContent =
+        attempts;
+
+
+    const result =
+        evaluateGuess(
+            guess,
+            dailyCode
+        );
+
+
+    addGuessToHistory(
+        guess,
+        result
+    );
+
+
+    if (
+        guess === dailyCode
+    ) {
+
+        winGame();
+
+        return;
+    }
+
+
+    showMessage(
+        getHint(result),
+        ""
+    );
+
+
+    guessInput.value = "";
+
+    guessInput.focus();
+}
+
+
+/* =========================================
+   EVALUATE GUESS
+========================================= */
+
+function evaluateGuess(
+    guess,
+    answer
+) {
+
+    const result =
+        Array(4)
+            .fill("incorrect");
+
+
+    const remaining =
+        answer.split("");
+
+
+    /*
+       FIRST PASS
+       Exact matches
+    */
+
+    for (
+        let i = 0;
+        i < 4;
+        i++
+    ) {
+
+        if (
+            guess[i] === answer[i]
+        ) {
+
+            result[i] =
+                "correct";
+
+            remaining[i] =
+                null;
+        }
+    }
+
+
+    /*
+       SECOND PASS
+       Wrong positions
+    */
+
+    for (
+        let i = 0;
+        i < 4;
+        i++
+    ) {
+
+        if (
+            result[i] ===
+            "correct"
+        ) {
+            continue;
+        }
+
+
+        const index =
+            remaining.indexOf(
+                guess[i]
+            );
+
+
+        if (
+            index !== -1
+        ) {
+
+            result[i] =
+                "wrong-position";
+
+            remaining[index] =
+                null;
+        }
+    }
+
+
+    return result;
+}
+
+
+/* =========================================
+   HINT
+========================================= */
+
+function getHint(result) {
+
+    const correct =
+        result.filter(
+            value =>
+                value === "correct"
+        ).length;
+
+
+    const close =
+        result.filter(
+            value =>
+                value ===
+                "wrong-position"
+        ).length;
+
+
+    if (
+        correct === 0 &&
+        close === 0
+    ) {
+
+        return "Nothing matched.";
+    }
+
+
+    if (
+        correct === 0
+    ) {
+
+        return (
+            `${close} number` +
+            `${close === 1 ? "" : "s"} ` +
+            `found, wrong position.`
+        );
+    }
+
+
+    return (
+        `${correct} correct ` +
+        `position${correct === 1 ? "" : "s"}, ` +
+        `${close} in the wrong position.`
+    );
+}
+
+
+/* =========================================
+   HISTORY
+========================================= */
+
+function addGuessToHistory(
+    guess,
+    result
+) {
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "guess-row";
+
+
+    for (
+        let i = 0;
+        i < 4;
+        i++
+    ) {
+
+        const digit =
+            document.createElement(
+                "div"
+            );
+
+
+        digit.className =
+            "guess-digit " +
+            result[i];
+
+
+        digit.textContent =
+            guess[i];
+
+
+        row.appendChild(
+            digit
+        );
+    }
+
+
+    historyElement.prepend(
+        row
+    );
+}
+
+
+/* =========================================
+   WIN
+========================================= */
+
+function winGame() {
+
+    gameWon = true;
+
+
+    clearInterval(
+        timerInterval
+    );
+
+
+    const seconds =
+        Math.floor(
+            (Date.now() - startTime)
+            / 1000
+        );
+
+
+    winCode.textContent =
+        dailyCode;
+
+
+    winAttempts.textContent =
+        attempts;
+
+
+    winTime.textContent =
+        `${seconds}s`;
+
+
+    winElement.classList.add(
+        "show"
+    );
+
+
+    guessInput.disabled =
+        true;
+
+
+    submitButton.disabled =
+        true;
+
+
+    showMessage(
+        "You cracked today's code!",
+        "success"
+    );
+}
+
+
+/* =========================================
+   MESSAGE
+========================================= */
+
+function showMessage(
+    text,
+    type
+) {
+
+    message.textContent =
+        text;
+
+
+    message.className =
+        "message " +
+        (type || "");
+}
+
+
+/* =========================================
+   SAVE SCORE
+========================================= */
+
+saveScoreButton.addEventListener(
+    "click",
+    async function() {
+
+        const name =
+            playerName.value
+                .trim()
+                .slice(0, 20);
+
+
+        if (!name) {
+
+            playerName.focus();
+
+            return;
+        }
+
+
+        const seconds =
+            Math.floor(
+                (Date.now() - startTime)
+                / 1000
+            );
+
+
+        saveScoreButton.disabled =
+            true;
+
+
+        saveScoreButton.textContent =
+            "Saving...";
+
+
+        const {
+            error
+        } = await supabaseClient
+            .from("code_scores")
+            .insert({
+                player_name:
+                    name,
+
+                challenge_date:
+                    today,
+
+                attempts:
+                    attempts,
+
+                time_seconds:
+                    seconds
+            });
+
+
+        if (error) {
+
+            console.error(
+                "Score save error:",
+                error
+            );
+
+
+            saveScoreButton.disabled =
+                false;
+
+
+            saveScoreButton.textContent =
+                "Try Again";
+
+
+            return;
+        }
+
+
+        saveScoreButton.textContent =
+            "Saved ✓";
+
+
+        loadLeaderboard();
+    }
+);
+
+
+/* =========================================
+   LEADERBOARD
+========================================= */
+
+async function loadLeaderboard() {
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("code_scores")
+        .select(
+            "player_name,attempts,time_seconds"
+        )
+        .eq(
+            "challenge_date",
+            today
+        )
+        .order(
+            "attempts",
+            {
+                ascending: true
+            }
+        )
+        .order(
+            "time_seconds",
+            {
+                ascending: true
+            }
+        )
+        .limit(10);
+
+
+    if (error) {
+
+        console.error(
+            "Leaderboard error:",
+            error
+        );
+
+
+        leaderboard.innerHTML = `
+            <div style="
+                padding:18px;
+                text-align:center;
+                color:#ff7089;
+            ">
+                Leaderboard unavailable.
+            </div>
+        `;
+
+
+        return;
+    }
+
+
+    if (
+        !data ||
+        data.length === 0
+    ) {
+
+        leaderboard.innerHTML = `
+            <div style="
+                padding:18px;
+                text-align:center;
+                color:#566b66;
+            ">
+                Be the first to crack today's code.
+            </div>
+        `;
+
+
+        return;
+    }
+
+
+    leaderboard.innerHTML =
+        data.map(
+            function(player, index) {
+
+                return `
+                    <div class="leader-row">
+
+                        <div class="rank">
+                            #${index + 1}
+                        </div>
+
+                        <div class="player">
+                            ${escapeHTML(
+                                player.player_name
+                            )}
+                        </div>
+
+                        <div class="score">
+                            ${player.attempts}
+                        </div>
+
+                        <div class="time">
+                            ${player.time_seconds}s
+                        </div>
+
+                    </div>
+                `;
+            }
+        ).join("");
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(
+            /[&<>"']/g,
+            function(character) {
+
+                return {
+                    "&":
+                        "&amp;",
+
+                    "<":
+                        "&lt;",
+
+                    ">":
+                        "&gt;",
+
+                    '"':
+                        "&quot;",
+
+                    "'":
+                        "&#039;"
+                }[character];
+            }
+        );
+}
+
+
+/* =========================================
+   INPUT
+========================================= */
+
+guessInput.addEventListener(
+    "input",
+    function() {
+
+        guessInput.value =
+            guessInput.value
+                .replace(/\D/g, "")
+                .slice(0, 4);
+    }
+);
+
+
+guessInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            checkGuess();
+        }
+    }
+);
+
+
+submitButton.addEventListener(
+    "click",
+    checkGuess
+);
+
+
+/* =========================================
+   START
+========================================= */
+
+startGame();
+
+</script>
+
+</body>
+</html>
