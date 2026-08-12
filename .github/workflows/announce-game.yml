@@ -1,0 +1,218 @@
+name: Announce New Game
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "games.json"
+
+permissions:
+  contents: read
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect and announce new game
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          BEFORE_SHA: ${{ github.event.before }}
+          AFTER_SHA: ${{ github.sha }}
+        run: |
+          python3 <<'PY'
+          import json
+          import os
+          import subprocess
+          import urllib.request
+
+          webhook = os.environ.get("DISCORD_WEBHOOK")
+
+          if not webhook:
+              print("ERROR: DISCORD_WEBHOOK secret is missing.")
+              exit(1)
+
+          before = os.environ.get("BEFORE_SHA")
+          after = os.environ.get("AFTER_SHA")
+
+          # Get games.json before the commit
+          try:
+              old_json = subprocess.check_output(
+                  ["git", "show", f"{before}:games.json"],
+                  text=True
+              )
+              old_games = json.loads(old_json)
+          except Exception:
+              old_games = []
+
+          # Get current games.json
+          with open("games.json", "r", encoding="utf-8") as f:
+              new_games = json.load(f)
+
+          # Make sure both are lists
+          if not isinstance(old_games, list):
+              old_games = []
+
+          if not isinstance(new_games, list):
+              print("ERROR: games.json must contain an array.")
+              exit(1)
+
+          # Create IDs from the actual game objects.
+          # This does NOT care what the HTML filename is.
+          def game_key(game):
+              if isinstance(game, dict):
+                  return (
+                      game.get("id")
+                      or game.get("slug")
+                      or game.get("url")
+                      or game.get("link")
+                      or game.get("html")
+                      or game.get("file")
+                      or game.get("name")
+                      or game.get("title")
+                  )
+
+              return str(game)
+
+          old_keys = {
+              game_key(game)
+              for game in old_games
+          }
+
+          new_games_found = [
+              game
+              for game in new_games
+              if game_key(game) not in old_keys
+          ]
+
+          if not new_games_found:
+              print("No new games detected.")
+              exit(0)
+
+          print(f"Found {len(new_games_found)} new game(s).")
+
+          for game in new_games_found:
+
+              if not isinstance(game, dict):
+                  print("Skipping invalid game entry:", game)
+                  continue
+
+              # ==============================
+              # GAME NAME
+              # ==============================
+
+              name = (
+                  game.get("name")
+                  or game.get("title")
+                  or "New Game"
+              )
+
+              # ==============================
+              # GAME LINK
+              # ==============================
+
+              link = (
+                  game.get("link")
+                  or game.get("url")
+                  or game.get("href")
+              )
+
+              if not link:
+                  html = (
+                      game.get("html")
+                      or game.get("file")
+                      or game.get("page")
+                  )
+
+                  if html:
+                      link = f"https://roncool.cc.cd/{html}"
+
+              if not link:
+                  link = "https://roncool.cc.cd/"
+
+              # ==============================
+              # GAME IMAGE
+              # ==============================
+
+              image = (
+                  game.get("image")
+                  or game.get("icon")
+                  or game.get("pfp")
+                  or game.get("thumbnail")
+                  or game.get("logo")
+              )
+
+              if image and image.startswith("/"):
+                  image = "https://roncool.cc.cd" + image
+
+              # ==============================
+              # DESCRIPTION
+              # ==============================
+
+              description = (
+                  game.get("description")
+                  or "A new game has just been added to Ron.cool!"
+              )
+
+              # ==============================
+              # DISCORD EMBED
+              # ==============================
+
+              embed = {
+                  "title": f"🎮 New Game Added — {name}",
+                  "description": description,
+                  "url": link,
+                  "color": 5569484,
+                  "fields": [
+                      {
+                          "name": "🎯 Play Now",
+                          "value": f"[Open {name}]({link})",
+                          "inline": True
+                      }
+                  ],
+                  "footer": {
+                      "text": "Ron.cool • New Game"
+                  }
+              }
+
+              if image:
+                  embed["thumbnail"] = {
+                      "url": image
+                  }
+
+              payload = {
+                  "username": "Ron.cool",
+                  "embeds": [embed]
+              }
+
+              data = json.dumps(payload).encode("utf-8")
+
+              request = urllib.request.Request(
+                  webhook,
+                  data=data,
+                  headers={
+                      "Content-Type": "application/json",
+                      "User-Agent": "Ron.cool GitHub Action"
+                  },
+                  method="POST"
+              )
+
+              try:
+                  with urllib.request.urlopen(request) as response:
+                      print(
+                          f"Discord response: {response.status}"
+                      )
+
+              except Exception as e:
+                  print("Discord webhook failed:")
+                  print(e)
+                  exit(1)
+
+          print("Announcement complete.")
+          PY
