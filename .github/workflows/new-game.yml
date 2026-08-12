@@ -1,360 +1,391 @@
-name: New Game Discord Announcement
+name: Ron.cool New Game
 
 on:
   push:
     branches:
       - main
     paths:
-      - "games.json"
+      - "*.html"
+      - "**/*.html"
+
+  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  announce:
+  new-game:
     runs-on: ubuntu-latest
 
     steps:
 
-      # ==========================================
-      # CHECKOUT
-      # ==========================================
-
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-
-      # ==========================================
-      # CHECK FOR NEW GAME
-      # ==========================================
-
-      - name: Detect new game
-        id: game
-        shell: python
+      - name: Find new HTML files
+        id: files
         run: |
+          git diff --name-status HEAD^ HEAD > changes.txt
 
+          echo "===== CHANGES ====="
+          cat changes.txt
+          echo "==================="
+
+          files=$(awk '$1 == "A" && $2 ~ /\.html$/ {print $2}' changes.txt)
+
+          if [ -z "$files" ]; then
+            echo "No new HTML files."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "New HTML files:"
+          echo "$files"
+
+          echo "found=true" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "files<<EOF"
+            echo "$files"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Update games.json
+        if: steps.files.outputs.found == 'true'
+        env:
+          NEW_FILES: ${{ steps.files.outputs.files }}
+        run: |
+          python3 <<'PY'
           import json
-          import subprocess
           import os
+          import re
 
+          FILE = "games.json"
 
-          # --------------------------------------
-          # Read current games.json
-          # --------------------------------------
+          # -----------------------------
+          # Load games.json
+          # -----------------------------
+
+          if os.path.exists(FILE):
+              try:
+                  with open(FILE, "r", encoding="utf-8") as f:
+                      games = json.load(f)
+              except Exception:
+                  games = []
+          else:
+              games = []
+
+          # Convert old single-object format
+          # into the new list format
+          if isinstance(games, dict):
+              games = [games]
+
+          if not isinstance(games, list):
+              games = []
+
+          # -----------------------------
+          # Process new games
+          # -----------------------------
+
+          new_files = os.environ["NEW_FILES"].splitlines()
+
+          for filepath in new_files:
+
+              filepath = filepath.strip()
+
+              if not filepath:
+                  continue
+
+              filename = os.path.basename(filepath)
+              slug = os.path.splitext(filename)[0]
+
+              # -------------------------
+              # Read HTML
+              # -------------------------
+
+              try:
+                  with open(
+                      filepath,
+                      "r",
+                      encoding="utf-8",
+                      errors="ignore"
+                  ) as f:
+                      html = f.read()
+              except Exception as e:
+                  print("Could not read:", filepath)
+                  print(e)
+                  continue
+
+              # -------------------------
+              # Find title
+              # -------------------------
+
+              match = re.search(
+                  r"<title[^>]*>(.*?)</title>",
+                  html,
+                  re.IGNORECASE | re.DOTALL
+              )
+
+              if match:
+                  name = match.group(1)
+                  name = re.sub(r"\s+", " ", name).strip()
+
+                  # Remove Ron.cool suffix
+                  name = re.sub(
+                      r"\s*\|\s*Ron\.cool\s*$",
+                      "",
+                      name,
+                      flags=re.IGNORECASE
+                  ).strip()
+              else:
+                  name = slug.replace("-", " ").replace("_", " ").title()
+
+              # -------------------------
+              # ID
+              # -------------------------
+
+              game_id = re.sub(
+                  r"[^a-z0-9-]+",
+                  "-",
+                  name.lower()
+              ).strip("-")
+
+              # -------------------------
+              # Icon
+              # -------------------------
+
+              icon = f"icons/{slug}.png"
+
+              # -------------------------
+              # Description
+              # -------------------------
+
+              description = f"Play {name} on Ron.cool."
+
+              # -------------------------
+              # Check duplicate
+              # -------------------------
+
+              already_exists = False
+
+              for game in games:
+
+                  if not isinstance(game, dict):
+                      continue
+
+                  if game.get("file") == filename:
+                      already_exists = True
+                      break
+
+              if already_exists:
+                  print("Already exists:", filename)
+                  continue
+
+              # -------------------------
+              # Add game
+              # -------------------------
+
+              game = {
+                  "id": game_id,
+                  "name": name,
+                  "file": filename,
+                  "icon": icon,
+                  "description": description
+              }
+
+              games.append(game)
+
+              print("Added game:")
+              print(json.dumps(game, indent=2))
+
+          # -----------------------------
+          # Save
+          # -----------------------------
 
           with open(
-              "games.json",
-              "r",
+              FILE,
+              "w",
               encoding="utf-8"
           ) as f:
 
-              current = json.load(f)
-
-
-          # --------------------------------------
-          # Read previous games.json
-          # --------------------------------------
-
-          try:
-
-              old_raw = subprocess.check_output(
-                  [
-                      "git",
-                      "show",
-                      "HEAD^:games.json"
-                  ],
-                  text=True
+              json.dump(
+                  games,
+                  f,
+                  indent=2,
+                  ensure_ascii=False
               )
 
-              old = json.loads(old_raw)
+              f.write("\n")
 
-          except Exception:
+          print("games.json updated successfully.")
+          PY
 
-              old = None
-
-
-          # --------------------------------------
-          # Convert either format into a list
-          # --------------------------------------
-
-          def normalise(data):
-
-              if data is None:
-                  return []
-
-              if isinstance(data, list):
-                  return data
-
-              if isinstance(data, dict):
-
-                  return [data]
-
-              return []
-
-
-          old_games = normalise(old)
-          new_games = normalise(current)
-
-
-          # --------------------------------------
-          # Find new games
-          # --------------------------------------
-
-          old_ids = set()
-
-          for game in old_games:
-
-              if isinstance(game, dict):
-
-                  game_id = game.get("id")
-
-                  if game_id:
-                      old_ids.add(str(game_id))
-
-
-          added_games = []
-
-
-          for game in new_games:
-
-              if not isinstance(game, dict):
-                  continue
-
-              game_id = game.get("id")
-
-              if not game_id:
-                  continue
-
-              if str(game_id) not in old_ids:
-
-                  added_games.append(game)
-
-
-          print("Old games:", old_games)
-          print("Current games:", new_games)
-          print("New games:", added_games)
-
-
-          # --------------------------------------
-          # GitHub outputs
-          # --------------------------------------
-
-          with open(
-              os.environ["GITHUB_OUTPUT"],
-              "a",
-              encoding="utf-8"
-          ) as output:
-
-              output.write(
-                  "count="
-                  + str(len(added_games))
-                  + "\n"
-              )
-
-              output.write(
-                  "games<<EOF\n"
-              )
-
-              output.write(
-                  json.dumps(
-                      added_games
-                  )
-              )
-
-              output.write(
-                  "\nEOF\n"
-              )
-
-
-      # ==========================================
-      # DISCORD
-      # ==========================================
-
-      - name: Send Discord announcement
-        if: steps.game.outputs.count != '0'
-        shell: python
-        env:
-
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-
-          NEW_GAMES: ${{ steps.game.outputs.games }}
-
+      - name: Commit games.json
+        if: steps.files.outputs.found == 'true'
         run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          git add games.json
+
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Auto update games.json"
+            git push
+          fi
+
+      - name: Discord announcement
+        if: steps.files.outputs.found == 'true'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          NEW_FILES: ${{ steps.files.outputs.files }}
+        run: |
+          python3 <<'PY'
           import json
           import os
           import urllib.request
           import urllib.parse
+          import re
 
-
-          webhook = os.environ.get(
-              "DISCORD_WEBHOOK"
-          )
-
+          webhook = os.environ.get("DISCORD_WEBHOOK")
 
           if not webhook:
-
               raise Exception(
-                  "DISCORD_WEBHOOK secret is missing!"
+                  "DISCORD_WEBHOOK secret DOES NOT EXIST."
               )
 
+          files = [
+              x.strip()
+              for x in os.environ["NEW_FILES"].splitlines()
+              if x.strip()
+          ]
 
-          games = json.loads(
-              os.environ["NEW_GAMES"]
-          )
+          for filepath in files:
 
+              filename = os.path.basename(filepath)
+              slug = os.path.splitext(filename)[0]
 
-          for game in games:
+              # -----------------------------
+              # Read game HTML
+              # -----------------------------
 
-              # ----------------------------------
-              # Game information
-              # ----------------------------------
+              try:
+                  with open(
+                      filepath,
+                      "r",
+                      encoding="utf-8",
+                      errors="ignore"
+                  ) as f:
+                      html = f.read()
+              except Exception:
+                  html = ""
 
-              name = game.get(
-                  "name",
-                  "New Game"
+              # -----------------------------
+              # Get actual name
+              # -----------------------------
+
+              match = re.search(
+                  r"<title[^>]*>(.*?)</title>",
+                  html,
+                  re.IGNORECASE | re.DOTALL
               )
 
+              if match:
 
-              description = game.get(
-                  "description",
-                  "A new game has been added to Ron.cool!"
-              )
+                  name = match.group(1)
 
+                  name = re.sub(
+                      r"\s+",
+                      " ",
+                      name
+                  ).strip()
 
-              file = game.get(
-                  "file",
-                  ""
-              )
+                  name = re.sub(
+                      r"\s*\|\s*Ron\.cool\s*$",
+                      "",
+                      name,
+                      flags=re.IGNORECASE
+                  ).strip()
 
+              else:
 
-              icon = game.get(
-                  "icon",
-                  ""
-              )
+                  name = (
+                      slug
+                      .replace("-", " ")
+                      .replace("_", " ")
+                      .title()
+                  )
 
-
-              # ----------------------------------
+              # -----------------------------
               # URLs
-              # ----------------------------------
+              # -----------------------------
 
-              base_url = (
-                  "https://roncool.cc.cd/"
-              )
-
+              base = "https://roncool.cc.cd/"
 
               game_url = (
-                  base_url
-                  + file
+                  base +
+                  urllib.parse.quote(filepath)
               )
-
 
               icon_url = (
-                  base_url
-                  + icon
+                  base +
+                  "icons/" +
+                  urllib.parse.quote(slug) +
+                  ".png"
               )
 
-
-              # ----------------------------------
-              # Discord embed
-              # ----------------------------------
+              # -----------------------------
+              # Discord
+              # -----------------------------
 
               payload = {
-
-                  "username":
-                      "Ron.cool",
-
-                  "avatar_url":
-                      "https://roncool.cc.cd/favicon.ico",
+                  "username": "Ron.cool",
 
                   "embeds": [
-
                       {
+                          "title": "🎮 New Game Added!",
 
-                          "title":
-                              "🎮 New Game Released!",
+                          "description": (
+                              f"**{name}** is now live on Ron.cool!\n\n"
+                              f"🚀 **[PLAY NOW]({game_url})**"
+                          ),
 
-                          "description":
-                              (
-                                  "**"
-                                  + name
-                                  + "**\n\n"
-                                  + description
-                                  + "\n\n"
-                                  + "👉 **[Play Now]("
-                                  + game_url
-                                  + ")**"
-                              ),
+                          "url": game_url,
 
-                          "url":
-                              game_url,
-
-                          "color":
-                              5630156,
+                          "color": 5630156,
 
                           "thumbnail": {
-
-                              "url":
-                                  icon_url
-
+                              "url": icon_url
                           },
 
                           "footer": {
-
-                              "text":
-                                  "Ron.cool • New Game"
-
+                              "text": "Ron.cool • New Game"
                           }
-
                       }
-
                   ]
-
               }
 
-
-              data = json.dumps(
-                  payload
-              ).encode("utf-8")
-
+              data = json.dumps(payload).encode("utf-8")
 
               request = urllib.request.Request(
-
                   webhook,
-
                   data=data,
-
                   headers={
-
-                      "Content-Type":
-                          "application/json",
-
-                      "User-Agent":
-                          "Ron.cool GitHub Actions"
-
+                      "Content-Type": "application/json",
+                      "User-Agent": "Ron.cool GitHub Action"
                   },
-
                   method="POST"
-
               )
 
+              print("Sending Discord announcement for:", name)
 
-              print(
-                  "Sending Discord announcement:"
-              )
-
-              print(
-                  name
-              )
-
-
-              with urllib.request.urlopen(
-                  request
-              ) as response:
-
+              with urllib.request.urlopen(request) as response:
                   print(
-                      "Discord response:",
+                      "Discord status:",
                       response.status
                   )
+          PY
