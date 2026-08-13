@@ -1,0 +1,2417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#02030b">
+
+<title>What's That Star? // Ron.cool</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+--bg:#02030b;
+--panel:rgba(5,8,22,.9);
+--line:rgba(120,150,255,.18);
+--text:#e8ecff;
+--muted:#7d86a8;
+--blue:#7ea7ff;
+--cyan:#6de7ff;
+--purple:#a88cff;
+--green:#70ffb0;
+--yellow:#ffe58a;
+--red:#ff6d8d;
+}
+
+html,body{
+width:100%;
+min-height:100%;
+background:var(--bg);
+color:var(--text);
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{overflow-x:hidden}
+
+body:before{
+content:"";
+position:fixed;
+inset:0;
+pointer-events:none;
+z-index:9999;
+background:repeating-linear-gradient(
+to bottom,
+rgba(255,255,255,.018) 0,
+rgba(255,255,255,.018) 1px,
+transparent 1px,
+transparent 5px
+);
+opacity:.35;
+}
+
+.space-bg{
+position:fixed;
+inset:0;
+z-index:0;
+pointer-events:none;
+overflow:hidden;
+background:
+radial-gradient(circle at 20% 20%,rgba(62,91,190,.13),transparent 30%),
+radial-gradient(circle at 80% 70%,rgba(120,55,190,.12),transparent 32%),
+#02030b;
+}
+
+.nebula{
+position:absolute;
+width:600px;
+height:600px;
+border-radius:50%;
+filter:blur(100px);
+opacity:.15;
+}
+
+.nebula.one{background:#5145ff;left:-200px;top:100px}
+.nebula.two{background:#00b7ff;right:-250px;bottom:-150px}
+
+/* START */
+
+.start-screen{
+position:fixed;
+inset:0;
+z-index:5000;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:25px;
+background:
+radial-gradient(circle at center,rgba(25,40,100,.25),transparent 50%),
+#02030b;
+transition:.7s;
+}
+
+.start-screen.hidden{
+opacity:0;
+pointer-events:none;
+transform:scale(1.04);
+}
+
+.start-stars{
+position:absolute;
+inset:0;
+overflow:hidden;
+}
+
+.start-star{
+position:absolute;
+width:2px;
+height:2px;
+background:white;
+border-radius:50%;
+opacity:.6;
+animation:twinkle 3s infinite alternate;
+}
+
+@keyframes twinkle{
+from{opacity:.15}
+to{opacity:.9}
+}
+
+.start-box{
+width:700px;
+max-width:100%;
+text-align:center;
+position:relative;
+z-index:2;
+}
+
+.start-mini{
+color:var(--cyan);
+font-size:11px;
+letter-spacing:5px;
+margin-bottom:20px;
+}
+
+.start-title{
+font-size:clamp(40px,8vw,82px);
+font-weight:800;
+letter-spacing:-4px;
+line-height:.95;
+margin-bottom:18px;
+text-shadow:0 0 30px rgba(126,167,255,.2);
+}
+
+.start-title span{color:var(--blue)}
+
+.start-subtitle{
+color:var(--muted);
+font-size:14px;
+line-height:1.8;
+max-width:540px;
+margin:auto;
+}
+
+.start-actions{
+margin-top:35px;
+display:flex;
+justify-content:center;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.start-button{
+border:1px solid rgba(126,167,255,.5);
+background:rgba(40,60,130,.22);
+color:white;
+padding:15px 28px;
+font-weight:700;
+letter-spacing:1px;
+cursor:pointer;
+border-radius:10px;
+transition:.2s;
+}
+
+.start-button:hover{
+background:rgba(70,100,200,.35);
+border-color:var(--cyan);
+transform:translateY(-2px);
+}
+
+.start-button.secondary{
+background:transparent;
+color:var(--muted);
+border-color:var(--line);
+}
+
+.start-info{
+margin-top:28px;
+display:flex;
+justify-content:center;
+gap:25px;
+flex-wrap:wrap;
+color:#59617f;
+font-size:10px;
+text-transform:uppercase;
+letter-spacing:2px;
+}
+
+/* APP */
+
+.app{
+position:relative;
+z-index:1;
+opacity:0;
+transition:opacity .8s;
+}
+
+.app.visible{opacity:1}
+
+.wrapper{
+width:1200px;
+max-width:calc(100% - 24px);
+margin:auto;
+padding:18px 0 40px;
+}
+
+/* TOP */
+
+.topbar{
+height:58px;
+border:1px solid var(--line);
+background:rgba(4,7,19,.84);
+backdrop-filter:blur(12px);
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 16px;
+margin-bottom:12px;
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.logo-dot{
+width:28px;
+height:28px;
+border-radius:50%;
+background:radial-gradient(circle at 35% 30%,white,#7ea7ff 35%,#172b70 70%);
+box-shadow:0 0 18px rgba(126,167,255,.35);
+}
+
+.logo-text{
+font-size:13px;
+font-weight:800;
+letter-spacing:1px;
+}
+
+.logo-text span{color:var(--blue)}
+
+.top-actions{
+display:flex;
+gap:6px;
+}
+
+.small-btn{
+border:1px solid var(--line);
+background:rgba(255,255,255,.025);
+color:var(--muted);
+padding:8px 11px;
+font-size:9px;
+border-radius:7px;
+cursor:pointer;
+}
+
+.small-btn:hover{
+color:white;
+border-color:rgba(126,167,255,.45);
+}
+
+/* MAIN */
+
+.main-grid{
+display:grid;
+grid-template-columns:1fr 300px;
+gap:12px;
+}
+
+.sky-panel,.side-panel{
+border:1px solid var(--line);
+background:var(--panel);
+backdrop-filter:blur(12px);
+border-radius:12px;
+overflow:hidden;
+}
+
+.sky-header{
+height:52px;
+padding:0 14px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+border-bottom:1px solid var(--line);
+}
+
+.sky-title{
+font-size:11px;
+font-weight:700;
+letter-spacing:2px;
+color:#cdd5f5;
+}
+
+.sky-status{
+font-size:9px;
+color:var(--green);
+letter-spacing:1px;
+}
+
+/* FIXED SKY */
+
+.sky{
+height:620px;
+position:relative;
+overflow:hidden;
+cursor:grab;
+user-select:none;
+touch-action:none;
+background:
+radial-gradient(circle at center,rgba(20,31,70,.55),rgba(2,3,11,.98) 72%);
+}
+
+.sky.dragging{cursor:grabbing}
+
+/*
+IMPORTANT:
+Everything inside sky-world moves together.
+This fixes the old object/zoom/pan problems.
+*/
+
+.sky-world{
+position:absolute;
+inset:0;
+transform-origin:50% 50%;
+will-change:transform;
+}
+
+/* OBJECTS */
+
+.sky-object{
+position:absolute;
+transform:translate(-50%,-50%);
+cursor:pointer;
+z-index:5;
+}
+
+.sky-object:hover{
+z-index:30;
+filter:brightness(1.35);
+}
+
+.star-core{
+border-radius:50%;
+background:white;
+box-shadow:
+0 0 4px white,
+0 0 10px rgba(170,200,255,.9);
+}
+
+.star-label{
+position:absolute;
+left:12px;
+top:7px;
+white-space:nowrap;
+font-size:8px;
+color:rgba(190,205,255,.35);
+pointer-events:none;
+}
+
+.planet-core{
+border-radius:50%;
+box-shadow:
+inset -5px -5px 8px rgba(0,0,0,.5),
+0 0 15px rgba(120,160,255,.3);
+position:relative;
+}
+
+.planet-ring{
+position:absolute;
+inset:-7px;
+border:1px solid rgba(230,220,180,.45);
+border-radius:50%;
+transform:rotate(-15deg) scaleX(1.8);
+}
+
+.moon-core{
+border-radius:50%;
+background:#d9d9cf;
+box-shadow:0 0 15px rgba(255,255,220,.25);
+}
+
+.comet-core{
+width:8px;
+height:8px;
+background:white;
+border-radius:50%;
+box-shadow:0 0 15px #8feaff;
+position:relative;
+}
+
+.comet-core:after{
+content:"";
+position:absolute;
+width:80px;
+height:2px;
+right:5px;
+top:3px;
+transform:rotate(160deg);
+background:linear-gradient(to left,rgba(110,230,255,.7),transparent);
+}
+
+.satellite-core{
+width:6px;
+height:6px;
+background:#c8d5ff;
+box-shadow:0 0 8px white;
+}
+
+/* CONSTELLATIONS */
+
+.constellation{
+position:absolute;
+inset:0;
+pointer-events:none;
+z-index:2;
+}
+
+.constellation-line{
+position:absolute;
+height:1px;
+background:rgba(126,167,255,.17);
+transform-origin:0 50%;
+}
+
+.constellation-name{
+position:absolute;
+color:rgba(140,165,220,.25);
+font-size:9px;
+letter-spacing:2px;
+}
+
+/* HUD */
+
+.compass{
+position:absolute;
+top:15px;
+left:50%;
+transform:translateX(-50%);
+color:rgba(180,200,255,.3);
+font-size:9px;
+letter-spacing:4px;
+z-index:50;
+pointer-events:none;
+}
+
+.sky-hint{
+position:absolute;
+left:15px;
+bottom:15px;
+padding:9px 12px;
+background:rgba(2,3,11,.7);
+border:1px solid var(--line);
+border-radius:7px;
+color:#68718e;
+font-size:9px;
+z-index:50;
+pointer-events:none;
+}
+
+.zoom-controls{
+position:absolute;
+right:15px;
+bottom:15px;
+display:flex;
+gap:5px;
+z-index:50;
+}
+
+.zoom-btn{
+width:32px;
+height:32px;
+background:rgba(2,3,11,.75);
+color:#aeb9dc;
+border:1px solid var(--line);
+border-radius:7px;
+cursor:pointer;
+}
+
+.zoom-btn:hover{
+border-color:var(--cyan);
+color:white;
+}
+
+/* SIDE */
+
+.side-content{padding:12px}
+
+.side-section{
+border:1px solid var(--line);
+border-radius:9px;
+margin-bottom:9px;
+overflow:hidden;
+}
+
+.side-section-title{
+padding:10px 11px;
+border-bottom:1px solid var(--line);
+color:#8f9bc0;
+font-size:9px;
+letter-spacing:2px;
+text-transform:uppercase;
+}
+
+.side-section-body{padding:11px}
+
+.stat-row{
+display:flex;
+justify-content:space-between;
+font-size:10px;
+color:#697391;
+margin-bottom:8px;
+}
+
+.stat-row:last-child{margin-bottom:0}
+
+.stat-row strong{color:#dce3ff}
+
+.progress{
+height:5px;
+border-radius:5px;
+background:#11162b;
+overflow:hidden;
+margin-top:10px;
+}
+
+.progress-fill{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,var(--blue),var(--cyan));
+transition:width .4s;
+}
+
+.menu-button{
+width:100%;
+text-align:left;
+border:0;
+border-bottom:1px solid rgba(120,150,255,.08);
+background:transparent;
+color:#7d86a8;
+padding:11px;
+cursor:pointer;
+font-size:10px;
+}
+
+.menu-button:last-child{border-bottom:0}
+
+.menu-button:hover{
+color:white;
+background:rgba(126,167,255,.05);
+}
+
+.menu-button span{
+float:right;
+color:#3e4662;
+}
+
+/* LOWER */
+
+.lower-grid{
+margin-top:12px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+}
+
+.info-panel{
+border:1px solid var(--line);
+background:var(--panel);
+border-radius:12px;
+overflow:hidden;
+}
+
+.info-header{
+padding:14px;
+border-bottom:1px solid var(--line);
+display:flex;
+justify-content:space-between;
+}
+
+.info-header h2{
+font-size:11px;
+letter-spacing:2px;
+}
+
+.info-header span{
+color:var(--muted);
+font-size:9px;
+}
+
+.info-body{padding:15px}
+
+.fact{
+font-size:13px;
+line-height:1.7;
+color:#b5bdd9;
+}
+
+.event{
+padding:11px 0;
+border-bottom:1px solid rgba(120,150,255,.08);
+}
+
+.event:last-child{border-bottom:0}
+
+.event-date{
+color:var(--blue);
+font-size:9px;
+letter-spacing:1px;
+margin-bottom:4px;
+}
+
+.event-name{
+color:#e1e7ff;
+font-size:11px;
+font-weight:700;
+}
+
+.event-description{
+margin-top:5px;
+color:#68718e;
+font-size:10px;
+line-height:1.6;
+}
+
+/* MODAL */
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.78);
+backdrop-filter:blur(7px);
+display:none;
+align-items:center;
+justify-content:center;
+padding:18px;
+z-index:9000;
+}
+
+.modal.show{display:flex}
+
+.modal-box{
+width:720px;
+max-width:100%;
+max-height:90vh;
+overflow-y:auto;
+background:#050817;
+border:1px solid rgba(126,167,255,.3);
+border-radius:14px;
+box-shadow:0 20px 80px rgba(0,0,0,.65);
+}
+
+.modal-header{
+padding:17px;
+border-bottom:1px solid var(--line);
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.modal-title{
+font-size:13px;
+letter-spacing:2px;
+font-weight:700;
+}
+
+.modal-close{
+border:1px solid var(--line);
+background:transparent;
+color:#77809e;
+width:30px;
+height:30px;
+border-radius:6px;
+cursor:pointer;
+font-size:18px;
+}
+
+.modal-close:hover{
+color:white;
+border-color:var(--red);
+}
+
+.modal-body{
+padding:20px;
+color:#929bb9;
+font-size:11px;
+line-height:1.9;
+}
+
+.modal-body h3{
+color:#dce4ff;
+font-size:16px;
+margin-bottom:8px;
+}
+
+.modal-body h4{
+color:var(--cyan);
+font-size:10px;
+letter-spacing:2px;
+margin:20px 0 8px;
+}
+
+.modal-body p{margin-bottom:12px}
+
+.object-big{
+display:flex;
+gap:20px;
+align-items:center;
+padding-bottom:20px;
+margin-bottom:18px;
+border-bottom:1px solid var(--line);
+}
+
+.object-visual{
+width:90px;
+height:90px;
+border-radius:50%;
+flex-shrink:0;
+background:radial-gradient(circle at 35% 30%,white,#8eb0ff 30%,#172b70 70%);
+box-shadow:0 0 35px rgba(126,167,255,.3);
+}
+
+.object-meta{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px;
+}
+
+.meta{
+border:1px solid var(--line);
+padding:9px;
+border-radius:7px;
+}
+
+.meta-label{
+display:block;
+color:#525b78;
+font-size:8px;
+text-transform:uppercase;
+margin-bottom:3px;
+}
+
+.meta-value{
+color:#cfd7f5;
+font-size:10px;
+}
+
+/* WIKI */
+
+.wiki-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:8px;
+}
+
+.wiki-card{
+border:1px solid var(--line);
+border-radius:8px;
+padding:12px;
+}
+
+.wiki-card-title{
+color:#dce4ff;
+font-size:11px;
+font-weight:700;
+}
+
+.wiki-card-text{
+color:#626b87;
+font-size:9px;
+margin-top:5px;
+line-height:1.5;
+}
+
+/* GUIDE */
+
+.guide-score{
+text-align:center;
+padding:18px;
+border:1px solid var(--line);
+border-radius:9px;
+margin-bottom:15px;
+}
+
+.guide-number{
+font-size:42px;
+font-weight:800;
+color:var(--green);
+}
+
+.guide-label{
+color:#606986;
+font-size:9px;
+letter-spacing:2px;
+}
+
+.guide-list{
+display:grid;
+gap:8px;
+}
+
+.guide-item{
+padding:12px;
+border:1px solid var(--line);
+border-radius:8px;
+}
+
+.guide-item strong{
+color:#cfd7f5;
+display:block;
+margin-bottom:4px;
+}
+
+.guide-item span{color:#626b87}
+
+/* TOAST */
+
+.toast{
+position:fixed;
+right:18px;
+bottom:18px;
+z-index:10000;
+padding:12px 15px;
+background:#070b1c;
+border:1px solid rgba(112,255,176,.3);
+border-radius:8px;
+color:#a9f8c9;
+font-size:10px;
+transform:translateY(80px);
+opacity:0;
+transition:.3s;
+}
+
+.toast.show{
+transform:none;
+opacity:1;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+.main-grid{grid-template-columns:1fr}
+.side-panel{order:-1}
+
+.side-content{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:8px;
+}
+
+.side-section{margin:0}
+.side-section:last-child{grid-column:1/-1}
+}
+
+@media(max-width:600px){
+.wrapper{max-width:calc(100% - 12px)}
+
+.topbar{padding:0 10px}
+
+.top-actions .small-btn:nth-child(n+3){
+display:none;
+}
+
+.sky{height:480px}
+
+.lower-grid{grid-template-columns:1fr}
+
+.side-content{grid-template-columns:1fr}
+
+.wiki-grid{grid-template-columns:1fr}
+
+.object-big{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.object-meta{width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<div class="space-bg">
+<div class="nebula one"></div>
+<div class="nebula two"></div>
+</div>
+
+<!-- START SCREEN -->
+
+<div class="start-screen" id="startScreen">
+
+<div class="start-stars" id="startStars"></div>
+
+<div class="start-box">
+
+<div class="start-mini">RON.COOL // OBSERVATORY</div>
+
+<div class="start-title">
+WHAT'S THAT <span>STAR?</span>
+</div>
+
+<div class="start-subtitle">
+Explore a simulated night sky, identify celestial objects,
+discover constellations, learn about space and uncover
+hidden objects.
+</div>
+
+<div class="start-actions">
+
+<button class="start-button" onclick="startGame()">
+✦ START EXPLORING
+</button>
+
+<button class="start-button secondary"
+onclick="openModal('SPACE WIKI',wikiHTML())">
+LEARN ABOUT SPACE
+</button>
+
+</div>
+
+<div class="start-info">
+<span>★ 17 OBJECTS</span>
+<span>✦ 8 CONSTELLATIONS</span>
+<span>◉ 4 SECRETS</span>
+</div>
+
+</div>
+</div>
+
+
+<!-- APP -->
+
+<div class="app" id="app">
+
+<div class="wrapper">
+
+<div class="topbar">
+
+<div class="logo">
+<div class="logo-dot"></div>
+
+<div class="logo-text">
+WHAT'S THAT <span>STAR?</span>
+</div>
+</div>
+
+<div class="top-actions">
+
+<button class="small-btn" onclick="identifyMode()">
+IDENTIFY
+</button>
+
+<button class="small-btn"
+onclick="openModal('SPACE WIKI',wikiHTML())">
+WIKI
+</button>
+
+<button class="small-btn"
+onclick="openModal('STARGAZING GUIDE',guideHTML())">
+GUIDE
+</button>
+
+<button class="small-btn"
+onclick="openModal('SPACE EVENTS',eventsHTML())">
+EVENTS
+</button>
+
+</div>
+</div>
+
+
+<div class="main-grid">
+
+<!-- SKY -->
+
+<div class="sky-panel">
+
+<div class="sky-header">
+
+<div class="sky-title">
+NIGHT SKY // LIVE SIMULATION
+</div>
+
+<div class="sky-status" id="skyStatus">
+● NORMAL
+</div>
+
+</div>
+
+
+<div class="sky" id="sky">
+
+<!-- EVERYTHING MOVES INSIDE THIS -->
+
+<div class="sky-world" id="skyWorld">
+
+<div class="constellation" id="constellationLayer"></div>
+
+</div>
+
+<div class="compass">
+N　　E　　S　　W
+</div>
+
+<div class="sky-hint">
+DRAG TO EXPLORE · CLICK OBJECTS TO IDENTIFY
+</div>
+
+<div class="zoom-controls">
+
+<button class="zoom-btn" onclick="changeZoom(1.15)">
++
+</button>
+
+<button class="zoom-btn" onclick="resetView()">
+⟳
+</button>
+
+<button class="zoom-btn" onclick="changeZoom(.87)">
+−
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SIDE -->
+
+<div class="side-panel">
+
+<div class="side-content">
+
+<div class="side-section">
+
+<div class="side-section-title">
+Discovery
+</div>
+
+<div class="side-section-body">
+
+<div class="stat-row">
+<span>Objects</span>
+<strong id="discoverCount">0 / 17</strong>
+</div>
+
+<div class="progress">
+<div class="progress-fill" id="discoverProgress"></div>
+</div>
+
+<div class="stat-row" style="margin-top:12px">
+<span>Constellations</span>
+<strong id="constellationCount">0 / 8</strong>
+</div>
+
+<div class="stat-row">
+<span>Secrets</span>
+<strong id="secretCount">0 / 4</strong>
+</div>
+
+</div>
+</div>
+
+
+<div class="side-section">
+
+<div class="side-section-title">
+Observatory
+</div>
+
+<button class="menu-button" onclick="identifyMode()">
+🔎 Identify an object
+<span>→</span>
+</button>
+
+<button class="menu-button"
+onclick="openModal('SPACE WIKI',wikiHTML())">
+📖 Space Wiki
+<span>→</span>
+</button>
+
+<button class="menu-button"
+onclick="openModal('STARGAZING GUIDE',guideHTML())">
+🌌 Stargazing Guide
+<span>→</span>
+</button>
+
+<button class="menu-button"
+onclick="openModal('SPACE EVENTS',eventsHTML())">
+📅 Upcoming Events
+<span>→</span>
+</button>
+
+</div>
+
+
+<div class="side-section">
+
+<div class="side-section-title">
+Current Conditions
+</div>
+
+<div class="side-section-body">
+
+<div class="stat-row">
+<span>Sky</span>
+<strong>CLEAR</strong>
+</div>
+
+<div class="stat-row">
+<span>Moonlight</span>
+<strong>LOW</strong>
+</div>
+
+<div class="stat-row">
+<span>Visibility</span>
+<strong>EXCELLENT</strong>
+</div>
+
+<div class="stat-row">
+<span>Light Pollution</span>
+<strong>MODERATE</strong>
+</div>
+
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+
+
+<!-- LOWER -->
+
+<div class="lower-grid">
+
+<div class="info-panel">
+
+<div class="info-header">
+<h2>SPACE FACT</h2>
+<span id="factNumber">#001</span>
+</div>
+
+<div class="info-body">
+
+<div class="fact" id="factText">
+The light from some stars you see tonight began
+its journey before humans had invented writing.
+</div>
+
+<button class="small-btn"
+style="margin-top:14px"
+onclick="newFact()">
+NEW FACT
+</button>
+
+</div>
+</div>
+
+
+<div class="info-panel">
+
+<div class="info-header">
+<h2>NEXT EVENT</h2>
+<span>2026</span>
+</div>
+
+<div class="info-body">
+
+<div class="event">
+
+<div class="event-date">
+AUG 27–28, 2026
+</div>
+
+<div class="event-name">
+PARTIAL LUNAR ECLIPSE
+</div>
+
+<div class="event-description">
+A partial lunar eclipse will be visible across
+Europe, Africa and western Asia.
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+
+<div class="modal-title" id="modalTitle">
+INFORMATION
+</div>
+
+<button class="modal-close" onclick="closeModal()">
+×
+</button>
+
+</div>
+
+<div class="modal-body" id="modalBody"></div>
+
+</div>
+</div>
+
+
+<div class="toast" id="toast">
+OBJECT DISCOVERED
+</div>
+
+
+<script>
+
+/* =========================================================
+START
+========================================================= */
+
+const startStars=document.getElementById("startStars");
+
+for(let i=0;i<180;i++){
+
+const s=document.createElement("div");
+
+s.className="start-star";
+
+s.style.left=Math.random()*100+"%";
+s.style.top=Math.random()*100+"%";
+
+const size=Math.random()>.9?3:1;
+
+s.style.width=size+"px";
+s.style.height=size+"px";
+
+s.style.animationDelay=Math.random()*3+"s";
+
+startStars.appendChild(s);
+}
+
+function startGame(){
+
+document.getElementById("startScreen").classList.add("hidden");
+document.getElementById("app").classList.add("visible");
+
+setTimeout(()=>{
+document.getElementById("startScreen").style.display="none";
+},800);
+
+updateStats();
+}
+
+
+/* =========================================================
+OBJECT DATABASE
+========================================================= */
+
+const objects=[
+
+{
+id:"sirius",
+name:"Sirius",
+type:"Star",
+constellation:"Canis Major",
+distance:"8.6 light-years",
+magnitude:"−1.46",
+description:"Sirius is the brightest star in Earth's night sky. It is actually a binary star system.",
+x:24,y:35,size:7
+},
+
+{
+id:"vega",
+name:"Vega",
+type:"Star",
+constellation:"Lyra",
+distance:"25 light-years",
+magnitude:"0.03",
+description:"Vega is one of the brightest stars in the northern sky and forms part of the Summer Triangle.",
+x:61,y:25,size:6
+},
+
+{
+id:"betelgeuse",
+name:"Betelgeuse",
+type:"Red Supergiant",
+constellation:"Orion",
+distance:"~550 light-years",
+magnitude:"0.5",
+description:"Betelgeuse is a massive red supergiant nearing the end of its stellar life.",
+x:73,y:53,size:8,red:true
+},
+
+{
+id:"rigel",
+name:"Rigel",
+type:"Blue Supergiant",
+constellation:"Orion",
+distance:"~860 light-years",
+magnitude:"0.13",
+description:"Rigel is a luminous blue supergiant and one of the brightest stars associated with Orion.",
+x:78,y:69,size:7
+},
+
+{
+id:"polaris",
+name:"Polaris",
+type:"Star",
+constellation:"Ursa Minor",
+distance:"~447 light-years",
+magnitude:"1.98",
+description:"Polaris is famous as the North Star because it lies very close to the north celestial pole.",
+x:50,y:14,size:6
+},
+
+{
+id:"aldebaran",
+name:"Aldebaran",
+type:"Giant Star",
+constellation:"Taurus",
+distance:"65 light-years",
+magnitude:"0.86",
+description:"Aldebaran is an orange giant that appears to form the eye of Taurus.",
+x:68,y:43,size:6,red:true
+},
+
+{
+id:"antares",
+name:"Antares",
+type:"Red Supergiant",
+constellation:"Scorpius",
+distance:"~550 light-years",
+magnitude:"0.96",
+description:"Antares is a huge red supergiant whose name roughly means rival of Mars.",
+x:38,y:76,size:8,red:true
+},
+
+{
+id:"procyon",
+name:"Procyon",
+type:"Star",
+constellation:"Canis Minor",
+distance:"11.5 light-years",
+magnitude:"0.34",
+description:"Procyon is one of the closest bright stars to the Solar System.",
+x:32,y:55,size:6
+},
+
+{
+id:"mars",
+name:"Mars",
+type:"Planet",
+constellation:"Variable",
+distance:"Varies",
+magnitude:"Variable",
+description:"Mars is the fourth planet from the Sun. Its rusty colour comes from iron minerals.",
+x:82,y:30,size:12,planet:"mars"
+},
+
+{
+id:"jupiter",
+name:"Jupiter",
+type:"Planet",
+constellation:"Variable",
+distance:"Varies",
+magnitude:"Very bright",
+description:"Jupiter is the largest planet in the Solar System.",
+x:16,y:62,size:18,planet:"jupiter"
+},
+
+{
+id:"saturn",
+name:"Saturn",
+type:"Planet",
+constellation:"Variable",
+distance:"Varies",
+magnitude:"Bright",
+description:"Saturn is famous for its spectacular ring system.",
+x:89,y:78,size:15,planet:"saturn"
+},
+
+{
+id:"moon",
+name:"The Moon",
+type:"Natural Satellite",
+constellation:"Variable",
+distance:"384,400 km",
+magnitude:"−12.7",
+description:"Earth's Moon is the fifth-largest natural satellite in the Solar System.",
+x:55,y:82,size:17,moon:true
+},
+
+{
+id:"andromeda",
+name:"Andromeda Galaxy",
+type:"Galaxy",
+constellation:"Andromeda",
+distance:"~2.5 million light-years",
+magnitude:"3.44",
+description:"The Andromeda Galaxy is the nearest large galaxy to the Milky Way.",
+x:12,y:23,size:9,galaxy:true
+},
+
+{
+id:"pleiades",
+name:"Pleiades",
+type:"Open Star Cluster",
+constellation:"Taurus",
+distance:"~444 light-years",
+magnitude:"1.6",
+description:"The Pleiades, or Seven Sisters, are a nearby open star cluster.",
+x:70,y:20,size:6
+},
+
+{
+id:"comet",
+name:"Unknown Comet",
+type:"Comet",
+constellation:"Unknown",
+distance:"Unknown",
+magnitude:"Unknown",
+description:"A strange comet has appeared in the simulated sky. Its orbit has not yet been classified.",
+x:42,y:28,size:8,
+comet:true,secret:true
+},
+
+{
+id:"satellite",
+name:"Unidentified Satellite",
+type:"Artificial Object",
+constellation:"None",
+distance:"Low Earth Orbit",
+magnitude:"Variable",
+description:"A small artificial object crossing the sky.",
+x:58,y:62,size:5,
+satellite:true,secret:true
+},
+
+{
+id:"strange",
+name:"UNKNOWN-01",
+type:"Unknown",
+constellation:"Unknown",
+distance:"████████",
+magnitude:"████",
+description:"This object does not appear in the ordinary catalogue. Something about its position seems wrong.",
+x:91,y:18,size:5,
+secret:true
+}
+
+];
+
+
+/* =========================================================
+CONSTELLATIONS
+========================================================= */
+
+const constellations=[
+
+{
+name:"ORION",
+points:[[69,45],[73,53],[78,69],[65,57],[82,57]]
+},
+
+{
+name:"LYRA",
+points:[[57,18],[61,25],[66,19],[69,27]]
+},
+
+{
+name:"CANIS MAJOR",
+points:[[24,35],[27,44],[31,51],[34,57]]
+},
+
+{
+name:"TAURUS",
+points:[[68,43],[72,35],[76,27],[82,29]]
+},
+
+{
+name:"URSA MINOR",
+points:[[50,14],[45,19],[39,18],[35,23],[42,27]]
+},
+
+{
+name:"SCORPIUS",
+points:[[38,76],[43,70],[49,74],[53,80],[58,76]]
+},
+
+{
+name:"CYGNUS",
+points:[[45,30],[53,37],[61,43],[53,50]]
+},
+
+{
+name:"CASSIOPEIA",
+points:[[15,35],[23,28],[31,35],[39,27],[47,35]]
+}
+
+];
+
+
+/* =========================================================
+SKY
+========================================================= */
+
+const sky=document.getElementById("sky");
+const world=document.getElementById("skyWorld");
+const constellationLayer=document.getElementById("constellationLayer");
+
+let zoom=1;
+let offsetX=0;
+let offsetY=0;
+
+function createConstellations(){
+
+constellationLayer.innerHTML="";
+
+constellations.forEach(c=>{
+
+for(let i=0;i<c.points.length-1;i++){
+
+const a=c.points[i];
+const b=c.points[i+1];
+
+const line=document.createElement("div");
+
+line.className="constellation-line";
+
+const x1=a[0]/100*100;
+const y1=a[1]/100*100;
+const x2=b[0]/100*100;
+const y2=b[1]/100*100;
+
+const dx=x2-x1;
+const dy=y2-y1;
+
+const length=Math.sqrt(dx*dx+dy*dy);
+const angle=Math.atan2(dy,dx)*180/Math.PI;
+
+line.style.left=x1+"%";
+line.style.top=y1+"%";
+line.style.width=length+"%";
+line.style.transform=`rotate(${angle}deg)`;
+
+constellationLayer.appendChild(line);
+}
+
+const label=document.createElement("div");
+
+label.className="constellation-name";
+
+const middle=c.points[Math.floor(c.points.length/2)];
+
+label.style.left=middle[0]+"%";
+label.style.top=(middle[1]+3)+"%";
+label.textContent=c.name;
+
+constellationLayer.appendChild(label);
+
+});
+
+}
+
+
+/* =========================================================
+OBJECT CREATION
+========================================================= */
+
+function createObjects(){
+
+objects.forEach(obj=>{
+
+const el=document.createElement("div");
+
+el.className="sky-object";
+el.dataset.id=obj.id;
+
+el.style.left=obj.x+"%";
+el.style.top=obj.y+"%";
+
+const core=document.createElement("div");
+
+if(obj.planet){
+
+core.className="planet-core";
+
+if(obj.planet==="mars"){
+core.style.background=
+"radial-gradient(circle at 35% 30%,#ffad7e,#b83d2d 60%,#45120e)";
+}
+
+if(obj.planet==="jupiter"){
+core.style.background=
+"linear-gradient(#d8c5a4 0 18%,#8b6f54 18% 28%,#d9c6a3 28% 42%,#9a745c 42% 53%,#d6bfa0 53%)";
+}
+
+if(obj.planet==="saturn"){
+
+core.style.background=
+"radial-gradient(circle at 35% 30%,#f2d9a0,#a88350)";
+
+const ring=document.createElement("div");
+
+ring.className="planet-ring";
+
+core.appendChild(ring);
+}
+
+}else if(obj.moon){
+
+core.className="moon-core";
+
+}else if(obj.comet){
+
+core.className="comet-core";
+
+}else if(obj.satellite){
+
+core.className="satellite-core";
+
+}else if(obj.galaxy){
+
+core.className="star-core";
+
+core.style.background=
+"radial-gradient(ellipse,#d9e4ff,#8499c9 30%,transparent 70%)";
+
+}else{
+
+core.className="star-core";
+
+if(obj.red){
+
+core.style.background="#ff8a70";
+
+core.style.boxShadow=
+"0 0 5px #ff8a70,0 0 14px rgba(255,100,80,.7)";
+}
+}
+
+core.style.width=obj.size+"px";
+core.style.height=obj.size+"px";
+
+el.appendChild(core);
+
+
+/* Labels */
+
+if(!obj.secret){
+
+const label=document.createElement("div");
+
+label.className="star-label";
+label.textContent=obj.name;
+
+el.appendChild(label);
+
+}
+
+
+/* Click */
+
+el.addEventListener("click",function(e){
+
+e.stopPropagation();
+
+identifyObject(obj.id);
+
+});
+
+world.appendChild(el);
+
+});
+
+}
+
+
+/* =========================================================
+INITIALISE SKY
+========================================================= */
+
+createConstellations();
+createObjects();
+
+
+/* =========================================================
+VIEW SYSTEM — FIXED
+========================================================= */
+
+function applyView(){
+
+world.style.transform=
+`translate3d(${offsetX}px,${offsetY}px,0) scale(${zoom})`;
+
+}
+
+function changeZoom(amount){
+
+zoom*=amount;
+
+zoom=Math.max(.65,Math.min(2.5,zoom));
+
+applyView();
+
+}
+
+function resetView(){
+
+zoom=1;
+offsetX=0;
+offsetY=0;
+
+applyView();
+
+}
+
+
+/* =========================================================
+DRAGGING — FIXED
+========================================================= */
+
+let dragging=false;
+let dragMoved=false;
+let startX=0;
+let startY=0;
+
+sky.addEventListener("pointerdown",e=>{
+
+if(e.target.closest(".sky-object")) return;
+
+dragging=true;
+dragMoved=false;
+
+startX=e.clientX;
+startY=e.clientY;
+
+sky.classList.add("dragging");
+
+try{
+sky.setPointerCapture(e.pointerId);
+}catch{}
+
+});
+
+sky.addEventListener("pointermove",e=>{
+
+if(!dragging)return;
+
+const dx=e.clientX-startX;
+const dy=e.clientY-startY;
+
+if(Math.abs(dx)>2 || Math.abs(dy)>2)
+dragMoved=true;
+
+offsetX+=dx;
+offsetY+=dy;
+
+startX=e.clientX;
+startY=e.clientY;
+
+applyView();
+
+});
+
+function stopDragging(){
+
+dragging=false;
+sky.classList.remove("dragging");
+
+}
+
+sky.addEventListener("pointerup",stopDragging);
+sky.addEventListener("pointercancel",stopDragging);
+sky.addEventListener("pointerleave",e=>{
+
+if(dragging && !sky.hasPointerCapture?.(e.pointerId))
+stopDragging();
+
+});
+
+
+/* WHEEL */
+
+sky.addEventListener("wheel",e=>{
+
+e.preventDefault();
+
+changeZoom(e.deltaY<0?1.08:.93);
+
+},{passive:false});
+
+
+/* =========================================================
+IDENTIFY
+========================================================= */
+
+let identifyActive=false;
+
+function identifyMode(){
+
+identifyActive=!identifyActive;
+
+const status=document.getElementById("skyStatus");
+
+if(identifyActive){
+
+status.textContent="● IDENTIFY MODE";
+status.style.color="#ffe58a";
+
+showToast("IDENTIFY MODE ENABLED");
+
+}else{
+
+status.textContent="● NORMAL";
+status.style.color="#70ffb0";
+
+showToast("IDENTIFY MODE DISABLED");
+
+}
+
+}
+
+
+/* =========================================================
+DISCOVERY
+========================================================= */
+
+let discovered=
+JSON.parse(localStorage.getItem("ronStarsDiscovered")||"[]");
+
+let secrets=
+JSON.parse(localStorage.getItem("ronStarsSecrets")||"[]");
+
+let foundConstellations=
+JSON.parse(localStorage.getItem("ronStarsConstellations")||"[]");
+
+
+function identifyObject(id){
+
+const obj=objects.find(o=>o.id===id);
+
+if(!obj)return;
+
+if(!discovered.includes(id)){
+
+discovered.push(id);
+
+localStorage.setItem(
+"ronStarsDiscovered",
+JSON.stringify(discovered)
+);
+
+if(obj.secret){
+
+if(!secrets.includes(id))
+secrets.push(id);
+
+localStorage.setItem(
+"ronStarsSecrets",
+JSON.stringify(secrets)
+);
+
+showToast("★ SECRET OBJECT DISCOVERED");
+
+}else{
+
+showToast("★ NEW OBJECT DISCOVERED");
+
+}
+
+updateStats();
+
+}
+
+openModal("OBJECT IDENTIFIED",objectHTML(obj));
+
+}
+
+
+/* =========================================================
+OBJECT MODAL
+========================================================= */
+
+function objectHTML(obj){
+
+let visual="";
+
+if(obj.planet==="mars"){
+
+visual=
+`<div class="object-visual"
+style="background:radial-gradient(circle at 35% 30%,#ffad7e,#b83d2d 60%,#45120e)">
+</div>`;
+
+}else if(obj.planet==="jupiter"){
+
+visual=
+`<div class="object-visual"
+style="background:linear-gradient(#d8c5a4 0 18%,#8b6f54 18% 28%,#d9c6a3 28% 42%,#9a745c 42% 53%,#d6bfa0 53%)">
+</div>`;
+
+}else if(obj.planet==="saturn"){
+
+visual=
+`<div class="object-visual"
+style="background:radial-gradient(circle at 35% 30%,#f2d9a0,#a88350)">
+</div>`;
+
+}else if(obj.red){
+
+visual=
+`<div class="object-visual"
+style="background:radial-gradient(circle at 35% 30%,#fff0e5,#ff896e 35%,#812719)">
+</div>`;
+
+}else{
+
+visual=`<div class="object-visual"></div>`;
+
+}
+
+return `
+
+<div class="object-big">
+
+${visual}
+
+<div>
+
+<h3>${obj.name}</h3>
+
+<div style="color:#697391">
+${obj.type}
+</div>
+
+</div>
+
+</div>
+
+<div class="object-meta">
+
+<div class="meta">
+<span class="meta-label">Type</span>
+<span class="meta-value">${obj.type}</span>
+</div>
+
+<div class="meta">
+<span class="meta-label">Constellation</span>
+<span class="meta-value">${obj.constellation}</span>
+</div>
+
+<div class="meta">
+<span class="meta-label">Distance</span>
+<span class="meta-value">${obj.distance}</span>
+</div>
+
+<div class="meta">
+<span class="meta-label">Magnitude</span>
+<span class="meta-value">${obj.magnitude}</span>
+</div>
+
+</div>
+
+<h4>ABOUT THIS OBJECT</h4>
+
+<p>${obj.description}</p>
+
+${obj.secret?
+`<p style="color:#ffe58a">
+⚠ This object is not part of the ordinary catalogue.
+</p>`:""}
+
+<button class="small-btn" onclick="closeModal()">
+CLOSE
+</button>
+
+`;
+
+}
+
+
+/* =========================================================
+STATS
+========================================================= */
+
+function updateStats(){
+
+const total=objects.length;
+
+document.getElementById("discoverCount").textContent=
+discovered.length+" / "+total;
+
+document.getElementById("discoverProgress").style.width=
+Math.min(100,discovered.length/total*100)+"%";
+
+document.getElementById("secretCount").textContent=
+secrets.length+" / 4";
+
+document.getElementById("constellationCount").textContent=
+foundConstellations.length+" / 8";
+
+}
+
+
+/* =========================================================
+MODAL
+========================================================= */
+
+function openModal(title,html){
+
+document.getElementById("modalTitle").textContent=title;
+document.getElementById("modalBody").innerHTML=html;
+
+document.getElementById("modal").classList.add("show");
+
+document.body.style.overflow="hidden";
+
+}
+
+function closeModal(){
+
+document.getElementById("modal").classList.remove("show");
+
+document.body.style.overflow="";
+
+}
+
+document.getElementById("modal").addEventListener("click",e=>{
+
+if(e.target.id==="modal")
+closeModal();
+
+});
+
+
+/* =========================================================
+WIKI
+========================================================= */
+
+function wikiHTML(){
+
+const entries=[
+
+["Stars","Stars are enormous balls of plasma held together by gravity. Their colour can reveal their temperature."],
+
+["Planets","Planets orbit stars and are large enough for gravity to make them roughly spherical."],
+
+["Black Holes","Black holes are regions of spacetime where gravity becomes extremely strong."],
+
+["Galaxies","Galaxies contain stars, gas, dust, dark matter and other material held together by gravity."],
+
+["Nebulae","Nebulae are enormous clouds of gas and dust. Some are stellar nurseries."],
+
+["Neutron Stars","Neutron stars are incredibly dense remnants left behind after some massive stars explode."],
+
+["Comets","Comets are icy bodies that can develop glowing comas and tails when they approach the Sun."],
+
+["Meteors","A meteor is the streak of light produced when space debris enters an atmosphere."],
+
+["Exoplanets","Exoplanets are planets orbiting stars outside our Solar System."],
+
+["Light-Years","A light-year measures distance. It is how far light travels in one year."],
+
+["Dark Matter","Dark matter does not appear to interact with light, but its gravitational effects can be detected."],
+
+["The Milky Way","Our Solar System is inside the Milky Way, a barred spiral galaxy containing enormous numbers of stars."]
+
+];
+
+return `
+
+<p>
+Welcome to the <strong>Ron.cool Space Wiki</strong>.
+Your little guide to the universe.
+</p>
+
+<div class="wiki-grid">
+
+${entries.map(e=>`
+
+<div class="wiki-card">
+
+<div class="wiki-card-title">
+${e[0]}
+</div>
+
+<div class="wiki-card-text">
+${e[1]}
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================================
+FACTS
+========================================================= */
+
+const facts=[
+
+"A day on Venus is longer than a year on Venus.",
+
+"The Sun contains about 99.8% of the Solar System's mass.",
+
+"Neutron stars can pack more mass than the Sun into a sphere only around 20 km across.",
+
+"Apollo footprints could remain on the Moon for millions of years because there is no wind or rain.",
+
+"Jupiter's Great Red Spot is a giant storm that has existed for centuries.",
+
+"Saturn's average density is less than water.",
+
+"Looking into space is looking into the past because light takes time to travel.",
+
+"The Milky Way and Andromeda are expected to interact dramatically in the distant future.",
+
+"Some of the oldest light we can observe comes from shortly after the birth of the universe."
+
+];
+
+let factIndex=0;
+
+function newFact(){
+
+factIndex=(factIndex+1)%facts.length;
+
+document.getElementById("factText").textContent=facts[factIndex];
+
+document.getElementById("factNumber").textContent=
+"#"+String(factIndex+1).padStart(3,"0");
+
+}
+
+
+/* =========================================================
+GUIDE
+========================================================= */
+
+function guideHTML(){
+
+return `
+
+<div class="guide-score">
+
+<div class="guide-number">8.5/10</div>
+
+<div class="guide-label">
+CURRENT SIMULATED CONDITIONS
+</div>
+
+</div>
+
+<div class="guide-list">
+
+<div class="guide-item">
+<strong>🌑 Dark skies</strong>
+<span>Get away from street lights and bright buildings. Your eyes can take around 20–30 minutes to adapt to darkness.</span>
+</div>
+
+<div class="guide-item">
+<strong>☁ Check the clouds</strong>
+<span>Clear skies matter more than almost anything else.</span>
+</div>
+
+<div class="guide-item">
+<strong>🌙 Watch the Moon</strong>
+<span>A bright Moon can wash out faint stars and galaxies.</span>
+</div>
+
+<div class="guide-item">
+<strong>👀 Use your eyes first</strong>
+<span>You do not need a telescope for meteors, bright planets or many constellations.</span>
+</div>
+
+<div class="guide-item">
+<strong>📱 Avoid bright screens</strong>
+<span>Lower your phone brightness or use a red-light mode.</span>
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================================
+EVENTS
+========================================================= */
+
+function eventsHTML(){
+
+return `
+
+<p>
+Important astronomical events for 2026.
+</p>
+
+<div class="event">
+
+<div class="event-date">
+AUGUST 12–13, 2026
+</div>
+
+<div class="event-name">
+PERSEID METEOR SHOWER
+</div>
+
+<div class="event-description">
+One of the year's best-known meteor showers.
+</div>
+
+</div>
+
+<div class="event">
+
+<div class="event-date">
+AUGUST 27–28, 2026
+</div>
+
+<div class="event-name">
+PARTIAL LUNAR ECLIPSE
+</div>
+
+<div class="event-description">
+A partial lunar eclipse will be visible across Europe,
+Africa and western Asia.
+</div>
+
+</div>
+
+<div class="event">
+
+<div class="event-date">
+FEBRUARY 6, 2027
+</div>
+
+<div class="event-name">
+ANNULAR SOLAR ECLIPSE
+</div>
+
+<div class="event-description">
+An annular eclipse will be visible across parts of
+South America and Africa.
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================================
+TOAST
+========================================================= */
+
+let toastTimer;
+
+function showToast(text){
+
+const toast=document.getElementById("toast");
+
+toast.textContent=text;
+
+toast.classList.add("show");
+
+clearTimeout(toastTimer);
+
+toastTimer=setTimeout(()=>{
+toast.classList.remove("show");
+},3000);
+
+}
+
+
+/* =========================================================
+MOVING SATELLITE
+========================================================= */
+
+setInterval(()=>{
+
+const satellite=
+document.querySelector('[data-id="satellite"]');
+
+if(!satellite)return;
+
+satellite.style.left=(20+Math.random()*60)+"%";
+satellite.style.top=(20+Math.random()*60)+"%";
+
+},5000);
+
+
+/* =========================================================
+SECRET
+========================================================= */
+
+let secretTimer=0;
+
+setInterval(()=>{
+
+secretTimer++;
+
+if(secretTimer===4 && !secrets.includes("strange")){
+
+const strange=
+document.querySelector('[data-id="strange"]');
+
+if(strange){
+
+strange.style.opacity="1";
+
+showToast(
+"Something appeared in the corner of the sky..."
+);
+
+}
+
+}
+
+},10000);
+
+
+/* =========================================================
+DOUBLE CLICK SECRET
+========================================================= */
+
+sky.addEventListener("dblclick",e=>{
+
+if(e.target===sky){
+
+showToast(
+"You looked somewhere nobody else did."
+);
+
+if(!secrets.includes("sky")){
+
+secrets.push("sky");
+
+localStorage.setItem(
+"ronStarsSecrets",
+JSON.stringify(secrets)
+);
+
+updateStats();
+
+}
+
+}
+
+});
+
+
+/* =========================================================
+KEYBOARD
+========================================================= */
+
+document.addEventListener("keydown",e=>{
+
+if(e.key==="Escape")
+closeModal();
+
+if(e.key==="+"||e.key==="=")
+changeZoom(1.12);
+
+if(e.key==="-")
+changeZoom(.89);
+
+if(e.key.toLowerCase()==="i")
+identifyMode();
+
+});
+
+
+/* =========================================================
+FINAL INIT
+========================================================= */
+
+applyView();
+updateStats();
+
+</script>
+
+</body>
+</html>
