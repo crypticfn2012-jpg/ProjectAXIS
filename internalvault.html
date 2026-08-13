@@ -255,7 +255,6 @@ body::after {
         opacity: 0;
         transform: translateY(4px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -307,7 +306,7 @@ body::after {
 }
 
 .card-header {
-    height: 42px;
+    min-height: 42px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -488,8 +487,7 @@ body::after {
     color: var(--yellow);
 }
 
-.log .err,
-.log .danger {
+.log .err {
     color: var(--red);
 }
 
@@ -604,6 +602,7 @@ body::after {
     justify-content: center;
     color: var(--green);
     font-size: 11px;
+    flex-shrink: 0;
 }
 
 .game-name {
@@ -807,261 +806,195 @@ body::after {
     100% { transform: translate(0); }
 }
 
-/* =========================================
-   HIDDEN GAME
-========================================= */
+/* =========================
+   VOID//RUN
+========================= */
 
-.hidden-game {
+.void-game {
     display: none;
 }
 
-.hidden-game.unlocked {
+.void-game.active {
     display: block;
-    animation: gameReveal .7s ease;
 }
 
-@keyframes gameReveal {
-    0% {
-        opacity: 0;
-        transform: scale(.96);
-        filter: blur(8px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
-        filter: blur(0);
-    }
+.void-shell {
+    background: #020303;
+    border: 1px solid #17221c;
+    box-shadow:
+        0 0 40px rgba(85,255,154,.04),
+        inset 0 0 40px rgba(85,255,154,.015);
 }
 
-.game-secret-card {
-    border-color: rgba(169,134,255,.25);
+.void-head {
+    padding: 15px;
+    border-bottom: 1px solid #17221c;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.game-secret-card .card-header {
-    border-color: rgba(169,134,255,.15);
+.void-title {
+    color: var(--green);
+    font-size: 13px;
+    letter-spacing: 2px;
 }
 
-.void-wrapper {
-    padding: 20px;
+.void-sub {
+    color: #46544b;
+    font-size: 8px;
 }
 
-.void-game {
+.void-screen {
     position: relative;
-    width: 100%;
-    height: 330px;
-    background:
-        radial-gradient(
-            circle at 50% 50%,
-            rgba(169,134,255,.08),
-            transparent 45%
-        ),
-        #020304;
-    border: 1px solid #171b25;
+    height: 390px;
     overflow: hidden;
+    background:
+        linear-gradient(rgba(85,255,154,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(85,255,154,.025) 1px, transparent 1px),
+        #010201;
+    background-size: 30px 30px;
     cursor: pointer;
     user-select: none;
 }
 
-.void-stars {
+.void-screen::after {
+    content: "";
     position: absolute;
     inset: 0;
-    background-image:
-        radial-gradient(circle, rgba(255,255,255,.7) 1px, transparent 1px),
-        radial-gradient(circle, rgba(169,134,255,.5) 1px, transparent 1px);
-    background-size: 83px 83px, 127px 127px;
-    animation: starsMove 8s linear infinite;
-    opacity: .45;
+    pointer-events: none;
+    background: linear-gradient(
+        transparent 0%,
+        rgba(85,255,154,.025) 50%,
+        transparent 100%
+    );
+    animation: scan 4s linear infinite;
 }
 
-@keyframes starsMove {
-    from {
-        background-position: 0 0, 0 0;
-    }
-
-    to {
-        background-position: -83px 83px, -127px 127px;
-    }
-}
-
-.void-grid {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 100px;
-    background:
-        linear-gradient(rgba(169,134,255,.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(169,134,255,.08) 1px, transparent 1px);
-    background-size: 25px 25px;
-    transform: perspective(100px) rotateX(45deg) scale(1.4);
-    transform-origin: bottom;
+@keyframes scan {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(100%); }
 }
 
 .void-player {
     position: absolute;
     width: 24px;
     height: 24px;
-    left: 70px;
-    bottom: 78px;
-    background: var(--purple);
-    box-shadow:
-        0 0 10px var(--purple),
-        0 0 30px rgba(169,134,255,.5);
-    z-index: 4;
+    background: var(--green);
+    box-shadow: 0 0 18px rgba(85,255,154,.7);
+    bottom: 50px;
+    left: 100px;
+    z-index: 3;
 }
 
-.void-player::after {
-    content: "";
+.void-player::before {
+    content: ">";
     position: absolute;
-    inset: 6px;
-    background: #020304;
+    color: #020303;
+    font-weight: bold;
+    font-size: 15px;
+    left: 6px;
+    top: 3px;
 }
 
 .void-obstacle {
     position: absolute;
-    width: 25px;
-    height: 25px;
+    width: 26px;
+    height: 26px;
+    background: var(--red);
+    box-shadow: 0 0 16px rgba(255,85,112,.5);
+    bottom: 50px;
     right: -40px;
-    bottom: 78px;
-    background: var(--red);
-    box-shadow:
-        0 0 10px var(--red),
-        0 0 25px rgba(255,85,112,.4);
-    z-index: 4;
+    z-index: 2;
 }
 
-.void-obstacle::before,
-.void-obstacle::after {
-    content: "";
+.void-star {
     position: absolute;
-    background: var(--red);
+    color: var(--yellow);
+    font-size: 18px;
+    z-index: 2;
+    text-shadow: 0 0 12px var(--yellow);
 }
 
-.void-obstacle::before {
-    width: 35px;
-    height: 3px;
-    top: 11px;
-    left: -5px;
-}
-
-.void-obstacle::after {
-    height: 35px;
-    width: 3px;
-    left: 11px;
-    top: -5px;
-}
-
-.void-hud {
+.void-ground {
     position: absolute;
-    left: 15px;
-    top: 14px;
-    right: 15px;
-    display: flex;
-    justify-content: space-between;
-    z-index: 10;
-    font-size: 10px;
+    left: 0;
+    right: 0;
+    bottom: 38px;
+    height: 1px;
+    background: rgba(85,255,154,.35);
+    box-shadow: 0 0 8px rgba(85,255,154,.15);
 }
 
 .void-score {
-    color: var(--purple);
+    position: absolute;
+    top: 16px;
+    left: 18px;
+    z-index: 5;
+    color: var(--green);
+    font-size: 12px;
 }
 
 .void-high {
-    color: #68727d;
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    z-index: 5;
+    color: #46544b;
+    font-size: 9px;
 }
 
-.void-status {
+.void-message {
     position: absolute;
     inset: 0;
-    z-index: 8;
+    z-index: 10;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     text-align: center;
-    pointer-events: none;
+    background: rgba(1,2,1,.82);
+    backdrop-filter: blur(2px);
 }
 
-.void-status h2 {
-    color: white;
-    font-size: 24px;
+.void-message h2 {
+    color: var(--green);
+    font-size: 25px;
     letter-spacing: 4px;
-    text-shadow: 0 0 20px rgba(169,134,255,.5);
+    margin-bottom: 10px;
 }
 
-.void-status p {
-    color: #697481;
+.void-message p {
+    color: #59675e;
     font-size: 9px;
-    margin-top: 10px;
+    line-height: 1.8;
+    max-width: 400px;
 }
 
 .void-start {
-    pointer-events: auto;
-    margin-top: 18px;
-    background: #0b0c12;
-    border: 1px solid #42375e;
-    color: var(--purple);
+    margin-top: 20px;
+    background: #071009;
+    border: 1px solid #274331;
+    color: var(--green);
     padding: 10px 18px;
     font-family: inherit;
-    cursor: pointer;
     font-size: 9px;
+    cursor: pointer;
 }
 
 .void-start:hover {
-    border-color: var(--purple);
-    box-shadow: 0 0 15px rgba(169,134,255,.15);
+    background: rgba(85,255,154,.08);
+    border-color: var(--green);
 }
 
-.void-game.running .void-status {
-    display: none;
-}
-
-.void-game.over .void-status {
+.void-info {
+    padding: 12px 15px;
+    border-top: 1px solid #17221c;
+    color: #46544b;
+    font-size: 8px;
     display: flex;
+    justify-content: space-between;
 }
-
-.void-game.over .void-status h2 {
-    color: var(--red);
-}
-
-.void-instructions {
-    padding-top: 15px;
-    color: #4d5863;
-    font-size: 9px;
-    line-height: 1.8;
-}
-
-.void-instructions span {
-    color: var(--purple);
-}
-
-.secret-unlocked-note {
-    margin-top: 18px;
-    padding: 12px;
-    border: 1px solid rgba(169,134,255,.15);
-    color: #655d78;
-    font-size: 9px;
-}
-
-.secret-unlocked-note strong {
-    color: var(--purple);
-}
-
-/* HIDDEN DISCOVERY */
-
-.discovery-message {
-    display: none;
-    margin-top: 15px;
-    color: var(--purple);
-    font-size: 9px;
-}
-
-.discovery-message.show {
-    display: block;
-    animation: fadeIn .4s ease;
-}
-
-/* MOBILE */
 
 .mobile-menu {
     display: none;
@@ -1123,8 +1056,16 @@ body::after {
         font-size: 19px;
     }
 
-    .void-game {
-        height: 280px;
+    .game {
+        gap: 10px;
+    }
+
+    .game > div:last-child {
+        flex-shrink: 0;
+    }
+
+    .void-screen {
+        height: 320px;
     }
 }
 </style>
@@ -1203,7 +1144,6 @@ body::after {
 
 </aside>
 
-
 <main class="main">
 
 <header class="topbar">
@@ -1228,9 +1168,7 @@ body::after {
 
 </header>
 
-
 <div class="content">
-
 
 <!-- ================= OVERVIEW ================= -->
 
@@ -1262,7 +1200,7 @@ body::after {
 
         <div class="card stat">
             <div class="stat-label">ACTIVE GAMES</div>
-            <div class="stat-value" id="gameCount">9</div>
+            <div class="stat-value" id="gameCount">27</div>
             <div class="stat-small">registered applications</div>
         </div>
 
@@ -1279,42 +1217,63 @@ body::after {
     <div class="grid grid-3">
 
         <div class="card connection">
+
             <div class="card-body">
+
                 <div class="service-logo">▲</div>
+
                 <div class="service-name">Cloudflare</div>
+
                 <div class="service-url">
                     EDGE / DNS / CDN / SECURITY
                 </div>
+
                 <div class="connection-status">
                     ● CONNECTED
                 </div>
+
             </div>
+
         </div>
 
         <div class="card connection">
+
             <div class="card-body">
+
                 <div class="service-logo">◈</div>
+
                 <div class="service-name">GitHub Pages</div>
+
                 <div class="service-url">
                     crypticfn2012-jpg.github.io/Ron.cool
                 </div>
+
                 <div class="connection-status">
                     ● CONNECTED
                 </div>
+
             </div>
+
         </div>
 
         <div class="card connection">
+
             <div class="card-body">
+
                 <div class="service-logo">▣</div>
+
                 <div class="service-name">Supabase</div>
+
                 <div class="service-url">
                     DATABASE / API / REALTIME
                 </div>
+
                 <div class="connection-status">
                     ● CONNECTED
                 </div>
+
             </div>
+
         </div>
 
     </div>
@@ -1370,7 +1329,6 @@ body::after {
 
         </div>
 
-
         <div class="card">
 
             <div class="card-header">
@@ -1404,7 +1362,7 @@ body::after {
 
         <div class="card-header">
             <span class="card-title">APPLICATION REGISTRY</span>
-            <span class="badge badge-green">9 ACTIVE</span>
+            <span class="badge badge-green">27 ACTIVE</span>
         </div>
 
         <div class="card-body" id="gameList"></div>
@@ -1562,7 +1520,6 @@ body::after {
             </div>
 
         </div>
-
 
         <div class="card">
 
@@ -1757,7 +1714,6 @@ body::after {
 
         </div>
 
-
         <div class="card">
 
             <div class="card-header">
@@ -1879,127 +1835,107 @@ body::after {
                 FLAG: RON_COOL_INTERNAL_01
             </div>
 
-            <!--
-                SECOND SECRET
-                The game is intentionally hidden inside
-                the Classified section.
-            -->
+            <br>
 
-            <div class="secret-unlocked-note">
-                <strong>INTERNAL NOTE:</strong>
-                classified environment contains 1 unregistered process.
-                Registry scan incomplete.
+            <div style="
+                border-top:1px solid #17221c;
+                padding-top:18px;
+                color:#59675e;
+                font-size:9px;
+                line-height:1.8;
+            ">
+                INTERNAL NOTE: classified environment contains
+                1 unregistered process. Registry scan incomplete.
+                <br><br>
+                ▸ UNREGISTERED PROCESS DETECTED<br>
+                ▸ ACCESS THROUGH INTERNAL SHELL<br>
+                ▸ PROCESS NAME: VOID.RUN
             </div>
 
-            <div class="discovery-message" id="discoveryMessage">
-                ▸ UNREGISTERED PROCESS DETECTED
-                <br>
-                ▸ ACCESS THROUGH INTERNAL SHELL
-                <br>
-                ▸ PROCESS NAME: <strong>VOID.RUN</strong>
-            </div>
+            <br>
+
+            <button
+                class="action-btn"
+                onclick="openVoidRun()">
+                INITIALIZE UNREGISTERED PROCESS
+            </button>
 
         </div>
 
     </div>
 
 
-    <!-- =========================================
-         SECRET GAME
-         HIDDEN UNTIL DISCOVERED
-    ========================================== -->
+    <!-- ================= SECRET GAME ================= -->
 
-    <div class="hidden-game" id="hiddenGame">
+    <div class="void-game" id="voidGame">
 
         <br>
 
-        <div class="card game-secret-card">
+        <div class="void-shell">
 
-            <div class="card-header">
+            <div class="void-head">
 
-                <span class="card-title">
-                    UNREGISTERED APPLICATION // VOID.RUN
-                </span>
+                <div>
+                    <div class="void-title">
+                        VOID//RUN
+                    </div>
 
-                <span class="badge"
-                      style="
-                      background:rgba(169,134,255,.08);
-                      color:#a986ff">
+                    <div class="void-sub">
+                        UNREGISTERED APPLICATION // PROCESS ID: 0xVOID
+                    </div>
+                </div>
+
+                <span class="badge badge-red">
                     UNKNOWN
                 </span>
 
             </div>
 
-            <div class="void-wrapper">
 
-                <div class="void-game" id="voidGame">
+            <div class="void-screen" id="voidScreen">
 
-                    <div class="void-stars"></div>
+                <div class="void-score">
+                    SCORE: <span id="voidScore">0</span>
+                </div>
 
-                    <div class="void-grid"></div>
+                <div class="void-high">
+                    HIGH: <span id="voidHigh">0</span>
+                </div>
 
-                    <div class="void-hud">
+                <div class="void-player" id="voidPlayer"></div>
 
-                        <div class="void-score">
-                            SCORE:
-                            <span id="voidScore">0</span>
-                        </div>
+                <div class="void-ground"></div>
 
-                        <div class="void-high">
-                            HIGH:
-                            <span id="voidHigh">0</span>
-                        </div>
+                <div class="void-message" id="voidMessage">
 
-                    </div>
+                    <h2>VOID//RUN</h2>
 
-                    <div class="void-player" id="voidPlayer"></div>
+                    <p>
+                        You found an unregistered process.
+                        <br>
+                        Nobody knows what this program does.
+                        <br>
+                        Keep the process alive.
+                    </p>
 
-                    <div class="void-obstacle" id="voidObstacle"></div>
-
-                    <div class="void-status" id="voidStatus">
-
-                        <h2 id="voidTitle">
-                            VOID//RUN
-                        </h2>
-
-                        <p id="voidSubtitle">
-                            UNREGISTERED PROCESS
-                        </p>
-
-                        <button
-                            class="void-start"
-                            id="voidStart">
-                            INITIALIZE PROCESS
-                        </button>
-
-                    </div>
+                    <button class="void-start" id="voidStart">
+                        INITIALIZE PROCESS
+                    </button>
 
                 </div>
 
-                <div class="void-instructions">
+            </div>
 
-                    <span>[SPACE]</span> jump
-                    &nbsp; //
-                    &nbsp;
-                    <span>[CLICK]</span> jump
-                    &nbsp; //
-                    &nbsp;
-                    survive as long as possible
-
-                </div>
-
-                <div style="
-                    margin-top:10px;
-                    color:#383e48;
-                    font-size:8px;
-                ">
-                    PROCESS ID: 0xVOID
+            <div class="void-info">
+                <span>
+                    [SPACE] JUMP
                     //
+                    [CLICK] JUMP
+                </span>
+
+                <span>
                     MEMORY: UNKNOWN
-                    //
-                    ORIGIN: UNKNOWN
-                </div>
-
+                </span>
             </div>
 
         </div>
@@ -2011,7 +1947,6 @@ body::after {
 
 </div>
 </main>
-
 </div>
 
 
@@ -2054,35 +1989,56 @@ const games = [
     },
 
     {
-        name: "Color Mixer",
+        name: "Color Lab",
         file: "color.html",
         icon: "C",
         status: "ONLINE"
     },
 
     {
-        name: "Compliment Generator",
+        name: "Life Check",
+        file: "life.html",
+        icon: "L",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Mood Garden",
+        file: "mood.html",
+        icon: "M",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Pocket Aquarium",
+        file: "aquarium.html",
+        icon: "F",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Compliment",
         file: "compliment.html",
         icon: "+",
         status: "ONLINE"
     },
 
     {
-        name: "Infinite Dice",
+        name: "Dice",
         file: "dice.html",
         icon: "D",
         status: "ONLINE"
     },
 
     {
-        name: "Particle Lab",
+        name: "Particles",
         file: "particle.html",
         icon: "✦",
         status: "ONLINE"
     },
 
     {
-        name: "Reaction Time",
+        name: "Reaction",
         file: "reaction.html",
         icon: "⚡",
         status: "ONLINE"
@@ -2103,9 +2059,114 @@ const games = [
     },
 
     {
-        name: "Typing Test",
+        name: "Typing",
         file: "typing.html",
         icon: "T",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Emoji Rain",
+        file: "emoji.html",
+        icon: "☂",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Memory Test",
+        file: "memory.html",
+        icon: "◆",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Explore Space",
+        file: "space.html",
+        icon: "◉",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Button Press",
+        file: "button.html",
+        icon: "?",
+        status: "ONLINE"
+    },
+
+    {
+        name: "FLAPPY.EXE",
+        file: "flappy.html",
+        icon: "!",
+        status: "ONLINE"
+    },
+
+    {
+        name: "COMPUTER.EXE",
+        file: "computer.html",
+        icon: "▣",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Crack the Code",
+        file: "crack.html",
+        icon: "#",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Don't Click the Bomb",
+        file: "bomb.html",
+        icon: "!",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Cursor Maze",
+        file: "cursor.html",
+        icon: "⌁",
+        status: "ONLINE"
+    },
+
+    {
+        name: "Orbit",
+        file: "orbit.html",
+        icon: "○",
+        status: "ONLINE"
+    },
+
+    {
+        name: "RonScript",
+        file: "ronscript.html",
+        icon: ">",
+        status: "ONLINE"
+    },
+
+    {
+        name: "3D Engine Test",
+        file: "3d.html",
+        icon: "3D",
+        status: "ONLINE"
+    },
+
+    {
+        name: "R.C Engine Playground",
+        file: "engine.html",
+        icon: "RC",
+        status: "ONLINE"
+    },
+
+    {
+        name: "3D Shooting Range",
+        file: "shooting.html",
+        icon: "+",
+        status: "ONLINE"
+    },
+
+    {
+        name: "R.C Engine Documentation",
+        file: "documentation.html",
+        icon: "DOC",
         status: "ONLINE"
     }
 
@@ -2225,8 +2286,7 @@ function viewGame(index) {
 
 function closeModal() {
 
-    document
-        .getElementById("modal")
+    document.getElementById("modal")
         .classList.remove("show");
 
 }
@@ -2260,23 +2320,17 @@ navButtons.forEach(button => {
 
         button.classList.add("active");
 
-        document
-            .querySelectorAll(".page")
-            .forEach(section =>
-                section.classList.remove("active")
-            );
+        document.querySelectorAll(".page").forEach(section =>
+            section.classList.remove("active")
+        );
 
-        document
-            .getElementById(page)
+        document.getElementById(page)
             .classList.add("active");
 
-        document
-            .getElementById("breadcrumb")
-            .textContent =
-            page.toUpperCase();
+        document.getElementById("breadcrumb")
+            .textContent = page.toUpperCase();
 
-        document
-            .getElementById("sidebar")
+        document.getElementById("sidebar")
             .classList.remove("open");
 
     });
@@ -2288,12 +2342,10 @@ navButtons.forEach(button => {
    MOBILE MENU
 ========================================== */
 
-document
-    .getElementById("mobileMenu")
+document.getElementById("mobileMenu")
     .addEventListener("click", () => {
 
-        document
-            .getElementById("sidebar")
+        document.getElementById("sidebar")
             .classList.toggle("open");
 
     });
@@ -2312,8 +2364,7 @@ function updateClock() {
             hour12: false
         });
 
-    document
-        .getElementById("clock")
+    document.getElementById("clock")
         .textContent = time;
 
 }
@@ -2332,8 +2383,7 @@ setInterval(() => {
     const latency =
         Math.floor(Math.random() * 12) + 18;
 
-    document
-        .getElementById("latency")
+    document.getElementById("latency")
         .textContent = latency;
 
 }, 2500);
@@ -2348,8 +2398,7 @@ setInterval(() => {
     const value =
         Math.floor(Math.random() * 8) + 13;
 
-    document
-        .getElementById("connections")
+    document.getElementById("connections")
         .textContent = value;
 
 }, 3000);
@@ -2375,7 +2424,11 @@ const logMessages = [
     ["Background health check", "ok"],
     ["API response received", "ok"],
     ["DNS lookup completed", "ok"],
-    ["Security layer verified", "ok"]
+    ["Security layer verified", "ok"],
+    ["GET /void.run", "warn"],
+    ["Unregistered process detected", "warn"],
+    ["Process memory scan failed", "warn"],
+    ["VOID.RUN heartbeat", "info"]
 
 ];
 
@@ -2395,35 +2448,24 @@ function createLog() {
 
     const entry =
         logMessages[
-            Math.floor(
-                Math.random() *
-                logMessages.length
-            )
+            Math.floor(Math.random() * logMessages.length)
         ];
 
     return `
         <div class="log">
-
-            <span class="time">
-                [${timestamp()}]
-            </span>
-
+            <span class="time">[${timestamp()}]</span>
             ${entry[0]}
-
-            <span class="${entry[1]}">
-
-                [
-                ${
+            <span class="${
+                entry[1]
+            }">
+                [${
                     entry[1] === "ok"
-                        ? "OK"
-                        : entry[1] === "warn"
-                        ? "WARN"
-                        : "INFO"
-                }
-                ]
-
+                    ? "OK"
+                    : entry[1] === "warn"
+                    ? "WARN"
+                    : "INFO"
+                }]
             </span>
-
         </div>
     `;
 
@@ -2438,11 +2480,9 @@ function addLog(container) {
     );
 
     while (container.children.length > 18) {
-
         container.removeChild(
             container.firstChild
         );
-
     }
 
     container.scrollTop =
@@ -2526,7 +2566,7 @@ terminalInput.addEventListener("keydown", e => {
         case "help":
 
             terminalPrint(
-                "commands: help, status, games, network, database, clear, whoami, secret, play",
+                "commands: help, status, games, network, database, clear, whoami, secret, void",
                 "info"
             );
 
@@ -2602,47 +2642,32 @@ terminalInput.addEventListener("keydown", e => {
             break;
 
 
-        /*
-        ==========================================
-        SECRET COMMAND
-        ==========================================
-        */
-
-        case "play":
+        case "void":
 
             terminalPrint(
-                "searching unregistered processes...",
-                "info"
+                "WARNING: UNREGISTERED PROCESS FOUND.",
+                "warn"
             );
 
             setTimeout(() => {
 
                 terminalPrint(
-                    "VOID.RUN detected.",
-                    "warn"
+                    "PROCESS: VOID.RUN",
+                    "danger"
                 );
 
-            }, 500);
+            }, 400);
 
             setTimeout(() => {
 
                 terminalPrint(
-                    "mounting executable...",
+                    "initialization pathway unlocked.",
                     "info"
                 );
 
-            }, 1000);
+                openVoidRun();
 
-            setTimeout(() => {
-
-                terminalPrint(
-                    "PROCESS INITIALIZED [OK]",
-                    "ok"
-                );
-
-                unlockHiddenGame();
-
-            }, 1500);
+            }, 900);
 
             break;
 
@@ -2706,19 +2731,13 @@ function unlockSecret() {
             .toUpperCase() === correctCode
     ) {
 
-        document
-            .getElementById("lockedScreen")
+        document.getElementById("lockedScreen")
             .style.display = "none";
 
-        document
-            .getElementById("secretMessage")
+        document.getElementById("secretMessage")
             .style.display = "block";
 
         error.textContent = "";
-
-        document
-            .getElementById("discoveryMessage")
-            .classList.add("show");
 
         document.body.classList.add("glitch");
 
@@ -2741,28 +2760,25 @@ function unlockSecret() {
 
 
 /* ==========================================
-   UNLOCK HIDDEN GAME
+   OPEN VOID RUN
 ========================================== */
 
-function unlockHiddenGame() {
+function openVoidRun() {
 
     const game =
-        document.getElementById("hiddenGame");
+        document.getElementById("voidGame");
 
-    game.classList.add("unlocked");
+    game.classList.add("active");
 
     game.scrollIntoView({
         behavior: "smooth",
-        block: "center"
+        block: "start"
     });
 
-    document.body.classList.add("glitch");
-
-    setTimeout(() => {
-
-        document.body.classList.remove("glitch");
-
-    }, 300);
+    terminalPrint(
+        "VOID.RUN initialized.",
+        "ok"
+    );
 
 }
 
@@ -2791,11 +2807,10 @@ function fakeRestart() {
                 RESTARTING RON-UK-01...
             </div>
 
-            <div id="restartText"
-                 style="color:#596570;font-size:10px">
-
+            <div
+                id="restartText"
+                style="color:#596570;font-size:10px">
                 shutting down services...
-
             </div>
 
         </div>
@@ -2805,8 +2820,7 @@ function fakeRestart() {
 
     setTimeout(() => {
 
-        document
-            .getElementById("restartText")
+        document.getElementById("restartText")
             .textContent =
             "just kidding.";
 
@@ -2815,8 +2829,7 @@ function fakeRestart() {
 
     setTimeout(() => {
 
-        document
-            .getElementById("restartText")
+        document.getElementById("restartText")
             .innerHTML =
             "you really thought I'd let you restart it?";
 
@@ -2854,7 +2867,8 @@ function systemGlitch() {
             "✓ GitHub Pages\n" +
             "✓ Supabase\n" +
             "✓ Game Registry\n" +
-            "✓ Ron.cool\n\n" +
+            "✓ Ron.cool\n" +
+            "✓ VOID.RUN CONTAINED\n\n" +
             "No problems detected."
         );
 
@@ -2904,9 +2918,7 @@ document.addEventListener("keydown", e => {
 setInterval(() => {
 
     const bars =
-        document.querySelectorAll(
-            ".progress-bar"
-        );
+        document.querySelectorAll(".progress-bar");
 
     bars.forEach(bar => {
 
@@ -2934,6 +2946,436 @@ setInterval(() => {
 
 
 /* ==========================================
+   VOID//RUN GAME
+========================================== */
+
+const voidScreen =
+    document.getElementById("voidScreen");
+
+const voidPlayer =
+    document.getElementById("voidPlayer");
+
+const voidMessage =
+    document.getElementById("voidMessage");
+
+const voidStart =
+    document.getElementById("voidStart");
+
+const voidScore =
+    document.getElementById("voidScore");
+
+const voidHigh =
+    document.getElementById("voidHigh");
+
+
+let voidRunning = false;
+let voidJumping = false;
+let voidScoreValue = 0;
+let voidHighValue =
+    Number(localStorage.getItem("ron_void_high") || 0);
+
+let voidObstacle = null;
+let voidStar = null;
+let voidAnimation = null;
+let voidSpeed = 5;
+let voidLastTime = 0;
+
+voidHigh.textContent =
+    voidHighValue;
+
+
+function jumpVoid() {
+
+    if (!voidRunning) return;
+
+    if (voidJumping) return;
+
+    voidJumping = true;
+
+    const start =
+        performance.now();
+
+    const duration = 620;
+    const height = 105;
+
+    function animateJump(now) {
+
+        const elapsed =
+            now - start;
+
+        const progress =
+            Math.min(
+                elapsed / duration,
+                1
+            );
+
+        const y =
+            Math.sin(
+                progress * Math.PI
+            ) * height;
+
+        voidPlayer.style.bottom =
+            (50 + y) + "px";
+
+        if (progress < 1) {
+
+            requestAnimationFrame(
+                animateJump
+            );
+
+        } else {
+
+            voidPlayer.style.bottom =
+                "50px";
+
+            voidJumping = false;
+
+        }
+
+    }
+
+    requestAnimationFrame(
+        animateJump
+    );
+
+}
+
+
+function createVoidObstacle() {
+
+    if (voidObstacle) {
+
+        voidObstacle.remove();
+
+    }
+
+    voidObstacle =
+        document.createElement("div");
+
+    voidObstacle.className =
+        "void-obstacle";
+
+    voidScreen.appendChild(
+        voidObstacle
+    );
+
+}
+
+
+function createVoidStar() {
+
+    if (voidStar) {
+
+        voidStar.remove();
+
+    }
+
+    voidStar =
+        document.createElement("div");
+
+    voidStar.className =
+        "void-star";
+
+    voidStar.textContent =
+        "✦";
+
+    voidStar.style.right =
+        "-40px";
+
+    voidStar.style.top =
+        (80 + Math.random() * 180) + "px";
+
+    voidScreen.appendChild(
+        voidStar
+    );
+
+}
+
+
+function rectsOverlap(a, b) {
+
+    const ar =
+        a.getBoundingClientRect();
+
+    const br =
+        b.getBoundingClientRect();
+
+    return !(
+        ar.right < br.left ||
+        ar.left > br.right ||
+        ar.bottom < br.top ||
+        ar.top > br.bottom
+    );
+
+}
+
+
+function startVoidRun() {
+
+    voidRunning = true;
+
+    voidScoreValue = 0;
+
+    voidSpeed = 5;
+
+    voidScore.textContent =
+        "0";
+
+    voidMessage.style.display =
+        "none";
+
+    createVoidObstacle();
+
+    createVoidStar();
+
+    voidLastTime =
+        performance.now();
+
+    cancelAnimationFrame(
+        voidAnimation
+    );
+
+    voidAnimation =
+        requestAnimationFrame(
+            voidLoop
+        );
+
+}
+
+
+function endVoidRun() {
+
+    voidRunning = false;
+
+    cancelAnimationFrame(
+        voidAnimation
+    );
+
+    if (
+        voidScoreValue >
+        voidHighValue
+    ) {
+
+        voidHighValue =
+            voidScoreValue;
+
+        localStorage.setItem(
+            "ron_void_high",
+            voidHighValue
+        );
+
+        voidHigh.textContent =
+            voidHighValue;
+
+    }
+
+    voidMessage.innerHTML = `
+
+        <h2>PROCESS HALTED</h2>
+
+        <p>
+            VOID.RUN terminated.
+            <br>
+            SCORE: ${voidScoreValue}
+            <br>
+            HIGH SCORE: ${voidHighValue}
+        </p>
+
+        <button
+            class="void-start"
+            id="voidRestart">
+            REINITIALIZE PROCESS
+        </button>
+
+    `;
+
+    voidMessage.style.display =
+        "flex";
+
+    document.getElementById(
+        "voidRestart"
+    ).onclick = startVoidRun;
+
+}
+
+
+function voidLoop(now) {
+
+    if (!voidRunning) return;
+
+    const delta =
+        Math.min(
+            now - voidLastTime,
+            40
+        );
+
+    voidLastTime = now;
+
+    if (voidObstacle) {
+
+        const current =
+            parseFloat(
+                voidObstacle.style.right
+                    .replace("px","")
+            ) || -40;
+
+        const next =
+            current +
+            (voidSpeed * delta / 16);
+
+        voidObstacle.style.right =
+            next + "px";
+
+        if (next > 1100) {
+
+            createVoidObstacle();
+
+        }
+
+    }
+
+    if (voidStar) {
+
+        const current =
+            parseFloat(
+                voidStar.style.right
+                    .replace("px","")
+            ) || -40;
+
+        const next =
+            current +
+            (voidSpeed * delta / 16);
+
+        voidStar.style.right =
+            next + "px";
+
+        if (next > 1100) {
+
+            createVoidStar();
+
+        }
+
+    }
+
+    if (
+        voidObstacle &&
+        rectsOverlap(
+            voidPlayer,
+            voidObstacle
+        )
+    ) {
+
+        endVoidRun();
+
+        return;
+
+    }
+
+    if (
+        voidStar &&
+        rectsOverlap(
+            voidPlayer,
+            voidStar
+        )
+    ) {
+
+        voidScoreValue += 25;
+
+        voidScore.textContent =
+            voidScoreValue;
+
+        createVoidStar();
+
+    }
+
+    voidScoreValue +=
+        delta * 0.01;
+
+    voidScore.textContent =
+        Math.floor(
+            voidScoreValue
+        );
+
+    voidSpeed =
+        Math.min(
+            12,
+            5 +
+            voidScoreValue / 350
+        );
+
+    voidAnimation =
+        requestAnimationFrame(
+            voidLoop
+        );
+
+}
+
+
+voidStart.addEventListener(
+    "click",
+    e => {
+
+        e.stopPropagation();
+
+        startVoidRun();
+
+    }
+);
+
+
+voidScreen.addEventListener(
+    "click",
+    e => {
+
+        if (
+            e.target === voidStart ||
+            e.target.id === "voidRestart"
+        ) return;
+
+        jumpVoid();
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    e => {
+
+        if (
+            e.code === "Space"
+        ) {
+
+            const visible =
+                document
+                    .getElementById(
+                        "voidGame"
+                    )
+                    .classList.contains(
+                        "active"
+                    );
+
+            if (!visible) return;
+
+            e.preventDefault();
+
+            if (!voidRunning) {
+
+                startVoidRun();
+
+            } else {
+
+                jumpVoid();
+
+            }
+
+        }
+
+    }
+);
+
+
+/* ==========================================
    CONSOLE EASTER EGG
 ========================================== */
 
@@ -2953,404 +3395,13 @@ console.log(
 );
 
 console.log(
-"%cThere is an unregistered process.",
-"color:#a986ff"
+"%cWARNING: one process is not registered.",
+"color:#ff5570"
 );
 
-
-/* ==================================================
-   VOID//RUN
-   SECRET GAME
-================================================== */
-
-const voidGame =
-    document.getElementById("voidGame");
-
-const voidPlayer =
-    document.getElementById("voidPlayer");
-
-const voidObstacle =
-    document.getElementById("voidObstacle");
-
-const voidScore =
-    document.getElementById("voidScore");
-
-const voidHigh =
-    document.getElementById("voidHigh");
-
-const voidStart =
-    document.getElementById("voidStart");
-
-const voidTitle =
-    document.getElementById("voidTitle");
-
-const voidSubtitle =
-    document.getElementById("voidSubtitle");
-
-
-let voidRunning = false;
-let voidJumping = false;
-let voidGameLoop = null;
-let voidScoreLoop = null;
-let voidObstacleX = 0;
-let voidScoreValue = 0;
-
-let voidHighScore =
-    Number(
-        localStorage.getItem(
-            "roncool_void_highscore"
-        )
-    ) || 0;
-
-voidHigh.textContent =
-    voidHighScore;
-
-
-/* ==========================================
-   START GAME
-========================================== */
-
-function startVoidGame() {
-
-    if (voidRunning) return;
-
-    voidRunning = true;
-
-    voidGame.classList.remove("over");
-    voidGame.classList.add("running");
-
-    voidScoreValue = 0;
-
-    voidScore.textContent = "0";
-
-    voidObstacleX =
-        voidGame.offsetWidth + 40;
-
-    voidObstacle.style.right =
-        "auto";
-
-    voidObstacle.style.left =
-        voidObstacleX + "px";
-
-    voidStart.textContent =
-        "RUNNING...";
-
-    voidStart.disabled = true;
-
-    voidGameLoop =
-        requestAnimationFrame(
-            updateVoidGame
-        );
-
-    voidScoreLoop =
-        setInterval(() => {
-
-            if (!voidRunning) return;
-
-            voidScoreValue++;
-
-            voidScore.textContent =
-                voidScoreValue;
-
-        }, 100);
-
-}
-
-
-/* ==========================================
-   GAME UPDATE
-========================================== */
-
-function updateVoidGame() {
-
-    if (!voidRunning) return;
-
-    voidObstacleX -= 5;
-
-    if (
-        voidObstacleX <
-        -60
-    ) {
-
-        voidObstacleX =
-            voidGame.offsetWidth +
-            Math.random() * 180 +
-            100;
-
-    }
-
-    voidObstacle.style.left =
-        voidObstacleX + "px";
-
-
-    checkVoidCollision();
-
-
-    voidGameLoop =
-        requestAnimationFrame(
-            updateVoidGame
-        );
-
-}
-
-
-/* ==========================================
-   JUMP
-========================================== */
-
-function voidJump() {
-
-    if (!voidRunning) {
-
-        startVoidGame();
-
-        return;
-
-    }
-
-    if (voidJumping) return;
-
-    voidJumping = true;
-
-    let position = 0;
-
-    const jumpUp =
-        setInterval(() => {
-
-            position += 6;
-
-            voidPlayer.style.bottom =
-                (78 + position) + "px";
-
-            if (position >= 115) {
-
-                clearInterval(jumpUp);
-
-                const fall =
-                    setInterval(() => {
-
-                        position -= 6;
-
-                        voidPlayer.style.bottom =
-                            (78 + position) + "px";
-
-                        if (position <= 0) {
-
-                            clearInterval(fall);
-
-                            position = 0;
-
-                            voidPlayer.style.bottom =
-                                "78px";
-
-                            voidJumping = false;
-
-                        }
-
-                    }, 16);
-
-            }
-
-        }, 16);
-
-}
-
-
-/* ==========================================
-   COLLISION
-========================================== */
-
-function checkVoidCollision() {
-
-    const playerLeft =
-        70;
-
-    const playerRight =
-        playerLeft + 24;
-
-    const obstacleLeft =
-        voidObstacleX;
-
-    const obstacleRight =
-        obstacleLeft + 25;
-
-
-    const playerBottom =
-        parseInt(
-            getComputedStyle(
-                voidPlayer
-            ).bottom
-        );
-
-
-    const playerGround =
-        playerBottom <= 82;
-
-
-    const horizontalHit =
-        playerRight >
-            obstacleLeft &&
-        playerLeft <
-            obstacleRight;
-
-
-    if (
-        horizontalHit &&
-        playerGround
-    ) {
-
-        endVoidGame();
-
-    }
-
-}
-
-
-/* ==========================================
-   GAME OVER
-========================================== */
-
-function endVoidGame() {
-
-    if (!voidRunning) return;
-
-    voidRunning = false;
-
-    cancelAnimationFrame(
-        voidGameLoop
-    );
-
-    clearInterval(
-        voidScoreLoop
-    );
-
-    voidGame.classList.remove(
-        "running"
-    );
-
-    voidGame.classList.add(
-        "over"
-    );
-
-    voidTitle.textContent =
-        "PROCESS TERMINATED";
-
-    voidSubtitle.innerHTML =
-        "SCORE: " +
-        voidScoreValue +
-        "<br><br>INITIALIZE TO TRY AGAIN";
-
-    voidStart.disabled = false;
-
-    voidStart.textContent =
-        "RESTART PROCESS";
-
-
-    if (
-        voidScoreValue >
-        voidHighScore
-    ) {
-
-        voidHighScore =
-            voidScoreValue;
-
-        localStorage.setItem(
-            "roncool_void_highscore",
-            voidHighScore
-        );
-
-        voidHigh.textContent =
-            voidHighScore;
-
-        voidSubtitle.innerHTML +=
-            "<br><br>NEW HIGH SCORE";
-
-    }
-
-}
-
-
-/* ==========================================
-   START BUTTON
-========================================== */
-
-voidStart.addEventListener(
-    "click",
-    e => {
-
-        e.stopPropagation();
-
-        if (voidRunning) return;
-
-        voidTitle.textContent =
-            "VOID//RUN";
-
-        voidSubtitle.textContent =
-            "UNREGISTERED PROCESS";
-
-        voidPlayer.style.bottom =
-            "78px";
-
-        startVoidGame();
-
-    }
-);
-
-
-/* ==========================================
-   CLICK TO JUMP
-========================================== */
-
-voidGame.addEventListener(
-    "click",
-    e => {
-
-        if (
-            e.target ===
-            voidStart
-        ) return;
-
-        voidJump();
-
-    }
-);
-
-
-/* ==========================================
-   SPACE TO JUMP
-========================================== */
-
-document.addEventListener(
-    "keydown",
-    e => {
-
-        if (
-            e.code === "Space"
-        ) {
-
-            const activePage =
-                document.getElementById(
-                    "classified"
-                );
-
-            if (
-                activePage.classList
-                    .contains("active") &&
-                document
-                    .getElementById("hiddenGame")
-                    .classList
-                    .contains("unlocked")
-            ) {
-
-                e.preventDefault();
-
-                voidJump();
-
-            }
-
-        }
-
-    }
+console.log(
+"%cPROCESS: VOID.RUN",
+"color:#55ff9a"
 );
 
 </script>
