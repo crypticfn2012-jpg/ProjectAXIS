@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1187,9 +1188,15 @@ function generateDailyCode(date) {
 async function loadDailyCode() {
 
     console.log(
-        "Loading challenge:",
+        "Loading daily code for:",
         today
     );
+
+
+    /*
+       STEP 1
+       Check if today's code already exists.
+    */
 
     const {
         data,
@@ -1204,13 +1211,12 @@ async function loadDailyCode() {
     if (error) {
 
         console.error(
-            "Supabase error loading daily code:",
+            "Error reading daily_codes:",
             error
         );
 
         showMessage(
-            "Supabase error: " +
-            error.message,
+            "Database error: " + error.message,
             "error"
         );
 
@@ -1219,7 +1225,8 @@ async function loadDailyCode() {
 
 
     /*
-       CODE ALREADY EXISTS
+       STEP 2
+       Today's code already exists.
     */
 
     if (data) {
@@ -1229,7 +1236,7 @@ async function loadDailyCode() {
                 .padStart(4, "0");
 
         console.log(
-            "Today's challenge loaded."
+            "Loaded existing daily code."
         );
 
         return true;
@@ -1237,17 +1244,25 @@ async function loadDailyCode() {
 
 
     /*
-       CODE DOESN'T EXIST
-       CREATE IT
+       STEP 3
+       No code exists.
+       Generate ONE for today.
     */
 
     const generated =
         generateDailyCode(today);
 
+
     console.log(
-        "Generating today's challenge."
+        "No code found. Creating:",
+        generated
     );
 
+
+    /*
+       STEP 4
+       Save it to Supabase.
+    */
 
     const {
         data: inserted,
@@ -1263,20 +1278,23 @@ async function loadDailyCode() {
 
 
     /*
-       INSERT FAILED
+       STEP 5
+       Insert failed.
     */
 
     if (insertError) {
 
         console.error(
-            "Could not create daily code:",
+            "Error creating daily code:",
             insertError
         );
 
 
         /*
-           Maybe another player created it
-           at exactly the same time.
+           It is possible that another player
+           created the code at the exact same time.
+
+           Check one more time.
         */
 
         const {
@@ -1295,6 +1313,10 @@ async function loadDailyCode() {
                 String(existing.code)
                     .padStart(4, "0");
 
+            console.log(
+                "Another player created today's code."
+            );
+
             return true;
         }
 
@@ -1306,7 +1328,8 @@ async function loadDailyCode() {
 
 
         showMessage(
-            "Couldn't create today's challenge.",
+            "Couldn't create today's challenge: " +
+            insertError.message,
             "error"
         );
 
@@ -1315,7 +1338,8 @@ async function loadDailyCode() {
 
 
     /*
-       CREATED SUCCESSFULLY
+       STEP 6
+       Successfully created today's code.
     */
 
     dailyCode =
@@ -1324,7 +1348,7 @@ async function loadDailyCode() {
 
 
     console.log(
-        "Today's challenge created."
+        "Today's code successfully saved to Supabase."
     );
 
     return true;
@@ -1356,14 +1380,10 @@ async function startGame() {
     }
 
 
-    /*
-       Database is working.
-       Start the game.
-    */
-
     submitButton.disabled = false;
 
     guessInput.disabled = false;
+
 
     startTime =
         Date.now();
@@ -1387,12 +1407,19 @@ async function startGame() {
 
     updateCountdown();
 
+
+    /*
+       Load today's leaderboard.
+    */
+
     loadLeaderboard();
+
 
     showMessage(
         "Enter a 4-digit code.",
         ""
     );
+
 
     guessInput.focus();
 }
@@ -1542,6 +1569,7 @@ function checkGuess() {
 
 
     attempts++;
+
 
     attemptsElement.textContent =
         attempts;
@@ -1877,7 +1905,19 @@ saveScoreButton.addEventListener(
             "Saving...";
 
 
+        console.log(
+            "Saving score:",
+            {
+                player_name: name,
+                challenge_date: today,
+                attempts: attempts,
+                time_seconds: seconds
+            }
+        );
+
+
         const {
+            data,
             error
         } = await supabaseClient
             .from("code_scores")
@@ -1893,13 +1933,14 @@ saveScoreButton.addEventListener(
 
                 time_seconds:
                     seconds
-            });
+            })
+            .select();
 
 
         if (error) {
 
             console.error(
-                "Score save error:",
+                "SCORE SAVE ERROR:",
                 error
             );
 
@@ -1912,15 +1953,38 @@ saveScoreButton.addEventListener(
                 "Try Again";
 
 
+            showMessage(
+                "Score couldn't be saved: " +
+                error.message,
+                "error"
+            );
+
+
             return;
         }
+
+
+        console.log(
+            "Score saved successfully:",
+            data
+        );
 
 
         saveScoreButton.textContent =
             "Saved ✓";
 
 
-        loadLeaderboard();
+        showMessage(
+            "Score saved!",
+            "success"
+        );
+
+
+        /*
+           Refresh leaderboard immediately.
+        */
+
+        await loadLeaderboard();
     }
 );
 
@@ -1930,6 +1994,11 @@ saveScoreButton.addEventListener(
 ========================================= */
 
 async function loadLeaderboard() {
+
+    console.log(
+        "Loading leaderboard..."
+    );
+
 
     const {
         data,
@@ -1961,7 +2030,7 @@ async function loadLeaderboard() {
     if (error) {
 
         console.error(
-            "Leaderboard error:",
+            "LEADERBOARD ERROR:",
             error
         );
 
@@ -1979,6 +2048,12 @@ async function loadLeaderboard() {
 
         return;
     }
+
+
+    console.log(
+        "Leaderboard loaded:",
+        data
+    );
 
 
     if (
@@ -2111,3 +2186,4 @@ startGame();
 
 </body>
 </html>
+
