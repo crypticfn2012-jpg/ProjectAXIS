@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#071525">
+<title>Cursor Maze | Ron.cool</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+    color: white;
+    background:
+        radial-gradient(circle at 50% -20%, #123c69 0%, #081b30 38%, #040b13 100%);
+}
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: black;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1000;
+    transition: .2s;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.05);
+}
+
+/* =========================
+   APP
+========================= */
+
+.app {
+    width: min(1050px, calc(100% - 30px));
+    height: 100vh;
+    margin: auto;
+    padding: 22px 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    text-align: center;
+    flex-shrink: 0;
+    margin-bottom: 12px;
+}
+
+.eyebrow {
+    color: #42bfff;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+}
+
+h1 {
+    margin: 4px 0;
+    font-size: clamp(30px, 5vw, 52px);
+    line-height: .95;
+    letter-spacing: -.06em;
+}
+
+.subtitle {
+    margin: 5px auto 0;
+    color: #7690a8;
+    font-size: 12px;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.stat {
+    min-width: 105px;
+    padding: 7px 12px;
+    border: 1px solid rgba(80,180,255,.12);
+    border-radius: 8px;
+    background: rgba(5,18,32,.8);
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    color: #60788e;
+    font-size: 8px;
+    font-weight: 900;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    margin-top: 2px;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+/* =========================
+   GAME PANEL
+========================= */
+
+.game-panel {
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid rgba(65,170,255,.16);
+    border-radius: 15px;
+    background: rgba(3,13,24,.82);
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.45),
+        inset 0 0 50px rgba(30,130,255,.025);
+}
+
+/* =========================
+   MAZE
+========================= */
+
+.maze-wrap {
+    min-height: 0;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+canvas {
+    display: block;
+    border-radius: 10px;
+    cursor: crosshair;
+    box-shadow:
+        0 0 0 1px rgba(70,180,255,.15),
+        0 15px 45px rgba(0,0,0,.35);
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    margin-top: 8px;
+    flex-shrink: 0;
+}
+
+.btn {
+    border: 0;
+    border-radius: 7px;
+    padding: 8px 15px;
+    font-size: 10px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .18s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.restart {
+    background: #168cff;
+    color: white;
+}
+
+.pause {
+    background: #102b45;
+    color: #9ec7e8;
+}
+
+/* =========================
+   MESSAGE
+========================= */
+
+.message {
+    height: 17px;
+    margin-top: 5px;
+    text-align: center;
+    color: #668097;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.message.good {
+    color: #42e5ae;
+}
+
+.message.bad {
+    color: #ff6464;
+}
+
+/* =========================
+   PAUSE OVERLAY
+========================= */
+
+.pause-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(2,9,16,.72);
+    backdrop-filter: blur(8px);
+    z-index: 500;
+}
+
+.pause-overlay.show {
+    display: flex;
+}
+
+.pause-box {
+    padding: 30px 40px;
+    border: 1px solid rgba(80,180,255,.2);
+    border-radius: 15px;
+    background: #081a2d;
+    text-align: center;
+    box-shadow: 0 25px 80px rgba(0,0,0,.55);
+}
+
+.pause-box .icon {
+    font-size: 35px;
+}
+
+.pause-box h2 {
+    margin: 7px 0 4px;
+}
+
+.pause-box p {
+    margin: 0;
+    color: #718ba3;
+    font-size: 11px;
+}
+
+/* =========================
+   WIN OVERLAY
+========================= */
+
+.win-overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(1,7,13,.76);
+    backdrop-filter: blur(8px);
+    z-index: 600;
+}
+
+.win-overlay.show {
+    display: flex;
+}
+
+.win-box {
+    width: min(380px, 100%);
+    padding: 30px;
+    border: 1px solid rgba(60,210,170,.2);
+    border-radius: 17px;
+    background: #071a25;
+    text-align: center;
+    box-shadow: 0 30px 100px rgba(0,0,0,.7);
+    animation: popup .25s ease;
+}
+
+@keyframes popup {
+    from {
+        opacity: 0;
+        transform: scale(.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.win-icon {
+    font-size: 42px;
+}
+
+.win-box h2 {
+    margin: 8px 0 5px;
+    font-size: 28px;
+}
+
+.win-box p {
+    margin: 0 0 20px;
+    color: #7894a7;
+    font-size: 12px;
+}
+
+.win-stats {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    margin-bottom: 20px;
+}
+
+.win-stat strong {
+    display: block;
+    font-size: 21px;
+}
+
+.win-stat span {
+    color: #5f788b;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px) {
+
+    .app {
+        width: calc(100% - 16px);
+        padding: 18px 0;
+    }
+
+    .header {
+        margin-bottom: 8px;
+    }
+
+    h1 {
+        font-size: 34px;
+    }
+
+    .subtitle {
+        font-size: 10px;
+    }
+
+    .stats {
+        gap: 5px;
+    }
+
+    .stat {
+        min-width: 80px;
+        padding: 6px 8px;
+    }
+
+    .stat-value {
+        font-size: 13px;
+    }
+
+    .game-panel {
+        padding: 7px;
+    }
+
+    .controls {
+        margin-top: 5px;
+    }
+}
+
+@media(max-height:650px) {
+
+    .app {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .header h1 {
+        font-size: 35px;
+    }
+
+    .header {
+        margin-bottom: 5px;
+    }
+
+    .subtitle {
+        display: none;
+    }
+
+    .stats {
+        margin-bottom: 5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+<main class="app">
+
+    <header class="header">
+        <div class="eyebrow">ron.cool / skill game</div>
+
+        <h1>Cursor Maze.</h1>
+
+        <p class="subtitle">
+            Guide your cursor from START to FINISH without touching the walls.
+            Press ESC to pause.
+        </p>
+    </header>
+
+    <section class="stats">
+
+        <div class="stat">
+            <span class="stat-label">Level</span>
+            <div class="stat-value" id="level">1</div>
+        </div>
+
+        <div class="stat">
+            <span class="stat-label">Time</span>
+            <div class="stat-value" id="timer">00:00.0</div>
+        </div>
+
+        <div class="stat">
+            <span class="stat-label">Best</span>
+            <div class="stat-value" id="best">--</div>
+        </div>
+
+    </section>
+
+    <section class="game-panel">
+
+        <div class="maze-wrap">
+            <canvas id="maze"></canvas>
+        </div>
+
+        <div class="controls">
+
+            <button class="btn restart" id="restart">
+                ↻ Restart
+            </button>
+
+            <button class="btn pause" id="pause">
+                ⏸ Pause
+            </button>
+
+        </div>
+
+        <div class="message" id="message">
+            Move your cursor onto START to begin.
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- PAUSE -->
+
+<div class="pause-overlay" id="pauseOverlay">
+
+    <div class="pause-box">
+
+        <div class="icon">⏸</div>
+
+        <h2>Paused</h2>
+
+        <p>Press ESC or the button to continue.</p>
+
+    </div>
+
+</div>
+
+
+<!-- WIN -->
+
+<div class="win-overlay" id="winOverlay">
+
+    <div class="win-box">
+
+        <div class="win-icon">🏁</div>
+
+        <h2>Maze Complete!</h2>
+
+        <p>You made it through without touching a wall.</p>
+
+        <div class="win-stats">
+
+            <div class="win-stat">
+                <strong id="winLevel">1</strong>
+                <span>Level</span>
+            </div>
+
+            <div class="win-stat">
+                <strong id="winTime">0.0s</strong>
+                <span>Time</span>
+            </div>
+
+        </div>
+
+        <button class="btn restart" id="nextLevel">
+            Next Level →
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const canvas = document.getElementById("maze");
+const ctx = canvas.getContext("2d");
+
+const levelEl = document.getElementById("level");
+const timerEl = document.getElementById("timer");
+const bestEl = document.getElementById("best");
+const messageEl = document.getElementById("message");
+
+const restartBtn = document.getElementById("restart");
+const pauseBtn = document.getElementById("pause");
+
+const pauseOverlay =
+    document.getElementById("pauseOverlay");
+
+const winOverlay =
+    document.getElementById("winOverlay");
+
+const winLevel =
+    document.getElementById("winLevel");
+
+const winTime =
+    document.getElementById("winTime");
+
+const nextLevel =
+    document.getElementById("nextLevel");
+
+
+/* =====================================================
+   GAME SETTINGS
+===================================================== */
+
+let level = 1;
+
+let cols = 12;
+let rows = 8;
+
+let cellSize = 40;
+
+let maze = [];
+
+let startCell;
+let endCell;
+
+let started = false;
+let paused = false;
+let completed = false;
+
+let startTime = 0;
+let elapsed = 0;
+
+let animationFrame;
+
+
+/* =====================================================
+   LOCAL BEST
+===================================================== */
+
+function getBest() {
+
+    const value =
+        localStorage.getItem(
+            "ron-cursor-maze-best-" + level
+        );
+
+    return value
+        ? Number(value)
+        : null;
+}
+
+
+function updateBestDisplay() {
+
+    const best = getBest();
+
+    bestEl.textContent =
+        best === null
+            ? "--"
+            : formatTime(best);
+
+}
+
+
+/* =====================================================
+   RANDOM
+===================================================== */
+
+function random(max) {
+
+    return Math.floor(Math.random() * max);
+
+}
+
+
+/* =====================================================
+   MAZE CELL
+===================================================== */
+
+function createCell(x, y) {
+
+    return {
+
+        x,
+        y,
+
+        walls: {
+            top: true,
+            right: true,
+            bottom: true,
+            left: true
+        },
+
+        visited: false
+
+    };
+
+}
+
+
+/* =====================================================
+   GET CELL
+===================================================== */
+
+function getCell(x, y) {
+
+    if (
+        x < 0 ||
+        y < 0 ||
+        x >= cols ||
+        y >= rows
+    ) {
+
+        return null;
+
+    }
+
+    return maze[y][x];
+
+}
+
+
+/* =====================================================
+   REMOVE WALL
+===================================================== */
+
+function removeWalls(a, b) {
+
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+
+    if (dx === 1) {
+
+        a.walls.left = false;
+        b.walls.right = false;
+
+    }
+
+    else if (dx === -1) {
+
+        a.walls.right = false;
+        b.walls.left = false;
+
+    }
+
+    else if (dy === 1) {
+
+        a.walls.top = false;
+        b.walls.bottom = false;
+
+    }
+
+    else if (dy === -1) {
+
+        a.walls.bottom = false;
+        b.walls.top = false;
+
+    }
+
+}
+
+
+/* =====================================================
+   GENERATE MAZE
+===================================================== */
+
+function generateMaze() {
+
+    maze = [];
+
+    for (let y = 0; y < rows; y++) {
+
+        maze[y] = [];
+
+        for (let x = 0; x < cols; x++) {
+
+            maze[y][x] =
+                createCell(x, y);
+
+        }
+
+    }
+
+    const stack = [];
+
+    const first =
+        maze[0][0];
+
+    first.visited = true;
+
+    stack.push(first);
+
+    while (stack.length) {
+
+        const current =
+            stack[stack.length - 1];
+
+        const neighbours = [];
+
+        const directions = [
+
+            [0, -1],
+            [1, 0],
+            [0, 1],
+            [-1, 0]
+
+        ];
+
+        for (const [dx, dy] of directions) {
+
+            const neighbour =
+                getCell(
+                    current.x + dx,
+                    current.y + dy
+                );
+
+            if (
+                neighbour &&
+                !neighbour.visited
+            ) {
+
+                neighbours.push(neighbour);
+
+            }
+
+        }
+
+        if (neighbours.length) {
+
+            const next =
+                neighbours[
+                    random(neighbours.length)
+                ];
+
+            removeWalls(current, next);
+
+            next.visited = true;
+
+            stack.push(next);
+
+        } else {
+
+            stack.pop();
+
+        }
+
+    }
+
+    startCell = maze[0][0];
+
+    endCell =
+        maze[rows - 1][cols - 1];
+
+}
+
+
+/* =====================================================
+   SIZE CANVAS
+===================================================== */
+
+function resizeCanvas() {
+
+    const wrap =
+        document.querySelector(".maze-wrap");
+
+    const availableWidth =
+        wrap.clientWidth;
+
+    const availableHeight =
+        wrap.clientHeight;
+
+    cellSize =
+        Math.floor(
+            Math.min(
+                availableWidth / cols,
+                availableHeight / rows
+            )
+        );
+
+    cellSize =
+        Math.max(12, cellSize);
+
+    canvas.width =
+        cellSize * cols;
+
+    canvas.height =
+        cellSize * rows;
+
+    draw();
+
+}
+
+
+/* =====================================================
+   DRAW MAZE
+===================================================== */
+
+function draw() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    /* background */
+
+    ctx.fillStyle = "#061321";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    /* subtle cells */
+
+    ctx.fillStyle = "rgba(30,130,210,.035)";
+
+    for (let y = 0; y < rows; y++) {
+
+        for (let x = 0; x < cols; x++) {
+
+            ctx.fillRect(
+                x * cellSize + 1,
+                y * cellSize + 1,
+                cellSize - 2,
+                cellSize - 2
+            );
+
+        }
+
+    }
+
+
+    /* START */
+
+    ctx.fillStyle = "#123f35";
+
+    ctx.fillRect(
+        3,
+        3,
+        cellSize - 6,
+        cellSize - 6
+    );
+
+
+    /* FINISH */
+
+    ctx.fillStyle = "#123b59";
+
+    ctx.fillRect(
+        (cols - 1) * cellSize + 3,
+        (rows - 1) * cellSize + 3,
+        cellSize - 6,
+        cellSize - 6
+    );
+
+
+    /* walls */
+
+    ctx.strokeStyle = "#3b9de0";
+
+    ctx.lineWidth =
+        Math.max(2, cellSize * .055);
+
+    ctx.lineCap = "round";
+
+    ctx.beginPath();
+
+    for (let y = 0; y < rows; y++) {
+
+        for (let x = 0; x < cols; x++) {
+
+            const cell =
+                maze[y][x];
+
+            const px =
+                x * cellSize;
+
+            const py =
+                y * cellSize;
+
+
+            if (cell.walls.top) {
+
+                ctx.moveTo(px, py);
+                ctx.lineTo(
+                    px + cellSize,
+                    py
+                );
+
+            }
+
+            if (cell.walls.right) {
+
+                ctx.moveTo(
+                    px + cellSize,
+                    py
+                );
+
+                ctx.lineTo(
+                    px + cellSize,
+                    py + cellSize
+                );
+
+            }
+
+            if (cell.walls.bottom) {
+
+                ctx.moveTo(
+                    px,
+                    py + cellSize
+                );
+
+                ctx.lineTo(
+                    px + cellSize,
+                    py + cellSize
+                );
+
+            }
+
+            if (cell.walls.left) {
+
+                ctx.moveTo(px, py);
+
+                ctx.lineTo(
+                    px,
+                    py + cellSize
+                );
+
+            }
+
+        }
+
+    }
+
+    ctx.stroke();
+
+
+    /* START label */
+
+    ctx.fillStyle = "#50e8b4";
+
+    ctx.font =
+        `900 ${Math.max(8, cellSize * .25)}px Arial`;
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    ctx.fillText(
+        "START",
+        cellSize / 2,
+        cellSize / 2
+    );
+
+
+    /* FINISH */
+
+    ctx.fillStyle = "#5fc5ff";
+
+    ctx.fillText(
+        "FINISH",
+        (cols - .5) * cellSize,
+        (rows - .5) * cellSize
+    );
+
+}
+
+
+/* =====================================================
+   MOUSE POSITION
+===================================================== */
+
+let mouseX = -9999;
+let mouseY = -9999;
+
+
+/* =====================================================
+   MOUSE MOVE
+===================================================== */
+
+canvas.addEventListener(
+    "mousemove",
+    event => {
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        mouseX =
+            (event.clientX - rect.left)
+            * canvas.width
+            / rect.width;
+
+        mouseY =
+            (event.clientY - rect.top)
+            * canvas.height
+            / rect.height;
+
+        checkCursor();
+
+    }
+);
+
+
+/* =====================================================
+   MOUSE ENTER
+===================================================== */
+
+canvas.addEventListener(
+    "mouseenter",
+    event => {
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+        mouseX =
+            (event.clientX - rect.left)
+            * canvas.width
+            / rect.width;
+
+        mouseY =
+            (event.clientY - rect.top)
+            * canvas.height
+            / rect.height;
+
+        checkCursor();
+
+    }
+);
+
+
+/* =====================================================
+   CURSOR CHECK
+===================================================== */
+
+function checkCursor() {
+
+    if (
+        paused ||
+        completed
+    ) {
+
+        return;
+
+    }
+
+
+    /* Must enter START first */
+
+    if (!started) {
+
+        const startX =
+            cellSize / 2;
+
+        const startY =
+            cellSize / 2;
+
+        const distance =
+            Math.hypot(
+                mouseX - startX,
+                mouseY - startY
+            );
+
+        if (
+            distance <= cellSize * .38
+        ) {
+
+            started = true;
+
+            startTime = performance.now();
+
+            messageEl.textContent =
+                "Go! Get to FINISH.";
+
+            messageEl.className =
+                "message good";
+
+        }
+
+        return;
+
+    }
+
+
+    /* Find cursor cell */
+
+    const x =
+        Math.floor(mouseX / cellSize);
+
+    const y =
+        Math.floor(mouseY / cellSize);
+
+
+    if (
+        x < 0 ||
+        y < 0 ||
+        x >= cols ||
+        y >= rows
+    ) {
+
+        return;
+
+    }
+
+
+    /* Check wall collision using
+       cursor's exact position */
+
+    const cell =
+        maze[y][x];
+
+    const localX =
+        mouseX - x * cellSize;
+
+    const localY =
+        mouseY - y * cellSize;
+
+    const margin =
+        Math.max(
+            2,
+            cellSize * .045
+        );
+
+
+    if (
+        cell.walls.left &&
+        localX <= margin
+    ) {
+
+        lose();
+
+        return;
+
+    }
+
+    if (
+        cell.walls.right &&
+        localX >= cellSize - margin
+    ) {
+
+        lose();
+
+        return;
+
+    }
+
+    if (
+        cell.walls.top &&
+        localY <= margin
+    ) {
+
+        lose();
+
+        return;
+
+    }
+
+    if (
+        cell.walls.bottom &&
+        localY >= cellSize - margin
+    ) {
+
+        lose();
+
+        return;
+
+    }
+
+
+    /* Finish */
+
+    if (
+        x === cols - 1 &&
+        y === rows - 1
+    ) {
+
+        win();
+
+    }
+
+}
+
+
+/* =====================================================
+   LOSE
+===================================================== */
+
+function lose() {
+
+    if (
+        completed ||
+        paused
+    ) {
+
+        return;
+
+    }
+
+    completed = true;
+
+    cancelAnimationFrame(
+        animationFrame
+    );
+
+    messageEl.textContent =
+        "You touched a wall! Restart and try again.";
+
+    messageEl.className =
+        "message bad";
+
+    canvas.animate(
+        [
+            { transform: "translateX(0)" },
+            { transform: "translateX(-5px)" },
+            { transform: "translateX(5px)" },
+            { transform: "translateX(0)" }
+        ],
+        {
+            duration: 220
+        }
+    );
+
+}
+
+
+/* =====================================================
+   WIN
+===================================================== */
+
+function win() {
+
+    if (
+        completed ||
+        paused
+    ) {
+
+        return;
+
+    }
+
+    completed = true;
+
+    elapsed =
+        performance.now() - startTime;
+
+    const oldBest =
+        getBest();
+
+    if (
+        oldBest === null ||
+        elapsed < oldBest
+    ) {
+
+        localStorage.setItem(
+            "ron-cursor-maze-best-" + level,
+            elapsed
+        );
+
+        updateBestDisplay();
+
+    }
+
+    winLevel.textContent =
+        level;
+
+    winTime.textContent =
+        formatTime(elapsed);
+
+    winOverlay.classList.add("show");
+
+}
+
+
+/* =====================================================
+   TIMER
+===================================================== */
+
+function updateTimer() {
+
+    if (
+        started &&
+        !paused &&
+        !completed
+    ) {
+
+        elapsed =
+            performance.now() - startTime;
+
+        timerEl.textContent =
+            formatTime(elapsed);
+
+    }
+
+    animationFrame =
+        requestAnimationFrame(
+            updateTimer
+        );
+
+}
+
+
+/* =====================================================
+   FORMAT TIME
+===================================================== */
+
+function formatTime(ms) {
+
+    const seconds =
+        ms / 1000;
+
+    return seconds.toFixed(1) + "s";
+
+}
+
+
+/* =====================================================
+   PAUSE
+===================================================== */
+
+function togglePause() {
+
+    if (completed) {
+        return;
+    }
+
+    paused = !paused;
+
+    if (paused) {
+
+        pauseOverlay.classList.add("show");
+
+        pauseBtn.textContent =
+            "▶ Resume";
+
+    } else {
+
+        pauseOverlay.classList.remove("show");
+
+        pauseBtn.textContent =
+            "⏸ Pause";
+
+        /*
+         * Don't reset the timer.
+         * Add the pause duration to startTime.
+         */
+
+        startTime =
+            performance.now()
+            - elapsed;
+
+    }
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+function restartGame() {
+
+    winOverlay.classList.remove("show");
+
+    pauseOverlay.classList.remove("show");
+
+    paused = false;
+    completed = false;
+    started = false;
+
+    startTime = 0;
+    elapsed = 0;
+
+    timerEl.textContent =
+        "00:00.0";
+
+    pauseBtn.textContent =
+        "⏸ Pause";
+
+    messageEl.textContent =
+        "Move your cursor onto START to begin.";
+
+    messageEl.className =
+        "message";
+
+    /*
+     * IMPORTANT:
+     * Generate a completely new maze
+     * every restart.
+     */
+
+    generateMaze();
+
+    resizeCanvas();
+
+    /*
+     * Put the cursor conceptually at the
+     * start until the player actually moves.
+     */
+
+    mouseX =
+        cellSize / 2;
+
+    mouseY =
+        cellSize / 2;
+
+}
+
+
+/* =====================================================
+   NEXT LEVEL
+===================================================== */
+
+function next() {
+
+    level++;
+
+    /*
+     * Increase complexity gradually.
+     */
+
+    cols =
+        Math.min(
+            26,
+            11 + Math.floor(level * 1.3)
+        );
+
+    rows =
+        Math.min(
+            17,
+            7 + Math.floor(level * .8)
+        );
+
+    levelEl.textContent =
+        level;
+
+    updateBestDisplay();
+
+    restartGame();
+
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+restartBtn.addEventListener(
+    "click",
+    restartGame
+);
+
+pauseBtn.addEventListener(
+    "click",
+    togglePause
+);
+
+nextLevel.addEventListener(
+    "click",
+    next
+);
+
+
+/* =====================================================
+   ESC PAUSE
+===================================================== */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            togglePause();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   BACK
+===================================================== */
+
+function goBack() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+/* =====================================================
+   RESIZE
+===================================================== */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        resizeCanvas();
+
+    }
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+generateMaze();
+
+updateBestDisplay();
+
+resizeCanvas();
+
+updateTimer();
+
+</script>
+
+</body>
+</html>
