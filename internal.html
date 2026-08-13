@@ -1,0 +1,1843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#050505">
+
+<title>ARCHIVE // UNKNOWN</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    background: #050505;
+    color: #b9b9b9;
+    font-family: "Courier New", monospace;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+/* =========================
+   CRT / GLITCH
+========================= */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            rgba(255,255,255,.025) 0px,
+            rgba(255,255,255,.025) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+    opacity: .5;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(
+            circle at center,
+            transparent 25%,
+            rgba(0,0,0,.5) 100%
+        );
+    z-index: 9998;
+}
+
+@keyframes flicker {
+    0%,100% { opacity: 1; }
+    48% { opacity: .96; }
+    50% { opacity: .78; }
+    52% { opacity: .98; }
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-2px,1px);
+    }
+    40% {
+        transform: translate(2px,-1px);
+    }
+    60% {
+        transform: translate(-1px,2px);
+    }
+    80% {
+        transform: translate(1px,-1px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+body {
+    animation: flicker 7s infinite;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.wrapper {
+    min-height: 100vh;
+    padding: 35px 20px;
+}
+
+.container {
+    width: 900px;
+    max-width: 100%;
+    margin: auto;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    border: 1px solid #202020;
+    background: #080808;
+    padding: 16px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    color: #777;
+    font-size: 10px;
+    letter-spacing: 2px;
+}
+
+.header-left strong {
+    color: #d4d4d4;
+}
+
+.header-right {
+    font-size: 9px;
+    color: #4c4c4c;
+}
+
+.signal {
+    color: #6cff9a;
+}
+
+/* =========================
+   NAV
+========================= */
+
+.fake-nav {
+    display: flex;
+    gap: 18px;
+    border-left: 1px solid #202020;
+    border-right: 1px solid #202020;
+    border-bottom: 1px solid #202020;
+    padding: 10px 15px;
+    background: #070707;
+    font-size: 9px;
+}
+
+.fake-nav span {
+    color: #4c4c4c;
+}
+
+.fake-nav span:nth-child(2) {
+    color: #737373;
+}
+
+.fake-nav span:hover {
+    color: #aaa;
+}
+
+/* =========================
+   ARCHIVE SCREEN
+========================= */
+
+.screen {
+    margin-top: 18px;
+    border: 1px solid #202020;
+    background: #080808;
+    min-height: 530px;
+    position: relative;
+}
+
+.screen-top {
+    padding: 10px 14px;
+    border-bottom: 1px solid #181818;
+    font-size: 9px;
+    color: #4c4c4c;
+    display: flex;
+    justify-content: space-between;
+}
+
+.screen-content {
+    padding: 35px;
+}
+
+/* =========================
+   ARCHIVE PAGES
+========================= */
+
+.archive-page {
+    display: none;
+}
+
+.archive-page.active {
+    display: block;
+    animation: pageIn .3s ease;
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.archive-number {
+    color: #383838;
+    font-size: 10px;
+    margin-bottom: 25px;
+}
+
+.archive-title {
+    font-size: 26px;
+    color: #d2d2d2;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+}
+
+.archive-subtitle {
+    font-size: 10px;
+    color: #505050;
+    margin-bottom: 35px;
+}
+
+.text {
+    font-size: 11px;
+    line-height: 2;
+    color: #777;
+    max-width: 700px;
+}
+
+.text strong {
+    color: #aaa;
+}
+
+.dim {
+    color: #3f3f3f;
+}
+
+.green {
+    color: #63ff9b !important;
+}
+
+.red {
+    color: #ff596e !important;
+}
+
+.yellow {
+    color: #d9bd62 !important;
+}
+
+.blue {
+    color: #64b8ff !important;
+}
+
+/* =========================
+   FILE BOX
+========================= */
+
+.file-box {
+    margin-top: 25px;
+    border: 1px solid #1c1c1c;
+    background: #050505;
+    padding: 18px;
+    font-size: 10px;
+}
+
+.file {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 5px;
+    border-bottom: 1px solid #111;
+    color: #666;
+}
+
+.file:last-child {
+    border-bottom: 0;
+}
+
+.file:hover {
+    background: #0b0b0b;
+    color: #aaa;
+}
+
+.file-status {
+    color: #3e3e3e;
+}
+
+.file-hidden {
+    cursor: pointer;
+}
+
+.file-hidden:hover .file-status {
+    color: #ff596e;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.controls {
+    margin-top: 35px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    background: #0b0b0b;
+    border: 1px solid #272727;
+    color: #666;
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 9px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    border-color: #555;
+    color: #bbb;
+}
+
+.btn-danger:hover {
+    border-color: #ff596e;
+    color: #ff596e;
+}
+
+/* =========================
+   CORRUPTION
+========================= */
+
+.corrupt {
+    color: #333;
+    letter-spacing: 3px;
+    user-select: none;
+}
+
+.corrupt:hover {
+    animation: glitch .2s infinite;
+    color: #aaa;
+}
+
+.redacted {
+    background: #252525;
+    color: #252525;
+    padding: 0 5px;
+    cursor: default;
+}
+
+.redacted:hover {
+    color: #111;
+}
+
+/* =========================
+   TERMINAL
+========================= */
+
+.terminal {
+    background: #030303;
+    border: 1px solid #171717;
+    padding: 18px;
+    min-height: 250px;
+    font-size: 10px;
+    line-height: 1.9;
+    overflow: auto;
+}
+
+.term-line {
+    color: #555;
+}
+
+.term-ok {
+    color: #62ff99;
+}
+
+.term-warn {
+    color: #d6b95b;
+}
+
+.term-error {
+    color: #ff596e;
+}
+
+.term-input {
+    display: flex;
+    margin-top: 10px;
+}
+
+.term-input span {
+    color: #62ff99;
+}
+
+.term-input input {
+    flex: 1;
+    background: transparent;
+    border: 0;
+    outline: none;
+    color: #aaa;
+    font-family: inherit;
+    font-size: 10px;
+    margin-left: 8px;
+}
+
+/* =========================
+   SECRET SYMBOL
+========================= */
+
+.symbol {
+    width: 90px;
+    height: 90px;
+    border: 1px solid #292929;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto;
+    color: #414141;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.symbol:hover {
+    border-color: #777;
+    color: #aaa;
+    animation: glitch .2s infinite;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+    margin-top: 12px;
+    border: 1px solid #171717;
+    background: #070707;
+    padding: 13px 15px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    color: #383838;
+}
+
+.footer span:last-child {
+    color: #4e4e4e;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(0,0,0,.88);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-box {
+    width: 550px;
+    max-width: 100%;
+    border: 1px solid #292929;
+    background: #070707;
+    padding: 25px;
+}
+
+.modal-title {
+    color: #bbb;
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.modal-text {
+    color: #555;
+    font-size: 10px;
+    line-height: 2;
+}
+
+.close {
+    margin-top: 20px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px) {
+
+    .wrapper {
+        padding: 12px;
+    }
+
+    .screen-content {
+        padding: 20px;
+    }
+
+    .archive-title {
+        font-size: 19px;
+    }
+
+    .header-right {
+        display: none;
+    }
+
+    .fake-nav {
+        overflow: hidden;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<div class="container">
+
+<!-- HEADER -->
+
+<div class="header">
+
+    <div class="header-left">
+        SYSTEM // <strong>ARCHIVE</strong>
+    </div>
+
+    <div class="header-right">
+        SIGNAL:
+        <span class="signal">●</span>
+        UNKNOWN
+    </div>
+
+</div>
+
+
+<!-- FAKE NAV -->
+
+<div class="fake-nav">
+
+    <span>INDEX</span>
+    <span>ARCHIVE</span>
+    <span>RECOVERED</span>
+    <span>UNKNOWN</span>
+    <span>---</span>
+    <span>NO SIGNAL</span>
+
+</div>
+
+
+<!-- SCREEN -->
+
+<div class="screen">
+
+<div class="screen-top">
+
+    <span id="location">
+        /archive/recovered
+    </span>
+
+    <span id="pageStatus">
+        CONNECTION UNSTABLE
+    </span>
+
+</div>
+
+
+<div class="screen-content">
+
+
+<!-- ==========================================
+     PAGE 1
+========================================== -->
+
+<section class="archive-page active" id="page1">
+
+    <div class="archive-number">
+        ARCHIVE ENTRY // 0001
+    </div>
+
+    <div class="archive-title">
+        RECOVERED DATA
+    </div>
+
+    <div class="archive-subtitle">
+        This file was recovered from an unknown location.
+    </div>
+
+    <div class="text">
+
+        Something happened here.
+
+        <br><br>
+
+        The original page appears to have been removed,
+        but parts of the directory are still accessible.
+
+        <br><br>
+
+        There are no links to this archive.
+
+        <br>
+
+        There are no references to it on the main index.
+
+        <br><br>
+
+        <span class="dim">
+            SYSTEM NOTE // INTERNAL PROCESS
+        </span>
+
+        <br><br>
+
+        <span class="yellow">
+            Someone forgot to remove the door.
+        </span>
+
+    </div>
+
+    <div class="controls">
+
+        <button class="btn" onclick="nextPage()">
+            [ READ NEXT ENTRY ]
+        </button>
+
+        <button class="btn" onclick="glitchPage()">
+            [ ??? ]
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     PAGE 2
+========================================== -->
+
+<section class="archive-page" id="page2">
+
+    <div class="archive-number">
+        ARCHIVE ENTRY // 0004
+    </div>
+
+    <div class="archive-title">
+        THE DIRECTORY
+    </div>
+
+    <div class="archive-subtitle">
+        Partial file listing recovered.
+    </div>
+
+    <div class="file-box">
+
+        <div class="file">
+            <span>8ball.html</span>
+            <span class="file-status">PUBLIC</span>
+        </div>
+
+        <div class="file">
+            <span>reaction.html</span>
+            <span class="file-status">PUBLIC</span>
+        </div>
+
+        <div class="file">
+            <span>typing.html</span>
+            <span class="file-status">PUBLIC</span>
+        </div>
+
+        <div class="file">
+            <span>slots.html</span>
+            <span class="file-status">PUBLIC</span>
+        </div>
+
+        <div class="file">
+            <span>spinwheel.html</span>
+            <span class="file-status">PUBLIC</span>
+        </div>
+
+        <div class="file file-hidden" onclick="showHiddenFile()">
+            <span>????????.html</span>
+            <span class="file-status" id="hiddenStatus">
+                CORRUPTED
+            </span>
+        </div>
+
+        <div class="file">
+            <span>index.html</span>
+            <span class="file-status">PUBLIC</span>
+        </div>
+
+    </div>
+
+    <div class="text" style="margin-top:25px">
+
+        <span class="dim">
+            > one file could not be recovered.
+        </span>
+
+        <br><br>
+
+        <span class="corrupt">
+            IT WAS NOT DELETED
+        </span>
+
+        <br><br>
+
+        <span class="dim">
+            STORAGE CLASS: VAULT
+        </span>
+
+    </div>
+
+    <div class="controls">
+
+        <button class="btn" onclick="previousPage()">
+            [ BACK ]
+        </button>
+
+        <button class="btn" onclick="nextPage()">
+            [ CONTINUE ]
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     PAGE 3
+========================================== -->
+
+<section class="archive-page" id="page3">
+
+    <div class="archive-number">
+        ARCHIVE ENTRY // 0007
+    </div>
+
+    <div class="archive-title">
+        USER REPORT
+    </div>
+
+    <div class="archive-subtitle">
+        Incident report // partially corrupted
+    </div>
+
+    <div class="text">
+
+        <span class="red">REPORT #071</span>
+
+        <br><br>
+
+        User claims they discovered an undocumented
+        section of the website.
+
+        <br><br>
+
+        The section supposedly displayed information
+        about the site's infrastructure.
+
+        <br><br>
+
+        When asked how they accessed it, the user replied:
+
+        <br><br>
+
+        <span class="yellow">
+            "I just found the door."
+        </span>
+
+        <br><br>
+
+        The user was unable to provide a direct link.
+
+        <br><br>
+
+        Investigation terminated.
+
+        <br>
+
+        Reason:
+
+        <span class="redacted">
+            ACCESS RESTRICTED
+        </span>
+
+        <br><br>
+
+        <span class="dim">
+            REPORT ROUTED TO INTERNAL REVIEW.
+        </span>
+
+    </div>
+
+    <div class="controls">
+
+        <button class="btn" onclick="previousPage()">
+            [ BACK ]
+        </button>
+
+        <button class="btn" onclick="nextPage()">
+            [ NEXT REPORT ]
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     PAGE 4
+========================================== -->
+
+<section class="archive-page" id="page4">
+
+    <div class="archive-number">
+        ARCHIVE ENTRY // 0012
+    </div>
+
+    <div class="archive-title">
+        ERROR 404
+    </div>
+
+    <div class="archive-subtitle">
+        The requested document does not exist.
+    </div>
+
+    <div class="terminal">
+
+        <div class="term-line">
+            SYSTEM REQUEST
+        </div>
+
+        <div class="term-line">
+            -----------------------------
+        </div>
+
+        <div class="term-line">
+            locating resource...
+        </div>
+
+        <div class="term-line">
+            searching public directory...
+        </div>
+
+        <div class="term-line">
+            searching hidden directory...
+        </div>
+
+        <div class="term-warn">
+            resource not indexed
+        </div>
+
+        <br>
+
+        <div class="term-line">
+            attempting recovery...
+        </div>
+
+        <div class="term-ok">
+            [PARTIAL DATA FOUND]
+        </div>
+
+        <br>
+
+        <div class="term-line">
+            The page exists.
+        </div>
+
+        <div class="term-line">
+            It simply isn't listed.
+        </div>
+
+        <br>
+
+        <div class="term-line">
+            checking internal routes...
+        </div>
+
+        <div class="term-warn">
+            route unavailable
+        </div>
+
+    </div>
+
+    <div class="controls">
+
+        <button class="btn" onclick="previousPage()">
+            [ BACK ]
+        </button>
+
+        <button class="btn" onclick="nextPage()">
+            [ FOLLOW TRACE ]
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     PAGE 5
+========================================== -->
+
+<section class="archive-page" id="page5">
+
+    <div class="archive-number">
+        TRACE // 0042
+    </div>
+
+    <div class="archive-title">
+        SOMETHING IS WRONG
+    </div>
+
+    <div class="archive-subtitle">
+        Automatic system note.
+    </div>
+
+    <div class="text">
+
+        The public index contains every registered
+        application.
+
+        <br><br>
+
+        At least...
+
+        <br><br>
+
+        <span class="red">
+            That's what the registry says.
+        </span>
+
+        <br><br>
+
+        But the system keeps reporting an additional
+        resource.
+
+        <br><br>
+
+        Resource:
+
+        <span class="redacted">
+            ███████████████
+        </span>
+
+        <br><br>
+
+        Location:
+
+        <span class="redacted">
+            █████████████████████
+        </span>
+
+        <br><br>
+
+        Storage:
+
+        <span class="redacted">
+            ██████████
+        </span>
+
+        <br><br>
+
+        Status:
+
+        <span class="green">
+            ONLINE
+        </span>
+
+        <br><br>
+
+        <span class="dim">
+            Last known handler: INTERNAL
+        </span>
+
+    </div>
+
+    <div class="controls">
+
+        <button class="btn" onclick="previousPage()">
+            [ BACK ]
+        </button>
+
+        <button class="btn" onclick="nextPage()">
+            [ INVESTIGATE ]
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     PAGE 6
+========================================== -->
+
+<section class="archive-page" id="page6">
+
+    <div class="archive-number">
+        ARCHIVE ENTRY // 0021
+    </div>
+
+    <div class="archive-title">
+        A NOTE
+    </div>
+
+    <div class="archive-subtitle">
+        Handwritten metadata recovered.
+    </div>
+
+    <div class="text">
+
+        If you're reading this,
+
+        <br><br>
+
+        you're probably looking for something.
+
+        <br><br>
+
+        Don't look for a link.
+
+        <br>
+
+        Look for a <strong>name</strong>.
+
+        <br><br>
+
+        The page you're looking for has a name
+        that sounds like a place.
+
+        <br><br>
+
+        Not a homepage.
+
+        <br>
+
+        Not a game.
+
+        <br>
+
+        Not an archive.
+
+        <br><br>
+
+        <span class="yellow">
+            Somewhere inside.
+        </span>
+
+        <br><br>
+
+        <span class="dim">
+            STORAGE MAY BE CLOSER THAN EXPECTED.
+        </span>
+
+    </div>
+
+    <div class="symbol" onclick="symbolClicked()">
+        ◈
+    </div>
+
+    <div id="symbolMessage"
+         class="dim"
+         style="text-align:center;font-size:9px">
+
+        nothing happened.
+
+    </div>
+
+    <div class="controls">
+
+        <button class="btn" onclick="previousPage()">
+            [ BACK ]
+        </button>
+
+        <button class="btn" onclick="nextPage()">
+            [ CONTINUE ]
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     PAGE 7
+========================================== -->
+
+<section class="archive-page" id="page7">
+
+    <div class="archive-number">
+        TRACE COMPLETE
+    </div>
+
+    <div class="archive-title">
+        THE DOOR
+    </div>
+
+    <div class="archive-subtitle">
+        Final recovered message.
+    </div>
+
+    <div class="text">
+
+        You weren't supposed to find this.
+
+        <br><br>
+
+        Which means you probably shouldn't keep going.
+
+        <br><br>
+
+        But if you made it this far...
+
+        <br><br>
+
+        there's one thing you should understand.
+
+        <br><br>
+
+        The hidden page isn't hidden because
+        it's protected.
+
+        <br><br>
+
+        It's hidden because nobody bothered
+        to tell you it exists.
+
+        <br><br>
+
+        <span class="green">
+            Find the page with the right name.
+        </span>
+
+        <br><br>
+
+        The name describes where you've ended up.
+
+        <br><br>
+
+        <span class="dim">
+            ACCESS PATH: INTERNAL
+        </span>
+
+    </div>
+
+    <div class="controls">
+
+        <button class="btn" onclick="previousPage()">
+            [ BACK ]
+        </button>
+
+        <button class="btn btn-danger"
+                onclick="finalGlitch()">
+            [ OPEN DOOR ]
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ==========================================
+     PAGE 8
+========================================== -->
+
+<section class="archive-page" id="page8">
+
+    <div class="archive-number">
+        CONNECTION // UNKNOWN
+    </div>
+
+    <div class="archive-title">
+        YOU FOUND IT
+    </div>
+
+    <div class="archive-subtitle">
+        Or at least... part of it.
+    </div>
+
+    <div class="text">
+
+        There is nothing else to recover.
+
+        <br><br>
+
+        The rest is somewhere on the site.
+
+        <br><br>
+
+        You already have enough information.
+
+        <br><br>
+
+        Think about the clues.
+
+        <br><br>
+
+        <span class="dim">
+            "a place"
+
+            <br>
+
+            "inside"
+
+            <br>
+
+            "not listed"
+
+            <br>
+
+            "the door"
+
+            <br>
+
+            "storage"
+        </span>
+
+        <br><br>
+
+        Maybe you've already seen the answer.
+
+        <br><br>
+
+        <span class="dim">
+            Two words appeared during recovery.
+        </span>
+
+        <br>
+
+        <span class="dim">
+            They were never shown together.
+        </span>
+
+    </div>
+
+    <br><br>
+
+    <div style="
+        text-align:center;
+        color:#292929;
+        font-size:9px;
+        letter-spacing:4px;
+    ">
+        END OF RECOVERY
+    </div>
+
+    <div class="controls">
+
+        <button class="btn" onclick="location.reload()">
+            [ RESET TRACE ]
+        </button>
+
+    </div>
+
+</section>
+
+
+</div>
+</div>
+
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+    <span>
+        ARCHIVE SYSTEM // UNOFFICIAL
+    </span>
+
+    <span id="footerRandom">
+        NODE UNKNOWN
+    </span>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            RECOVERED INFORMATION
+        </div>
+
+        <div class="modal-text" id="modalText"></div>
+
+        <button class="btn close"
+                onclick="closeModal()">
+            [ CLOSE ]
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   PAGE SYSTEM
+========================================== */
+
+let currentPage = 1;
+const totalPages = 8;
+
+function showPage(page) {
+
+    if (page < 1) page = 1;
+    if (page > totalPages) page = totalPages;
+
+    currentPage = page;
+
+    document.querySelectorAll(".archive-page")
+        .forEach(p => p.classList.remove("active"));
+
+    document.getElementById("page" + page)
+        .classList.add("active");
+
+    document.getElementById("location")
+        .textContent =
+        "/archive/recovered/" +
+        String(page).padStart(4, "0");
+
+    const statuses = [
+        "CONNECTION UNSTABLE",
+        "PARTIAL DATA",
+        "RECOVERED",
+        "UNKNOWN",
+        "TRACE ACTIVE",
+        "SIGNAL DETECTED",
+        "DOOR FOUND",
+        "END OF TRACE"
+    ];
+
+    document.getElementById("pageStatus")
+        .textContent = statuses[page - 1];
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+function nextPage() {
+    showPage(currentPage + 1);
+}
+
+function previousPage() {
+    showPage(currentPage - 1);
+}
+
+
+/* ==========================================
+   RANDOM GLITCH
+========================================== */
+
+function glitchPage() {
+
+    document.body.style.animation = "none";
+
+    document.querySelector(".screen")
+        .style.animation = "glitch .2s infinite";
+
+    setTimeout(() => {
+
+        document.querySelector(".screen")
+            .style.animation = "";
+
+        document.body.style.animation =
+            "flicker 7s infinite";
+
+    }, 600);
+
+}
+
+
+/* ==========================================
+   HIDDEN FILE
+========================================== */
+
+let hiddenClicked = false;
+
+function showHiddenFile() {
+
+    const status =
+        document.getElementById("hiddenStatus");
+
+    if (!hiddenClicked) {
+
+        hiddenClicked = true;
+
+        status.textContent = "RECOVERING...";
+
+        status.style.color = "#d9bd62";
+
+        setTimeout(() => {
+
+            status.textContent =
+                "NAME REDACTED";
+
+            status.style.color =
+                "#ff596e";
+
+        }, 1000);
+
+        setTimeout(() => {
+
+            showModal(
+                "FILE RECOVERY",
+                `
+                The filename could not be recovered.
+
+                <br><br>
+
+                But the metadata contains one useful
+                piece of information:
+
+                <br><br>
+
+                <span style="color:#63ff9b">
+                CATEGORY: LOCATION
+                </span>
+
+                <br><br>
+
+                The file isn't a game.
+
+                <br><br>
+
+                <span style="color:#555">
+                STORAGE CLASS: VAULT
+                </span>
+                `
+            );
+
+        }, 1300);
+
+    }
+
+}
+
+
+/* ==========================================
+   SYMBOL
+========================================== */
+
+let symbolClicks = 0;
+
+function symbolClicked() {
+
+    symbolClicks++;
+
+    const message =
+        document.getElementById("symbolMessage");
+
+    if (symbolClicks === 1) {
+
+        message.textContent =
+            "something moved.";
+
+    } else if (symbolClicks === 2) {
+
+        message.textContent =
+            "you should probably stop.";
+
+    } else if (symbolClicks === 3) {
+
+        message.textContent =
+            "WHY ARE YOU STILL CLICKING THIS?";
+
+        message.style.color =
+            "#ff596e";
+
+    } else if (symbolClicks >= 5) {
+
+        showModal(
+            "HIDDEN METADATA",
+            `
+            You found something that wasn't
+            supposed to be clickable.
+
+            <br><br>
+
+            Maybe that's the point.
+
+            <br><br>
+
+            <span style="color:#63ff9b">
+            SOME THINGS ARE ONLY FOUND
+            WHEN YOU LOOK FOR THEM.
+            </span>
+
+            <br><br>
+
+            <span style="color:#444">
+            classification: INTERNAL
+            </span>
+            `
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   FINAL GLITCH
+========================================== */
+
+function finalGlitch() {
+
+    document.body.style.animation = "none";
+
+    const screen =
+        document.querySelector(".screen");
+
+    screen.style.animation =
+        "glitch .08s infinite";
+
+    setTimeout(() => {
+
+        screen.style.animation = "";
+
+        showPage(8);
+
+    }, 1000);
+
+}
+
+
+/* ==========================================
+   MODAL
+========================================== */
+
+function showModal(title, text) {
+
+    document.querySelector(".modal-title")
+        .textContent = title;
+
+    document.getElementById("modalText")
+        .innerHTML = text;
+
+    document.getElementById("modal")
+        .classList.add("show");
+
+}
+
+function closeModal() {
+
+    document.getElementById("modal")
+        .classList.remove("show");
+
+}
+
+document.getElementById("modal")
+    .addEventListener("click", e => {
+
+        if (e.target.id === "modal") {
+            closeModal();
+        }
+
+    });
+
+
+/* ==========================================
+   RANDOM FOOTER
+========================================== */
+
+const footerMessages = [
+    "NODE UNKNOWN",
+    "TRACE 7F3A",
+    "SIGNAL LOST",
+    "NO INDEX",
+    "ARCHIVE ACTIVE",
+    "UNKNOWN HOST",
+    "RECOVERY MODE",
+    "LOCAL CACHE",
+    "INTERNAL NODE",
+    "COLD STORAGE"
+];
+
+setInterval(() => {
+
+    document.getElementById("footerRandom")
+        .textContent =
+        footerMessages[
+            Math.floor(
+                Math.random() *
+                footerMessages.length
+            )
+        ];
+
+}, 2500);
+
+
+/* ==========================================
+   RANDOM GLITCH TEXT
+========================================== */
+
+const glitchCharacters =
+    "!@#$%^&*0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+setInterval(() => {
+
+    const elements =
+        document.querySelectorAll(".corrupt");
+
+    elements.forEach(el => {
+
+        if (Math.random() > .7) {
+
+            let result = "";
+
+            for (let i = 0; i < 15; i++) {
+
+                result +=
+                    glitchCharacters[
+                        Math.floor(
+                            Math.random() *
+                            glitchCharacters.length
+                        )
+                    ];
+
+            }
+
+            const original =
+                el.dataset.original ||
+                el.textContent;
+
+            el.dataset.original = original;
+
+            el.textContent = result;
+
+            setTimeout(() => {
+                el.textContent = original;
+            }, 100);
+
+        }
+
+    });
+
+}, 1800);
+
+
+/* ==========================================
+   KEYBOARD EASTER EGG
+========================================== */
+
+let keyBuffer = "";
+
+document.addEventListener("keydown", e => {
+
+    keyBuffer +=
+        e.key.toLowerCase();
+
+    if (keyBuffer.length > 30) {
+        keyBuffer =
+            keyBuffer.slice(-30);
+    }
+
+    /*
+       Secret phrase hidden in the archive.
+       Doesn't directly reveal the vault.
+    */
+
+    if (keyBuffer.includes("inside")) {
+
+        showModal(
+            "TRACE DETECTED",
+            `
+            You found a keyword.
+
+            <br><br>
+
+            <span style="color:#63ff9b">
+            INSIDE
+            </span>
+
+            <br><br>
+
+            That might be more important
+            than you think.
+            `
+        );
+
+        keyBuffer = "";
+
+    }
+
+});
+
+
+/* ==========================================
+   KONAMI-STYLE EXTRA GLITCH
+========================================== */
+
+let sequence = [];
+
+const secretSequence = [
+    "ArrowUp",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight"
+];
+
+document.addEventListener("keydown", e => {
+
+    sequence.push(e.key);
+
+    if (sequence.length >
+        secretSequence.length) {
+
+        sequence.shift();
+
+    }
+
+    if (
+        sequence.join(",") ===
+        secretSequence.join(",")
+    ) {
+
+        showModal(
+            "ARCHIVE OVERRIDE",
+            `
+            <span style="color:#63ff9b">
+            ACCESS PATTERN RECOGNISED
+            </span>
+
+            <br><br>
+
+            You definitely weren't supposed
+            to know that sequence.
+
+            <br><br>
+
+            Keep searching.
+
+            <br><br>
+
+            <span style="color:#444">
+            ROUTE CLASS: INTERNAL
+            </span>
+            `
+        );
+
+        sequence = [];
+
+    }
+
+});
+
+
+/* ==========================================
+   RANDOM SYSTEM EVENTS
+========================================== */
+
+setInterval(() => {
+
+    const events = [
+        "background process detected",
+        "index synchronisation complete",
+        "unknown request ignored",
+        "archive checksum verified",
+        "directory scan completed",
+        "unlisted resource detected",
+        "trace route changed",
+        "connection restored",
+        "internal process completed",
+        "vault checksum verified"
+    ];
+
+    const event =
+        events[
+            Math.floor(
+                Math.random() *
+                events.length
+            )
+        ];
+
+    document.getElementById("pageStatus")
+        .textContent =
+        event.toUpperCase();
+
+    setTimeout(() => {
+
+        const statuses = [
+            "CONNECTION UNSTABLE",
+            "PARTIAL DATA",
+            "RECOVERED",
+            "UNKNOWN",
+            "TRACE ACTIVE",
+            "SIGNAL DETECTED",
+            "DOOR FOUND",
+            "END OF TRACE"
+        ];
+
+        document.getElementById("pageStatus")
+            .textContent =
+            statuses[currentPage - 1];
+
+    }, 1200);
+
+}, 5000);
+
+
+/* ==========================================
+   INITIALISE
+========================================== */
+
+showPage(1);
+
+</script>
+
+</body>
+</html>
