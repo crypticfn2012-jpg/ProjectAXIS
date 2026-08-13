@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Security | Ron.cool</title>
+
+<meta
+    name="description"
+    content="Report security vulnerabilities to Ron.cool."
+>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100%;
+    }
+
+    body {
+        min-height: 100vh;
+        background:
+            radial-gradient(
+                circle at 50% -10%,
+                #123b4a 0%,
+                #07151d 35%,
+                #03070a 75%
+            );
+
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+
+        background-image:
+            linear-gradient(
+                rgba(84, 255, 204, 0.025) 1px,
+                transparent 1px
+            ),
+            linear-gradient(
+                90deg,
+                rgba(84, 255, 204, 0.025) 1px,
+                transparent 1px
+            );
+
+        background-size: 45px 45px;
+
+        mask-image:
+            linear-gradient(
+                to bottom,
+                black,
+                transparent
+            );
+    }
+
+    a {
+        color: #54ffcc;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .container {
+        width: min(1050px, calc(100% - 32px));
+        margin: auto;
+    }
+
+    /* NAV */
+
+    nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+
+        padding: 16px 0;
+
+        background: rgba(3, 7, 10, 0.8);
+
+        border-bottom:
+            1px solid
+            rgba(84, 255, 204, 0.08);
+
+        backdrop-filter: blur(14px);
+    }
+
+    .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .logo {
+        color: white;
+        font-size: 21px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+    }
+
+    .logo span {
+        color: #54ffcc;
+    }
+
+    .back {
+        padding: 8px 14px;
+
+        border:
+            1px solid
+            rgba(84, 255, 204, 0.25);
+
+        border-radius: 9px;
+
+        background:
+            rgba(84, 255, 204, 0.04);
+
+        color: #b8d8d2;
+        font-size: 13px;
+    }
+
+    .back:hover {
+        color: white;
+
+        background:
+            rgba(84, 255, 204, 0.1);
+
+        text-decoration: none;
+    }
+
+    /* HERO */
+
+    .hero {
+        padding: 90px 0 55px;
+        text-align: center;
+    }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 7px 12px;
+
+        border:
+            1px solid
+            rgba(84, 255, 204, 0.2);
+
+        border-radius: 999px;
+
+        background:
+            rgba(84, 255, 204, 0.05);
+
+        color: #54ffcc;
+
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.13em;
+    }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+
+        border-radius: 50%;
+
+        background: #54ffcc;
+
+        box-shadow:
+            0 0 12px
+            rgba(84, 255, 204, 0.9);
+    }
+
+    .hero h1 {
+        margin: 20px 0 15px;
+
+        font-size:
+            clamp(42px, 8vw, 76px);
+
+        line-height: 0.95;
+        letter-spacing: -0.055em;
+    }
+
+    .hero h1 span {
+        color: #54ffcc;
+    }
+
+    .hero p {
+        width: min(650px, 100%);
+        margin: auto;
+
+        color: #8fa8a8;
+
+        font-size: 17px;
+        line-height: 1.7;
+    }
+
+    /* CARDS */
+
+    .grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 18px;
+
+        margin-bottom: 18px;
+    }
+
+    .card {
+        padding: 26px;
+
+        border:
+            1px solid
+            rgba(84, 255, 204, 0.11);
+
+        border-radius: 18px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(11, 32, 40, 0.82),
+                rgba(5, 14, 19, 0.78)
+            );
+
+        box-shadow:
+            0 20px 60px
+            rgba(0, 0, 0, 0.22);
+
+        backdrop-filter: blur(10px);
+    }
+
+    .card h2 {
+        margin: 0 0 12px;
+        font-size: 20px;
+    }
+
+    .card > p {
+        margin: 0;
+        color: #91a8aa;
+        line-height: 1.7;
+    }
+
+    .full {
+        grid-column: 1 / -1;
+    }
+
+    /* INFO STEPS */
+
+    .steps {
+        display: grid;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .step {
+        display: flex;
+        gap: 14px;
+
+        padding: 14px;
+
+        border-radius: 12px;
+
+        background:
+            rgba(255, 255, 255, 0.025);
+    }
+
+    .number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex: 0 0 32px;
+
+        width: 32px;
+        height: 32px;
+
+        border-radius: 9px;
+
+        background:
+            rgba(84, 255, 204, 0.1);
+
+        color: #54ffcc;
+
+        font-weight: 900;
+    }
+
+    .step strong {
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    .step span {
+        color: #81989a;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* IMPORTANT */
+
+    .important {
+        padding: 18px;
+        margin-top: 20px;
+
+        border:
+            1px solid
+            rgba(255, 193, 91, 0.18);
+
+        border-radius: 13px;
+
+        background:
+            rgba(255, 193, 91, 0.045);
+    }
+
+    .important strong {
+        color: #ffd27a;
+    }
+
+    .important p {
+        margin: 7px 0 0;
+
+        color: #a99d82;
+
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    /* FORM */
+
+    form {
+        margin-top: 24px;
+    }
+
+    .form-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 14px;
+    }
+
+    .field {
+        margin-bottom: 17px;
+    }
+
+    label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #d7e6e4;
+
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+
+        padding: 13px 14px;
+
+        outline: none;
+
+        border:
+            1px solid
+            rgba(84, 255, 204, 0.12);
+
+        border-radius: 10px;
+
+        background:
+            rgba(0, 0, 0, 0.25);
+
+        color: white;
+
+        font-family: inherit;
+        font-size: 14px;
+
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: #52686a;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #54ffcc;
+
+        box-shadow:
+            0 0 0 3px
+            rgba(84, 255, 204, 0.07);
+    }
+
+    textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .hint {
+        margin-top: 6px;
+        color: #667d7f;
+        font-size: 11px;
+    }
+
+    button {
+        width: 100%;
+
+        padding: 14px 18px;
+
+        border: 0;
+        border-radius: 11px;
+
+        background: #54ffcc;
+        color: #03100d;
+
+        cursor: pointer;
+
+        font-size: 14px;
+        font-weight: 900;
+
+        transition: 0.2s ease;
+    }
+
+    button:hover:not(:disabled) {
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 10px 30px
+            rgba(84, 255, 204, 0.18);
+    }
+
+    button:disabled {
+        opacity: 0.65;
+        cursor: wait;
+    }
+
+    /* MESSAGE */
+
+    #formMessage {
+        display: none;
+
+        padding: 14px;
+        margin-top: 15px;
+
+        border-radius: 10px;
+
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    #formMessage.success {
+        display: block;
+
+        border:
+            1px solid
+            rgba(84, 255, 204, 0.25);
+
+        background:
+            rgba(84, 255, 204, 0.08);
+
+        color: #54ffcc;
+    }
+
+    #formMessage.error {
+        display: block;
+
+        border:
+            1px solid
+            rgba(255, 70, 100, 0.25);
+
+        background:
+            rgba(255, 70, 100, 0.08);
+
+        color: #ff8da3;
+    }
+
+    /* FOOTER */
+
+    footer {
+        padding: 45px 0 55px;
+
+        text-align: center;
+
+        color: #526769;
+
+        font-size: 12px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 700px) {
+
+        .grid,
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hero {
+            padding-top: 60px;
+        }
+
+        .card {
+            padding: 21px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+
+<nav>
+
+    <div class="container nav-inner">
+
+        <div class="logo">
+            Ron<span>.</span>cool
+        </div>
+
+        <a
+            href="/"
+            class="back"
+        >
+            ← Back to Ron.cool
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- HERO -->
+
+<section class="hero">
+
+    <div class="container">
+
+        <div class="badge">
+            <span class="status-dot"></span>
+            SECURITY
+        </div>
+
+        <h1>
+            Keeping Ron<span>.</span>cool safe.
+        </h1>
+
+        <p>
+            Found a security vulnerability on Ron.cool?
+            Report it privately and help us keep the
+            site safe for everyone.
+        </p>
+
+    </div>
+
+</section>
+
+
+<main class="container">
+
+    <div class="grid">
+
+        <!-- RESPONSIBLE DISCLOSURE -->
+
+        <section class="card">
+
+            <h2>
+                🛡️ Responsible disclosure
+            </h2>
+
+            <p>
+                Please report security issues privately
+                instead of publicly sharing them. This
+                gives us time to investigate and fix
+                problems.
+            </p>
+
+            <div class="important">
+
+                <strong>
+                    Please don't exploit real users.
+                </strong>
+
+                <p>
+                    Don't access, modify, delete or
+                    download information belonging to
+                    other users. Only test information
+                    you own or have permission to test.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- WHAT TO REPORT -->
+
+        <section class="card">
+
+            <h2>
+                🔎 What should I report?
+            </h2>
+
+            <p>
+                Examples of security issues we'd like
+                to hear about:
+            </p>
+
+            <div class="steps">
+
+                <div class="step">
+
+                    <div class="number">
+                        1
+                    </div>
+
+                    <div>
+                        <strong>
+                            Account & authentication
+                        </strong>
+
+                        <span>
+                            Issues that could allow
+                            unauthorized account access.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="number">
+                        2
+                    </div>
+
+                    <div>
+                        <strong>
+                            Data exposure
+                        </strong>
+
+                        <span>
+                            Unexpected access to private
+                            or sensitive information.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="number">
+                        3
+                    </div>
+
+                    <div>
+                        <strong>
+                            Website vulnerabilities
+                        </strong>
+
+                        <span>
+                            XSS, injection, access-control
+                            issues or similar problems.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="number">
+                        4
+                    </div>
+
+                    <div>
+                        <strong>
+                            Security bypasses
+                        </strong>
+
+                        <span>
+                            Ways to bypass protections
+                            or restrictions unexpectedly.
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HOW TO REPORT -->
+
+        <section class="card">
+
+            <h2>
+                📋 Make a good report
+            </h2>
+
+            <p>
+                The more information you provide, the
+                easier it is for us to investigate.
+            </p>
+
+            <div class="steps">
+
+                <div class="step">
+
+                    <div class="number">
+                        1
+                    </div>
+
+                    <div>
+                        <strong>
+                            Explain it
+                        </strong>
+
+                        <span>
+                            Tell us what you discovered
+                            and why it may be a security
+                            problem.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="number">
+                        2
+                    </div>
+
+                    <div>
+                        <strong>
+                            Reproduce it
+                        </strong>
+
+                        <span>
+                            Give us clear steps that allow
+                            us to reproduce the issue.
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <div class="step">
+
+                    <div class="number">
+                        3
+                    </div>
+
+                    <div>
+                        <strong>
+                            Show evidence
+                        </strong>
+
+                        <span>
+                            Screenshots, console output,
+                            requests and proof-of-concepts
+                            can be useful.
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- WHAT HAPPENS -->
+
+        <section class="card">
+
+            <h2>
+                ⏱️ What happens next?
+            </h2>
+
+            <p>
+                We'll review the report, investigate the
+                issue and attempt to reproduce it.
+            </p>
+
+            <div class="important">
+
+                <strong>
+                    We take legitimate reports seriously.
+                </strong>
+
+                <p>
+                    If the vulnerability is confirmed,
+                    we'll work on fixing it and update
+                    its status internally.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- REPORT FORM -->
+
+        <section class="card full">
+
+            <h2>
+                🚨 Report a vulnerability
+            </h2>
+
+            <p>
+                Submit your report below. Fields marked
+                required must be completed.
+            </p>
+
+
+            <form id="securityForm">
+
+                <!-- NAME + EMAIL -->
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label for="name">
+                            Your name / alias
+                        </label>
+
+                        <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            placeholder="Your name or alias"
+                            maxlength="100"
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="email">
+                            Contact email
+                        </label>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            placeholder="you@example.com"
+                            maxlength="254"
+                        >
+
+                        <div class="hint">
+                            Optional. Used only if you
+                            want us to contact you.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SEVERITY + LOCATION -->
+
+                <div class="form-grid">
+
+                    <div class="field">
+
+                        <label for="severity">
+                            Estimated severity
+                        </label>
+
+                        <select
+                            id="severity"
+                            name="severity"
+                        >
+
+                            <option value="low">
+                                Low
+                            </option>
+
+                            <option value="medium">
+                                Medium
+                            </option>
+
+                            <option value="high">
+                                High
+                            </option>
+
+                            <option value="critical">
+                                Critical
+                            </option>
+
+                            <option value="unknown">
+                                I'm not sure
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label for="location">
+                            Affected page / feature
+                        </label>
+
+                        <input
+                            id="location"
+                            name="location"
+                            type="text"
+                            placeholder="https://roncool.cc.cd/..."
+                            maxlength="500"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- TITLE -->
+
+                <div class="field">
+
+                    <label for="title">
+                        Vulnerability title *
+                    </label>
+
+                    <input
+                        id="title"
+                        name="title"
+                        type="text"
+                        placeholder="Example: Stored XSS in..."
+                        maxlength="200"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="field">
+
+                    <label for="description">
+                        Description *
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Describe what you discovered..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- STEPS -->
+
+                <div class="field">
+
+                    <label for="steps">
+                        Steps to reproduce *
+                    </label>
+
+                    <textarea
+                        id="steps"
+                        name="steps"
+                        placeholder="1. Go to...
+
+
+2. Click...
+3. Enter...
+4. Observe..."
+required
+></textarea>
+
+
+                </div>
+
+
+                <!-- IMPACT -->
+
+                <div class="field">
+
+                    <label for="impact">
+                        Security impact *
+                    </label>
+
+                    <textarea
+                        id="impact"
+                        name="impact"
+                        placeholder="Explain what an attacker could potentially do..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <!-- EVIDENCE -->
+
+                <div class="field">
+
+                    <label for="evidence">
+                        Evidence / proof of concept
+                    </label>
+
+                    <textarea
+                        id="evidence"
+                        name="evidence"
+                        placeholder="Screenshots, console output, payloads or other evidence..."
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    id="submitButton"
+                    type="submit"
+                >
+                    Submit Security Report →
+                </button>
+
+
+                <div id="formMessage"></div>
+
+            </form>
+
+        </section>
+
+
+        <!-- COMMITMENT -->
+
+        <section class="card full">
+
+            <h2>
+                ❤️ Our commitment
+            </h2>
+
+            <p>
+                Ron.cool is built to be a fun and safe
+                place to explore projects and games.
+                We appreciate responsible researchers
+                who help us improve the security of the
+                site.
+            </p>
+
+            <p style="margin-top: 14px;">
+                Please act responsibly and give us the
+                opportunity to investigate an issue before
+                publicly disclosing technical details.
+            </p>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div class="container">
+
+        Ron.cool Security ·
+
+        <a href="/">
+            Back to Ron.cool
+        </a>
+
+        <br>
+        <br>
+
+        Please report security issues responsibly.
+
+    </div>
+
+</footer>
+
+
+<!-- ==================================================
+     SUPABASE
+================================================== -->
+
+<script type="module">
+
+    import {
+        createClient
+    } from
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+
+    /*
+     * ==================================================
+     * PUT YOUR SUPABASE DETAILS HERE
+     * ==================================================
+     */
+
+    const SUPABASE_URL =
+        "https://rldidvwcylirjyfktvtg.supabase.co";
+
+    const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZGlkdndjeWxpcmp5Zmt0dnRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyMjM0OTAsImV4cCI6MjEwMTc5OTQ5MH0.YO5zeu5uL3siDDPVfsPc9v_VCETHixTWXjzotVOEp0U";
+
+
+    /*
+     * Create Supabase client.
+     */
+
+    const supabase =
+        createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
+
+
+    /*
+     * ==================================================
+     * GET HTML ELEMENTS
+     * ==================================================
+     */
+
+    const form =
+        document.getElementById(
+            "securityForm"
+        );
+
+    const submitButton =
+        document.getElementById(
+            "submitButton"
+        );
+
+    const formMessage =
+        document.getElementById(
+            "formMessage"
+        );
+
+
+    /*
+     * ==================================================
+     * SHOW MESSAGE
+     * ==================================================
+     */
+
+    function showMessage(
+        text,
+        type
+    ) {
+
+        formMessage.textContent =
+            text;
+
+        formMessage.className =
+            type;
+
+        formMessage.style.display =
+            "block";
+
+    }
+
+
+    /*
+     * ==================================================
+     * SUBMIT REPORT
+     * ==================================================
+     */
+
+    form.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            /*
+             * Disable button.
+             */
+
+            submitButton.disabled =
+                true;
+
+            submitButton.textContent =
+                "Submitting report...";
+
+
+            formMessage.style.display =
+                "none";
+
+
+            /*
+             * Read form values.
+             */
+
+            const name =
+                document
+                    .getElementById("name")
+                    .value
+                    .trim();
+
+
+            const email =
+                document
+                    .getElementById("email")
+                    .value
+                    .trim();
+
+
+            const severity =
+                document
+                    .getElementById("severity")
+                    .value;
+
+
+            const location =
+                document
+                    .getElementById("location")
+                    .value
+                    .trim();
+
+
+            const title =
+                document
+                    .getElementById("title")
+                    .value
+                    .trim();
+
+
+            const description =
+                document
+                    .getElementById("description")
+                    .value
+                    .trim();
+
+
+            const steps =
+                document
+                    .getElementById("steps")
+                    .value
+                    .trim();
+
+
+            const impact =
+                document
+                    .getElementById("impact")
+                    .value
+                    .trim();
+
+
+            const evidence =
+                document
+                    .getElementById("evidence")
+                    .value
+                    .trim();
+
+
+            /*
+             * Validate required fields.
+             */
+
+            if (
+                title === "" ||
+                description === "" ||
+                steps === "" ||
+                impact === ""
+            ) {
+
+                showMessage(
+                    "Please complete all required fields.",
+                    "error"
+                );
+
+
+                submitButton.disabled =
+                    false;
+
+                submitButton.textContent =
+                    "Submit Security Report →";
+
+                return;
+
+            }
+
+
+            /*
+             * ==================================================
+             * INSERT REPORT INTO SUPABASE
+             * ==================================================
+             *
+             * id:
+             *     Automatically generated.
+             *
+             * created_at:
+             *     Automatically generated.
+             *
+             * status:
+             *     Automatically becomes "new".
+             */
+
+            try {
+
+                const {
+                    error
+                } = await supabase
+                    .from("security_reports")
+                    .insert({
+
+                        name:
+                            name === ""
+                                ? null
+                                : name,
+
+                        email:
+                            email === ""
+                                ? null
+                                : email,
+
+                        severity:
+                            severity === ""
+                                ? null
+                                : severity,
+
+                        location:
+                            location === ""
+                                ? null
+                                : location,
+
+                        title:
+                            title,
+
+                        description:
+                            description,
+
+                        steps:
+                            steps,
+
+                        impact:
+                            impact,
+
+                        evidence:
+                            evidence === ""
+                                ? null
+                                : evidence
+
+                    });
+
+
+                /*
+                 * Supabase returned an error.
+                 */
+
+                if (error) {
+
+                    console.error(
+                        "Supabase error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        "Your report could not be submitted. Please try again.",
+                        "error"
+                    );
+
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.textContent =
+                        "Submit Security Report →";
+
+                    return;
+
+                }
+
+
+                /*
+                 * ==================================================
+                 * SUCCESS
+                 * ==================================================
+                 */
+
+                form.reset();
+
+
+                showMessage(
+                    "✓ Your security report has been submitted successfully. Thank you for helping keep Ron.cool safe!",
+                    "success"
+                );
+
+
+                submitButton.disabled =
+                    false;
+
+                submitButton.textContent =
+                    "Submit Security Report →";
+
+
+            } catch (error) {
+
+                /*
+                 * Unexpected JavaScript/network error.
+                 */
+
+                console.error(
+                    "Ron.cool security report error:",
+                    error
+                );
+
+
+                showMessage(
+                    "Something went wrong while submitting the report. Please try again.",
+                    "error"
+                );
+
+
+                submitButton.disabled =
+                    false;
+
+                submitButton.textContent =
+                    "Submit Security Report →";
+
+            }
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>
+
+
