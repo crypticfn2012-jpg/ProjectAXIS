@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090707">
+<title>Don't Click the Bomb | Ron.cool</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    background:
+        radial-gradient(circle at 50% -20%, #401414 0%, #150909 38%, #070606 80%);
+    color: #fff;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+    overflow-x: hidden;
+}
+
+/* BACK BUTTON */
+
+.back-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #00ffcc;
+    color: #000;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 1000;
+    transition: .2s;
+}
+
+.back-btn:hover {
+    background: #00ddb3;
+    transform: scale(1.05);
+}
+
+/* BACKGROUND */
+
+.background {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,70,70,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,70,70,.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+/* APP */
+
+.app {
+    width: min(760px, calc(100% - 24px));
+    margin: auto;
+    padding: 58px 0 25px;
+}
+
+/* HEADER */
+
+.header {
+    text-align: center;
+    margin-bottom: 14px;
+}
+
+.eyebrow {
+    color: #ff6262;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+}
+
+h1 {
+    margin: 4px 0;
+    font-size: clamp(32px, 6vw, 52px);
+    line-height: .95;
+    letter-spacing: -.065em;
+}
+
+.subtitle {
+    margin: 0 auto;
+    color: #927f7f;
+    font-size: 11px;
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7px;
+    margin-bottom: 8px;
+}
+
+.stat {
+    padding: 8px;
+    border: 1px solid rgba(255,255,255,.07);
+    background: rgba(18,10,10,.8);
+    border-radius: 9px;
+    text-align: center;
+}
+
+.stat-label {
+    color: #756464;
+    font-size: 7px;
+    font-weight: 900;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    margin-top: 2px;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+/* GAME */
+
+.game {
+    padding: 11px;
+    border: 1px solid rgba(255,90,90,.12);
+    border-radius: 15px;
+    background: linear-gradient(145deg, rgba(28,13,13,.97), rgba(11,7,7,.97));
+    box-shadow: 0 20px 60px rgba(0,0,0,.45);
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 4px;
+    width: min(560px, 100%);
+    margin: auto;
+}
+
+.cell {
+    aspect-ratio: 1;
+    padding: 0;
+    border: 1px solid #2a1717;
+    border-radius: 7px;
+    background: linear-gradient(145deg,#241313,#130b0b);
+    color: transparent;
+    cursor: pointer;
+    transition: transform .12s, background .15s, border .15s;
+    position: relative;
+    overflow: hidden;
+}
+
+.cell::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.05), transparent);
+    pointer-events: none;
+}
+
+.cell:hover {
+    transform: scale(.92);
+    border-color: #ff5151;
+    background: #301616;
+}
+
+.cell.safe {
+    cursor: default;
+    background: #101f19;
+    border-color: #1c4d3c;
+    transform: scale(.94);
+}
+
+.cell.safe::before {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #45e3ae;
+    font-size: clamp(12px,2.5vw,20px);
+    font-weight: 900;
+}
+
+.cell.bomb {
+    cursor: default;
+    background: radial-gradient(circle,#ff4747 0%,#8c1818 45%,#2a0909 100%);
+    border-color: #ff6262;
+    animation: explode .45s ease;
+}
+
+.cell.bomb::before {
+    content: "💣";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: clamp(16px,3vw,27px);
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(.7);
+        opacity: .3;
+    }
+    55% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.board.shake {
+    animation: shake .35s;
+}
+
+@keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-7px); }
+    75% { transform: translateX(7px); }
+}
+
+/* CONTROLS */
+
+.controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 9px;
+}
+
+.btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 9px 17px;
+    font-size: 10px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.reset {
+    background: #ff4e4e;
+    color: white;
+}
+
+.reset:hover {
+    box-shadow: 0 8px 25px rgba(255,70,70,.18);
+}
+
+/* MESSAGE */
+
+.message {
+    min-height: 17px;
+    margin-top: 7px;
+    text-align: center;
+    color: #8f7d7d;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.message.success {
+    color: #45e3ae;
+}
+
+.message.error {
+    color: #ff6060;
+}
+
+/* LEADERBOARD */
+
+.leaderboard {
+    margin-top: 8px;
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 11px;
+    overflow: hidden;
+    background: rgba(12,8,8,.8);
+}
+
+.leader-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.leader-header strong {
+    font-size: 10px;
+}
+
+.leader-header span {
+    color: #6f6060;
+    font-size: 8px;
+}
+
+.leader-row {
+    display: grid;
+    grid-template-columns: 35px 1fr 80px 60px;
+    padding: 7px 12px;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    font-size: 9px;
+}
+
+.leader-row:last-child {
+    border-bottom: 0;
+}
+
+.rank {
+    color: #665858;
+}
+
+.player {
+    font-weight: 800;
+}
+
+.safe-score {
+    color: #45e3ae;
+    text-align: right;
+}
+
+.time {
+    color: #776868;
+    text-align: right;
+}
+
+/* OVERLAY */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0,0,0,.75);
+    backdrop-filter: blur(8px);
+    z-index: 500;
+}
+
+.overlay.show {
+    display: flex;
+}
+
+.result {
+    width: min(380px,100%);
+    padding: 25px;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 18px;
+    background: #130b0b;
+    text-align: center;
+    box-shadow: 0 30px 100px rgba(0,0,0,.7);
+    animation: popup .25s ease;
+}
+
+@keyframes popup {
+    from {
+        opacity: 0;
+        transform: scale(.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.result-icon {
+    font-size: 42px;
+    margin-bottom: 6px;
+}
+
+.result h2 {
+    margin: 0;
+    font-size: 27px;
+    letter-spacing: -.04em;
+}
+
+.result p {
+    color: #8e7d7d;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 18px 0;
+}
+
+.result-stat strong {
+    display: block;
+    font-size: 19px;
+}
+
+.result-stat span {
+    color: #756565;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+
+.name-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #332020;
+    border-radius: 8px;
+    background: #0a0707;
+    color: white;
+    outline: none;
+    text-align: center;
+}
+
+.name-input:focus {
+    border-color: #ff5151;
+}
+
+.save {
+    width: 100%;
+    margin-top: 7px;
+    background: #ff5151;
+    color: white;
+}
+
+.play {
+    width: 100%;
+    margin-top: 7px;
+    background: #271515;
+    color: #b99e9e;
+}
+
+/* MOBILE */
+
+@media(max-width:600px) {
+    .app {
+        width: calc(100% - 16px);
+        padding-top: 60px;
+    }
+
+    h1 {
+        font-size: 36px;
+    }
+
+    .subtitle {
+        font-size: 10px;
+    }
+
+    .game {
+        padding: 7px;
+    }
+
+    .board {
+        gap: 3px;
+    }
+
+    .cell {
+        border-radius: 5px;
+    }
+
+    .leader-row {
+        grid-template-columns: 28px 1fr 60px;
+    }
+
+    .time {
+        display: none;
+    }
+}
+
+@media(max-height:700px) and (min-width:601px) {
+    .app {
+        padding-top: 48px;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+
+    .header {
+        margin-bottom: 9px;
+    }
+
+    .cell {
+        max-height: 55px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="background">
+    <div class="grid"></div>
+</div>
+
+<button class="back-btn" onclick="goBack()">⬅ Back</button>
+
+<main class="app">
+
+    <header class="header">
+        <div class="eyebrow">ron.cool / daily game</div>
+
+        <h1>Don't Click the Bomb.</h1>
+
+        <p class="subtitle">
+            Find every safe square. The bombs move every attempt.
+        </p>
+    </header>
+
+    <section class="stats">
+
+        <div class="stat">
+            <div class="stat-label">Safe Clicks</div>
+            <div class="stat-value" id="safeCount">0</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Time</div>
+            <div class="stat-value" id="timer">00:00</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-label">Bombs</div>
+            <div class="stat-value" id="bombCount">5</div>
+        </div>
+
+    </section>
+
+    <section class="game">
+
+        <div class="board" id="board"></div>
+
+        <div class="controls">
+            <button class="btn reset" id="resetButton">
+                New Attempt
+            </button>
+        </div>
+
+        <div class="message" id="message">
+            Pick a square. Choose wisely.
+        </div>
+
+    </section>
+
+    <section class="leaderboard">
+
+        <div class="leader-header">
+            <strong>Today's leaderboard</strong>
+            <span>Most safe clicks</span>
+        </div>
+
+        <div id="leaderboard">
+            <div style="
+                padding:12px;
+                text-align:center;
+                color:#665858;
+                font-size:9px;
+            ">
+                Loading...
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<div class="overlay" id="overlay">
+
+    <div class="result">
+
+        <div class="result-icon" id="resultIcon">💣</div>
+
+        <h2 id="resultTitle">Boom.</h2>
+
+        <p id="resultText">
+            You clicked the bomb.
+        </p>
+
+        <div class="result-stats">
+
+            <div class="result-stat">
+                <strong id="resultSafe">0</strong>
+                <span>Safe</span>
+            </div>
+
+            <div class="result-stat">
+                <strong id="resultTime">0s</strong>
+                <span>Time</span>
+            </div>
+
+        </div>
+
+        <div id="scoreArea">
+
+            <input
+                class="name-input"
+                id="playerName"
+                maxlength="20"
+                placeholder="Your name"
+                autocomplete="off"
+            >
+
+            <button class="btn save" id="saveScore">
+                Save Score
+            </button>
+
+        </div>
+
+        <button class="btn play" id="playAgain">
+            Try Again
+        </button>
+
+    </div>
+
+</div>
+
+<script>
+
+/* =========================================
+   SUPABASE
+========================================= */
+
+const SUPABASE_URL =
+    "https://rldidvwcylirjyfktvtg.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZGlkdndjeWxpcmp5Zmt0dnRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyMjM0OTAsImV4cCI6MjEwMTc5OTQ5MH0.YO5zeu5uL3siDDPVfsPc9v_VCETHixTWXjzotVOEp0U";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+    );
+
+
+/* =========================================
+   SETTINGS
+========================================= */
+
+const SIZE = 8;
+const TOTAL_CELLS = SIZE * SIZE;
+const BOMBS = 5;
+
+
+/* =========================================
+   GAME STATE
+========================================= */
+
+let bombPositions = [];
+let safeClicks = 0;
+let startTime = null;
+let timerInterval = null;
+let gameOver = false;
+let scoreSaved = false;
+let today = getDate();
+
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const board = document.getElementById("board");
+const safeCount = document.getElementById("safeCount");
+const timer = document.getElementById("timer");
+const bombCount = document.getElementById("bombCount");
+const message = document.getElementById("message");
+const overlay = document.getElementById("overlay");
+const resultIcon = document.getElementById("resultIcon");
+const resultTitle = document.getElementById("resultTitle");
+const resultText = document.getElementById("resultText");
+const resultSafe = document.getElementById("resultSafe");
+const resultTime = document.getElementById("resultTime");
+const playerName = document.getElementById("playerName");
+const saveScore = document.getElementById("saveScore");
+const leaderboard = document.getElementById("leaderboard");
+
+
+/* =========================================
+   DATE
+========================================= */
+
+function getDate() {
+
+    const now = new Date();
+
+    return now.toISOString().split("T")[0];
+
+}
+
+
+/* =========================================
+   RANDOM BOMBS
+   NEW POSITIONS EVERY ATTEMPT
+========================================= */
+
+function generateBombs() {
+
+    const positions = [];
+
+    while (positions.length < BOMBS) {
+
+        const position =
+            Math.floor(
+                Math.random() * TOTAL_CELLS
+            );
+
+        if (!positions.includes(position)) {
+            positions.push(position);
+        }
+
+    }
+
+    return positions;
+
+}
+
+
+/* =========================================
+   TIMER
+========================================= */
+
+function updateTimer() {
+
+    if (!startTime || gameOver) {
+        return;
+    }
+
+    const seconds =
+        Math.floor(
+            (Date.now() - startTime) / 1000
+        );
+
+    timer.textContent =
+        formatTime(seconds);
+
+}
+
+
+function formatTime(seconds) {
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    const secs =
+        seconds % 60;
+
+    return (
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(secs).padStart(2, "0")
+    );
+
+}
+
+
+/* =========================================
+   START GAME
+========================================= */
+
+function startGame() {
+
+    clearInterval(timerInterval);
+
+    safeClicks = 0;
+    gameOver = false;
+    scoreSaved = false;
+
+    /*
+        IMPORTANT:
+        Bombs are generated randomly EVERY TIME
+        the player starts a new attempt.
+    */
+
+    bombPositions = generateBombs();
+
+    startTime = Date.now();
+
+    safeCount.textContent = "0";
+    timer.textContent = "00:00";
+
+    message.textContent =
+        "Pick a square. Choose wisely.";
+
+    message.className = "message";
+
+    overlay.classList.remove("show");
+
+    saveScore.disabled = false;
+    saveScore.textContent = "Save Score";
+
+    playerName.value = "";
+
+    document.getElementById("scoreArea").style.display =
+        "block";
+
+    buildBoard();
+
+    timerInterval =
+        setInterval(updateTimer, 250);
+
+}
+
+
+/* =========================================
+   BUILD BOARD
+========================================= */
+
+function buildBoard() {
+
+    board.innerHTML = "";
+
+    for (
+        let i = 0;
+        i < TOTAL_CELLS;
+        i++
+    ) {
+
+        const cell =
+            document.createElement("button");
+
+        cell.className = "cell";
+
+        cell.dataset.index = i;
+
+        cell.setAttribute(
+            "aria-label",
+            `Square ${i + 1}`
+        );
+
+        cell.addEventListener(
+            "click",
+            () => clickCell(cell, i)
+        );
+
+        board.appendChild(cell);
+
+    }
+
+}
+
+
+/* =========================================
+   CLICK CELL
+========================================= */
+
+function clickCell(cell, index) {
+
+    if (gameOver) {
+        return;
+    }
+
+    if (
+        cell.classList.contains("safe") ||
+        cell.classList.contains("bomb")
+    ) {
+        return;
+    }
+
+
+    /* =====================
+       BOMB
+    ===================== */
+
+    if (bombPositions.includes(index)) {
+
+        cell.classList.add("bomb");
+
+        board.classList.add("shake");
+
+        setTimeout(() => {
+            board.classList.remove("shake");
+        }, 400);
+
+        revealBombs();
+
+        loseGame();
+
+        return;
+
+    }
+
+
+    /* =====================
+       SAFE
+    ===================== */
+
+    safeClicks++;
+
+    safeCount.textContent =
+        safeClicks;
+
+    cell.classList.add("safe");
+
+    message.textContent =
+        "Safe. Keep going.";
+
+    message.className =
+        "message success";
+
+
+    const safeTotal =
+        TOTAL_CELLS - BOMBS;
+
+    if (safeClicks >= safeTotal) {
+        winGame();
+    }
+
+}
+
+
+/* =========================================
+   REVEAL BOMBS
+========================================= */
+
+function revealBombs() {
+
+    bombPositions.forEach(index => {
+
+        const cell =
+            board.children[index];
+
+        if (!cell.classList.contains("bomb")) {
+            cell.classList.add("bomb");
+        }
+
+    });
+
+}
+
+
+/* =========================================
+   LOSE
+========================================= */
+
+function loseGame() {
+
+    gameOver = true;
+
+    clearInterval(timerInterval);
+
+    const seconds =
+        Math.floor(
+            (Date.now() - startTime) / 1000
+        );
+
+    resultIcon.textContent = "💣";
+
+    resultTitle.textContent = "Boom.";
+
+    resultText.textContent =
+        "You clicked one of the bombs.";
+
+    resultSafe.textContent =
+        safeClicks;
+
+    resultTime.textContent =
+        `${seconds}s`;
+
+    document.getElementById(
+        "scoreArea"
+    ).style.display = "none";
+
+    overlay.classList.add("show");
+
+}
+
+
+/* =========================================
+   WIN
+========================================= */
+
+function winGame() {
+
+    gameOver = true;
+
+    clearInterval(timerInterval);
+
+    const seconds =
+        Math.floor(
+            (Date.now() - startTime) / 1000
+        );
+
+    resultIcon.textContent = "🏆";
+
+    resultTitle.textContent =
+        "You survived.";
+
+    resultText.textContent =
+        "You found every safe square.";
+
+    resultSafe.textContent =
+        safeClicks;
+
+    resultTime.textContent =
+        `${seconds}s`;
+
+    document.getElementById(
+        "scoreArea"
+    ).style.display = "block";
+
+    overlay.classList.add("show");
+
+}
+
+
+/* =========================================
+   SAVE SCORE
+========================================= */
+
+saveScore.addEventListener(
+    "click",
+    async () => {
+
+        if (scoreSaved) {
+            return;
+        }
+
+        const name =
+            playerName.value
+                .trim()
+                .slice(0, 20);
+
+        if (!name) {
+
+            playerName.focus();
+
+            return;
+
+        }
+
+        const seconds =
+            Math.floor(
+                (Date.now() - startTime) / 1000
+            );
+
+        saveScore.disabled = true;
+
+        saveScore.textContent =
+            "Saving...";
+
+        try {
+
+            const { error } =
+                await supabaseClient
+                    .from("bomb_scores")
+                    .insert({
+
+                        player_name: name,
+
+                        challenge_date: today,
+
+                        safe_clicks:
+                            safeClicks,
+
+                        time_seconds:
+                            seconds
+
+                    });
+
+            if (error) {
+                throw error;
+            }
+
+            scoreSaved = true;
+
+            saveScore.textContent =
+                "Saved ✓";
+
+            loadLeaderboard();
+
+        } catch (error) {
+
+            console.error(
+                "Supabase save error:",
+                error
+            );
+
+            saveScore.disabled = false;
+
+            saveScore.textContent =
+                "Try Again";
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   LEADERBOARD
+========================================= */
+
+async function loadLeaderboard() {
+
+    const { data, error } =
+        await supabaseClient
+            .from("bomb_scores")
+            .select(
+                "player_name,safe_clicks,time_seconds"
+            )
+            .eq(
+                "challenge_date",
+                today
+            )
+            .order(
+                "safe_clicks",
+                {
+                    ascending: false
+                }
+            )
+            .order(
+                "time_seconds",
+                {
+                    ascending: true
+                }
+            )
+            .limit(10);
+
+
+    if (error) {
+
+        console.error(
+            "Leaderboard error:",
+            error
+        );
+
+        leaderboard.innerHTML = `
+            <div style="
+                padding:12px;
+                text-align:center;
+                color:#665858;
+                font-size:9px;
+            ">
+                Leaderboard unavailable.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    if (!data || !data.length) {
+
+        leaderboard.innerHTML = `
+            <div style="
+                padding:12px;
+                text-align:center;
+                color:#665858;
+                font-size:9px;
+            ">
+                Be the first to survive.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    leaderboard.innerHTML =
+        data.map(
+            (player, index) => `
+
+                <div class="leader-row">
+
+                    <div class="rank">
+                        #${index + 1}
+                    </div>
+
+                    <div class="player">
+                        ${escapeHTML(
+                            player.player_name
+                        )}
+                    </div>
+
+                    <div class="safe-score">
+                        ${player.safe_clicks}
+                    </div>
+
+                    <div class="time">
+                        ${player.time_seconds}s
+                    </div>
+
+                </div>
+
+            `
+        ).join("");
+
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(
+            /[&<>"']/g,
+            character => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#039;"
+            }[character])
+        );
+
+}
+
+
+/* =========================================
+   BUTTONS
+========================================= */
+
+document
+    .getElementById("resetButton")
+    .addEventListener(
+        "click",
+        startGame
+    );
+
+document
+    .getElementById("playAgain")
+    .addEventListener(
+        "click",
+        startGame
+    );
+
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+function goBack() {
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+bombCount.textContent =
+    BOMBS;
+
+loadLeaderboard();
+
+startGame();
+
+</script>
+
+</body>
+</html>
