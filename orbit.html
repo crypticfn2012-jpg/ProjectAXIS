@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +7,7 @@
 <title>Orbit | ron.cool</title>
 
 <style>
-    .back-btn {
+.back-btn {
     position: fixed;
     top: 14px;
     left: 14px;
@@ -36,6 +35,7 @@
     background: #667eea;
     transform: translateY(-2px);
 }
+
 * {
     margin: 0;
     padding: 0;
@@ -62,6 +62,7 @@ body {
 
 body {
     font-family: Arial, Helvetica, sans-serif;
+
     background:
         radial-gradient(
             circle at 20% 20%,
@@ -77,7 +78,6 @@ body {
 
     color: var(--text);
 }
-
 
 /* =========================================
    BACKGROUND STARS
@@ -98,7 +98,6 @@ body {
     background: white;
     opacity: .4;
 }
-
 
 /* =========================================
    SCREENS
@@ -126,7 +125,6 @@ body {
     pointer-events: none;
     transform: scale(.97);
 }
-
 
 /* =========================================
    MAIN MENU
@@ -250,7 +248,6 @@ body {
     margin-bottom: 28px;
 }
 
-
 /* =========================================
    MENU BUTTONS
 ========================================= */
@@ -320,7 +317,6 @@ body {
 
     color: rgba(255,255,255,.3);
 }
-
 
 /* =========================================
    INFO SCREEN
@@ -405,7 +401,6 @@ body {
     background: rgba(255,255,255,.12);
 }
 
-
 /* =========================================
    GAME
 ========================================= */
@@ -416,7 +411,6 @@ body {
 
 .game {
     position: absolute;
-
     inset: 0;
 }
 
@@ -430,7 +424,6 @@ body {
 
     touch-action: none;
 }
-
 
 /* =========================================
    GAME UI
@@ -519,7 +512,6 @@ body {
     background: rgba(124,108,255,.5);
 }
 
-
 /* =========================================
    GAME OVER
 ========================================= */
@@ -598,7 +590,6 @@ body {
     gap: 7px;
 }
 
-
 /* =========================================
    PAUSE
 ========================================= */
@@ -633,7 +624,6 @@ body {
     text-shadow:
         0 0 30px rgba(124,108,255,.5);
 }
-
 
 /* =========================================
    MOBILE
@@ -672,22 +662,16 @@ body {
 </head>
 
 <body>
-    <button class="back-btn" onclick="goBack()">← Back</button>
 
-<!-- =====================================
-     STARS
-===================================== -->
+<button class="back-btn" onclick="goBack()">← Back</button>
 
 <div class="stars" id="stars"></div>
-
 
 <!-- =====================================
      MAIN MENU
 ===================================== -->
 
-<section
-    class="screen"
-    id="menuScreen">
+<section class="screen" id="menuScreen">
 
     <div class="menu">
 
@@ -701,21 +685,15 @@ body {
 
         <div class="menu-buttons">
 
-            <button
-                class="menu-btn primary"
-                id="playBtn">
+            <button class="menu-btn primary" id="playBtn">
                 ▶ Play
             </button>
 
-            <button
-                class="menu-btn"
-                id="howBtn">
+            <button class="menu-btn" id="howBtn">
                 ❓ How to Play
             </button>
 
-            <button
-                class="menu-btn"
-                id="instructionsBtn">
+            <button class="menu-btn" id="instructionsBtn">
                 📖 Instructions
             </button>
 
@@ -729,67 +707,50 @@ body {
 
 </section>
 
-
 <!-- =====================================
      HOW TO PLAY
 ===================================== -->
 
-<section
-    class="screen hidden"
-    id="howScreen">
+<section class="screen hidden" id="howScreen">
 
     <div class="info-panel">
 
         <h2>How to Play</h2>
 
         <div class="info-section">
-
             <h3>🪐 Stay in Orbit</h3>
-
             <p>
                 Your little ship automatically orbits
                 the central planet.
             </p>
-
         </div>
 
         <div class="info-section">
-
             <h3>🎯 Collect Stars</h3>
-
             <p>
                 Move your cursor around the screen.
                 Collect glowing stars to increase
                 your score.
             </p>
-
         </div>
 
         <div class="info-section">
-
             <h3>☄️ Avoid Meteors</h3>
-
             <p>
                 Meteors will appear as your score
                 increases. Touching one ends the run.
             </p>
-
         </div>
 
         <div class="info-section">
-
             <h3>🔥 Survive</h3>
-
             <p>
                 The longer you survive, the faster
                 everything becomes.
             </p>
-
         </div>
 
-        <button
-            class="close-btn"
-            id="howBackBtn">
+        <button class="close-btn" id="howBackBtn">
             ← Back
         </button>
 
@@ -797,66 +758,49 @@ body {
 
 </section>
 
-
 <!-- =====================================
      INSTRUCTIONS
 ===================================== -->
 
-<section
-    class="screen hidden"
-    id="instructionsScreen">
+<section class="screen hidden" id="instructionsScreen">
 
     <div class="info-panel">
 
         <h2>Instructions</h2>
 
         <div class="info-section">
-
             <h3>🖱 Mouse</h3>
-
             <p>
                 Move your mouse around the game area
                 to control your ship.
             </p>
-
         </div>
 
         <div class="info-section">
-
             <h3>📱 Mobile</h3>
-
             <p>
                 Drag your finger around the screen
                 to move.
             </p>
-
         </div>
 
         <div class="info-section">
-
             <h3>⏸ Pause</h3>
-
             <p>
                 Press P or click the pause button
                 in the top-right corner.
             </p>
-
         </div>
 
         <div class="info-section">
-
             <h3>🏆 Best Score</h3>
-
             <p>
                 Your best score is automatically saved
                 to your browser.
             </p>
-
         </div>
 
-        <button
-            class="close-btn"
-            id="instructionsBackBtn">
+        <button class="close-btn" id="instructionsBackBtn">
             ← Back
         </button>
 
@@ -864,14 +808,11 @@ body {
 
 </section>
 
-
 <!-- =====================================
      GAME SCREEN
 ===================================== -->
 
-<section
-    class="screen hidden"
-    id="gameScreen">
+<section class="screen hidden" id="gameScreen">
 
     <div class="game">
 
@@ -887,9 +828,7 @@ body {
                 Score
             </div>
 
-            <div
-                class="score-value"
-                id="score">
+            <div class="score-value" id="score">
                 0
             </div>
 
@@ -901,9 +840,7 @@ body {
                 Best
             </div>
 
-            <div
-                class="score-value"
-                id="best">
+            <div class="score-value" id="best">
                 0
             </div>
 
@@ -913,15 +850,11 @@ body {
 
     <div class="game-controls">
 
-        <button
-            class="small-btn"
-            id="pauseBtn">
+        <button class="small-btn" id="pauseBtn">
             ⏸
         </button>
 
-        <button
-            class="small-btn"
-            id="quitBtn">
+        <button class="small-btn" id="quitBtn">
             ✕
         </button>
 
@@ -929,14 +862,11 @@ body {
 
 </section>
 
-
 <!-- =====================================
      PAUSE
 ===================================== -->
 
-<div
-    class="pause-overlay"
-    id="pauseOverlay">
+<div class="pause-overlay" id="pauseOverlay">
 
     <div class="pause-text">
         PAUSED
@@ -944,41 +874,29 @@ body {
 
 </div>
 
-
 <!-- =====================================
      GAME OVER
 ===================================== -->
 
-<div
-    class="game-over hidden"
-    id="gameOver">
+<div class="game-over hidden" id="gameOver">
 
     <div class="game-over-panel">
 
         <h2>Game Over</h2>
 
-        <div
-            class="final-score"
-            id="finalScore">
+        <div class="final-score" id="finalScore">
             0
         </div>
 
-        <div
-            class="new-best"
-            id="newBest">
-        </div>
+        <div class="new-best" id="newBest"></div>
 
         <div class="game-over-buttons">
 
-            <button
-                class="menu-btn primary"
-                id="againBtn">
+            <button class="menu-btn primary" id="againBtn">
                 🔄 Play Again
             </button>
 
-            <button
-                class="menu-btn"
-                id="gameMenuBtn">
+            <button class="menu-btn" id="gameMenuBtn">
                 🏠 Main Menu
             </button>
 
@@ -987,7 +905,6 @@ body {
     </div>
 
 </div>
-
 
 <script>
 
@@ -1043,11 +960,7 @@ function showScreen(screen) {
 
 document
     .getElementById("playBtn")
-    .addEventListener("click", () => {
-
-        startGame();
-
-    });
+    .addEventListener("click", startGame);
 
 
 document
@@ -1087,7 +1000,7 @@ document
 
 
 /* =========================================
-   STARS BACKGROUND
+   BACKGROUND STARS
 ========================================= */
 
 function createStars() {
@@ -1095,11 +1008,9 @@ function createStars() {
     const container =
         document.getElementById("stars");
 
-    for (
-        let i = 0;
-        i < 80;
-        i++
-    ) {
+    container.innerHTML = "";
+
+    for (let i = 0; i < 80; i++) {
 
         const star =
             document.createElement("div");
@@ -1164,7 +1075,6 @@ let meteors = [];
 const player = {
 
     x: 0,
-
     y: 0,
 
     radius: 7,
@@ -1229,19 +1139,14 @@ window.addEventListener(
 
 function setPointer(e) {
 
-    player.targetX =
-        e.clientX;
-
-    player.targetY =
-        e.clientY;
+    player.targetX = e.clientX;
+    player.targetY = e.clientY;
 }
-
 
 canvas.addEventListener(
     "pointermove",
     setPointer
 );
-
 
 canvas.addEventListener(
     "pointerdown",
@@ -1261,9 +1166,9 @@ function startGame() {
 
     paused = false;
 
-    pauseOverlay.classList.remove(
-        "visible"
-    );
+    pauseOverlay.classList.remove("visible");
+
+    document.getElementById("pauseBtn").textContent = "⏸";
 
     running = true;
 
@@ -1277,15 +1182,18 @@ function startGame() {
 
     meteorTimer = 0;
 
+    /*
+       IMPORTANT:
+
+       Start with several stars immediately.
+       This prevents the game from feeling empty.
+    */
+
     starTimer = 0;
 
-    document.getElementById(
-        "score"
-    ).textContent = "0";
+    document.getElementById("score").textContent = "0";
 
-    document.getElementById(
-        "best"
-    ).textContent = best;
+    document.getElementById("best").textContent = best;
 
     player.x =
         window.innerWidth / 2;
@@ -1300,6 +1208,32 @@ function startGame() {
         player.y;
 
     player.angle = 0;
+
+    /*
+       Start the player at a comfortable orbit.
+    */
+
+    player.orbitRadius =
+        Math.min(
+            180,
+            Math.max(
+                100,
+                Math.min(
+                    window.innerWidth,
+                    window.innerHeight
+                ) * .18
+            )
+        );
+
+    /*
+       Pre-fill the arena with collectible stars.
+    */
+
+    for (let i = 0; i < 7; i++) {
+
+        spawnStar(true);
+
+    }
 
     lastTime =
         performance.now();
@@ -1322,28 +1256,135 @@ function startGame() {
    SPAWN STAR
 ========================================= */
 
-function spawnStar() {
+/*
+   NEW STAR SYSTEM
 
-    const padding = 70;
+   Stars are no longer randomly placed anywhere
+   on the screen.
+
+   They are spawned around the player's orbit,
+   meaning they are actually reachable.
+
+   `initialSpawn` is used at the beginning of
+   a game to fill the screen.
+*/
+
+function spawnStar(initialSpawn = false) {
+
+    const cx =
+        window.innerWidth / 2;
+
+    const cy =
+        window.innerHeight / 2;
+
+    /*
+       Spawn at a radius close to the current
+       player orbit.
+
+       This keeps stars in the actual gameplay area.
+    */
+
+    let radius;
+
+    if (initialSpawn) {
+
+        radius =
+            player.orbitRadius +
+            (Math.random() - .5) * 100;
+
+    } else {
+
+        radius =
+            player.orbitRadius +
+            (Math.random() - .5) * 130;
+
+    }
+
+    /*
+       Prevent stars from appearing too close
+       to the central planet.
+    */
+
+    radius =
+        Math.max(
+            70,
+            Math.min(
+                Math.min(
+                    window.innerWidth,
+                    window.innerHeight
+                ) * .43,
+                radius
+            )
+        );
+
+
+    /*
+       Pick an angle around the orbit.
+
+       We deliberately spread the stars around
+       the player's path rather than putting them
+       completely randomly.
+    */
+
+    const angle =
+        player.angle +
+        (Math.random() - .5) *
+        Math.PI *
+        1.7;
+
+
+    let x =
+        cx +
+        Math.cos(angle) *
+        radius;
+
+    let y =
+        cy +
+        Math.sin(angle) *
+        radius;
+
+
+    /*
+       Keep stars safely inside the screen.
+    */
+
+    const padding = 55;
+
+    x =
+        Math.max(
+            padding,
+            Math.min(
+                window.innerWidth - padding,
+                x
+            )
+        );
+
+    y =
+        Math.max(
+            padding,
+            Math.min(
+                window.innerHeight - padding,
+                y
+            )
+        );
+
 
     stars.push({
 
-        x:
-            padding +
-            Math.random() *
-            (window.innerWidth - padding * 2),
+        x: x,
 
-        y:
-            padding +
-            Math.random() *
-            (window.innerHeight - padding * 2),
+        y: y,
 
-        radius: 5,
+        radius:
+            5 + Math.random() * 1.5,
 
         life: 1,
 
         pulse:
-            Math.random() * Math.PI * 2
+            Math.random() *
+            Math.PI *
+            2
+
     });
 }
 
@@ -1415,9 +1456,17 @@ function spawnMeteor() {
             dy * dy
         );
 
+    /*
+       Slightly slower early game.
+       Gets progressively faster.
+    */
+
     const speed =
-        45 +
-        difficulty * 9;
+        42 +
+        Math.min(
+            100,
+            difficulty * 7
+        );
 
     meteors.push({
 
@@ -1438,6 +1487,7 @@ function spawnMeteor() {
 
         rotation:
             Math.random() * 6
+
     });
 }
 
@@ -1479,12 +1529,19 @@ function gameLoop(time) {
 
 function update(dt) {
 
+    /*
+       Difficulty increases with score,
+       but more smoothly than before.
+    */
+
     difficulty =
         1 +
-        score / 15;
+        score / 12;
 
 
-    /* PLAYER */
+    /* =====================================
+       PLAYER
+    ===================================== */
 
     const cx =
         window.innerWidth / 2;
@@ -1499,7 +1556,10 @@ function update(dt) {
         player.targetY - cy;
 
     const targetAngle =
-        Math.atan2(dy, dx);
+        Math.atan2(
+            dy,
+            dx
+        );
 
     let difference =
         targetAngle -
@@ -1524,17 +1584,27 @@ function update(dt) {
             dt * 7
         );
 
+
+    /*
+       Calculate desired orbit radius.
+    */
+
     const targetRadius =
         Math.min(
-            240,
+            Math.min(
+                window.innerWidth,
+                window.innerHeight
+            ) * .43,
+
             Math.max(
-                70,
+                75,
                 Math.sqrt(
                     dx * dx +
                     dy * dy
                 )
             )
         );
+
 
     player.orbitRadius +=
         (
@@ -1545,6 +1615,7 @@ function update(dt) {
             1,
             dt * 4
         );
+
 
     player.x =
         cx +
@@ -1561,15 +1632,55 @@ function update(dt) {
         player.orbitRadius;
 
 
-    /* SPAWNING */
+    /* =====================================
+       STAR SPAWNING
+    ===================================== */
 
     starTimer += dt;
 
-    if (starTimer > 1.1) {
+    /*
+       MUCH more frequent spawning.
+
+       Before:
+       ~1 star every 1.1 seconds.
+
+       Now:
+       starts around every .55 seconds and
+       gets faster as the score rises.
+    */
+
+    const starDelay =
+        Math.max(
+            .32,
+            .65 -
+            difficulty * .015
+        );
+
+    if (
+        starTimer >
+        starDelay
+    ) {
 
         starTimer = 0;
 
-        if (stars.length < 5) {
+        /*
+           Keep a healthy amount of stars
+           available at all times.
+        */
+
+        const maxStars =
+            Math.min(
+                10,
+                6 +
+                Math.floor(
+                    difficulty / 3
+                )
+            );
+
+        if (
+            stars.length <
+            maxStars
+        ) {
 
             spawnStar();
 
@@ -1577,13 +1688,17 @@ function update(dt) {
     }
 
 
+    /* =====================================
+       METEOR SPAWNING
+    ===================================== */
+
     meteorTimer += dt;
 
     const meteorDelay =
         Math.max(
-            .35,
-            1.7 -
-            difficulty * .08
+            .42,
+            1.8 -
+            difficulty * .075
         );
 
     if (
@@ -1598,7 +1713,9 @@ function update(dt) {
     }
 
 
-    /* STARS */
+    /* =====================================
+       STARS
+    ===================================== */
 
     for (
         let i = stars.length - 1;
@@ -1612,11 +1729,14 @@ function update(dt) {
         star.pulse +=
             dt * 4;
 
+
         const dx =
-            player.x - star.x;
+            player.x -
+            star.x;
 
         const dy =
-            player.y - star.y;
+            player.y -
+            star.y;
 
         const distance =
             Math.sqrt(
@@ -1624,11 +1744,12 @@ function update(dt) {
                 dy * dy
             );
 
+
         if (
             distance <
             player.radius +
             star.radius +
-            7
+            10
         ) {
 
             stars.splice(
@@ -1642,6 +1763,7 @@ function update(dt) {
                 "score"
             ).textContent =
                 score;
+
 
             if (
                 score > best
@@ -1663,7 +1785,9 @@ function update(dt) {
     }
 
 
-    /* METEORS */
+    /* =====================================
+       METEORS
+    ===================================== */
 
     for (
         let i = meteors.length - 1;
@@ -1675,26 +1799,31 @@ function update(dt) {
             meteors[i];
 
         meteor.x +=
-            meteor.vx * dt;
+            meteor.vx *
+            dt;
 
         meteor.y +=
-            meteor.vy * dt;
+            meteor.vy *
+            dt;
 
         meteor.rotation +=
             dt * 3;
 
 
         const dx =
-            player.x - meteor.x;
+            player.x -
+            meteor.x;
 
         const dy =
-            player.y - meteor.y;
+            player.y -
+            meteor.y;
 
         const distance =
             Math.sqrt(
                 dx * dx +
                 dy * dy
             );
+
 
         if (
             distance <
@@ -1739,7 +1868,9 @@ function draw() {
         window.innerHeight;
 
 
-    /* BACKGROUND */
+    /* =====================================
+       BACKGROUND
+    ===================================== */
 
     ctx.fillStyle =
         "#050711";
@@ -1752,13 +1883,16 @@ function draw() {
     );
 
 
-    /* CENTRAL PLANET */
+    /* =====================================
+       CENTRAL PLANET
+    ===================================== */
 
     const cx =
         width / 2;
 
     const cy =
         height / 2;
+
 
     const planetGlow =
         ctx.createRadialGradient(
@@ -1819,7 +1953,9 @@ function draw() {
     ctx.stroke();
 
 
-    /* ORBIT */
+    /* =====================================
+       ORBIT
+    ===================================== */
 
     ctx.strokeStyle =
         "rgba(124,108,255,.13)";
@@ -1839,7 +1975,9 @@ function draw() {
     ctx.stroke();
 
 
-    /* STARS */
+    /* =====================================
+       STARS
+    ===================================== */
 
     for (
         const star of stars
@@ -1880,7 +2018,9 @@ function draw() {
     }
 
 
-    /* METEORS */
+    /* =====================================
+       METEORS
+    ===================================== */
 
     for (
         const meteor of meteors
@@ -1938,7 +2078,9 @@ function draw() {
     }
 
 
-    /* PLAYER */
+    /* =====================================
+       PLAYER
+    ===================================== */
 
     ctx.save();
 
@@ -2040,15 +2182,18 @@ function endGame() {
         animationId = null;
     }
 
+
     document.getElementById(
         "finalScore"
     ).textContent =
         score;
 
+
     const newBest =
         document.getElementById(
             "newBest"
         );
+
 
     if (
         score === best &&
@@ -2061,8 +2206,10 @@ function endGame() {
     } else {
 
         newBest.textContent =
-            "Best: " + best;
+            "Best: " +
+            best;
     }
+
 
     gameOver.classList.remove(
         "hidden"
@@ -2148,11 +2295,7 @@ document
     .getElementById("againBtn")
     .addEventListener(
         "click",
-        () => {
-
-            startGame();
-
-        }
+        startGame
     );
 
 
@@ -2202,15 +2345,22 @@ document.addEventListener(
                 togglePause();
 
             }
-
         }
     }
 );
+
+
+/* =========================================
+   BACK TO RON.COOL
+========================================= */
+
 function goBack() {
-    window.location.href = "index.html";
+
+    window.location.href =
+        "index.html";
 }
+
 </script>
 
 </body>
 </html>
-
