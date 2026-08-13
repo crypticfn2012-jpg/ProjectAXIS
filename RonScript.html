@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RonScript - Programming Language</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      color: #e0e0e0;
+      font-family: 'Fira Code', 'Consolas', monospace;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 30px;
+      border-bottom: 2px solid #00d4ff;
+      padding-bottom: 15px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #00d4ff;
+      text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      color: #888;
+      font-size: 0.9em;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .panel {
+      background: rgba(20, 20, 30, 0.8);
+      border: 1px solid #00d4ff;
+      border-radius: 8px;
+      padding: 15px;
+      backdrop-filter: blur(10px);
+    }
+
+    .panel h2 {
+      color: #00d4ff;
+      margin-bottom: 12px;
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel h2::before {
+      content: '▶';
+      display: inline-block;
+      width: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 300px;
+      background: #0a0a0a;
+      color: #0f0;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 1.5;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #00d4ff;
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    }
+
+    .output-box {
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 12px;
+      height: 300px;
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .output-box.error {
+      color: #ff6b6b;
+      border-color: #ff6b6b;
+    }
+
+    .output-box.success {
+      color: #0f0;
+      border-color: #00d4ff;
+    }
+
+    .output-empty {
+      color: #555;
+      font-style: italic;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.secondary {
+      background: linear-gradient(135deg, #444 0%, #222 100%);
+      color: #fff;
+    }
+
+    button.secondary:hover {
+      box-shadow: 0 5px 15px rgba(100, 100, 100, 0.4);
+    }
+
+    .docs {
+      background: rgba(20, 20, 30, 0.8);
+      border: 1px solid #00d4ff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .docs h2 {
+      color: #00d4ff;
+      margin-bottom: 20px;
+      font-size: 1.3em;
+    }
+
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .doc-section {
+      background: rgba(10, 10, 10, 0.5);
+      border-left: 3px solid #00d4ff;
+      padding: 15px;
+      border-radius: 4px;
+    }
+
+    .doc-section h3 {
+      color: #00d4ff;
+      margin-bottom: 10px;
+      font-size: 1.1em;
+    }
+
+    .doc-section code {
+      background: #0a0a0a;
+      color: #0f0;
+      padding: 2px 6px;
+      border-radius: 3px;
+      display: block;
+      margin-top: 8px;
+      padding: 8px;
+      overflow-x: auto;
+    }
+
+    .doc-section p {
+      color: #bbb;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .error-line {
+      color: #ff6b6b;
+      margin: 5px 0;
+    }
+
+    .success-msg {
+      color: #0f0;
+      margin: 5px 0;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #333;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      color: #00d4ff;
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.8em;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 1200px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>RonScript</h1>
+    <p class="subtitle">A proper programming language that actually works</p>
+  </header>
+
+  <div class="button-group">
+    <button onclick="run()">▶ RUN CODE</button>
+    <button class="secondary" onclick="clearOutput()">CLEAR</button>
+    <button class="secondary" onclick="loadExample('hello')">Example: Hello</button>
+    <button class="secondary" onclick="loadExample('functions')">Example: Functions</button>
+    <button class="secondary" onclick="loadExample('arrays')">Example: Arrays</button>
+  </div>
+
+  <div class="main-grid">
+    <div class="panel">
+      <h2>CODE EDITOR</h2>
+      <textarea id="code" spellcheck="false"># RonScript - Let's go!
+say "Hello, World!"
+
+# Variables and math
+let name = "Ron"
+let age = 25
+let score = 100 + 50 * 2
+
+say "Name: " + name
+say "Age: " + age
+say "Score: " + score
+
+# Arrays
+let items = [1, 2, 3, 4, 5]
+say "Items: " + items
+say "First: " + items[0]
+say "Length: " + len(items)
+
+# Functions
+fn greet(person)
+  say "Hello, " + person + "!"
+end
+
+greet("Alice")
+greet("Bob")
+
+# Loops
+loop 3
+  say "Loop iteration!"
+end
+
+# Conditional
+if score > 100
+  say "Amazing!"
+else if score > 50
+  say "Good!"
+else
+  say "Keep trying!"
+end</textarea>
+    </div>
+
+    <div class="panel">
+      <h2>OUTPUT</h2>
+      <div class="output-box success" id="output">
+        <span class="output-empty">Run code to see output...</span>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value" id="lineCount">0</div>
+          <div class="stat-label">Lines</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="execTime">0ms</div>
+          <div class="stat-label">Exec Time</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="docs">
+    <h2>Language Reference</h2>
+    
+    <div class="docs-grid">
+      <div class="doc-section">
+        <h3>Output</h3>
+        <p>Print text to output</p>
+        <code>say "Hello, World!"
+say variable
+say 10 + 5</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>Variables</h3>
+        <p>Store and use values</p>
+        <code>let x = 10
+let name = "Ron"
+let arr = [1, 2, 3]
+x = 20</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>Math Operators</h3>
+        <p>Basic arithmetic operations</p>
+        <code>let a = 5 + 3    # 8
+let b = 10 - 2   # 8
+let c = 4 * 5    # 20
+let d = 20 / 4   # 5
+let e = 10 % 3   # 1</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>Comparisons</h3>
+        <p>Compare values (true/false)</p>
+        <code>x > 5
+x < 10
+x == 5
+x != 3
+x >= 5
+x <= 10</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>Logic</h3>
+        <p>Boolean operations</p>
+        <code>if x > 5 and y < 10
+  say "Both true!"
+end
+
+if x or y
+  say "At least one true!"
+end
+
+if not x
+  say "Not true!"
+end</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>Conditionals</h3>
+        <p>if/else if/else statements</p>
+        <code>if x > 10
+  say "Big"
+else if x > 5
+  say "Medium"
+else
+  say "Small"
+end</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>Loops</h3>
+        <p>Repeat code N times</p>
+        <code>loop 5
+  say "Repeating!"
+end
+
+loop len(array)
+  say "Item!"
+end</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>Functions</h3>
+        <p>Reusable code blocks</p>
+        <code>fn add(a, b)
+  return a + b
+end
+
+let result = add(5, 3)
+say result</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>Arrays</h3>
+        <p>Store multiple values</p>
+        <code>let arr = [10, 20, 30]
+say arr[0]        # 10
+say len(arr)      # 3
+arr[1] = 25
+push(arr, 40)</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>String Operations</h3>
+        <p>Work with text</p>
+        <code>let s1 = "Hello"
+let s2 = " World"
+say s1 + s2       # Concatenate
+say len(s1)       # Length
+say upper("hi")
+say lower("HI")</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>Built-in Functions</h3>
+        <p>Ready-to-use functions</p>
+        <code>len(x)          # Length
+type(x)         # Data type
+push(arr, val)  # Add to array
+upper(str)      # Uppercase
+lower(str)      # Lowercase
+round(num)      # Round number
+int(x)          # Convert to int</code>
+      </div>
+
+      <div class="doc-section">
+        <h3>Comments</h3>
+        <p>Notes in your code</p>
+        <code"># This is a comment
+# Everything after # is ignored
+say "Code" # Comment here</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ TOKENIZER ============
+class Tokenizer {
+  constructor(input) {
+    this.input = input;
+    this.pos = 0;
+    this.tokens = [];
+  }
+
+  tokenize() {
+    while (this.pos < this.input.length) {
+      this.skipWhitespace();
+      if (this.pos >= this.input.length) break;
+
+      const ch = this.input[this.pos];
+
+      // Comments
+      if (ch === '#') {
+        while (this.pos < this.input.length && this.input[this.pos] !== '\n') {
+          this.pos++;
+        }
+        continue;
+      }
+
+      // Strings
+      if (ch === '"' || ch === "'") {
+        this.readString(ch);
+        continue;
+      }
+
+      // Numbers
+      if (/\d/.test(ch)) {
+        this.readNumber();
+        continue;
+      }
+
+      // Identifiers and keywords
+      if (/[a-zA-Z_]/.test(ch)) {
+        this.readIdentifier();
+        continue;
+      }
+
+      // Operators and punctuation
+      if ('+-*/%=()[]{},.'.includes(ch)) {
+        if (ch === '=' && this.input[this.pos + 1] === '=') {
+          this.tokens.push({ type: 'EQ', value: '==' });
+          this.pos += 2;
+        } else if (ch === '!' && this.input[this.pos + 1] === '=') {
+          this.tokens.push({ type: 'NE', value: '!=' });
+          this.pos += 2;
+        } else if (ch === '>' && this.input[this.pos + 1] === '=') {
+          this.tokens.push({ type: 'GTE', value: '>=' });
+          this.pos += 2;
+        } else if (ch === '<' && this.input[this.pos + 1] === '=') {
+          this.tokens.push({ type: 'LTE', value: '<=' });
+          this.pos += 2;
+        } else if (ch === '>' && this.input[this.pos + 1] !== '=') {
+          this.tokens.push({ type: 'GT', value: '>' });
+          this.pos++;
+        } else if (ch === '<' && this.input[this.pos + 1] !== '=') {
+          this.tokens.push({ type: 'LT', value: '<' });
+          this.pos++;
+        } else {
+          this.tokens.push({ type: ch, value: ch });
+          this.pos++;
+        }
+        continue;
+      }
+
+      this.pos++;
+    }
+
+    this.tokens.push({ type: 'EOF', value: null });
+    return this.tokens;
+  }
+
+  skipWhitespace() {
+    while (this.pos < this.input.length && /\s/.test(this.input[this.pos])) {
+      this.pos++;
+    }
+  }
+
+  readString(quote) {
+    this.pos++;
+    let value = '';
+    while (this.pos < this.input.length && this.input[this.pos] !== quote) {
+      if (this.input[this.pos] === '\\') {
+        this.pos++;
+        const next = this.input[this.pos];
+        if (next === 'n') value += '\n';
+        else if (next === 't') value += '\t';
+        else if (next === 'r') value += '\r';
+        else value += next;
+      } else {
+        value += this.input[this.pos];
+      }
+      this.pos++;
+    }
+    this.pos++; // closing quote
+    this.tokens.push({ type: 'STRING', value });
+  }
+
+  readNumber() {
+    let value = '';
+    let hasDecimal = false;
+    while (this.pos < this.input.length) {
+      const ch = this.input[this.pos];
+      if (/\d/.test(ch)) {
+        value += ch;
+        this.pos++;
+      } else if (ch === '.' && !hasDecimal) {
+        hasDecimal = true;
+        value += ch;
+        this.pos++;
+      } else {
+        break;
+      }
+    }
+    this.tokens.push({ type: 'NUMBER', value: parseFloat(value) });
+  }
+
+  readIdentifier() {
+    let value = '';
+    while (this.pos < this.input.length && /[a-zA-Z0-9_]/.test(this.input[this.pos])) {
+      value += this.input[this.pos];
+      this.pos++;
+    }
+
+    const keywords = ['say', 'let', 'if', 'else', 'end', 'loop', 'fn', 'return', 'and', 'or', 'not'];
+    const type = keywords.includes(value) ? 'KEYWORD' : 'IDENT';
+    this.tokens.push({ type, value });
+  }
+}
+
+// ============ PARSER ============
+class Parser {
+  constructor(tokens) {
+    this.tokens = tokens;
+    this.pos = 0;
+  }
+
+  parse() {
+    const statements = [];
+    while (!this.isAtEnd()) {
+      const stmt = this.parseStatement();
+      if (stmt) statements.push(stmt);
+    }
+    return statements;
+  }
+
+  parseStatement() {
+    const token = this.current();
+
+    if (token.type === 'KEYWORD') {
+      if (token.value === 'say') return this.parseSay();
+      if (token.value === 'let') return this.parseLet();
+      if (token.value === 'if') return this.parseIf();
+      if (token.value === 'loop') return this.parseLoop();
+      if (token.value === 'fn') return this.parseFn();
+      if (token.value === 'return') return this.parseReturn();
+    }
+
+    if (token.type === 'IDENT') {
+      return this.parseAssignmentOrCall();
+    }
+
+    return null;
+  }
+
+  parseSay() {
+    this.advance(); // 'say'
+    const expr = this.parseExpression();
+    return { type: 'say', expr };
+  }
+
+  parseLet() {
+    this.advance(); // 'let'
+    const name = this.expect('IDENT').value;
+    this.expect('=');
+    const expr = this.parseExpression();
+    return { type: 'let', name, expr };
+  }
+
+  parseAssignmentOrCall() {
+    const name = this.current().value;
+    this.advance();
+
+    // Check for assignment
+    if (this.current().type === '=') {
+      this.advance();
+      const expr = this.parseExpression();
+      return { type: 'assign', name, expr };
+    }
+
+    // Check for array assignment (a[0] = 5)
+    if (this.current().type === '[') {
+      this.advance();
+      const index = this.parseExpression();
+      this.expect(']');
+      if (this.current().type === '=') {
+        this.advance();
+        const expr = this.parseExpression();
+        return { type: 'arrayAssign', name, index, expr };
+      }
+      this.pos--; // backtrack
+    }
+
+    this.pos--; // backtrack
+    return null;
+  }
+
+  parseIf() {
+    this.advance(); // 'if'
+    const condition = this.parseExpression();
+    const thenBranch = [];
+
+    while (!this.isAtEnd() && this.current().value !== 'else' && this.current().value !== 'end') {
+      const stmt = this.parseStatement();
+      if (stmt) thenBranch.push(stmt);
+    }
+
+    let elseBranch = [];
+    if (this.current().value === 'else') {
+      this.advance();
+      if (this.current().value === 'if') {
+        elseBranch = [this.parseIf()];
+      } else {
+        while (!this.isAtEnd() && this.current().value !== 'end') {
+          const stmt = this.parseStatement();
+          if (stmt) elseBranch.push(stmt);
+        }
+      }
+    }
+
+    this.expect('end');
+    return { type: 'if', condition, thenBranch, elseBranch };
+  }
+
+  parseLoop() {
+    this.advance(); // 'loop'
+    const count = this.parseExpression();
+    const body = [];
+
+    while (!this.isAtEnd() && this.current().value !== 'end') {
+      const stmt = this.parseStatement();
+      if (stmt) body.push(stmt);
+    }
+
+    this.expect('end');
+    return { type: 'loop', count, body };
+  }
+
+  parseFn() {
+    this.advance(); // 'fn'
+    const name = this.expect('IDENT').value;
+    this.expect('(');
+
+    const params = [];
+    while (this.current().type !== ')') {
+      params.push(this.expect('IDENT').value);
+      if (this.current().type === ',') this.advance();
+    }
+    this.expect(')');
+
+    const body = [];
+    while (!this.isAtEnd() && this.current().value !== 'end') {
+      const stmt = this.parseStatement();
+      if (stmt) body.push(stmt);
+    }
+
+    this.expect('end');
+    return { type: 'fn', name, params, body };
+  }
+
+  parseReturn() {
+    this.advance(); // 'return'
+    const expr = this.parseExpression();
+    return { type: 'return', expr };
+  }
+
+  parseExpression() {
+    return this.parseOr();
+  }
+
+  parseOr() {
+    let left = this.parseAnd();
+    while (this.current().value === 'or') {
+      this.advance();
+      const right = this.parseAnd();
+      left = { type: 'or', left, right };
+    }
+    return left;
+  }
+
+  parseAnd() {
+    let left = this.parseComparison();
+    while (this.current().value === 'and') {
+      this.advance();
+      const right = this.parseComparison();
+      left = { type: 'and', left, right };
+    }
+    return left;
+  }
+
+  parseComparison() {
+    let left = this.parseAddition();
+    while (['>', '<', '==', '!=', '>=', '<='].includes(this.current().value)) {
+      const op = this.current().value;
+      this.advance();
+      const right = this.parseAddition();
+      left = { type: 'binop', op, left, right };
+    }
+    return left;
+  }
+
+  parseAddition() {
+    let left = this.parseMultiplication();
+    while (['+', '-'].includes(this.current().value)) {
+      const op = this.current().value;
+      this.advance();
+      const right = this.parseMultiplication();
+      left = { type: 'binop', op, left, right };
+    }
+    return left;
+  }
+
+  parseMultiplication() {
+    let left = this.parseUnary();
+    while (['*', '/', '%'].includes(this.current().value)) {
+      const op = this.current().value;
+      this.advance();
+      const right = this.parseUnary();
+      left = { type: 'binop', op, left, right };
+    }
+    return left;
+  }
+
+  parseUnary() {
+    if (this.current().value === 'not') {
+      this.advance();
+      return { type: 'not', expr: this.parseUnary() };
+    }
+    return this.parseCall();
+  }
+
+  parseCall() {
+    let expr = this.parsePrimary();
+
+    while (true) {
+      if (this.current().type === '(') {
+        this.advance();
+        const args = [];
+        while (this.current().type !== ')') {
+          args.push(this.parseExpression());
+          if (this.current().type === ',') this.advance();
+        }
+        this.expect(')');
+        expr = { type: 'call', func: expr, args };
+      } else if (this.current().type === '[') {
+        this.advance();
+        const index = this.parseExpression();
+        this.expect(']');
+        expr = { type: 'index', expr, index };
+      } else {
+        break;
+      }
+    }
+
+    return expr;
+  }
+
+  parsePrimary() {
+    const token = this.current();
+
+    if (token.type === 'NUMBER') {
+      this.advance();
+      return { type: 'number', value: token.value };
+    }
+
+    if (token.type === 'STRING') {
+      this.advance();
+      return { type: 'string', value: token.value };
+    }
+
+    if (token.type === 'IDENT') {
+      const name = token.value;
+      this.advance();
+      return { type: 'ident', name };
+    }
+
+    if (token.type === '(') {
+      this.advance();
+      const expr = this.parseExpression();
+      this.expect(')');
+      return expr;
+    }
+
+    if (token.type === '[') {
+      this.advance();
+      const elements = [];
+      while (this.current().type !== ']') {
+        elements.push(this.parseExpression());
+        if (this.current().type === ',') this.advance();
+      }
+      this.expect(']');
+      return { type: 'array', elements };
+    }
+
+    throw new Error(`Unexpected token: ${token.type} = ${token.value}`);
+  }
+
+  current() {
+    return this.tokens[this.pos] || { type: 'EOF' };
+  }
+
+  advance() {
+    this.pos++;
+  }
+
+  expect(type) {
+    const token = this.current();
+    if (token.type !== type) {
+      throw new Error(`Expected ${type}, got ${token.type}`);
+    }
+    this.advance();
+    return token;
+  }
+
+  isAtEnd() {
+    return this.current().type === 'EOF';
+  }
+}
+
+// ============ RUNTIME ============
+class Runtime {
+  constructor() {
+    this.globals = {};
+    this.locals = [{}];
+    this.output = [];
+    this.functions = {};
+    this.returnValue = null;
+    this.shouldReturn = false;
+  }
+
+  execute(statements) {
+    for (const stmt of statements) {
+      this.executeStatement(stmt);
+      if (this.shouldReturn) break;
+    }
+  }
+
+  executeStatement(stmt) {
+    if (!stmt) return;
+
+    if (stmt.type === 'say') {
+      const val = this.evaluate(stmt.expr);
+      this.output.push(String(val));
+    } else if (stmt.type === 'let') {
+      const val = this.evaluate(stmt.expr);
+      this.setVariable(stmt.name, val);
+    } else if (stmt.type === 'assign') {
+      const val = this.evaluate(stmt.expr);
+      this.setVariable(stmt.name, val);
+    } else if (stmt.type === 'arrayAssign') {
+      const arr = this.getVariable(stmt.name);
+      const index = this.evaluate(stmt.index);
+      const val = this.evaluate(stmt.expr);
+      arr[index] = val;
+    } else if (stmt.type === 'if') {
+      const cond = this.evaluate(stmt.condition);
+      if (this.isTruthy(cond)) {
+        this.execute(stmt.thenBranch);
+      } else {
+        this.execute(stmt.elseBranch);
+      }
+    } else if (stmt.type === 'loop') {
+      const count = this.evaluate(stmt.count);
+      for (let i = 0; i < count; i++) {
+        this.execute(stmt.body);
+        if (this.shouldReturn) break;
+      }
+    } else if (stmt.type === 'fn') {
+      this.functions[stmt.name] = stmt;
+    } else if (stmt.type === 'return') {
+      this.returnValue = this.evaluate(stmt.expr);
+      this.shouldReturn = true;
+    }
+  }
+
+  evaluate(expr) {
+    if (!expr) return null;
+
+    if (expr.type === 'number') return expr.value;
+    if (expr.type === 'string') return expr.value;
+
+    if (expr.type === 'ident') {
+      return this.getVariable(expr.name);
+    }
+
+    if (expr.type === 'array') {
+      return expr.elements.map(e => this.evaluate(e));
+    }
+
+    if (expr.type === 'binop') {
+      const left = this.evaluate(expr.left);
+      const right = this.evaluate(expr.right);
+      switch (expr.op) {
+        case '+': return left + right;
+        case '-': return left - right;
+        case '*': return left * right;
+        case '/': return left / right;
+        case '%': return left % right;
+        case '>': return left > right;
+        case '<': return left < right;
+        case '==': return left === right;
+        case '!=': return left !== right;
+        case '>=': return left >= right;
+        case '<=': return left <= right;
+      }
+    }
+
+    if (expr.type === 'and') {
+      const left = this.evaluate(expr.left);
+      const right = this.evaluate(expr.right);
+      return this.isTruthy(left) && this.isTruthy(right);
+    }
+
+    if (expr.type === 'or') {
+      const left = this.evaluate(expr.left);
+      const right = this.evaluate(expr.right);
+      return this.isTruthy(left) || this.isTruthy(right);
+    }
+
+    if (expr.type === 'not') {
+      return !this.isTruthy(this.evaluate(expr.expr));
+    }
+
+    if (expr.type === 'index') {
+      const arr = this.evaluate(expr.expr);
+      const index = this.evaluate(expr.index);
+      return arr[index];
+    }
+
+    if (expr.type === 'call') {
+      return this.callFunction(expr.func, expr.args);
+    }
+
+    return null;
+  }
+
+  callFunction(func, args) {
+    const argValues = args.map(a => this.evaluate(a));
+
+    // Built-in functions
+    if (func.type === 'ident') {
+      const name = func.name;
+
+      if (name === 'len') {
+        return argValues[0]?.length || 0;
+      }
+      if (name === 'type') {
+        const val = argValues[0];
+        if (Array.isArray(val)) return 'array';
+        if (typeof val === 'number') return 'number';
+        if (typeof val === 'string') return 'string';
+        return typeof val;
+      }
+      if (name === 'push') {
+        argValues[0].push(argValues[1]);
+        return argValues[0];
+      }
+      if (name === 'upper') {
+        return String(argValues[0]).toUpperCase();
+      }
+      if (name === 'lower') {
+        return String(argValues[0]).toLowerCase();
+      }
+      if (name === 'round') {
+        return Math.round(argValues[0]);
+      }
+      if (name === 'int') {
+        return Math.floor(argValues[0]);
+      }
+
+      // User-defined function
+      if (this.functions[name]) {
+        const fn = this.functions[name];
+        this.locals.push({});
+
+        for (let i = 0; i < fn.params.length; i++) {
+          this.locals[this.locals.length - 1][fn.params[i]] = argValues[i];
+        }
+
+        this.shouldReturn = false;
+        this.returnValue = null;
+        this.execute(fn.body);
+
+        const result = this.returnValue;
+        this.locals.pop();
+
+        return result;
+      }
+    }
+
+    throw new Error(`Unknown function: ${func.name || 'anonymous'}`);
+  }
+
+  getVariable(name) {
+    for (let i = this.locals.length - 1; i >= 0; i--) {
+      if (name in this.locals[i]) {
+        return this.locals[i][name];
+      }
+    }
+    if (name in this.globals) {
+      return this.globals[name];
+    }
+    throw new Error(`Undefined variable: ${name}`);
+  }
+
+  setVariable(name, value) {
+    // Check if exists in locals
+    for (let i = this.locals.length - 1; i >= 0; i--) {
+      if (name in this.locals[i]) {
+        this.locals[i][name] = value;
+        return;
+      }
+    }
+    // Set in current scope
+    this.locals[this.locals.length - 1][name] = value;
+  }
+
+  isTruthy(value) {
+    if (value === false || value === 0 || value === '' || value === null) return false;
+    return true;
+  }
+}
+
+// ============ EXAMPLES ============
+const examples = {
+  hello: `# Hello World
+say "Welcome to RonScript!"
+say "Let's code something cool"`,
+
+  functions: `# Functions and return values
+fn square(x)
+  return x * x
+end
+
+fn greet(name, age)
+  say "Hello, " + name + "!"
+  say "You are " + age + " years old"
+end
+
+let result = square(5)
+say "5 squared is: " + result
+
+greet("Alice", 25)
+greet("Bob", 30)`,
+
+  arrays: `# Working with arrays
+let nums = [10, 20, 30, 40]
+say "Array: " + nums
+say "First element: " + nums[0]
+say "Length: " + len(nums)
+
+push(nums, 50)
+say "After push: " + nums
+
+let fruits = ["apple", "banana", "orange"]
+loop len(fruits)
+  say "Fruit found!"
+end`,
+};
+
+// ============ UI FUNCTIONS ============
+function run() {
+  const code = document.getElementById('code').value;
+  const outputBox = document.getElementById('output');
+
+  const startTime = performance.now();
+
+  try {
+    // Tokenize
+    const tokenizer = new Tokenizer(code);
+    const tokens = tokenizer.tokenize();
+
+    // Parse
+    const parser = new Parser(tokens);
+    const ast = parser.parse();
+
+    // Execute
+    const runtime = new Runtime();
+    runtime.execute(ast);
+
+    const endTime = performance.now();
+    const execTime = (endTime - startTime).toFixed(2);
+
+    // Display output
+    if (runtime.output.length === 0) {
+      outputBox.textContent = '(no output)';
+      outputBox.className = 'output-box success';
+    } else {
+      outputBox.textContent = runtime.output.join('\n');
+      outputBox.className = 'output-box success';
+    }
+
+    document.getElementById('execTime').textContent = execTime + 'ms';
+    document.getElementById('lineCount').textContent = code.split('\n').length;
+  } catch (e) {
+    outputBox.textContent = '❌ ERROR\n\n' + e.message;
+    outputBox.className = 'output-box error';
+  }
+}
+
+function clearOutput() {
+  document.getElementById('output').textContent = '(no output)';
+  document.getElementById('output').className = 'output-box success';
+}
+
+function loadExample(name) {
+  document.getElementById('code').value = examples[name];
+  run();
+}
+
+// Run example on load
+window.addEventListener('load', () => {
+  loadExample('hello');
+});
+</script>
+
+</body>
+</html>
