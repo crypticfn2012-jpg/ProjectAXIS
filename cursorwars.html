@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cursor Wars | Ron.cool</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 <style>
 *{
@@ -18,8 +18,8 @@ html,body{
     height:100%;
     overflow:hidden;
     background:#05070b;
-    color:white;
-    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color:#fff;
+    font-family:Inter,Arial,sans-serif;
 }
 
 body{
@@ -31,29 +31,29 @@ canvas{
     inset:0;
     width:100%;
     height:100%;
-    cursor:none;
+    cursor:crosshair;
 }
 
-#ui{
+#hud{
     position:fixed;
     inset:0;
     pointer-events:none;
 }
 
 .topbar{
-    height:64px;
     position:absolute;
+    top:0;
     left:0;
     right:0;
-    top:0;
+    height:64px;
 
     display:flex;
     align-items:center;
-    gap:18px;
+    gap:20px;
 
-    padding:0 18px;
+    padding:0 20px;
 
-    background:rgba(5,8,13,.86);
+    background:rgba(5,8,14,.88);
     border-bottom:1px solid rgba(255,255,255,.08);
 
     backdrop-filter:blur(18px);
@@ -61,12 +61,12 @@ canvas{
 
 .logo{
     font-size:20px;
-    font-weight:950;
+    font-weight:1000;
     letter-spacing:-1px;
 }
 
 .logo span{
-    color:#5794ff;
+    color:#5b91ff;
 }
 
 .spacer{
@@ -74,126 +74,111 @@ canvas{
 }
 
 .stat{
-    font-size:9px;
-    color:#778397;
-    text-transform:uppercase;
-    letter-spacing:1.2px;
+    color:#68758a;
+    font-size:8px;
     font-weight:900;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
 }
 
 .stat b{
     display:block;
-    color:white;
-    font-size:12px;
     margin-top:2px;
+    color:#fff;
+    font-size:12px;
     letter-spacing:0;
 }
 
-.button{
-    pointer-events:auto;
-    border:1px solid rgba(255,255,255,.12);
-    background:rgba(255,255,255,.06);
-    color:white;
-    padding:8px 12px;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:850;
-}
-
-.button:hover{
-    background:rgba(255,255,255,.12);
-}
-
-/* PANELS */
-
 .panel{
     position:absolute;
-    pointer-events:auto;
+    top:80px;
 
-    background:rgba(7,11,18,.86);
+    width:230px;
+
+    padding:14px;
+
+    background:rgba(7,11,18,.87);
     border:1px solid rgba(255,255,255,.08);
-    border-radius:13px;
+    border-radius:12px;
 
     backdrop-filter:blur(18px);
 
-    box-shadow:
-        0 20px 70px rgba(0,0,0,.45);
+    pointer-events:auto;
 }
 
-.left-panel{
+.left{
     left:15px;
-    top:79px;
-    width:230px;
-    padding:14px;
 }
 
-.right-panel{
+.right{
     right:15px;
-    top:79px;
-    width:230px;
-    padding:14px;
 }
 
 .label{
-    font-size:9px;
-    color:#718096;
-    font-weight:950;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
     margin-bottom:9px;
+
+    color:#68758a;
+
+    font-size:8px;
+    font-weight:1000;
+    letter-spacing:1.6px;
+    text-transform:uppercase;
 }
 
 .player-card{
     padding:12px;
 
     background:rgba(255,255,255,.035);
+
     border:1px solid rgba(255,255,255,.07);
 
-    border-radius:10px;
+    border-radius:9px;
 
-    margin-bottom:13px;
+    margin-bottom:14px;
 }
 
 .player-name{
     font-size:17px;
-    font-weight:950;
+    font-weight:1000;
 }
 
-.player-faction{
-    font-size:10px;
-    color:#8793a6;
+.faction-name{
+    color:#8a96a8;
+    font-size:9px;
     margin-top:2px;
 }
 
-.health{
+.health-bg{
     height:5px;
+
     margin-top:10px;
 
-    background:#202632;
-    border-radius:10px;
+    background:#202633;
+
+    border-radius:99px;
 
     overflow:hidden;
 }
 
-.health div{
+#healthBar{
     height:100%;
     width:100%;
-
-    background:#4de783;
+    background:#4be48a;
+    transition:width .15s;
 }
 
 .row{
     display:flex;
     justify-content:space-between;
 
-    color:#7f8b9e;
-
     font-size:10px;
     line-height:2;
+
+    color:#778498;
 }
 
 .row b{
-    color:white;
+    color:#fff;
 }
 
 .faction{
@@ -210,29 +195,30 @@ canvas{
     background:rgba(255,255,255,.025);
 }
 
-.faction-dot{
+.dot{
     width:8px;
     height:8px;
+
     border-radius:50%;
 }
 
-.faction-name{
+.faction-title{
     flex:1;
+
     font-size:10px;
-    font-weight:850;
+    font-weight:900;
 }
 
 .faction-count{
-    color:#7f8a9c;
+    color:#758196;
     font-size:10px;
 }
-
-/* EVENTS */
 
 #events{
     position:absolute;
     left:15px;
     bottom:15px;
+
     width:330px;
 }
 
@@ -241,19 +227,18 @@ canvas{
 
     padding:8px 10px;
 
-    border-radius:8px;
-
-    background:rgba(6,10,16,.78);
     border:1px solid rgba(255,255,255,.07);
 
-    color:#b8c1cf;
+    border-radius:8px;
+
+    background:rgba(5,9,15,.82);
+
+    color:#b8c2d0;
 
     font-size:10px;
 
-    backdrop-filter:blur(10px);
+    backdrop-filter:blur(12px);
 }
-
-/* CHAT */
 
 .chat{
     position:absolute;
@@ -261,21 +246,24 @@ canvas{
     bottom:15px;
 
     width:310px;
+
+    pointer-events:auto;
 }
 
 .chat-log{
-    height:175px;
+    height:170px;
 
     padding:10px;
 
     overflow:hidden;
 
-    background:rgba(7,11,18,.88);
-    border:1px solid rgba(255,255,255,.07);
+    background:rgba(7,11,18,.9);
 
-    border-radius:11px 11px 0 0;
+    border:1px solid rgba(255,255,255,.08);
 
-    backdrop-filter:blur(15px);
+    border-radius:10px 10px 0 0;
+
+    backdrop-filter:blur(18px);
 }
 
 .chat-message{
@@ -284,22 +272,25 @@ canvas{
 
     margin:4px 0;
 
-    color:#c3cbd7;
+    color:#c0c8d4;
 }
 
 .chat-message strong{
-    color:white;
+    margin-right:4px;
 }
 
 .chat-form{
     display:flex;
 
-    background:rgba(7,11,18,.95);
+    height:38px;
 
-    border:1px solid rgba(255,255,255,.07);
+    background:#080c13;
+
+    border:1px solid rgba(255,255,255,.08);
+
     border-top:0;
 
-    border-radius:0 0 11px 11px;
+    border-radius:0 0 10px 10px;
 }
 
 .chat-form input{
@@ -307,34 +298,32 @@ canvas{
 
     min-width:0;
 
-    background:transparent;
+    padding:0 10px;
 
-    border:0;
     outline:0;
+    border:0;
 
     color:white;
-
-    padding:10px;
+    background:transparent;
 
     font-size:10px;
 }
 
 .chat-form button{
+    width:50px;
+
     border:0;
 
-    background:#4e8eff;
+    background:#4f8fff;
+
     color:white;
 
-    padding:0 14px;
-
-    font-weight:900;
+    font-weight:1000;
 
     cursor:pointer;
 
-    border-radius:0 0 11px 0;
+    border-radius:0 0 9px 0;
 }
-
-/* MINIMAP */
 
 #minimap{
     position:absolute;
@@ -345,16 +334,14 @@ canvas{
     width:210px;
     height:130px;
 
-    background:#070a10;
-
     border:1px solid rgba(255,255,255,.1);
 
     border-radius:10px;
+
+    background:#070a10;
 }
 
-/* HELP */
-
-#help{
+#controls{
     position:absolute;
 
     left:50%;
@@ -362,25 +349,48 @@ canvas{
 
     transform:translateX(-50%);
 
-    padding:8px 11px;
+    padding:8px 12px;
+
+    border:1px solid rgba(255,255,255,.08);
 
     border-radius:8px;
 
-    background:rgba(7,11,18,.78);
-    border:1px solid rgba(255,255,255,.08);
+    background:rgba(5,9,15,.8);
 
-    color:#778396;
+    color:#788497;
 
-    font-size:10px;
+    font-size:9px;
 
-    backdrop-filter:blur(12px);
+    backdrop-filter:blur(10px);
 }
 
-/* START SCREEN */
+button.small{
+    pointer-events:auto;
 
-#start{
+    border:1px solid rgba(255,255,255,.1);
+
+    border-radius:7px;
+
+    padding:7px 11px;
+
+    background:rgba(255,255,255,.06);
+
+    color:white;
+
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+button.small:hover{
+    background:rgba(255,255,255,.12);
+}
+
+/* START */
+
+#startScreen{
     position:fixed;
-    z-index:20;
+    z-index:50;
 
     inset:0;
 
@@ -390,88 +400,87 @@ canvas{
 
     background:
         radial-gradient(
-            circle at 50% 40%,
-            rgba(77,141,255,.16),
-            transparent 38%
+            circle at 50% 38%,
+            rgba(75,130,255,.16),
+            transparent 40%
         ),
-        rgba(2,4,8,.95);
+        #030509;
 
-    backdrop-filter:blur(10px);
+    backdrop-filter:blur(8px);
 }
 
-.start-content{
-    width:min(570px,92vw);
+.start{
+    width:min(560px,92vw);
+
     text-align:center;
 }
 
-.cursor-logo{
+.cursorIcon{
     font-size:68px;
 
     filter:
         drop-shadow(
-            0 0 30px
-            rgba(77,141,255,.55)
+            0 0 25px
+            rgba(79,143,255,.6)
         );
 }
 
 h1{
-    margin:12px 0;
+    margin:10px 0;
 
-    font-size:58px;
+    font-size:60px;
 
     line-height:.9;
 
-    letter-spacing:-4px;
+    letter-spacing:-5px;
 }
 
 h1 span{
-    color:#5794ff;
+    color:#568eff;
 }
 
-.description{
-    max-width:490px;
+.subtitle{
+    max-width:480px;
 
-    margin:auto;
+    margin:18px auto;
 
-    color:#8994a7;
+    color:#818da0;
 
     font-size:12px;
 
     line-height:1.7;
 }
 
-.name-input{
-    width:190px;
-
-    margin:20px auto 14px;
-
-    display:block;
+#nameInput{
+    width:210px;
 
     padding:12px;
 
-    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.12);
 
-    border:1px solid rgba(255,255,255,.13);
-
-    border-radius:9px;
+    border-radius:8px;
 
     outline:none;
+
+    background:rgba(255,255,255,.05);
 
     color:white;
 
     text-align:center;
+
+    font-size:12px;
 }
 
 .colors{
     display:flex;
     justify-content:center;
 
-    gap:9px;
+    gap:10px;
 
-    margin-bottom:18px;
+    margin:18px 0;
 }
 
-.color-button{
+.color{
     width:30px;
     height:30px;
 
@@ -482,51 +491,85 @@ h1 span{
     cursor:pointer;
 }
 
-.color-button.selected{
+.color.selected{
     outline:2px solid white;
     outline-offset:3px;
 }
 
-.play-button{
-    padding:13px 20px;
+#connectionStatus{
+    min-height:18px;
 
-    border:0;
-
-    border-radius:9px;
-
-    background:#4d8dff;
-
-    color:white;
-
-    font-weight:950;
-
-    cursor:pointer;
-}
-
-.status{
-    color:#7f8b9e;
+    color:#718097;
 
     font-size:10px;
 
     margin:10px;
 }
 
+#play{
+    padding:13px 22px;
+
+    border:0;
+
+    border-radius:8px;
+
+    background:#4f8fff;
+
+    color:white;
+
+    font-weight:1000;
+
+    cursor:pointer;
+}
+
+#play:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
 .hidden{
     display:none!important;
 }
 
-/* MOBILE */
+#deadScreen{
+    position:fixed;
+    z-index:40;
+
+    inset:0;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(0,0,0,.45);
+
+    pointer-events:none;
+}
+
+#deadScreen div{
+    text-align:center;
+}
+
+#deadScreen h2{
+    font-size:50px;
+    margin:0;
+}
+
+#deadScreen p{
+    color:#8995a8;
+}
 
 @media(max-width:850px){
 
-    .left-panel{
+    .left{
         display:none;
     }
 
-    .right-panel{
+    .right{
         width:180px;
-        right:8px;
         top:72px;
+        right:8px;
     }
 
     .chat{
@@ -537,24 +580,26 @@ h1 span{
         display:none;
     }
 
-    #help{
-        display:none;
-    }
-
     #minimap{
         right:8px;
         bottom:8px;
     }
 
+    #controls{
+        display:none;
+    }
+
     .topbar{
-        padding:0 9px;
-        gap:9px;
+        padding:0 10px;
+        gap:10px;
     }
 
     .topbar .stat:nth-of-type(n+3){
         display:none;
     }
+
 }
+
 </style>
 </head>
 
@@ -562,7 +607,7 @@ h1 span{
 
 <canvas id="game"></canvas>
 
-<div id="ui">
+<div id="hud">
 
     <div class="topbar">
 
@@ -571,7 +616,7 @@ h1 span{
         </div>
 
         <div class="stat">
-            ONLINE
+            PLAYERS
             <b id="online">1</b>
         </div>
 
@@ -582,23 +627,23 @@ h1 span{
 
         <div class="stat">
             KILLS
-            <b id="kills">0</b>
+            <b id="topKills">0</b>
         </div>
 
         <div class="spacer"></div>
 
-        <button class="button" id="centerButton">
+        <button class="small" id="centerBtn">
             CENTER
         </button>
 
-        <button class="button" id="pauseButton">
-            Ⅱ
+        <button class="small" id="pauseBtn">
+            II
         </button>
 
     </div>
 
 
-    <div class="panel left-panel">
+    <div class="panel left">
 
         <div class="label">
             YOUR CURSOR
@@ -606,15 +651,21 @@ h1 span{
 
         <div class="player-card">
 
-            <div class="player-name" id="playerName">
+            <div
+                class="player-name"
+                id="myName"
+            >
                 RON
             </div>
 
-            <div class="player-faction" id="playerFaction">
+            <div
+                class="faction-name"
+                id="myFaction"
+            >
                 Azure
             </div>
 
-            <div class="health">
+            <div class="health-bg">
                 <div id="healthBar"></div>
             </div>
 
@@ -632,7 +683,7 @@ h1 span{
 
         <div class="row">
             <span>Kills</span>
-            <b id="kills2">0</b>
+            <b id="kills">0</b>
         </div>
 
         <div class="row">
@@ -642,15 +693,13 @@ h1 span{
 
         <div class="row">
             <span>Connection</span>
-            <b id="connection">
-                CONNECTING
-            </b>
+            <b id="connection">CONNECTING</b>
         </div>
 
     </div>
 
 
-    <div class="panel right-panel">
+    <div class="panel right">
 
         <div class="label">
             FACTIONS
@@ -664,20 +713,38 @@ h1 span{
     <div id="events"></div>
 
 
-    <canvas id="minimap" width="420" height="260"></canvas>
+    <canvas
+        id="minimap"
+        width="420"
+        height="260"
+    ></canvas>
+
+
+    <div id="controls">
+        <b>WASD</b> MOVE ·
+        <b>CLICK</b> MOVE ·
+        <b>F</b> ATTACK ·
+        <b>SPACE</b> PAUSE
+    </div>
 
 
     <div class="chat">
 
-        <div class="chat-log" id="chatLog"></div>
+        <div
+            class="chat-log"
+            id="chatLog"
+        ></div>
 
-        <form class="chat-form" id="chatForm">
+        <form
+            class="chat-form"
+            id="chatForm"
+        >
 
             <input
                 id="chatInput"
-                maxlength="120"
+                maxlength="100"
                 autocomplete="off"
-                placeholder="Message the battlefield..."
+                placeholder="Message..."
             >
 
             <button>
@@ -688,22 +755,22 @@ h1 span{
 
     </div>
 
-
-    <div id="help">
-        <b>WASD</b> MOVE ·
-        <b>CLICK</b> MOVE ·
-        <b>F</b> ATTACK ·
-        <b>SPACE</b> PAUSE
-    </div>
-
 </div>
 
 
-<div id="start">
+<div id="deadScreen">
+    <div>
+        <h2>💀 ELIMINATED</h2>
+        <p>Respawning...</p>
+    </div>
+</div>
 
-    <div class="start-content">
 
-        <div class="cursor-logo">
+<div id="startScreen">
+
+    <div class="start">
+
+        <div class="cursorIcon">
             🖱️
         </div>
 
@@ -711,15 +778,15 @@ h1 span{
             CURSOR <span>WARS</span>
         </h1>
 
-        <div class="description">
-            Enter the shared battlefield. Every player connected to
-            ron.cool sees the same multiplayer world in real time.
+        <div class="subtitle">
+            A real-time multiplayer cursor battlefield.
+            Enter the same world as everyone else on Ron.cool,
+            choose your faction and fight.
         </div>
 
         <input
             id="nameInput"
-            class="name-input"
-            maxlength="18"
+            maxlength="16"
             value="RON"
             placeholder="Cursor name"
         >
@@ -729,18 +796,15 @@ h1 span{
             id="colors"
         ></div>
 
-        <div
-            class="status"
-            id="status"
-        >
+        <div id="connectionStatus">
             Connecting to multiplayer...
         </div>
 
         <button
-            class="play-button"
-            id="playButton"
+            id="play"
+            disabled
         >
-            ENTER BATTLEFIELD
+            CONNECTING...
         </button>
 
     </div>
@@ -757,54 +821,58 @@ h1 span{
 const SUPABASE_URL =
 "https://rldidvwcylirjyfktvtg.supabase.co";
 
-const SUPABASE_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzIiwiZGVmIjoicmxkaWR2d2N5bGlyanl5Zmt2dGciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc4NjIyMzQ5MCwiZXhwIjoyMTAxNzk5NDkwfQ.YO5zeu5uL3siDDPVfsPc9v_VCETHixTWXjzotVOEp0U";
+const SUPABASE_ANON_KEY =
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZGlkdndjeWxpcmp5Zmt2dGciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc4NjIyMzQ5MCwiZXhwIjoyMTAxNzk5NDk0MH0.YO5zeu5uL3siDDPVfs9v_VCETHixTWXjzotVOEp0U";
 
 const supabaseClient =
 supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_ANON_KEY,
+    {
+        realtime:{
+            params:{
+                eventsPerSecond:30
+            }
+        }
+    }
 );
 
 
 /* =========================================================
-   GAME CONSTANTS
+   WORLD
 ========================================================= */
 
-const ROOM =
-"cursor-wars-global";
+const WORLD_W = 4000;
+const WORLD_H = 2500;
 
-const WORLD_WIDTH =
-3600;
+const ROOM = "cursor-wars-global-v2";
 
-const WORLD_HEIGHT =
-2200;
 
 const FACTIONS = [
 
     {
         name:"Azure",
-        color:"#4d8dff"
+        color:"#4f8fff"
     },
 
     {
         name:"Crimson",
-        color:"#ff5264"
+        color:"#ff5263"
     },
 
     {
         name:"Emerald",
-        color:"#42dc8a"
+        color:"#45dc8a"
     },
 
     {
         name:"Violet",
-        color:"#a66cff"
+        color:"#a86cff"
     },
 
     {
         name:"Gold",
-        color:"#ffc84a"
+        color:"#ffc84d"
     }
 
 ];
@@ -820,47 +888,46 @@ document.getElementById("game");
 const ctx =
 canvas.getContext("2d");
 
-const minimap =
+const mini =
 document.getElementById("minimap");
 
-const minimapCtx =
-minimap.getContext("2d");
+const mctx =
+mini.getContext("2d");
 
-let width =
-innerWidth;
+let W = innerWidth;
+let H = innerHeight;
 
-let height =
-innerHeight;
-
-let dpr =
+let DPR =
 devicePixelRatio || 1;
 
 
 function resize(){
 
-    width =
-    innerWidth;
-
-    height =
-    innerHeight;
+    W = innerWidth;
+    H = innerHeight;
 
     canvas.width =
-    width * dpr;
+    W * DPR;
 
     canvas.height =
-    height * dpr;
+    H * DPR;
+
+    canvas.style.width =
+    W + "px";
+
+    canvas.style.height =
+    H + "px";
 
     ctx.setTransform(
-        dpr,
+        DPR,
         0,
         0,
-        dpr,
+        DPR,
         0,
         0
     );
 
 }
-
 
 resize();
 
@@ -874,12 +941,12 @@ addEventListener(
    LOCAL PLAYER
 ========================================================= */
 
-const myId =
+const id =
 crypto.randomUUID();
 
 const player = {
 
-    id:myId,
+    id,
 
     name:"RON",
 
@@ -887,9 +954,9 @@ const player = {
 
     color:FACTIONS[0].color,
 
-    x:WORLD_WIDTH / 2,
+    x:WORLD_W / 2,
 
-    y:WORLD_HEIGHT / 2,
+    y:WORLD_H / 2,
 
     vx:0,
 
@@ -897,15 +964,13 @@ const player = {
 
     hp:100,
 
-    maxHp:100,
-
     kills:0,
 
     deaths:0,
 
     alive:true,
 
-    lastSent:0,
+    lastNetwork:0,
 
     lastAttack:0
 
@@ -913,7 +978,7 @@ const player = {
 
 
 /* =========================================================
-   OTHER PLAYERS
+   REMOTE PLAYERS
 ========================================================= */
 
 const players =
@@ -929,7 +994,6 @@ const keys = {};
 const mouse = {
 
     x:0,
-
     y:0,
 
     target:null
@@ -939,27 +1003,32 @@ const mouse = {
 
 addEventListener(
     "keydown",
-    event => {
+    e => {
 
-        keys[event.key] =
+        keys[e.key.toLowerCase()] =
         true;
 
-        if(event.key === " "){
+        if(
+            e.key === " "
+        ){
 
-            event.preventDefault();
+            e.preventDefault();
 
             paused =
             !paused;
 
             document.getElementById(
-                "pauseButton"
+                "pauseBtn"
             ).textContent =
-            paused ? "▶" : "Ⅱ";
+            paused
+            ? "▶"
+            : "II";
 
         }
 
+
         if(
-            event.key.toLowerCase()
+            e.key.toLowerCase()
             === "f"
         ){
 
@@ -973,9 +1042,9 @@ addEventListener(
 
 addEventListener(
     "keyup",
-    event => {
+    e => {
 
-        keys[event.key] =
+        keys[e.key.toLowerCase()] =
         false;
 
     }
@@ -984,13 +1053,13 @@ addEventListener(
 
 canvas.addEventListener(
     "mousemove",
-    event => {
+    e => {
 
         mouse.x =
-        event.clientX;
+        e.clientX;
 
         mouse.y =
-        event.clientY;
+        e.clientY;
 
     }
 );
@@ -998,22 +1067,32 @@ canvas.addEventListener(
 
 canvas.addEventListener(
     "mousedown",
-    event => {
+    e => {
 
-        if(event.button !== 0)
+        if(
+            e.button !== 0
+        ){
+
             return;
+
+        }
+
 
         mouse.target = {
 
             x:
-            event.clientX -
-            width / 2 +
-            player.x,
+            player.x +
+            (
+                e.clientX -
+                W / 2
+            ),
 
             y:
-            event.clientY -
-            height / 2 +
-            player.y
+            player.y +
+            (
+                e.clientY -
+                H / 2
+            )
 
         };
 
@@ -1023,8 +1102,8 @@ canvas.addEventListener(
 
 canvas.addEventListener(
     "contextmenu",
-    event =>
-    event.preventDefault()
+    e =>
+    e.preventDefault()
 );
 
 
@@ -1032,38 +1111,34 @@ canvas.addEventListener(
    GAME STATE
 ========================================================= */
 
-let channel =
-null;
+let channel = null;
 
-let connected =
-false;
+let connected = false;
 
-let playing =
-false;
+let playing = false;
 
-let paused =
-false;
+let paused = false;
 
-let selectedFaction =
-0;
+let selectedFaction = 0;
 
 let lastFrame =
 performance.now();
 
-let lastPing =
-0;
+let lastBroadcast = 0;
+
+let lastPing = 0;
 
 let events = [];
 
-let messages = [];
+let chatMessages = [];
 
 
 /* =========================================================
-   HELPERS
+   UTILS
 ========================================================= */
 
 function clamp(
-    value,
+    n,
     min,
     max
 ){
@@ -1072,14 +1147,14 @@ function clamp(
         min,
         Math.min(
             max,
-            value
+            n
         )
     );
 
 }
 
 
-function distance(
+function dist(
     a,
     b
 ){
@@ -1092,21 +1167,26 @@ function distance(
 }
 
 
-function escapeHTML(
+function safe(
     text
 ){
 
-    return text.replace(
-        /[&<>"']/g,
-        char => ({
-
-            "&":"&amp;",
-            "<":"&lt;",
-            ">":"&gt;",
-            '"':"&quot;",
-            "'":"&#039;"
-
-        }[char])
+    return String(text)
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
     );
 
 }
@@ -1125,13 +1205,13 @@ function updateUI(){
 
 
     document.getElementById(
-        "kills"
+        "topKills"
     ).textContent =
     player.kills;
 
 
     document.getElementById(
-        "kills2"
+        "kills"
     ).textContent =
     player.kills;
 
@@ -1143,13 +1223,13 @@ function updateUI(){
 
 
     document.getElementById(
-        "playerName"
+        "myName"
     ).textContent =
     player.name;
 
 
     document.getElementById(
-        "playerFaction"
+        "myFaction"
     ).textContent =
     FACTIONS[
         player.faction
@@ -1159,17 +1239,15 @@ function updateUI(){
     document.getElementById(
         "health"
     ).textContent =
-    Math.ceil(player.hp);
+    Math.ceil(
+        player.hp
+    );
 
 
     document.getElementById(
         "healthBar"
     ).style.width =
-    (
-        player.hp /
-        player.maxHp *
-        100
-    ) + "%";
+    player.hp + "%";
 
 
     const counts =
@@ -1184,18 +1262,15 @@ function updateUI(){
 
 
     for(
-        const p
-        of players.values()
+        const p of players.values()
     ){
 
         if(
-            counts[p.faction] !==
-            undefined
+            p.alive &&
+            counts[p.faction] !== undefined
         ){
 
-            counts[
-                p.faction
-            ]++;
+            counts[p.faction]++;
 
         }
 
@@ -1206,25 +1281,24 @@ function updateUI(){
         "factions"
     ).innerHTML =
     FACTIONS.map(
-        (f,index) => `
+        (f,i) => `
 
             <div class="faction">
 
                 <div
-                    class="faction-dot"
+                    class="dot"
                     style="
                         background:${f.color};
-                        box-shadow:
-                        0 0 10px ${f.color};
+                        box-shadow:0 0 9px ${f.color};
                     "
                 ></div>
 
-                <div class="faction-name">
+                <div class="faction-title">
                     ${f.name}
                 </div>
 
                 <div class="faction-count">
-                    ${counts[index]}
+                    ${counts[i]}
                 </div>
 
             </div>
@@ -1239,19 +1313,15 @@ function updateUI(){
    EVENTS
 ========================================================= */
 
-function addEvent(
+function eventMessage(
     icon,
     text
 ){
 
     events.unshift({
-
         icon,
-
         text
-
     });
-
 
     events =
     events.slice(
@@ -1259,18 +1329,15 @@ function addEvent(
         5
     );
 
-
     document.getElementById(
         "events"
     ).innerHTML =
     events.map(
-        event => `
+        e => `
 
             <div class="event">
-
-                ${event.icon}
-                ${escapeHTML(event.text)}
-
+                ${e.icon}
+                ${safe(e.text)}
             </div>
 
         `
@@ -1289,44 +1356,32 @@ function addChat(
     color
 ){
 
-    messages.push({
-
+    chatMessages.push({
         name,
-
         text,
-
         color
-
     });
 
-
-    messages =
-    messages.slice(
+    chatMessages =
+    chatMessages.slice(
         -30
     );
-
 
     document.getElementById(
         "chatLog"
     ).innerHTML =
-    messages.map(
-        message => `
+    chatMessages.map(
+        m => `
 
             <div class="chat-message">
 
                 <strong
-                    style="
-                        color:${message.color}
-                    "
+                    style="color:${m.color}"
                 >
-                    ${escapeHTML(
-                        message.name
-                    )}
+                    ${safe(m.name)}
                 </strong>
 
-                ${escapeHTML(
-                    message.text
-                )}
+                ${safe(m.text)}
 
             </div>
 
@@ -1337,10 +1392,45 @@ function addChat(
 
 
 /* =========================================================
-   BROADCAST
+   PLAYER PACKET
 ========================================================= */
 
-async function broadcast(
+function packet(){
+
+    return {
+
+        id:player.id,
+
+        name:player.name,
+
+        faction:player.faction,
+
+        color:player.color,
+
+        x:Math.round(player.x),
+
+        y:Math.round(player.y),
+
+        hp:Math.round(player.hp),
+
+        kills:player.kills,
+
+        deaths:player.deaths,
+
+        alive:player.alive,
+
+        time:Date.now()
+
+    };
+
+}
+
+
+/* =========================================================
+   SEND
+========================================================= */
+
+async function send(
     event,
     payload
 ){
@@ -1353,7 +1443,6 @@ async function broadcast(
         return;
 
     }
-
 
     try{
 
@@ -1368,11 +1457,11 @@ async function broadcast(
         });
 
     }
-    catch(error){
+    catch(err){
 
         console.error(
-            "Broadcast error:",
-            error
+            "Realtime send failed:",
+            err
         );
 
     }
@@ -1381,67 +1470,16 @@ async function broadcast(
 
 
 /* =========================================================
-   PLAYER SNAPSHOT
+   RECEIVE STATE
 ========================================================= */
 
-function getSnapshot(){
-
-    return {
-
-        id:player.id,
-
-        name:player.name,
-
-        faction:player.faction,
-
-        color:player.color,
-
-        x:Math.round(
-            player.x
-        ),
-
-        y:Math.round(
-            player.y
-        ),
-
-        vx:Math.round(
-            player.vx
-        ),
-
-        vy:Math.round(
-            player.vy
-        ),
-
-        hp:Math.round(
-            player.hp
-        ),
-
-        maxHp:100,
-
-        kills:player.kills,
-
-        deaths:player.deaths,
-
-        alive:player.alive,
-
-        timestamp:Date.now()
-
-    };
-
-}
-
-
-/* =========================================================
-   RECEIVE PLAYER
-========================================================= */
-
-function receivePlayer(
+function receiveState(
     data
 ){
 
     if(
         !data ||
-        data.id === myId
+        data.id === player.id
     ){
 
         return;
@@ -1449,55 +1487,43 @@ function receivePlayer(
     }
 
 
-    const existing =
+    const old =
     players.get(
         data.id
     );
 
 
-    if(existing){
+    if(old){
 
-        existing.targetX =
-        data.x;
+        old.targetX =
+        Number(data.x);
 
-        existing.targetY =
-        data.y;
+        old.targetY =
+        Number(data.y);
 
-        existing.x +=
-        (
-            data.x -
-            existing.x
-        ) * .4;
+        old.hp =
+        Number(data.hp);
 
-        existing.y +=
-        (
-            data.y -
-            existing.y
-        ) * .4;
+        old.alive =
+        data.alive !== false;
 
-        existing.hp =
-        data.hp;
+        old.name =
+        data.name || "PLAYER";
 
-        existing.alive =
-        data.alive;
+        old.color =
+        data.color || "#fff";
 
-        existing.name =
-        data.name;
+        old.faction =
+        Number(data.faction) || 0;
 
-        existing.faction =
-        data.faction;
+        old.kills =
+        Number(data.kills) || 0;
 
-        existing.color =
-        data.color;
+        old.deaths =
+        Number(data.deaths) || 0;
 
-        existing.kills =
-        data.kills;
-
-        existing.deaths =
-        data.deaths;
-
-        existing.timestamp =
-        data.timestamp;
+        old.lastSeen =
+        Date.now();
 
     }
     else{
@@ -1506,17 +1532,44 @@ function receivePlayer(
             data.id,
             {
 
-                ...data,
+                id:data.id,
 
-                x:data.x,
+                name:data.name || "PLAYER",
 
-                y:data.y,
+                faction:
+                Number(data.faction) || 0,
 
-                targetX:data.x,
+                color:
+                data.color || "#fff",
 
-                targetY:data.y
+                x:Number(data.x),
+
+                y:Number(data.y),
+
+                targetX:Number(data.x),
+
+                targetY:Number(data.y),
+
+                hp:Number(data.hp),
+
+                kills:
+                Number(data.kills) || 0,
+
+                deaths:
+                Number(data.deaths) || 0,
+
+                alive:
+                data.alive !== false,
+
+                lastSeen:
+                Date.now()
 
             }
+        );
+
+        eventMessage(
+            "👋",
+            `${data.name || "Player"} joined`
         );
 
     }
@@ -1528,7 +1581,7 @@ function receivePlayer(
 
 
 /* =========================================================
-   ATTACK RECEIVER
+   ATTACK RECEIVE
 ========================================================= */
 
 function receiveAttack(
@@ -1537,7 +1590,7 @@ function receiveAttack(
 
     if(
         !data ||
-        data.target !== myId
+        data.target !== player.id
     ){
 
         return;
@@ -1545,14 +1598,64 @@ function receiveAttack(
     }
 
 
-    if(!player.alive)
+    if(
+        !player.alive
+    ){
+
         return;
+
+    }
+
+
+    const attacker =
+    players.get(
+        data.attacker
+    );
+
+
+    if(
+        !attacker
+    ){
+
+        return;
+
+    }
+
+
+    /*
+       Same faction = no damage.
+    */
+
+    if(
+        attacker.faction ===
+        player.faction
+    ){
+
+        return;
+
+    }
+
+
+    /*
+       Distance validation.
+    */
+
+    if(
+        dist(
+            player,
+            attacker
+        ) > 145
+    ){
+
+        return;
+
+    }
 
 
     const damage =
     clamp(
-        Number(data.damage) || 0,
-        1,
+        Number(data.damage) || 10,
+        5,
         20
     );
 
@@ -1565,33 +1668,40 @@ function receiveAttack(
         player.hp <= 0
     ){
 
-        player.hp =
-        0;
+        player.hp = 0;
 
-        player.alive =
-        false;
+        player.alive = false;
 
         player.deaths++;
 
 
-        broadcast(
+        document.getElementById(
+            "deadScreen"
+        ).style.display =
+        "flex";
+
+
+        send(
             "death",
             {
 
-                player:
-                myId,
+                victim:
+                player.id,
 
                 killer:
-                data.attacker
+                attacker.id
 
             }
         );
 
 
-        addEvent(
+        eventMessage(
             "💀",
-            "You were eliminated!"
+            `You were eliminated by ${attacker.name}`
         );
+
+
+        updateUI();
 
 
         setTimeout(
@@ -1600,15 +1710,17 @@ function receiveAttack(
         );
 
     }
+    else{
 
+        updateUI();
 
-    updateUI();
+    }
 
 }
 
 
 /* =========================================================
-   DEATH
+   DEATH RECEIVE
 ========================================================= */
 
 function receiveDeath(
@@ -1617,7 +1729,7 @@ function receiveDeath(
 
     if(
         !data ||
-        data.player === myId
+        data.victim === player.id
     ){
 
         return;
@@ -1627,43 +1739,40 @@ function receiveDeath(
 
     const victim =
     players.get(
-        data.player
+        data.victim
     );
 
 
     if(victim){
 
-        victim.alive =
-        false;
+        victim.hp = 0;
 
-        victim.hp =
-        0;
+        victim.alive = false;
 
     }
 
 
-    const killer =
-    players.get(
-        data.killer
-    );
+    if(
+        data.killer === player.id
+    ){
+
+        player.kills++;
 
 
-    if(killer){
-
-        killer.kills =
-        (killer.kills || 0) + 1;
+        eventMessage(
+            "🎯",
+            `You eliminated ${victim?.name || "a player"}`
+        );
 
     }
+    else{
 
+        eventMessage(
+            "💀",
+            `${victim?.name || "A player"} was eliminated`
+        );
 
-    addEvent(
-        "💀",
-        `${
-            victim
-            ? victim.name
-            : "A cursor"
-        } was eliminated`
-    );
+    }
 
 
     updateUI();
@@ -1678,39 +1787,45 @@ function receiveDeath(
 function respawn(){
 
     player.x =
-    WORLD_WIDTH / 2 +
-    Math.random() * 500 -
-    250;
-
-
-    player.y =
-    WORLD_HEIGHT / 2 +
-    Math.random() * 400 -
-    200;
-
-
-    player.hp =
-    100;
-
-
-    player.alive =
-    true;
-
-
-    player.vx =
-    0;
-
-    player.vy =
-    0;
-
-
-    broadcast(
-        "state",
-        getSnapshot()
+    250 +
+    Math.random() *
+    (
+        WORLD_W -
+        500
     );
 
 
-    addEvent(
+    player.y =
+    250 +
+    Math.random() *
+    (
+        WORLD_H -
+        500
+    );
+
+
+    player.hp = 100;
+
+    player.alive = true;
+
+    player.vx = 0;
+
+    player.vy = 0;
+
+
+    document.getElementById(
+        "deadScreen"
+    ).style.display =
+    "none";
+
+
+    send(
+        "state",
+        packet()
+    );
+
+
+    eventMessage(
         "⚡",
         "You respawned"
     );
@@ -1722,71 +1837,15 @@ function respawn(){
 
 
 /* =========================================================
-   FIND ENEMY
-========================================================= */
-
-function nearestEnemy(){
-
-    let target =
-    null;
-
-    let bestDistance =
-    Infinity;
-
-
-    for(
-        const p
-        of players.values()
-    ){
-
-        if(
-            !p.alive ||
-            p.faction ===
-            player.faction
-        ){
-
-            continue;
-
-        }
-
-
-        const d =
-        distance(
-            player,
-            p
-        );
-
-
-        if(
-            d <
-            bestDistance
-        ){
-
-            bestDistance =
-            d;
-
-            target =
-            p;
-
-        }
-
-    }
-
-
-    return target;
-
-}
-
-
-/* =========================================================
    ATTACK
 ========================================================= */
 
 async function attack(){
 
     if(
-        !player.alive ||
-        paused
+        !playing ||
+        paused ||
+        !player.alive
     ){
 
         return;
@@ -1802,7 +1861,7 @@ async function attack(){
         now -
         player.lastAttack
         <
-        400
+        450
     ){
 
         return;
@@ -1810,25 +1869,54 @@ async function attack(){
     }
 
 
-    const enemy =
-    nearestEnemy();
+    let closest = null;
+
+    let closestDistance =
+    Infinity;
 
 
-    if(
-        !enemy
+    for(
+        const p of players.values()
     ){
 
-        return;
+        if(
+            !p.alive ||
+            p.faction ===
+            player.faction
+        ){
 
-    }
+            continue;
+
+        }
 
 
-    if(
-        distance(
+        const d =
+        dist(
             player,
-            enemy
-        ) >
-        110
+            p
+        );
+
+
+        if(
+            d <
+            closestDistance
+        ){
+
+            closestDistance =
+            d;
+
+            closest =
+            p;
+
+        }
+
+    }
+
+
+    if(
+        !closest ||
+        closestDistance >
+        145
     ){
 
         return;
@@ -1840,21 +1928,21 @@ async function attack(){
     now;
 
 
-    await broadcast(
+    await send(
         "attack",
         {
 
             attacker:
-            myId,
+            player.id,
 
             target:
-            enemy.id,
+            closest.id,
 
             damage:
+            10 +
             Math.floor(
-                8 +
                 Math.random() *
-                8
+                6
             )
 
         }
@@ -1867,7 +1955,7 @@ async function attack(){
    MOVEMENT
 ========================================================= */
 
-function move(
+function updateMovement(
     dt
 ){
 
@@ -1880,185 +1968,183 @@ function move(
     }
 
 
-    let x =
-    0;
-
-    let y =
-    0;
+    let dx = 0;
+    let dy = 0;
 
 
     if(
         keys.w ||
-        keys.ArrowUp
+        keys.arrowup
     ){
 
-        y--;
+        dy--;
 
     }
 
 
     if(
         keys.s ||
-        keys.ArrowDown
+        keys.arrowdown
     ){
 
-        y++;
+        dy++;
 
     }
 
 
     if(
         keys.a ||
-        keys.ArrowLeft
+        keys.arrowleft
     ){
 
-        x--;
+        dx--;
 
     }
 
 
     if(
         keys.d ||
-        keys.ArrowRight
+        keys.arrowright
     ){
 
-        x++;
+        dx++;
 
     }
 
 
     if(
-        !x &&
-        !y &&
-        mouse.target
+        dx ||
+        dy
     ){
 
-        x =
-        mouse.target.x -
-        player.x;
-
-        y =
-        mouse.target.y -
-        player.y;
-
-
-        const d =
+        const len =
         Math.hypot(
-            x,
-            y
+            dx,
+            dy
         );
 
 
-        if(
-            d < 15
-        ){
-
-            mouse.target =
-            null;
-
-            x = 0;
-            y = 0;
-
-        }
-        else{
-
-            x /= d;
-            y /= d;
-
-        }
-
-    }
-    else if(
-        x ||
-        y
-    ){
-
-        const d =
-        Math.hypot(
-            x,
-            y
-        );
-
-
-        x /= d;
-        y /= d;
+        dx /= len;
+        dy /= len;
 
 
         mouse.target =
         null;
 
     }
+    else if(
+        mouse.target
+    ){
+
+        dx =
+        mouse.target.x -
+        player.x;
+
+        dy =
+        mouse.target.y -
+        player.y;
 
 
-    const speed =
-    260;
+        const len =
+        Math.hypot(
+            dx,
+            dy
+        );
+
+
+        if(
+            len < 10
+        ){
+
+            mouse.target =
+            null;
+
+            dx = 0;
+            dy = 0;
+
+        }
+        else{
+
+            dx /= len;
+            dy /= len;
+
+        }
+
+    }
+
+
+    const speed = 290;
+
+
+    const desiredX =
+    dx * speed;
+
+    const desiredY =
+    dy * speed;
 
 
     player.vx +=
     (
-        x * speed -
+        desiredX -
         player.vx
     ) *
     Math.min(
         1,
-        dt * 12
+        dt * 14
     );
 
 
     player.vy +=
     (
-        y * speed -
+        desiredY -
         player.vy
     ) *
     Math.min(
         1,
-        dt * 12
+        dt * 14
     );
 
 
     if(
-        !x &&
-        !y
+        !dx &&
+        !dy
     ){
 
         player.vx *=
         Math.pow(
-            .0001,
+            .001,
             dt
         );
 
         player.vy *=
         Math.pow(
-            .0001,
+            .001,
             dt
         );
 
     }
 
 
+    player.x +=
+    player.vx * dt;
+
+    player.y +=
+    player.vy * dt;
+
+
     player.x =
     clamp(
-        player.x +
-        player.vx *
-        dt,
-
-        20,
-
-        WORLD_WIDTH -
-        20
+        player.x,
+        25,
+        WORLD_W - 25
     );
 
 
     player.y =
     clamp(
-        player.y +
-        player.vy *
-        dt,
-
-        80,
-
-        WORLD_HEIGHT -
-        20
+        player.y,
+        85,
+        WORLD_H - 25
     );
 
 }
@@ -2070,26 +2156,26 @@ function move(
 
 function drawCursor(
     p,
-    mine=false
+    mine = false
 ){
 
-    const screenX =
+    const sx =
     p.x -
     player.x +
-    width / 2;
+    W / 2;
 
 
-    const screenY =
+    const sy =
     p.y -
     player.y +
-    height / 2;
+    H / 2;
 
 
     if(
-        screenX < -60 ||
-        screenX > width + 60 ||
-        screenY < -60 ||
-        screenY > height + 60
+        sx < -80 ||
+        sx > W + 80 ||
+        sy < -80 ||
+        sy > H + 80
     ){
 
         return;
@@ -2099,21 +2185,17 @@ function drawCursor(
 
     ctx.save();
 
-
     ctx.translate(
-        screenX,
-        screenY
+        sx,
+        sy
     );
 
 
     ctx.shadowColor =
     p.color;
 
-
     ctx.shadowBlur =
-    mine
-    ? 26
-    : 15;
+    mine ? 28 : 16;
 
 
     ctx.fillStyle =
@@ -2122,62 +2204,52 @@ function drawCursor(
 
     ctx.beginPath();
 
-
     ctx.moveTo(
-        -3,
-        -17
+        -5,
+        -18
     );
-
 
     ctx.lineTo(
         4,
-        11
+        10
     );
-
 
     ctx.lineTo(
         11,
-        7
+        6
     );
-
 
     ctx.lineTo(
         19,
         19
     );
 
-
     ctx.lineTo(
-        24,
+        25,
         15
     );
 
-
     ctx.lineTo(
-        15,
-        3
+        16,
+        2
     );
 
-
     ctx.lineTo(
-        23,
-        0
+        25,
+        -1
     );
-
 
     ctx.closePath();
-
 
     ctx.fill();
 
 
+    ctx.shadowBlur = 0;
+
     ctx.strokeStyle =
-    "#ffffff";
+    "rgba(255,255,255,.85)";
 
-
-    ctx.globalAlpha =
-    .8;
-
+    ctx.lineWidth = 1;
 
     ctx.stroke();
 
@@ -2188,54 +2260,49 @@ function drawCursor(
     ctx.textAlign =
     "center";
 
-
     ctx.font =
-    "10px system-ui";
-
+    "900 10px Arial";
 
     ctx.fillStyle =
-    "#ffffff";
-
+    "#fff";
 
     ctx.globalAlpha =
     .9;
 
-
     ctx.fillText(
         p.name,
-        screenX + 6,
-        screenY + 31
+        sx,
+        sy + 32
     );
+
+    ctx.globalAlpha = 1;
 
 
     if(
         p.hp <
-        p.maxHp
+        100
     ){
 
         ctx.fillStyle =
-        "#00000099";
-
+        "rgba(0,0,0,.7)";
 
         ctx.fillRect(
-            screenX - 16,
-            screenY + 35,
-            32,
+            sx - 18,
+            sy + 37,
+            36,
             3
         );
 
 
         ctx.fillStyle =
-        "#4de783";
-
+        "#4be48a";
 
         ctx.fillRect(
-            screenX - 16,
-            screenY + 35,
-            32 *
+            sx - 18,
+            sy + 37,
+            36 *
             clamp(
-                p.hp /
-                p.maxHp,
+                p.hp / 100,
                 0,
                 1
             ),
@@ -2251,63 +2318,49 @@ function drawCursor(
    DRAW WORLD
 ========================================================= */
 
-function draw(){
-
-    ctx.clearRect(
-        0,
-        0,
-        width,
-        height
-    );
-
+function drawWorld(){
 
     ctx.fillStyle =
-    "#070a10";
-
+    "#06090f";
 
     ctx.fillRect(
         0,
         0,
-        width,
-        height
+        W,
+        H
     );
 
 
-    const grid =
-    90;
+    /*
+       Grid
+    */
+
+    const grid = 100;
 
 
-    const offsetX =
+    const ox =
     (
-        width / 2 -
+        W / 2 -
         player.x
-    ) %
-    grid;
+    ) % grid;
 
 
-    const offsetY =
+    const oy =
     (
-        height / 2 -
+        H / 2 -
         player.y
-    ) %
-    grid;
+    ) % grid;
 
 
     ctx.strokeStyle =
-    "#ffffff06";
+    "rgba(255,255,255,.035)";
 
-
-    ctx.lineWidth =
-    1;
+    ctx.lineWidth = 1;
 
 
     for(
-        let x =
-        offsetX;
-
-        x <
-        width;
-
+        let x = ox;
+        x < W;
         x += grid
     ){
 
@@ -2320,7 +2373,7 @@ function draw(){
 
         ctx.lineTo(
             x,
-            height
+            H
         );
 
         ctx.stroke();
@@ -2329,12 +2382,8 @@ function draw(){
 
 
     for(
-        let y =
-        offsetY;
-
-        y <
-        height;
-
+        let y = oy;
+        y < H;
         y += grid
     ){
 
@@ -2346,7 +2395,7 @@ function draw(){
         );
 
         ctx.lineTo(
-            width,
+            W,
             y
         );
 
@@ -2355,9 +2404,37 @@ function draw(){
     }
 
 
+    /*
+       World border
+    */
+
+    const left =
+    -player.x +
+    W / 2;
+
+
+    const top =
+    -player.y +
+    H / 2;
+
+
+    ctx.strokeStyle =
+    "rgba(79,143,255,.2)";
+
+    ctx.strokeRect(
+        left,
+        top,
+        WORLD_W,
+        WORLD_H
+    );
+
+
+    /*
+       Remote players
+    */
+
     for(
-        const p
-        of players.values()
+        const p of players.values()
     ){
 
         if(
@@ -2373,6 +2450,10 @@ function draw(){
     }
 
 
+    /*
+       Local player
+    */
+
     if(
         player.alive
     ){
@@ -2385,53 +2466,49 @@ function draw(){
     }
 
 
+    /*
+       Move marker
+    */
+
     if(
         mouse.target
     ){
 
-        const targetX =
+        const tx =
         mouse.target.x -
         player.x +
-        width / 2;
+        W / 2;
 
 
-        const targetY =
+        const ty =
         mouse.target.y -
         player.y +
-        height / 2;
+        H / 2;
 
 
         ctx.strokeStyle =
-        "#ffffff88";
+        "rgba(255,255,255,.7)";
 
-
-        ctx.lineWidth =
-        1;
+        ctx.lineWidth = 1;
 
 
         ctx.beginPath();
 
-
         ctx.arc(
-            targetX,
-            targetY,
-            8 +
+            tx,
+            ty,
+            9 +
             Math.sin(
                 performance.now() /
-                100
+                120
             ) * 2,
-
             0,
             Math.PI * 2
         );
 
-
         ctx.stroke();
 
     }
-
-
-    drawMinimap();
 
 }
 
@@ -2442,18 +2519,14 @@ function draw(){
 
 function drawMinimap(){
 
-    const mw =
-    420;
-
-    const mh =
-    260;
+    const mw = 420;
+    const mh = 260;
 
 
-    minimapCtx.fillStyle =
+    mctx.fillStyle =
     "#070a10";
 
-
-    minimapCtx.fillRect(
+    mctx.fillRect(
         0,
         0,
         mw,
@@ -2461,9 +2534,23 @@ function drawMinimap(){
     );
 
 
+    /*
+       border
+    */
+
+    mctx.strokeStyle =
+    "rgba(255,255,255,.12)";
+
+    mctx.strokeRect(
+        1,
+        1,
+        mw - 2,
+        mh - 2
+    );
+
+
     for(
-        const p
-        of players.values()
+        const p of players.values()
     ){
 
         if(
@@ -2475,140 +2562,150 @@ function drawMinimap(){
         }
 
 
-        minimapCtx.fillStyle =
+        mctx.fillStyle =
         p.color;
 
 
-        minimapCtx.fillRect(
+        mctx.beginPath();
 
-            p.x /
-            WORLD_WIDTH *
-            mw,
-
-            p.y /
-            WORLD_HEIGHT *
-            mh,
-
-            5,
-            5
-
+        mctx.arc(
+            p.x / WORLD_W * mw,
+            p.y / WORLD_H * mh,
+            4,
+            0,
+            Math.PI * 2
         );
+
+        mctx.fill();
 
     }
 
 
-    minimapCtx.fillStyle =
+    mctx.fillStyle =
     player.color;
 
 
-    minimapCtx.beginPath();
+    mctx.beginPath();
 
-
-    minimapCtx.arc(
-
-        player.x /
-        WORLD_WIDTH *
-        mw,
-
-        player.y /
-        WORLD_HEIGHT *
-        mh,
-
+    mctx.arc(
+        player.x / WORLD_W * mw,
+        player.y / WORLD_H * mh,
         6,
-
         0,
         Math.PI * 2
-
     );
 
-
-    minimapCtx.fill();
+    mctx.fill();
 
 }
 
 
 /* =========================================================
-   CONNECT TO SUPABASE
+   CONNECT
 ========================================================= */
 
 async function connect(){
 
-    try{
+    const status =
+    document.getElementById(
+        "connectionStatus"
+    );
 
-        channel =
-        supabaseClient.channel(
-            ROOM,
-            {
 
-                config:{
+    const button =
+    document.getElementById(
+        "play"
+    );
 
-                    broadcast:{
-                        self:false
-                    },
 
-                    presence:{
-                        key:myId
-                    }
+    status.textContent =
+    "Connecting to Supabase Realtime...";
 
+
+    channel =
+    supabaseClient.channel(
+        ROOM,
+        {
+            config:{
+                broadcast:{
+                    self:false
                 }
-
             }
-        );
+        }
+    );
 
 
-        channel
+    /*
+       PLAYER STATE
+    */
 
-        .on(
-            "broadcast",
-            {
-                event:"state"
-            },
-            ({payload}) => {
+    channel.on(
+        "broadcast",
+        {
+            event:"state"
+        },
+        ({payload}) => {
 
-                receivePlayer(
-                    payload
-                );
+            receiveState(
+                payload
+            );
 
-            }
-        )
-
-
-        .on(
-            "broadcast",
-            {
-                event:"attack"
-            },
-            ({payload}) => {
-
-                receiveAttack(
-                    payload
-                );
-
-            }
-        )
+        }
+    );
 
 
-        .on(
-            "broadcast",
-            {
-                event:"death"
-            },
-            ({payload}) => {
+    /*
+       ATTACKS
+    */
 
-                receiveDeath(
-                    payload
-                );
+    channel.on(
+        "broadcast",
+        {
+            event:"attack"
+        },
+        ({payload}) => {
 
-            }
-        )
+            receiveAttack(
+                payload
+            );
+
+        }
+    );
 
 
-        .on(
-            "broadcast",
-            {
-                event:"chat"
-            },
-            ({payload}) => {
+    /*
+       DEATHS
+    */
+
+    channel.on(
+        "broadcast",
+        {
+            event:"death"
+        },
+        ({payload}) => {
+
+            receiveDeath(
+                payload
+            );
+
+        }
+    );
+
+
+    /*
+       CHAT
+    */
+
+    channel.on(
+        "broadcast",
+        {
+            event:"chat"
+        },
+        ({payload}) => {
+
+            if(
+                payload
+            ){
 
                 addChat(
                     payload.name,
@@ -2617,159 +2714,167 @@ async function connect(){
                 );
 
             }
-        )
+
+        }
+    );
 
 
-        .on(
-            "broadcast",
-            {
-                event:"ping"
-            },
-            ({payload}) => {
+    /*
+       PING
+    */
 
-                if(
-                    payload &&
-                    payload.target ===
-                    myId
-                ){
+    channel.on(
+        "broadcast",
+        {
+            event:"ping"
+        },
+        ({payload}) => {
 
-                    document.getElementById(
-                        "ping"
-                    ).textContent =
-                    Math.round(
-                        performance.now() -
-                        payload.time
-                    ) +
-                    " ms";
+            if(
+                payload &&
+                payload.target ===
+                player.id
+            ){
 
-                }
-
-            }
-        )
-
-
-        .on(
-            "presence",
-            {
-                event:"leave"
-            },
-            ({key}) => {
-
-                const p =
-                players.get(
-                    key
+                const latency =
+                Math.round(
+                    performance.now() -
+                    payload.sent
                 );
 
 
-                if(p){
+                document.getElementById(
+                    "ping"
+                ).textContent =
+                latency +
+                " ms";
 
-                    addEvent(
-                        "👋",
-                        `${p.name} left the battlefield`
-                    );
+            }
 
-                }
+        }
+    );
 
 
-                players.delete(
-                    key
+    /*
+       SUBSCRIBE
+    */
+
+    channel.subscribe(
+        async status => {
+
+            console.log(
+                "Supabase:",
+                status
+            );
+
+
+            document.getElementById(
+                "connection"
+            ).textContent =
+            status;
+
+
+            if(
+                status ===
+                "SUBSCRIBED"
+            ){
+
+                connected =
+                true;
+
+
+                status.textContent =
+                "✓ Multiplayer connected";
+
+
+                button.disabled =
+                false;
+
+                button.textContent =
+                "ENTER BATTLEFIELD";
+
+
+                eventMessage(
+                    "🌐",
+                    "Connected to Cursor Wars"
+                );
+
+
+                /*
+                   Tell everyone we exist.
+                */
+
+                await send(
+                    "state",
+                    packet()
                 );
 
 
                 updateUI();
 
             }
-        )
 
 
-        .subscribe(
-            async status => {
+            if(
+                status ===
+                "CHANNEL_ERROR"
+            ){
 
-                document.getElementById(
-                    "connection"
-                ).textContent =
-                status;
-
-
-                if(
-                    status ===
-                    "SUBSCRIBED"
-                ){
-
-                    connected =
-                    true;
+                connected =
+                false;
 
 
-                    document.getElementById(
-                        "status"
-                    ).textContent =
-                    "Connected — multiplayer ready.";
+                status.textContent =
+                "Realtime connection failed";
 
 
-                    await channel.track({
-
-                        id:myId,
-
-                        name:player.name,
-
-                        faction:player.faction,
-
-                        color:player.color
-
-                    });
-
-
-                    await broadcast(
-                        "state",
-                        getSnapshot()
-                    );
-
-
-                    addEvent(
-                        "🌐",
-                        "Connected to global battlefield"
-                    );
-
-                }
-                else{
-
-                    document.getElementById(
-                        "status"
-                    ).textContent =
-                    "Realtime: " +
-                    status;
-
-                }
+                button.textContent =
+                "CONNECTION FAILED";
 
             }
-        );
-
-    }
-    catch(error){
-
-        console.error(
-            error
-        );
 
 
-        document.getElementById(
-            "status"
-        ).textContent =
-        "Connection failed.";
+            if(
+                status ===
+                "TIMED_OUT"
+            ){
 
-    }
+                connected =
+                false;
+
+
+                status.textContent =
+                "Connection timed out";
+
+
+                button.textContent =
+                "RETRYING...";
+
+            }
+
+        }
+    );
 
 }
 
 
 /* =========================================================
-   START GAME
+   START
 ========================================================= */
 
 document.getElementById(
-    "playButton"
+    "play"
 ).onclick =
-async function(){
+async () => {
+
+    if(
+        !connected
+    ){
+
+        return;
+
+    }
+
 
     player.name =
     (
@@ -2779,7 +2884,7 @@ async function(){
         "RON"
     ).slice(
         0,
-        18
+        16
     );
 
 
@@ -2793,51 +2898,24 @@ async function(){
     ].color;
 
 
-    if(
-        !connected
-    ){
-
-        document.getElementById(
-            "status"
-        ).textContent =
-        "Still connecting...";
-
-        return;
-
-    }
-
-
     playing =
     true;
 
 
     document.getElementById(
-        "start"
+        "startScreen"
     ).classList.add(
         "hidden"
     );
 
 
-    await channel.track({
-
-        id:myId,
-
-        name:player.name,
-
-        faction:player.faction,
-
-        color:player.color
-
-    });
-
-
-    await broadcast(
+    await send(
         "state",
-        getSnapshot()
+        packet()
     );
 
 
-    addEvent(
+    eventMessage(
         "🚀",
         `${player.name} entered the battlefield`
     );
@@ -2849,81 +2927,75 @@ async function(){
 
 
 /* =========================================================
-   FACTION SELECTOR
+   FACTION BUTTONS
 ========================================================= */
 
-for(
-    let i = 0;
+FACTIONS.forEach(
+    (f,index) => {
 
-    i < FACTIONS.length;
-
-    i++
-){
-
-    const button =
-    document.createElement(
-        "button"
-    );
+        const btn =
+        document.createElement(
+            "button"
+        );
 
 
-    button.className =
-    "color-button";
+        btn.className =
+        "color";
 
 
-    button.style.background =
-    FACTIONS[i].color;
+        btn.style.background =
+        f.color;
 
 
-    button.title =
-    FACTIONS[i].name;
+        btn.title =
+        f.name;
 
 
-    button.onclick =
-    () => {
+        btn.onclick =
+        () => {
 
-        selectedFaction =
-        i;
+            selectedFaction =
+            index;
 
 
-        document
-        .querySelectorAll(
-            ".color-button"
-        )
-        .forEach(
-            button =>
-            button.classList.remove(
-                "selected"
+            document
+            .querySelectorAll(
+                ".color"
             )
+            .forEach(
+                x =>
+                x.classList.remove(
+                    "selected"
+                )
+            );
+
+
+            btn.classList.add(
+                "selected"
+            );
+
+        };
+
+
+        document.getElementById(
+            "colors"
+        ).appendChild(
+            btn
         );
 
 
-        button.classList.add(
-            "selected"
-        );
+        if(
+            index === 0
+        ){
 
-    };
+            btn.classList.add(
+                "selected"
+            );
 
-
-    document
-    .getElementById(
-        "colors"
-    )
-    .appendChild(
-        button
-    );
-
-
-    if(
-        i === 0
-    ){
-
-        button.classList.add(
-            "selected"
-        );
+        }
 
     }
-
-}
+);
 
 
 /* =========================================================
@@ -2932,58 +3004,61 @@ for(
 
 document.getElementById(
     "chatForm"
-).onsubmit =
-async function(event){
+).addEventListener(
+    "submit",
+    async e => {
 
-    event.preventDefault();
-
-
-    const input =
-    document.getElementById(
-        "chatInput"
-    );
+        e.preventDefault();
 
 
-    const text =
-    input.value.trim();
+        const input =
+        document.getElementById(
+            "chatInput"
+        );
 
 
-    if(
-        !text
-    ){
-
-        return;
-
-    }
+        const text =
+        input.value.trim();
 
 
-    input.value =
-    "";
+        if(
+            !text ||
+            !connected
+        ){
 
-
-    addChat(
-        player.name,
-        text,
-        player.color
-    );
-
-
-    await broadcast(
-        "chat",
-        {
-
-            name:
-            player.name,
-
-            text,
-
-            color:
-            player.color
+            return;
 
         }
-    );
 
-};
+
+        input.value =
+        "";
+
+
+        addChat(
+            player.name,
+            text,
+            player.color
+        );
+
+
+        await send(
+            "chat",
+            {
+
+                name:
+                player.name,
+
+                text,
+
+                color:
+                player.color
+
+            }
+        );
+
+    }
+);
 
 
 /* =========================================================
@@ -2991,27 +3066,25 @@ async function(event){
 ========================================================= */
 
 document.getElementById(
-    "centerButton"
+    "centerBtn"
 ).onclick =
-function(){
+() => {
 
     player.x =
-    WORLD_WIDTH /
-    2;
-
+    WORLD_W / 2;
 
     player.y =
-    WORLD_HEIGHT /
-    2;
+    WORLD_H / 2;
 
+    player.vx = 0;
+    player.vy = 0;
 
     mouse.target =
     null;
 
-
-    broadcast(
+    send(
         "state",
-        getSnapshot()
+        packet()
     );
 
 };
@@ -3022,27 +3095,70 @@ function(){
 ========================================================= */
 
 document.getElementById(
-    "pauseButton"
+    "pauseBtn"
 ).onclick =
-function(){
+() => {
 
     paused =
     !paused;
 
-
-    this.textContent =
+    document.getElementById(
+        "pauseBtn"
+    ).textContent =
     paused
     ? "▶"
-    : "Ⅱ";
+    : "II";
 
 };
+
+
+/* =========================================================
+   REMOVE STALE PLAYERS
+========================================================= */
+
+setInterval(
+    () => {
+
+        const now =
+        Date.now();
+
+
+        for(
+            const [
+                id,
+                p
+            ]
+            of players
+        ){
+
+            if(
+                now -
+                p.lastSeen
+                >
+                8000
+            ){
+
+                players.delete(
+                    id
+                );
+
+            }
+
+        }
+
+
+        updateUI();
+
+    },
+    2000
+);
 
 
 /* =========================================================
    GAME LOOP
 ========================================================= */
 
-function gameLoop(
+function loop(
     now
 ){
 
@@ -3065,29 +3181,38 @@ function gameLoop(
         !paused
     ){
 
-        move(
+        updateMovement(
             dt
         );
 
 
+        /*
+           Broadcast position
+           ~20 times/sec.
+        */
+
         if(
             now -
-            player.lastSent
+            lastBroadcast
             >
-            55
+            50
         ){
 
-            player.lastSent =
+            lastBroadcast =
             now;
 
 
-            broadcast(
+            send(
                 "state",
-                getSnapshot()
+                packet()
             );
 
         }
 
+
+        /*
+           Ping every 2 seconds.
+        */
 
         if(
             now -
@@ -3100,14 +3225,14 @@ function gameLoop(
             now;
 
 
-            broadcast(
+            send(
                 "ping",
                 {
 
                     target:
-                    myId,
+                    player.id,
 
-                    time:
+                    sent:
                     performance.now()
 
                 }
@@ -3115,66 +3240,23 @@ function gameLoop(
 
         }
 
-
-        updateUI();
-
     }
 
 
-    draw();
+    drawWorld();
+
+    drawMinimap();
 
 
     requestAnimationFrame(
-        gameLoop
+        loop
     );
 
 }
 
 
 /* =========================================================
-   CLEAN STALE PLAYERS
-========================================================= */
-
-setInterval(
-    () => {
-
-        const cutoff =
-        Date.now() -
-        7000;
-
-
-        for(
-            const [
-                id,
-                p
-            ]
-            of players
-        ){
-
-            if(
-                !p.timestamp ||
-                p.timestamp <
-                cutoff
-            ){
-
-                players.delete(
-                    id
-                );
-
-            }
-
-        }
-
-
-        updateUI();
-
-    },
-    2000
-);
-
-
-/* =========================================================
-   START
+   INITIALISE
 ========================================================= */
 
 updateUI();
@@ -3182,7 +3264,7 @@ updateUI();
 connect();
 
 requestAnimationFrame(
-    gameLoop
+    loop
 );
 
 </script>
