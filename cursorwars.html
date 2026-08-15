@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>Cursor Wars | Ron.cool</title>
 
+<!-- Prevent favicon 404 -->
+<link rel="icon" href="data:,">
+
+<!-- Supabase -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 <style>
@@ -17,9 +22,9 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#05070b;
-    color:#fff;
-    font-family:Inter,Arial,sans-serif;
+    background:#05070c;
+    color:white;
+    font-family:Arial,Helvetica,sans-serif;
 }
 
 body{
@@ -31,166 +36,395 @@ canvas{
     inset:0;
     width:100%;
     height:100%;
+}
+
+#game{
     cursor:crosshair;
 }
+
+.hidden{
+    display:none!important;
+}
+
+/* =========================
+   START SCREEN
+========================= */
+
+#startScreen{
+    position:fixed;
+    inset:0;
+    z-index:100;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(70,130,255,.18),
+            transparent 40%
+        ),
+        #030509;
+}
+
+.startBox{
+    width:min(560px,92vw);
+    padding:40px;
+
+    text-align:center;
+
+    background:rgba(10,14,23,.85);
+
+    border:1px solid rgba(255,255,255,.1);
+
+    border-radius:18px;
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.5);
+
+    backdrop-filter:blur(20px);
+}
+
+.logoCursor{
+    font-size:65px;
+
+    margin-bottom:10px;
+
+    filter:
+        drop-shadow(
+            0 0 25px
+            rgba(75,140,255,.7)
+        );
+}
+
+h1{
+    margin:0;
+
+    font-size:58px;
+
+    line-height:.9;
+
+    letter-spacing:-5px;
+}
+
+h1 span{
+    color:#5792ff;
+}
+
+.subtitle{
+    margin:22px auto;
+
+    max-width:440px;
+
+    color:#7d899d;
+
+    font-size:12px;
+
+    line-height:1.7;
+}
+
+#name{
+    width:230px;
+
+    padding:13px 15px;
+
+    border:1px solid rgba(255,255,255,.12);
+
+    border-radius:9px;
+
+    outline:none;
+
+    background:rgba(255,255,255,.05);
+
+    color:white;
+
+    text-align:center;
+
+    font-size:13px;
+}
+
+#name:focus{
+    border-color:#5792ff;
+}
+
+.colors{
+    display:flex;
+
+    justify-content:center;
+
+    gap:12px;
+
+    margin:22px 0;
+}
+
+.colorButton{
+    width:32px;
+    height:32px;
+
+    border:0;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    transition:.15s;
+}
+
+.colorButton:hover{
+    transform:scale(1.15);
+}
+
+.colorButton.selected{
+    outline:2px solid white;
+    outline-offset:4px;
+}
+
+#status{
+    min-height:18px;
+
+    margin:12px;
+
+    color:#7c899d;
+
+    font-size:10px;
+}
+
+#playButton{
+    padding:14px 25px;
+
+    border:0;
+
+    border-radius:9px;
+
+    background:#4f8cff;
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+#playButton:hover{
+    background:#679cff;
+}
+
+#playButton:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
+/* =========================
+   HUD
+========================= */
 
 #hud{
     position:fixed;
     inset:0;
+
     pointer-events:none;
 }
 
 .topbar{
     position:absolute;
+
     top:0;
     left:0;
     right:0;
-    height:64px;
+
+    height:62px;
 
     display:flex;
     align-items:center;
-    gap:20px;
 
-    padding:0 20px;
+    gap:22px;
+
+    padding:0 18px;
 
     background:rgba(5,8,14,.88);
-    border-bottom:1px solid rgba(255,255,255,.08);
 
-    backdrop-filter:blur(18px);
+    border-bottom:1px solid rgba(255,255,255,.07);
+
+    backdrop-filter:blur(15px);
 }
 
 .logo{
-    font-size:20px;
+    font-size:19px;
     font-weight:1000;
     letter-spacing:-1px;
 }
 
 .logo span{
-    color:#5b91ff;
+    color:#5792ff;
+}
+
+.stat{
+    color:#647187;
+
+    font-size:8px;
+    font-weight:900;
+
+    letter-spacing:1px;
+}
+
+.stat b{
+    display:block;
+
+    margin-top:2px;
+
+    color:white;
+
+    font-size:12px;
+
+    letter-spacing:0;
 }
 
 .spacer{
     flex:1;
 }
 
-.stat{
-    color:#68758a;
-    font-size:8px;
+.hudButton{
+    pointer-events:auto;
+
+    padding:7px 11px;
+
+    border:1px solid rgba(255,255,255,.1);
+
+    border-radius:7px;
+
+    background:rgba(255,255,255,.05);
+
+    color:white;
+
+    font-size:9px;
+
     font-weight:900;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
+
+    cursor:pointer;
 }
 
-.stat b{
-    display:block;
-    margin-top:2px;
-    color:#fff;
-    font-size:12px;
-    letter-spacing:0;
+.hudButton:hover{
+    background:rgba(255,255,255,.1);
 }
+
+/* =========================
+   PANELS
+========================= */
 
 .panel{
     position:absolute;
-    top:80px;
 
-    width:230px;
+    top:77px;
 
-    padding:14px;
+    width:220px;
 
-    background:rgba(7,11,18,.87);
+    padding:13px;
+
+    background:rgba(7,11,18,.86);
+
     border:1px solid rgba(255,255,255,.08);
-    border-radius:12px;
 
-    backdrop-filter:blur(18px);
+    border-radius:11px;
 
-    pointer-events:auto;
+    backdrop-filter:blur(15px);
 }
 
-.left{
-    left:15px;
+.leftPanel{
+    left:14px;
 }
 
-.right{
-    right:15px;
+.rightPanel{
+    right:14px;
 }
 
 .label{
     margin-bottom:9px;
 
-    color:#68758a;
+    color:#637086;
 
     font-size:8px;
     font-weight:1000;
-    letter-spacing:1.6px;
-    text-transform:uppercase;
+
+    letter-spacing:1.5px;
 }
 
-.player-card{
-    padding:12px;
+.playerCard{
+    padding:11px;
+
+    margin-bottom:15px;
 
     background:rgba(255,255,255,.035);
 
-    border:1px solid rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.06);
 
-    border-radius:9px;
-
-    margin-bottom:14px;
+    border-radius:8px;
 }
 
-.player-name{
-    font-size:17px;
+.playerName{
+    font-size:16px;
     font-weight:1000;
 }
 
-.faction-name{
-    color:#8a96a8;
+.factionName{
+    margin-top:3px;
+
+    color:#7b879a;
+
     font-size:9px;
-    margin-top:2px;
 }
 
-.health-bg{
+.healthOuter{
     height:5px;
 
     margin-top:10px;
 
-    background:#202633;
+    overflow:hidden;
+
+    background:#202632;
 
     border-radius:99px;
-
-    overflow:hidden;
 }
 
 #healthBar{
-    height:100%;
     width:100%;
-    background:#4be48a;
-    transition:width .15s;
+    height:100%;
+
+    background:#4be38b;
+
+    transition:.15s;
 }
 
 .row{
     display:flex;
+
     justify-content:space-between;
 
-    font-size:10px;
     line-height:2;
 
-    color:#778498;
+    color:#748196;
+
+    font-size:10px;
 }
 
 .row b{
-    color:#fff;
+    color:white;
 }
 
 .faction{
     display:flex;
-    align-items:center;
-    gap:8px;
 
-    padding:8px;
+    align-items:center;
+
+    gap:8px;
 
     margin:4px 0;
 
-    border-radius:8px;
+    padding:8px;
+
+    border-radius:7px;
 
     background:rgba(255,255,255,.025);
 }
@@ -202,84 +436,65 @@ canvas{
     border-radius:50%;
 }
 
-.faction-title{
+.factionNameSmall{
     flex:1;
 
     font-size:10px;
     font-weight:900;
 }
 
-.faction-count{
+.factionCount{
     color:#758196;
-    font-size:10px;
-}
-
-#events{
-    position:absolute;
-    left:15px;
-    bottom:15px;
-
-    width:330px;
-}
-
-.event{
-    margin-top:5px;
-
-    padding:8px 10px;
-
-    border:1px solid rgba(255,255,255,.07);
-
-    border-radius:8px;
-
-    background:rgba(5,9,15,.82);
-
-    color:#b8c2d0;
 
     font-size:10px;
-
-    backdrop-filter:blur(12px);
 }
 
-.chat{
+/* =========================
+   CHAT
+========================= */
+
+#chat{
     position:absolute;
-    right:15px;
-    bottom:15px;
+
+    right:14px;
+    bottom:14px;
 
     width:310px;
 
     pointer-events:auto;
 }
 
-.chat-log{
+#chatMessages{
     height:170px;
 
-    padding:10px;
+    padding:9px;
 
     overflow:hidden;
 
-    background:rgba(7,11,18,.9);
+    background:rgba(6,10,16,.9);
 
     border:1px solid rgba(255,255,255,.08);
 
     border-radius:10px 10px 0 0;
 
-    backdrop-filter:blur(18px);
+    backdrop-filter:blur(15px);
 }
 
-.chat-message{
-    font-size:10px;
-    line-height:1.5;
-
+.chatLine{
     margin:4px 0;
 
-    color:#c0c8d4;
+    color:#b7c1cf;
+
+    font-size:10px;
+
+    line-height:1.4;
 }
 
-.chat-message strong{
-    margin-right:4px;
+.chatLine strong{
+    margin-right:5px;
 }
 
-.chat-form{
+.chatInputRow{
     display:flex;
 
     height:38px;
@@ -293,286 +508,169 @@ canvas{
     border-radius:0 0 10px 10px;
 }
 
-.chat-form input{
+#chatInput{
     flex:1;
 
     min-width:0;
 
     padding:0 10px;
 
-    outline:0;
     border:0;
+    outline:0;
+
+    background:transparent;
 
     color:white;
-    background:transparent;
 
     font-size:10px;
 }
 
-.chat-form button{
-    width:50px;
+#chatSend{
+    width:48px;
 
     border:0;
 
-    background:#4f8fff;
+    background:#4f8cff;
 
     color:white;
 
-    font-weight:1000;
-
     cursor:pointer;
 
-    border-radius:0 0 9px 0;
+    font-weight:900;
 }
+
+/* =========================
+   EVENTS
+========================= */
+
+#events{
+    position:absolute;
+
+    left:14px;
+    bottom:14px;
+
+    width:330px;
+}
+
+.event{
+    margin-top:5px;
+
+    padding:8px 10px;
+
+    background:rgba(5,9,15,.85);
+
+    border:1px solid rgba(255,255,255,.07);
+
+    border-radius:7px;
+
+    color:#b7c1cf;
+
+    font-size:10px;
+}
+
+/* =========================
+   MINIMAP
+========================= */
 
 #minimap{
     position:absolute;
 
-    right:340px;
-    bottom:15px;
+    right:338px;
+    bottom:14px;
 
     width:210px;
     height:130px;
 
     border:1px solid rgba(255,255,255,.1);
 
-    border-radius:10px;
+    border-radius:9px;
 
     background:#070a10;
 }
+
+/* =========================
+   CONTROLS
+========================= */
 
 #controls{
     position:absolute;
 
     left:50%;
-    bottom:15px;
+    bottom:14px;
 
     transform:translateX(-50%);
 
     padding:8px 12px;
 
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:8px;
-
     background:rgba(5,9,15,.8);
 
-    color:#788497;
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:7px;
+
+    color:#738096;
 
     font-size:9px;
 
     backdrop-filter:blur(10px);
 }
 
-button.small{
-    pointer-events:auto;
+/* =========================
+   DEATH
+========================= */
 
-    border:1px solid rgba(255,255,255,.1);
-
-    border-radius:7px;
-
-    padding:7px 11px;
-
-    background:rgba(255,255,255,.06);
-
-    color:white;
-
-    font-weight:900;
-
-    cursor:pointer;
-}
-
-button.small:hover{
-    background:rgba(255,255,255,.12);
-}
-
-/* START */
-
-#startScreen{
+#deathScreen{
     position:fixed;
-    z-index:50;
 
     inset:0;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:
-        radial-gradient(
-            circle at 50% 38%,
-            rgba(75,130,255,.16),
-            transparent 40%
-        ),
-        #030509;
-
-    backdrop-filter:blur(8px);
-}
-
-.start{
-    width:min(560px,92vw);
-
-    text-align:center;
-}
-
-.cursorIcon{
-    font-size:68px;
-
-    filter:
-        drop-shadow(
-            0 0 25px
-            rgba(79,143,255,.6)
-        );
-}
-
-h1{
-    margin:10px 0;
-
-    font-size:60px;
-
-    line-height:.9;
-
-    letter-spacing:-5px;
-}
-
-h1 span{
-    color:#568eff;
-}
-
-.subtitle{
-    max-width:480px;
-
-    margin:18px auto;
-
-    color:#818da0;
-
-    font-size:12px;
-
-    line-height:1.7;
-}
-
-#nameInput{
-    width:210px;
-
-    padding:12px;
-
-    border:1px solid rgba(255,255,255,.12);
-
-    border-radius:8px;
-
-    outline:none;
-
-    background:rgba(255,255,255,.05);
-
-    color:white;
-
-    text-align:center;
-
-    font-size:12px;
-}
-
-.colors{
-    display:flex;
-    justify-content:center;
-
-    gap:10px;
-
-    margin:18px 0;
-}
-
-.color{
-    width:30px;
-    height:30px;
-
-    border:0;
-
-    border-radius:50%;
-
-    cursor:pointer;
-}
-
-.color.selected{
-    outline:2px solid white;
-    outline-offset:3px;
-}
-
-#connectionStatus{
-    min-height:18px;
-
-    color:#718097;
-
-    font-size:10px;
-
-    margin:10px;
-}
-
-#play{
-    padding:13px 22px;
-
-    border:0;
-
-    border-radius:8px;
-
-    background:#4f8fff;
-
-    color:white;
-
-    font-weight:1000;
-
-    cursor:pointer;
-}
-
-#play:disabled{
-    opacity:.45;
-    cursor:not-allowed;
-}
-
-.hidden{
-    display:none!important;
-}
-
-#deadScreen{
-    position:fixed;
-    z-index:40;
-
-    inset:0;
+    z-index:90;
 
     display:none;
 
     align-items:center;
     justify-content:center;
 
-    background:rgba(0,0,0,.45);
+    background:rgba(0,0,0,.5);
 
     pointer-events:none;
 }
 
-#deadScreen div{
+.deathText{
     text-align:center;
 }
 
-#deadScreen h2{
-    font-size:50px;
+.deathText h2{
     margin:0;
+
+    font-size:52px;
+
+    letter-spacing:-3px;
 }
 
-#deadScreen p{
-    color:#8995a8;
+.deathText p{
+    color:#7e899c;
+
+    font-size:11px;
 }
+
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:850px){
 
-    .left{
+    .leftPanel{
         display:none;
     }
 
-    .right{
-        width:180px;
-        top:72px;
+    .rightPanel{
+        top:70px;
         right:8px;
+        width:175px;
     }
 
-    .chat{
+    #chat{
         display:none;
     }
 
@@ -580,13 +678,13 @@ h1 span{
         display:none;
     }
 
+    #controls{
+        display:none;
+    }
+
     #minimap{
         right:8px;
         bottom:8px;
-    }
-
-    #controls{
-        display:none;
     }
 
     .topbar{
@@ -598,14 +696,72 @@ h1 span{
         display:none;
     }
 
-}
+    h1{
+        font-size:45px;
+    }
 
+    .startBox{
+        padding:30px 20px;
+    }
+}
 </style>
 </head>
 
 <body>
 
 <canvas id="game"></canvas>
+
+<!-- =========================
+     START
+========================= -->
+
+<div id="startScreen">
+
+    <div class="startBox">
+
+        <div class="logoCursor">🖱️</div>
+
+        <h1>
+            CURSOR <span>WARS</span>
+        </h1>
+
+        <div class="subtitle">
+            Real-time multiplayer cursor combat.
+            Join the global battlefield, choose a faction
+            and fight other players.
+        </div>
+
+        <input
+            id="name"
+            maxlength="16"
+            value="RON"
+            placeholder="Your cursor name"
+        >
+
+        <div
+            class="colors"
+            id="colors"
+        ></div>
+
+        <div id="status">
+            Loading multiplayer...
+        </div>
+
+        <button
+            id="playButton"
+            disabled
+        >
+            CONNECTING...
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     HUD
+========================= -->
 
 <div id="hud">
 
@@ -616,7 +772,7 @@ h1 span{
         </div>
 
         <div class="stat">
-            PLAYERS
+            ONLINE
             <b id="online">1</b>
         </div>
 
@@ -627,45 +783,51 @@ h1 span{
 
         <div class="stat">
             KILLS
-            <b id="topKills">0</b>
+            <b id="killsTop">0</b>
         </div>
 
         <div class="spacer"></div>
 
-        <button class="small" id="centerBtn">
+        <button
+            class="hudButton"
+            id="center"
+        >
             CENTER
         </button>
 
-        <button class="small" id="pauseBtn">
+        <button
+            class="hudButton"
+            id="pause"
+        >
             II
         </button>
 
     </div>
 
 
-    <div class="panel left">
+    <div class="panel leftPanel">
 
         <div class="label">
             YOUR CURSOR
         </div>
 
-        <div class="player-card">
+        <div class="playerCard">
 
             <div
-                class="player-name"
-                id="myName"
+                class="playerName"
+                id="playerName"
             >
                 RON
             </div>
 
             <div
-                class="faction-name"
-                id="myFaction"
+                class="factionName"
+                id="playerFaction"
             >
                 Azure
             </div>
 
-            <div class="health-bg">
+            <div class="healthOuter">
                 <div id="healthBar"></div>
             </div>
 
@@ -675,7 +837,6 @@ h1 span{
             </div>
 
         </div>
-
 
         <div class="label">
             STATISTICS
@@ -693,13 +854,13 @@ h1 span{
 
         <div class="row">
             <span>Connection</span>
-            <b id="connection">CONNECTING</b>
+            <b id="connection">—</b>
         </div>
 
     </div>
 
 
-    <div class="panel right">
+    <div class="panel rightPanel">
 
         <div class="label">
             FACTIONS
@@ -728,15 +889,12 @@ h1 span{
     </div>
 
 
-    <div class="chat">
+    <div id="chat">
 
-        <div
-            class="chat-log"
-            id="chatLog"
-        ></div>
+        <div id="chatMessages"></div>
 
         <form
-            class="chat-form"
+            class="chatInputRow"
             id="chatForm"
         >
 
@@ -747,7 +905,7 @@ h1 span{
                 placeholder="Message..."
             >
 
-            <button>
+            <button id="chatSend">
                 ➤
             </button>
 
@@ -758,54 +916,19 @@ h1 span{
 </div>
 
 
-<div id="deadScreen">
-    <div>
+<!-- =========================
+     DEATH
+========================= -->
+
+<div id="deathScreen">
+
+    <div class="deathText">
+
         <h2>💀 ELIMINATED</h2>
-        <p>Respawning...</p>
-    </div>
-</div>
 
-
-<div id="startScreen">
-
-    <div class="start">
-
-        <div class="cursorIcon">
-            🖱️
-        </div>
-
-        <h1>
-            CURSOR <span>WARS</span>
-        </h1>
-
-        <div class="subtitle">
-            A real-time multiplayer cursor battlefield.
-            Enter the same world as everyone else on Ron.cool,
-            choose your faction and fight.
-        </div>
-
-        <input
-            id="nameInput"
-            maxlength="16"
-            value="RON"
-            placeholder="Cursor name"
-        >
-
-        <div
-            class="colors"
-            id="colors"
-        ></div>
-
-        <div id="connectionStatus">
-            Connecting to multiplayer...
-        </div>
-
-        <button
-            id="play"
-            disabled
-        >
-            CONNECTING...
-        </button>
+        <p>
+            Respawning...
+        </p>
 
     </div>
 
@@ -815,16 +938,17 @@ h1 span{
 <script>
 
 /* =========================================================
-   SUPABASE
+   SUPABASE CONFIG
 ========================================================= */
 
 const SUPABASE_URL =
 "https://rldidvwcylirjyfktvtg.supabase.co";
 
 const SUPABASE_ANON_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZGlkdndjeWxpcmp5Zmt2dGciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc4NjIyMzQ5MCwiZXhwIjoyMTAxNzk5NDk0MH0.YO5zeu5uL3siDDPVfs9v_VCETHixTWXjzotVOEp0U";
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZGlkdndjeWxpcmp5Zmt0dnRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYyMjM0OTAsImV4cCI6MjEwMTc5OTQ5MH0.YO5zeu5uL3siDDPVfs9v_VCETHixTWXjzotVOEp0U";
 
-const supabaseClient =
+
+const db =
 supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
@@ -839,20 +963,21 @@ supabase.createClient(
 
 
 /* =========================================================
-   WORLD
+   GAME CONFIG
 ========================================================= */
 
-const WORLD_W = 4000;
-const WORLD_H = 2500;
+const WORLD_WIDTH = 4000;
+const WORLD_HEIGHT = 2500;
 
-const ROOM = "cursor-wars-global-v2";
+const ROOM =
+"cursor-wars-global";
 
 
 const FACTIONS = [
 
     {
         name:"Azure",
-        color:"#4f8fff"
+        color:"#4f8cff"
     },
 
     {
@@ -862,12 +987,12 @@ const FACTIONS = [
 
     {
         name:"Emerald",
-        color:"#45dc8a"
+        color:"#45df8b"
     },
 
     {
         name:"Violet",
-        color:"#a86cff"
+        color:"#a76cff"
     },
 
     {
@@ -888,41 +1013,47 @@ document.getElementById("game");
 const ctx =
 canvas.getContext("2d");
 
-const mini =
+const minimap =
 document.getElementById("minimap");
 
 const mctx =
-mini.getContext("2d");
+minimap.getContext("2d");
 
-let W = innerWidth;
-let H = innerHeight;
+let width =
+innerWidth;
 
-let DPR =
+let height =
+innerHeight;
+
+let dpr =
 devicePixelRatio || 1;
 
 
 function resize(){
 
-    W = innerWidth;
-    H = innerHeight;
+    width =
+    innerWidth;
+
+    height =
+    innerHeight;
 
     canvas.width =
-    W * DPR;
+    width * dpr;
 
     canvas.height =
-    H * DPR;
+    height * dpr;
 
     canvas.style.width =
-    W + "px";
+    width + "px";
 
     canvas.style.height =
-    H + "px";
+    height + "px";
 
     ctx.setTransform(
-        DPR,
+        dpr,
         0,
         0,
-        DPR,
+        dpr,
         0,
         0
     );
@@ -938,15 +1069,16 @@ addEventListener(
 
 
 /* =========================================================
-   LOCAL PLAYER
+   PLAYER
 ========================================================= */
 
-const id =
+const myId =
 crypto.randomUUID();
 
-const player = {
 
-    id,
+const me = {
+
+    id:myId,
 
     name:"RON",
 
@@ -954,9 +1086,9 @@ const player = {
 
     color:FACTIONS[0].color,
 
-    x:WORLD_W / 2,
+    x:WORLD_WIDTH / 2,
 
-    y:WORLD_H / 2,
+    y:WORLD_HEIGHT / 2,
 
     vx:0,
 
@@ -970,8 +1102,6 @@ const player = {
 
     alive:true,
 
-    lastNetwork:0,
-
     lastAttack:0
 
 };
@@ -981,8 +1111,23 @@ const player = {
    REMOTE PLAYERS
 ========================================================= */
 
-const players =
+const remotePlayers =
 new Map();
+
+
+/* =========================================================
+   NETWORK
+========================================================= */
+
+let channel = null;
+
+let connected = false;
+
+let joined = false;
+
+let lastSend = 0;
+
+let lastPing = 0;
 
 
 /* =========================================================
@@ -994,6 +1139,7 @@ const keys = {};
 const mouse = {
 
     x:0,
+
     y:0,
 
     target:null
@@ -1005,8 +1151,10 @@ addEventListener(
     "keydown",
     e => {
 
-        keys[e.key.toLowerCase()] =
-        true;
+        keys[
+            e.key.toLowerCase()
+        ] = true;
+
 
         if(
             e.key === " "
@@ -1014,15 +1162,7 @@ addEventListener(
 
             e.preventDefault();
 
-            paused =
-            !paused;
-
-            document.getElementById(
-                "pauseBtn"
-            ).textContent =
-            paused
-            ? "▶"
-            : "II";
+            togglePause();
 
         }
 
@@ -1044,8 +1184,9 @@ addEventListener(
     "keyup",
     e => {
 
-        keys[e.key.toLowerCase()] =
-        false;
+        keys[
+            e.key.toLowerCase()
+        ] = false;
 
     }
 );
@@ -1070,7 +1211,8 @@ canvas.addEventListener(
     e => {
 
         if(
-            e.button !== 0
+            e.button !== 0 ||
+            !joined
         ){
 
             return;
@@ -1081,17 +1223,17 @@ canvas.addEventListener(
         mouse.target = {
 
             x:
-            player.x +
+            me.x +
             (
                 e.clientX -
-                W / 2
+                width / 2
             ),
 
             y:
-            player.y +
+            me.y +
             (
                 e.clientY -
-                H / 2
+                height / 2
             )
 
         };
@@ -1108,37 +1250,11 @@ canvas.addEventListener(
 
 
 /* =========================================================
-   GAME STATE
-========================================================= */
-
-let channel = null;
-
-let connected = false;
-
-let playing = false;
-
-let paused = false;
-
-let selectedFaction = 0;
-
-let lastFrame =
-performance.now();
-
-let lastBroadcast = 0;
-
-let lastPing = 0;
-
-let events = [];
-
-let chatMessages = [];
-
-
-/* =========================================================
-   UTILS
+   UTILITY
 ========================================================= */
 
 function clamp(
-    n,
+    value,
     min,
     max
 ){
@@ -1147,14 +1263,14 @@ function clamp(
         min,
         Math.min(
             max,
-            n
+            value
         )
     );
 
 }
 
 
-function dist(
+function distance(
     a,
     b
 ){
@@ -1167,270 +1283,25 @@ function dist(
 }
 
 
-function safe(
-    text
+function escapeHTML(
+    value
 ){
 
-    return String(text)
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    );
+    return String(value)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
 
 }
 
 
 /* =========================================================
-   UI
+   NETWORK SEND
 ========================================================= */
 
-function updateUI(){
-
-    document.getElementById(
-        "online"
-    ).textContent =
-    players.size + 1;
-
-
-    document.getElementById(
-        "topKills"
-    ).textContent =
-    player.kills;
-
-
-    document.getElementById(
-        "kills"
-    ).textContent =
-    player.kills;
-
-
-    document.getElementById(
-        "deaths"
-    ).textContent =
-    player.deaths;
-
-
-    document.getElementById(
-        "myName"
-    ).textContent =
-    player.name;
-
-
-    document.getElementById(
-        "myFaction"
-    ).textContent =
-    FACTIONS[
-        player.faction
-    ].name;
-
-
-    document.getElementById(
-        "health"
-    ).textContent =
-    Math.ceil(
-        player.hp
-    );
-
-
-    document.getElementById(
-        "healthBar"
-    ).style.width =
-    player.hp + "%";
-
-
-    const counts =
-    FACTIONS.map(
-        () => 0
-    );
-
-
-    counts[
-        player.faction
-    ]++;
-
-
-    for(
-        const p of players.values()
-    ){
-
-        if(
-            p.alive &&
-            counts[p.faction] !== undefined
-        ){
-
-            counts[p.faction]++;
-
-        }
-
-    }
-
-
-    document.getElementById(
-        "factions"
-    ).innerHTML =
-    FACTIONS.map(
-        (f,i) => `
-
-            <div class="faction">
-
-                <div
-                    class="dot"
-                    style="
-                        background:${f.color};
-                        box-shadow:0 0 9px ${f.color};
-                    "
-                ></div>
-
-                <div class="faction-title">
-                    ${f.name}
-                </div>
-
-                <div class="faction-count">
-                    ${counts[i]}
-                </div>
-
-            </div>
-
-        `
-    ).join("");
-
-}
-
-
-/* =========================================================
-   EVENTS
-========================================================= */
-
-function eventMessage(
-    icon,
-    text
-){
-
-    events.unshift({
-        icon,
-        text
-    });
-
-    events =
-    events.slice(
-        0,
-        5
-    );
-
-    document.getElementById(
-        "events"
-    ).innerHTML =
-    events.map(
-        e => `
-
-            <div class="event">
-                ${e.icon}
-                ${safe(e.text)}
-            </div>
-
-        `
-    ).join("");
-
-}
-
-
-/* =========================================================
-   CHAT
-========================================================= */
-
-function addChat(
-    name,
-    text,
-    color
-){
-
-    chatMessages.push({
-        name,
-        text,
-        color
-    });
-
-    chatMessages =
-    chatMessages.slice(
-        -30
-    );
-
-    document.getElementById(
-        "chatLog"
-    ).innerHTML =
-    chatMessages.map(
-        m => `
-
-            <div class="chat-message">
-
-                <strong
-                    style="color:${m.color}"
-                >
-                    ${safe(m.name)}
-                </strong>
-
-                ${safe(m.text)}
-
-            </div>
-
-        `
-    ).join("");
-
-}
-
-
-/* =========================================================
-   PLAYER PACKET
-========================================================= */
-
-function packet(){
-
-    return {
-
-        id:player.id,
-
-        name:player.name,
-
-        faction:player.faction,
-
-        color:player.color,
-
-        x:Math.round(player.x),
-
-        y:Math.round(player.y),
-
-        hp:Math.round(player.hp),
-
-        kills:player.kills,
-
-        deaths:player.deaths,
-
-        alive:player.alive,
-
-        time:Date.now()
-
-    };
-
-}
-
-
-/* =========================================================
-   SEND
-========================================================= */
-
-async function send(
+async function broadcast(
     event,
     payload
 ){
@@ -1444,24 +1315,25 @@ async function send(
 
     }
 
+
     try{
 
         await channel.send({
 
             type:"broadcast",
 
-            event,
+            event:event,
 
-            payload
+            payload:payload
 
         });
 
     }
-    catch(err){
+    catch(error){
 
         console.error(
-            "Realtime send failed:",
-            err
+            "Broadcast failed:",
+            error
         );
 
     }
@@ -1470,16 +1342,51 @@ async function send(
 
 
 /* =========================================================
-   RECEIVE STATE
+   STATE
 ========================================================= */
 
-function receiveState(
-    data
+function state(){
+
+    return {
+
+        id:me.id,
+
+        name:me.name,
+
+        faction:me.faction,
+
+        color:me.color,
+
+        x:Math.round(me.x),
+
+        y:Math.round(me.y),
+
+        hp:Math.round(me.hp),
+
+        kills:me.kills,
+
+        deaths:me.deaths,
+
+        alive:me.alive,
+
+        sent:Date.now()
+
+    };
+
+}
+
+
+/* =========================================================
+   RECEIVE PLAYER
+========================================================= */
+
+function receivePlayer(
+data
 ){
 
     if(
         !data ||
-        data.id === player.id
+        data.id === me.id
     ){
 
         return;
@@ -1487,95 +1394,88 @@ function receiveState(
     }
 
 
-    const old =
-    players.get(
+    let p =
+    remotePlayers.get(
         data.id
     );
 
 
-    if(old){
+    if(!p){
 
-        old.targetX =
-        Number(data.x);
+        p = {
 
-        old.targetY =
-        Number(data.y);
+            id:data.id,
 
-        old.hp =
-        Number(data.hp);
+            name:data.name || "PLAYER",
 
-        old.alive =
-        data.alive !== false;
+            faction:Number(data.faction) || 0,
 
-        old.name =
-        data.name || "PLAYER";
+            color:data.color || "#fff",
 
-        old.color =
-        data.color || "#fff";
+            x:Number(data.x) || 0,
 
-        old.faction =
-        Number(data.faction) || 0;
+            y:Number(data.y) || 0,
 
-        old.kills =
-        Number(data.kills) || 0;
+            targetX:Number(data.x) || 0,
 
-        old.deaths =
-        Number(data.deaths) || 0;
+            targetY:Number(data.y) || 0,
 
-        old.lastSeen =
-        Date.now();
+            hp:Number(data.hp) || 100,
+
+            kills:Number(data.kills) || 0,
+
+            deaths:Number(data.deaths) || 0,
+
+            alive:data.alive !== false,
+
+            lastSeen:Date.now()
+
+        };
+
+        remotePlayers.set(
+            data.id,
+            p
+        );
+
+        addEvent(
+            "👋",
+            `${p.name} joined`
+        );
 
     }
     else{
 
-        players.set(
-            data.id,
-            {
+        p.name =
+        data.name || p.name;
 
-                id:data.id,
+        p.faction =
+        Number(data.faction) || 0;
 
-                name:data.name || "PLAYER",
+        p.color =
+        data.color || p.color;
 
-                faction:
-                Number(data.faction) || 0,
+        p.targetX =
+        Number(data.x) || p.x;
 
-                color:
-                data.color || "#fff",
+        p.targetY =
+        Number(data.y) || p.y;
 
-                x:Number(data.x),
+        p.hp =
+        Number(data.hp) || 0;
 
-                y:Number(data.y),
+        p.kills =
+        Number(data.kills) || 0;
 
-                targetX:Number(data.x),
+        p.deaths =
+        Number(data.deaths) || 0;
 
-                targetY:Number(data.y),
+        p.alive =
+        data.alive !== false;
 
-                hp:Number(data.hp),
-
-                kills:
-                Number(data.kills) || 0,
-
-                deaths:
-                Number(data.deaths) || 0,
-
-                alive:
-                data.alive !== false,
-
-                lastSeen:
-                Date.now()
-
-            }
-        );
-
-        eventMessage(
-            "👋",
-            `${data.name || "Player"} joined`
-        );
+        p.lastSeen =
+        Date.now();
 
     }
-
-
-    updateUI();
 
 }
 
@@ -1585,21 +1485,13 @@ function receiveState(
 ========================================================= */
 
 function receiveAttack(
-    data
+data
 ){
 
     if(
         !data ||
-        data.target !== player.id
-    ){
-
-        return;
-
-    }
-
-
-    if(
-        !player.alive
+        data.target !== me.id ||
+        !me.alive
     ){
 
         return;
@@ -1608,14 +1500,12 @@ function receiveAttack(
 
 
     const attacker =
-    players.get(
+    remotePlayers.get(
         data.attacker
     );
 
 
-    if(
-        !attacker
-    ){
+    if(!attacker){
 
         return;
 
@@ -1623,12 +1513,12 @@ function receiveAttack(
 
 
     /*
-       Same faction = no damage.
+       Friendly fire disabled.
     */
 
     if(
         attacker.faction ===
-        player.faction
+        me.faction
     ){
 
         return;
@@ -1637,14 +1527,17 @@ function receiveAttack(
 
 
     /*
-       Distance validation.
+       Server-side validation isn't
+       available in this one-file
+       client-only version, so still
+       validate distance here.
     */
 
     if(
-        dist(
-            player,
+        distance(
+            me,
             attacker
-        ) > 145
+        ) > 160
     ){
 
         return;
@@ -1660,44 +1553,42 @@ function receiveAttack(
     );
 
 
-    player.hp -=
+    me.hp -=
     damage;
 
 
     if(
-        player.hp <= 0
+        me.hp <= 0
     ){
 
-        player.hp = 0;
+        me.hp = 0;
 
-        player.alive = false;
+        me.alive = false;
 
-        player.deaths++;
+        me.deaths++;
 
 
         document.getElementById(
-            "deadScreen"
+            "deathScreen"
         ).style.display =
         "flex";
 
 
-        send(
-            "death",
-            {
-
-                victim:
-                player.id,
-
-                killer:
-                attacker.id
-
-            }
+        addEvent(
+            "💀",
+            `You were eliminated by ${attacker.name}`
         );
 
 
-        eventMessage(
-            "💀",
-            `You were eliminated by ${attacker.name}`
+        broadcast(
+            "death",
+            {
+
+                victim:me.id,
+
+                killer:attacker.id
+
+            }
         );
 
 
@@ -1710,11 +1601,9 @@ function receiveAttack(
         );
 
     }
-    else{
 
-        updateUI();
 
-    }
+    updateUI();
 
 }
 
@@ -1724,12 +1613,11 @@ function receiveAttack(
 ========================================================= */
 
 function receiveDeath(
-    data
+data
 ){
 
     if(
-        !data ||
-        data.victim === player.id
+        !data
     ){
 
         return;
@@ -1738,7 +1626,7 @@ function receiveDeath(
 
 
     const victim =
-    players.get(
+    remotePlayers.get(
         data.victim
     );
 
@@ -1753,23 +1641,23 @@ function receiveDeath(
 
 
     if(
-        data.killer === player.id
+        data.killer === me.id
     ){
 
-        player.kills++;
+        me.kills++;
 
 
-        eventMessage(
+        addEvent(
             "🎯",
             `You eliminated ${victim?.name || "a player"}`
         );
 
     }
-    else{
+    else if(victim){
 
-        eventMessage(
+        addEvent(
             "💀",
-            `${victim?.name || "A player"} was eliminated`
+            `${victim.name} was eliminated`
         );
 
     }
@@ -1786,46 +1674,44 @@ function receiveDeath(
 
 function respawn(){
 
-    player.x =
-    250 +
+    me.x =
+    300 +
     Math.random() *
     (
-        WORLD_W -
-        500
+        WORLD_WIDTH - 600
     );
 
 
-    player.y =
-    250 +
+    me.y =
+    300 +
     Math.random() *
     (
-        WORLD_H -
-        500
+        WORLD_HEIGHT - 600
     );
 
 
-    player.hp = 100;
+    me.vx = 0;
 
-    player.alive = true;
+    me.vy = 0;
 
-    player.vx = 0;
+    me.hp = 100;
 
-    player.vy = 0;
+    me.alive = true;
 
 
     document.getElementById(
-        "deadScreen"
+        "deathScreen"
     ).style.display =
     "none";
 
 
-    send(
+    broadcast(
         "state",
-        packet()
+        state()
     );
 
 
-    eventMessage(
+    addEvent(
         "⚡",
         "You respawned"
     );
@@ -1840,12 +1726,13 @@ function respawn(){
    ATTACK
 ========================================================= */
 
-async function attack(){
+function attack(){
 
     if(
-        !playing ||
-        paused ||
-        !player.alive
+        !joined ||
+        !connected ||
+        !me.alive ||
+        paused
     ){
 
         return;
@@ -1859,9 +1746,9 @@ async function attack(){
 
     if(
         now -
-        player.lastAttack
+        me.lastAttack
         <
-        450
+        400
     ){
 
         return;
@@ -1869,20 +1756,20 @@ async function attack(){
     }
 
 
-    let closest = null;
+    let target = null;
 
-    let closestDistance =
+    let best =
     Infinity;
 
 
     for(
-        const p of players.values()
+        const p of remotePlayers.values()
     ){
 
         if(
             !p.alive ||
             p.faction ===
-            player.faction
+            me.faction
         ){
 
             continue;
@@ -1891,22 +1778,20 @@ async function attack(){
 
 
         const d =
-        dist(
-            player,
+        distance(
+            me,
             p
         );
 
 
         if(
             d <
-            closestDistance
+            best
         ){
 
-            closestDistance =
-            d;
+            best = d;
 
-            closest =
-            p;
+            target = p;
 
         }
 
@@ -1914,9 +1799,8 @@ async function attack(){
 
 
     if(
-        !closest ||
-        closestDistance >
-        145
+        !target ||
+        best > 150
     ){
 
         return;
@@ -1924,25 +1808,22 @@ async function attack(){
     }
 
 
-    player.lastAttack =
+    me.lastAttack =
     now;
 
 
-    await send(
+    broadcast(
         "attack",
         {
 
-            attacker:
-            player.id,
+            attacker:me.id,
 
-            target:
-            closest.id,
+            target:target.id,
 
             damage:
             10 +
             Math.floor(
-                Math.random() *
-                6
+                Math.random() * 6
             )
 
         }
@@ -1955,12 +1836,14 @@ async function attack(){
    MOVEMENT
 ========================================================= */
 
-function updateMovement(
-    dt
+function move(
+dt
 ){
 
     if(
-        !player.alive
+        !joined ||
+        paused ||
+        !me.alive
     ){
 
         return;
@@ -1969,6 +1852,7 @@ function updateMovement(
 
 
     let dx = 0;
+
     let dy = 0;
 
 
@@ -2017,15 +1901,18 @@ function updateMovement(
         dy
     ){
 
-        const len =
+        const length =
         Math.hypot(
             dx,
             dy
         );
 
 
-        dx /= len;
-        dy /= len;
+        dx /=
+        length;
+
+        dy /=
+        length;
 
 
         mouse.target =
@@ -2038,14 +1925,14 @@ function updateMovement(
 
         dx =
         mouse.target.x -
-        player.x;
+        me.x;
 
         dy =
         mouse.target.y -
-        player.y;
+        me.y;
 
 
-        const len =
+        const length =
         Math.hypot(
             dx,
             dy
@@ -2053,40 +1940,45 @@ function updateMovement(
 
 
         if(
-            len < 10
+            length < 8
         ){
 
             mouse.target =
             null;
 
             dx = 0;
+
             dy = 0;
 
         }
         else{
 
-            dx /= len;
-            dy /= len;
+            dx /=
+            length;
+
+            dy /=
+            length;
 
         }
 
     }
 
 
-    const speed = 290;
+    const speed =
+    290;
 
 
-    const desiredX =
+    const targetVX =
     dx * speed;
 
-    const desiredY =
+    const targetVY =
     dy * speed;
 
 
-    player.vx +=
+    me.vx +=
     (
-        desiredX -
-        player.vx
+        targetVX -
+        me.vx
     ) *
     Math.min(
         1,
@@ -2094,10 +1986,10 @@ function updateMovement(
     );
 
 
-    player.vy +=
+    me.vy +=
     (
-        desiredY -
-        player.vy
+        targetVY -
+        me.vy
     ) *
     Math.min(
         1,
@@ -2110,13 +2002,13 @@ function updateMovement(
         !dy
     ){
 
-        player.vx *=
+        me.vx *=
         Math.pow(
             .001,
             dt
         );
 
-        player.vy *=
+        me.vy *=
         Math.pow(
             .001,
             dt
@@ -2125,26 +2017,26 @@ function updateMovement(
     }
 
 
-    player.x +=
-    player.vx * dt;
+    me.x +=
+    me.vx * dt;
 
-    player.y +=
-    player.vy * dt;
+    me.y +=
+    me.vy * dt;
 
 
-    player.x =
+    me.x =
     clamp(
-        player.x,
+        me.x,
         25,
-        WORLD_W - 25
+        WORLD_WIDTH - 25
     );
 
 
-    player.y =
+    me.y =
     clamp(
-        player.y,
-        85,
-        WORLD_H - 25
+        me.y,
+        80,
+        WORLD_HEIGHT - 25
     );
 
 }
@@ -2155,27 +2047,27 @@ function updateMovement(
 ========================================================= */
 
 function drawCursor(
-    p,
-    mine = false
+p,
+mine=false
 ){
 
-    const sx =
+    const screenX =
     p.x -
-    player.x +
-    W / 2;
+    me.x +
+    width / 2;
 
 
-    const sy =
+    const screenY =
     p.y -
-    player.y +
-    H / 2;
+    me.y +
+    height / 2;
 
 
     if(
-        sx < -80 ||
-        sx > W + 80 ||
-        sy < -80 ||
-        sy > H + 80
+        screenX < -100 ||
+        screenX > width + 100 ||
+        screenY < -100 ||
+        screenY > height + 100
     ){
 
         return;
@@ -2186,8 +2078,8 @@ function drawCursor(
     ctx.save();
 
     ctx.translate(
-        sx,
-        sy
+        screenX,
+        screenY
     );
 
 
@@ -2195,7 +2087,7 @@ function drawCursor(
     p.color;
 
     ctx.shadowBlur =
-    mine ? 28 : 16;
+    mine ? 25 : 15;
 
 
     ctx.fillStyle =
@@ -2205,38 +2097,38 @@ function drawCursor(
     ctx.beginPath();
 
     ctx.moveTo(
-        -5,
-        -18
+        -6,
+        -20
     );
 
     ctx.lineTo(
-        4,
-        10
+        5,
+        9
     );
 
     ctx.lineTo(
-        11,
-        6
+        12,
+        5
     );
 
     ctx.lineTo(
-        19,
-        19
+        21,
+        18
     );
 
     ctx.lineTo(
-        25,
-        15
+        27,
+        14
     );
 
     ctx.lineTo(
-        16,
-        2
+        17,
+        1
     );
 
     ctx.lineTo(
-        25,
-        -1
+        26,
+        -3
     );
 
     ctx.closePath();
@@ -2247,12 +2139,11 @@ function drawCursor(
     ctx.shadowBlur = 0;
 
     ctx.strokeStyle =
-    "rgba(255,255,255,.85)";
+    "rgba(255,255,255,.9)";
 
     ctx.lineWidth = 1;
 
     ctx.stroke();
-
 
     ctx.restore();
 
@@ -2266,40 +2157,34 @@ function drawCursor(
     ctx.fillStyle =
     "#fff";
 
-    ctx.globalAlpha =
-    .9;
-
     ctx.fillText(
         p.name,
-        sx,
-        sy + 32
+        screenX,
+        screenY + 33
     );
-
-    ctx.globalAlpha = 1;
 
 
     if(
-        p.hp <
-        100
+        p.hp < 100
     ){
 
         ctx.fillStyle =
         "rgba(0,0,0,.7)";
 
         ctx.fillRect(
-            sx - 18,
-            sy + 37,
+            screenX - 18,
+            screenY + 38,
             36,
             3
         );
 
 
         ctx.fillStyle =
-        "#4be48a";
+        "#4be38b";
 
         ctx.fillRect(
-            sx - 18,
-            sy + 37,
+            screenX - 18,
+            screenY + 38,
             36 *
             clamp(
                 p.hp / 100,
@@ -2326,8 +2211,8 @@ function drawWorld(){
     ctx.fillRect(
         0,
         0,
-        W,
-        H
+        width,
+        height
     );
 
 
@@ -2335,20 +2220,21 @@ function drawWorld(){
        Grid
     */
 
-    const grid = 100;
+    const grid =
+    100;
 
 
-    const ox =
+    const offsetX =
     (
-        W / 2 -
-        player.x
+        width / 2 -
+        me.x
     ) % grid;
 
 
-    const oy =
+    const offsetY =
     (
-        H / 2 -
-        player.y
+        height / 2 -
+        me.y
     ) % grid;
 
 
@@ -2359,8 +2245,8 @@ function drawWorld(){
 
 
     for(
-        let x = ox;
-        x < W;
+        let x = offsetX;
+        x < width;
         x += grid
     ){
 
@@ -2368,12 +2254,12 @@ function drawWorld(){
 
         ctx.moveTo(
             x,
-            64
+            62
         );
 
         ctx.lineTo(
             x,
-            H
+            height
         );
 
         ctx.stroke();
@@ -2382,8 +2268,8 @@ function drawWorld(){
 
 
     for(
-        let y = oy;
-        y < H;
+        let y = offsetY;
+        y < height;
         y += grid
     ){
 
@@ -2395,7 +2281,7 @@ function drawWorld(){
         );
 
         ctx.lineTo(
-            W,
+            width,
             y
         );
 
@@ -2408,33 +2294,23 @@ function drawWorld(){
        World border
     */
 
-    const left =
-    -player.x +
-    W / 2;
-
-
-    const top =
-    -player.y +
-    H / 2;
-
-
     ctx.strokeStyle =
-    "rgba(79,143,255,.2)";
+    "rgba(79,140,255,.2)";
 
     ctx.strokeRect(
-        left,
-        top,
-        WORLD_W,
-        WORLD_H
+        -me.x + width / 2,
+        -me.y + height / 2,
+        WORLD_WIDTH,
+        WORLD_HEIGHT
     );
 
 
     /*
-       Remote players
+       Other players
     */
 
     for(
-        const p of players.values()
+        const p of remotePlayers.values()
     ){
 
         if(
@@ -2455,11 +2331,11 @@ function drawWorld(){
     */
 
     if(
-        player.alive
+        me.alive
     ){
 
         drawCursor(
-            player,
+            me,
             true
         );
 
@@ -2467,23 +2343,23 @@ function drawWorld(){
 
 
     /*
-       Move marker
+       Destination marker
     */
 
     if(
         mouse.target
     ){
 
-        const tx =
+        const x =
         mouse.target.x -
-        player.x +
-        W / 2;
+        me.x +
+        width / 2;
 
 
-        const ty =
+        const y =
         mouse.target.y -
-        player.y +
-        H / 2;
+        me.y +
+        height / 2;
 
 
         ctx.strokeStyle =
@@ -2495,12 +2371,11 @@ function drawWorld(){
         ctx.beginPath();
 
         ctx.arc(
-            tx,
-            ty,
-            9 +
+            x,
+            y,
+            10 +
             Math.sin(
-                performance.now() /
-                120
+                performance.now() / 120
             ) * 2,
             0,
             Math.PI * 2
@@ -2519,8 +2394,9 @@ function drawWorld(){
 
 function drawMinimap(){
 
-    const mw = 420;
-    const mh = 260;
+    const w = 420;
+
+    const h = 260;
 
 
     mctx.fillStyle =
@@ -2529,14 +2405,10 @@ function drawMinimap(){
     mctx.fillRect(
         0,
         0,
-        mw,
-        mh
+        w,
+        h
     );
 
-
-    /*
-       border
-    */
 
     mctx.strokeStyle =
     "rgba(255,255,255,.12)";
@@ -2544,13 +2416,13 @@ function drawMinimap(){
     mctx.strokeRect(
         1,
         1,
-        mw - 2,
-        mh - 2
+        w - 2,
+        h - 2
     );
 
 
     for(
-        const p of players.values()
+        const p of remotePlayers.values()
     ){
 
         if(
@@ -2569,8 +2441,8 @@ function drawMinimap(){
         mctx.beginPath();
 
         mctx.arc(
-            p.x / WORLD_W * mw,
-            p.y / WORLD_H * mh,
+            p.x / WORLD_WIDTH * w,
+            p.y / WORLD_HEIGHT * h,
             4,
             0,
             Math.PI * 2
@@ -2582,14 +2454,14 @@ function drawMinimap(){
 
 
     mctx.fillStyle =
-    player.color;
+    me.color;
 
 
     mctx.beginPath();
 
     mctx.arc(
-        player.x / WORLD_W * mw,
-        player.y / WORLD_H * mh,
+        me.x / WORLD_WIDTH * w,
+        me.y / WORLD_HEIGHT * h,
         6,
         0,
         Math.PI * 2
@@ -2601,34 +2473,268 @@ function drawMinimap(){
 
 
 /* =========================================================
-   CONNECT
+   UI
+========================================================= */
+
+function updateUI(){
+
+    document.getElementById(
+        "online"
+    ).textContent =
+    remotePlayers.size + 1;
+
+
+    document.getElementById(
+        "killsTop"
+    ).textContent =
+    me.kills;
+
+
+    document.getElementById(
+        "kills"
+    ).textContent =
+    me.kills;
+
+
+    document.getElementById(
+        "deaths"
+    ).textContent =
+    me.deaths;
+
+
+    document.getElementById(
+        "playerName"
+    ).textContent =
+    me.name;
+
+
+    document.getElementById(
+        "playerFaction"
+    ).textContent =
+    FACTIONS[
+        me.faction
+    ].name;
+
+
+    document.getElementById(
+        "health"
+    ).textContent =
+    Math.ceil(
+        me.hp
+    );
+
+
+    document.getElementById(
+        "healthBar"
+    ).style.width =
+    me.hp + "%";
+
+
+    const counts =
+    FACTIONS.map(
+        () => 0
+    );
+
+
+    counts[
+        me.faction
+    ]++;
+
+
+    for(
+        const p of remotePlayers.values()
+    ){
+
+        if(
+            p.alive &&
+            counts[p.faction] !== undefined
+        ){
+
+            counts[p.faction]++;
+
+        }
+
+    }
+
+
+    document.getElementById(
+        "factions"
+    ).innerHTML =
+    FACTIONS.map(
+        (f,i) => `
+
+            <div class="faction">
+
+                <div
+                    class="dot"
+                    style="
+                        background:${f.color};
+                        box-shadow:0 0 8px ${f.color};
+                    "
+                ></div>
+
+                <div class="factionNameSmall">
+                    ${f.name}
+                </div>
+
+                <div class="factionCount">
+                    ${counts[i]}
+                </div>
+
+            </div>
+
+        `
+    ).join("");
+
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+let eventList = [];
+
+
+function addEvent(
+icon,
+text
+){
+
+    eventList.unshift({
+        icon,
+        text
+    });
+
+
+    eventList =
+    eventList.slice(
+        0,
+        5
+    );
+
+
+    document.getElementById(
+        "events"
+    ).innerHTML =
+    eventList.map(
+        e => `
+
+            <div class="event">
+                ${e.icon}
+                ${escapeHTML(e.text)}
+            </div>
+
+        `
+    ).join("");
+
+}
+
+
+/* =========================================================
+   CHAT
+========================================================= */
+
+function addChat(
+name,
+text,
+color
+){
+
+    const box =
+    document.getElementById(
+        "chatMessages"
+    );
+
+
+    const line =
+    document.createElement(
+        "div"
+    );
+
+
+    line.className =
+    "chatLine";
+
+
+    const strong =
+    document.createElement(
+        "strong"
+    );
+
+
+    strong.textContent =
+    name;
+
+
+    strong.style.color =
+    color;
+
+
+    line.appendChild(
+        strong
+    );
+
+
+    line.appendChild(
+        document.createTextNode(
+            text
+        )
+    );
+
+
+    box.appendChild(
+        line
+    );
+
+
+    while(
+        box.children.length > 30
+    ){
+
+        box.removeChild(
+            box.firstChild
+        );
+
+    }
+
+
+    box.scrollTop =
+    box.scrollHeight;
+
+}
+
+
+/* =========================================================
+   CONNECT TO SUPABASE
 ========================================================= */
 
 async function connect(){
 
     const status =
     document.getElementById(
-        "connectionStatus"
+        "status"
     );
 
 
-    const button =
+    const play =
     document.getElementById(
-        "play"
+        "playButton"
     );
 
 
     status.textContent =
-    "Connecting to Supabase Realtime...";
+    "Connecting to multiplayer...";
 
 
     channel =
-    supabaseClient.channel(
+    db.channel(
         ROOM,
         {
             config:{
                 broadcast:{
-                    self:false
+                    self:false,
+                    ack:true
                 }
             }
         }
@@ -2636,7 +2742,7 @@ async function connect(){
 
 
     /*
-       PLAYER STATE
+       State
     */
 
     channel.on(
@@ -2646,16 +2752,18 @@ async function connect(){
         },
         ({payload}) => {
 
-            receiveState(
+            receivePlayer(
                 payload
             );
+
+            updateUI();
 
         }
     );
 
 
     /*
-       ATTACKS
+       Attacks
     */
 
     channel.on(
@@ -2674,7 +2782,7 @@ async function connect(){
 
 
     /*
-       DEATHS
+       Deaths
     */
 
     channel.on(
@@ -2693,7 +2801,7 @@ async function connect(){
 
 
     /*
-       CHAT
+       Chat
     */
 
     channel.on(
@@ -2720,7 +2828,7 @@ async function connect(){
 
 
     /*
-       PING
+       Ping
     */
 
     channel.on(
@@ -2732,22 +2840,20 @@ async function connect(){
 
             if(
                 payload &&
-                payload.target ===
-                player.id
+                payload.target === me.id
             ){
 
-                const latency =
+                const ping =
                 Math.round(
                     performance.now() -
-                    payload.sent
+                    payload.time
                 );
 
 
                 document.getElementById(
                     "ping"
                 ).textContent =
-                latency +
-                " ms";
+                ping + " ms";
 
             }
 
@@ -2755,28 +2861,23 @@ async function connect(){
     );
 
 
-    /*
-       SUBSCRIBE
-    */
-
     channel.subscribe(
-        async status => {
+        async state => {
 
             console.log(
-                "Supabase:",
-                status
+                "Supabase Realtime:",
+                state
             );
 
 
             document.getElementById(
                 "connection"
             ).textContent =
-            status;
+            state;
 
 
             if(
-                status ===
-                "SUBSCRIBED"
+                state === "SUBSCRIBED"
             ){
 
                 connected =
@@ -2787,26 +2888,17 @@ async function connect(){
                 "✓ Multiplayer connected";
 
 
-                button.disabled =
+                play.disabled =
                 false;
 
-                button.textContent =
+
+                play.textContent =
                 "ENTER BATTLEFIELD";
 
 
-                eventMessage(
+                addEvent(
                     "🌐",
                     "Connected to Cursor Wars"
-                );
-
-
-                /*
-                   Tell everyone we exist.
-                */
-
-                await send(
-                    "state",
-                    packet()
                 );
 
 
@@ -2815,9 +2907,8 @@ async function connect(){
             }
 
 
-            if(
-                status ===
-                "CHANNEL_ERROR"
+            else if(
+                state === "CHANNEL_ERROR"
             ){
 
                 connected =
@@ -2825,18 +2916,21 @@ async function connect(){
 
 
                 status.textContent =
-                "Realtime connection failed";
+                "Realtime channel error";
 
 
-                button.textContent =
-                "CONNECTION FAILED";
+                play.disabled =
+                true;
+
+
+                play.textContent =
+                "CONNECTION ERROR";
 
             }
 
 
-            if(
-                status ===
-                "TIMED_OUT"
+            else if(
+                state === "TIMED_OUT"
             ){
 
                 connected =
@@ -2844,11 +2938,29 @@ async function connect(){
 
 
                 status.textContent =
-                "Connection timed out";
+                "Realtime connection timed out";
 
 
-                button.textContent =
-                "RETRYING...";
+                play.disabled =
+                true;
+
+
+                play.textContent =
+                "TIMED OUT";
+
+            }
+
+
+            else if(
+                state === "CLOSED"
+            ){
+
+                connected =
+                false;
+
+
+                status.textContent =
+                "Connection closed";
 
             }
 
@@ -2859,11 +2971,11 @@ async function connect(){
 
 
 /* =========================================================
-   START
+   PLAY
 ========================================================= */
 
 document.getElementById(
-    "play"
+    "playButton"
 ).onclick =
 async () => {
 
@@ -2876,11 +2988,15 @@ async () => {
     }
 
 
-    player.name =
+    const enteredName =
+    document.getElementById(
+        "name"
+    ).value.trim();
+
+
+    me.name =
     (
-        document.getElementById(
-            "nameInput"
-        ).value.trim() ||
+        enteredName ||
         "RON"
     ).slice(
         0,
@@ -2888,17 +3004,17 @@ async () => {
     );
 
 
-    player.faction =
+    me.faction =
     selectedFaction;
 
 
-    player.color =
+    me.color =
     FACTIONS[
         selectedFaction
     ].color;
 
 
-    playing =
+    joined =
     true;
 
 
@@ -2909,49 +3025,52 @@ async () => {
     );
 
 
-    await send(
-        "state",
-        packet()
-    );
-
-
-    eventMessage(
+    addEvent(
         "🚀",
-        `${player.name} entered the battlefield`
+        `${me.name} entered the battlefield`
     );
 
 
     updateUI();
 
+
+    await broadcast(
+        "state",
+        state()
+    );
+
 };
 
 
 /* =========================================================
-   FACTION BUTTONS
+   COLORS
 ========================================================= */
+
+let selectedFaction = 0;
+
 
 FACTIONS.forEach(
     (f,index) => {
 
-        const btn =
+        const button =
         document.createElement(
             "button"
         );
 
 
-        btn.className =
-        "color";
+        button.className =
+        "colorButton";
 
 
-        btn.style.background =
+        button.style.background =
         f.color;
 
 
-        btn.title =
+        button.title =
         f.name;
 
 
-        btn.onclick =
+        button.onclick =
         () => {
 
             selectedFaction =
@@ -2959,18 +3078,18 @@ FACTIONS.forEach(
 
 
             document
-            .querySelectorAll(
-                ".color"
-            )
-            .forEach(
-                x =>
-                x.classList.remove(
-                    "selected"
+                .querySelectorAll(
+                    ".colorButton"
                 )
-            );
+                .forEach(
+                    b =>
+                    b.classList.remove(
+                        "selected"
+                    )
+                );
 
 
-            btn.classList.add(
+            button.classList.add(
                 "selected"
             );
 
@@ -2980,7 +3099,7 @@ FACTIONS.forEach(
         document.getElementById(
             "colors"
         ).appendChild(
-            btn
+            button
         );
 
 
@@ -2988,7 +3107,7 @@ FACTIONS.forEach(
             index === 0
         ){
 
-            btn.classList.add(
+            button.classList.add(
                 "selected"
             );
 
@@ -2999,16 +3118,16 @@ FACTIONS.forEach(
 
 
 /* =========================================================
-   CHAT
+   CHAT SEND
 ========================================================= */
 
 document.getElementById(
     "chatForm"
 ).addEventListener(
     "submit",
-    async e => {
+    async event => {
 
-        e.preventDefault();
+        event.preventDefault();
 
 
         const input =
@@ -3023,7 +3142,8 @@ document.getElementById(
 
         if(
             !text ||
-            !connected
+            !connected ||
+            !joined
         ){
 
             return;
@@ -3035,26 +3155,30 @@ document.getElementById(
         "";
 
 
+        const message = {
+
+            name:me.name,
+
+            text:text.slice(
+                0,
+                100
+            ),
+
+            color:me.color
+
+        };
+
+
         addChat(
-            player.name,
-            text,
-            player.color
+            message.name,
+            message.text,
+            message.color
         );
 
 
-        await send(
+        await broadcast(
             "chat",
-            {
-
-                name:
-                player.name,
-
-                text,
-
-                color:
-                player.color
-
-            }
+            message
         );
 
     }
@@ -3066,25 +3190,27 @@ document.getElementById(
 ========================================================= */
 
 document.getElementById(
-    "centerBtn"
+    "center"
 ).onclick =
 () => {
 
-    player.x =
-    WORLD_W / 2;
+    me.x =
+    WORLD_WIDTH / 2;
 
-    player.y =
-    WORLD_H / 2;
+    me.y =
+    WORLD_HEIGHT / 2;
 
-    player.vx = 0;
-    player.vy = 0;
+    me.vx = 0;
+
+    me.vy = 0;
 
     mouse.target =
     null;
 
-    send(
+
+    broadcast(
         "state",
-        packet()
+        state()
     );
 
 };
@@ -3094,26 +3220,42 @@ document.getElementById(
    PAUSE
 ========================================================= */
 
-document.getElementById(
-    "pauseBtn"
-).onclick =
-() => {
+let paused = false;
+
+
+function togglePause(){
+
+    if(
+        !joined
+    ){
+
+        return;
+
+    }
+
 
     paused =
     !paused;
 
+
     document.getElementById(
-        "pauseBtn"
+        "pause"
     ).textContent =
     paused
     ? "▶"
     : "II";
 
-};
+}
+
+
+document.getElementById(
+    "pause"
+).onclick =
+togglePause;
 
 
 /* =========================================================
-   REMOVE STALE PLAYERS
+   REMOVE OLD PLAYERS
 ========================================================= */
 
 setInterval(
@@ -3128,7 +3270,7 @@ setInterval(
                 id,
                 p
             ]
-            of players
+            of remotePlayers
         ){
 
             if(
@@ -3138,7 +3280,7 @@ setInterval(
                 8000
             ){
 
-                players.delete(
+                remotePlayers.delete(
                     id
                 );
 
@@ -3155,11 +3297,53 @@ setInterval(
 
 
 /* =========================================================
+   INTERPOLATE REMOTE PLAYERS
+========================================================= */
+
+function interpolatePlayers(
+dt
+){
+
+    for(
+        const p of remotePlayers.values()
+    ){
+
+        p.x +=
+        (
+            p.targetX -
+            p.x
+        ) *
+        Math.min(
+            1,
+            dt * 14
+        );
+
+
+        p.y +=
+        (
+            p.targetY -
+            p.y
+        ) *
+        Math.min(
+            1,
+            dt * 14
+        );
+
+    }
+
+}
+
+
+/* =========================================================
    GAME LOOP
 ========================================================= */
 
+let lastFrame =
+performance.now();
+
+
 function loop(
-    now
+now
 ){
 
     const dt =
@@ -3176,35 +3360,39 @@ function loop(
     now;
 
 
+    interpolatePlayers(
+        dt
+    );
+
+
     if(
-        playing &&
+        joined &&
         !paused
     ){
 
-        updateMovement(
+        move(
             dt
         );
 
 
         /*
-           Broadcast position
-           ~20 times/sec.
+           20 network updates/sec.
         */
 
         if(
             now -
-            lastBroadcast
-            >
+            lastSend
+            >=
             50
         ){
 
-            lastBroadcast =
+            lastSend =
             now;
 
 
-            send(
+            broadcast(
                 "state",
-                packet()
+                state()
             );
 
         }
@@ -3217,7 +3405,7 @@ function loop(
         if(
             now -
             lastPing
-            >
+            >=
             2000
         ){
 
@@ -3225,14 +3413,13 @@ function loop(
             now;
 
 
-            send(
+            broadcast(
                 "ping",
                 {
 
-                    target:
-                    player.id,
+                    target:me.id,
 
-                    sent:
+                    time:
                     performance.now()
 
                 }
@@ -3256,7 +3443,7 @@ function loop(
 
 
 /* =========================================================
-   INITIALISE
+   START
 ========================================================= */
 
 updateUI();
