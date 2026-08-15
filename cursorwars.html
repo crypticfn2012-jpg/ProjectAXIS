@@ -3,706 +3,165 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>Cursor Wars | Ron.cool</title>
-
-<!-- Prevent favicon 404 -->
 <link rel="icon" href="data:,">
-
-<!-- Supabase -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-    box-sizing:border-box;
-}
-
+*{box-sizing:border-box}
 html,body{
-    margin:0;
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    background:#05070c;
-    color:white;
-    font-family:Arial,Helvetica,sans-serif;
+margin:0;width:100%;height:100%;overflow:hidden;
+background:#05070c;color:white;
+font-family:Arial,Helvetica,sans-serif
 }
-
-body{
-    user-select:none;
-}
-
-canvas{
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-}
-
-#game{
-    cursor:crosshair;
-}
-
-.hidden{
-    display:none!important;
-}
-
-/* =========================
-   START SCREEN
-========================= */
+body{user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%}
+#game{cursor:crosshair}
+.hidden{display:none!important}
 
 #startScreen{
-    position:fixed;
-    inset:0;
-    z-index:100;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:
-        radial-gradient(
-            circle at 50% 40%,
-            rgba(70,130,255,.18),
-            transparent 40%
-        ),
-        #030509;
+position:fixed;inset:0;z-index:100;
+display:flex;align-items:center;justify-content:center;
+background:radial-gradient(circle at 50% 40%,rgba(70,130,255,.18),transparent 40%),#030509
 }
-
 .startBox{
-    width:min(560px,92vw);
-    padding:40px;
-
-    text-align:center;
-
-    background:rgba(10,14,23,.85);
-
-    border:1px solid rgba(255,255,255,.1);
-
-    border-radius:18px;
-
-    box-shadow:
-        0 30px 100px rgba(0,0,0,.5);
-
-    backdrop-filter:blur(20px);
+width:min(560px,92vw);padding:40px;text-align:center;
+background:rgba(10,14,23,.85);border:1px solid rgba(255,255,255,.1);
+border-radius:18px;box-shadow:0 30px 100px rgba(0,0,0,.5);
+backdrop-filter:blur(20px)
 }
-
 .logoCursor{
-    font-size:65px;
-
-    margin-bottom:10px;
-
-    filter:
-        drop-shadow(
-            0 0 25px
-            rgba(75,140,255,.7)
-        );
+font-size:65px;margin-bottom:10px;
+filter:drop-shadow(0 0 25px rgba(75,140,255,.7))
 }
-
-h1{
-    margin:0;
-
-    font-size:58px;
-
-    line-height:.9;
-
-    letter-spacing:-5px;
-}
-
-h1 span{
-    color:#5792ff;
-}
-
+h1{margin:0;font-size:58px;line-height:.9;letter-spacing:-5px}
+h1 span{color:#5792ff}
 .subtitle{
-    margin:22px auto;
-
-    max-width:440px;
-
-    color:#7d899d;
-
-    font-size:12px;
-
-    line-height:1.7;
+margin:22px auto;max-width:440px;color:#7d899d;
+font-size:12px;line-height:1.7
 }
-
 #name{
-    width:230px;
-
-    padding:13px 15px;
-
-    border:1px solid rgba(255,255,255,.12);
-
-    border-radius:9px;
-
-    outline:none;
-
-    background:rgba(255,255,255,.05);
-
-    color:white;
-
-    text-align:center;
-
-    font-size:13px;
+width:230px;padding:13px 15px;border:1px solid rgba(255,255,255,.12);
+border-radius:9px;outline:none;background:rgba(255,255,255,.05);
+color:white;text-align:center;font-size:13px
 }
-
-#name:focus{
-    border-color:#5792ff;
-}
-
-.colors{
-    display:flex;
-
-    justify-content:center;
-
-    gap:12px;
-
-    margin:22px 0;
-}
-
+#name:focus{border-color:#5792ff}
+.colors{display:flex;justify-content:center;gap:12px;margin:22px 0}
 .colorButton{
-    width:32px;
-    height:32px;
-
-    border:0;
-
-    border-radius:50%;
-
-    cursor:pointer;
-
-    transition:.15s;
+width:32px;height:32px;border:0;border-radius:50%;cursor:pointer;transition:.15s
 }
-
-.colorButton:hover{
-    transform:scale(1.15);
-}
-
-.colorButton.selected{
-    outline:2px solid white;
-    outline-offset:4px;
-}
-
-#status{
-    min-height:18px;
-
-    margin:12px;
-
-    color:#7c899d;
-
-    font-size:10px;
-}
-
+.colorButton:hover{transform:scale(1.15)}
+.colorButton.selected{outline:2px solid white;outline-offset:4px}
+#status{min-height:18px;margin:12px;color:#7c899d;font-size:10px}
 #playButton{
-    padding:14px 25px;
-
-    border:0;
-
-    border-radius:9px;
-
-    background:#4f8cff;
-
-    color:white;
-
-    font-size:12px;
-
-    font-weight:900;
-
-    cursor:pointer;
+padding:14px 25px;border:0;border-radius:9px;background:#4f8cff;
+color:white;font-size:12px;font-weight:900;cursor:pointer
 }
+#playButton:hover{background:#679cff}
+#playButton:disabled{opacity:.45;cursor:not-allowed}
 
-#playButton:hover{
-    background:#679cff;
-}
-
-#playButton:disabled{
-    opacity:.45;
-    cursor:not-allowed;
-}
-
-/* =========================
-   HUD
-========================= */
-
-#hud{
-    position:fixed;
-    inset:0;
-
-    pointer-events:none;
-}
-
+#hud{position:fixed;inset:0;pointer-events:none}
 .topbar{
-    position:absolute;
-
-    top:0;
-    left:0;
-    right:0;
-
-    height:62px;
-
-    display:flex;
-    align-items:center;
-
-    gap:22px;
-
-    padding:0 18px;
-
-    background:rgba(5,8,14,.88);
-
-    border-bottom:1px solid rgba(255,255,255,.07);
-
-    backdrop-filter:blur(15px);
+position:absolute;top:0;left:0;right:0;height:62px;
+display:flex;align-items:center;gap:22px;padding:0 18px;
+background:rgba(5,8,14,.88);border-bottom:1px solid rgba(255,255,255,.07);
+backdrop-filter:blur(15px)
 }
-
-.logo{
-    font-size:19px;
-    font-weight:1000;
-    letter-spacing:-1px;
-}
-
-.logo span{
-    color:#5792ff;
-}
-
-.stat{
-    color:#647187;
-
-    font-size:8px;
-    font-weight:900;
-
-    letter-spacing:1px;
-}
-
-.stat b{
-    display:block;
-
-    margin-top:2px;
-
-    color:white;
-
-    font-size:12px;
-
-    letter-spacing:0;
-}
-
-.spacer{
-    flex:1;
-}
-
+.logo{font-size:19px;font-weight:1000;letter-spacing:-1px}
+.logo span{color:#5792ff}
+.stat{color:#647187;font-size:8px;font-weight:900;letter-spacing:1px}
+.stat b{display:block;margin-top:2px;color:white;font-size:12px;letter-spacing:0}
+.spacer{flex:1}
 .hudButton{
-    pointer-events:auto;
-
-    padding:7px 11px;
-
-    border:1px solid rgba(255,255,255,.1);
-
-    border-radius:7px;
-
-    background:rgba(255,255,255,.05);
-
-    color:white;
-
-    font-size:9px;
-
-    font-weight:900;
-
-    cursor:pointer;
+pointer-events:auto;padding:7px 11px;border:1px solid rgba(255,255,255,.1);
+border-radius:7px;background:rgba(255,255,255,.05);color:white;
+font-size:9px;font-weight:900;cursor:pointer
 }
-
-.hudButton:hover{
-    background:rgba(255,255,255,.1);
-}
-
-/* =========================
-   PANELS
-========================= */
+.hudButton:hover{background:rgba(255,255,255,.1)}
 
 .panel{
-    position:absolute;
-
-    top:77px;
-
-    width:220px;
-
-    padding:13px;
-
-    background:rgba(7,11,18,.86);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:11px;
-
-    backdrop-filter:blur(15px);
+position:absolute;top:77px;width:220px;padding:13px;
+background:rgba(7,11,18,.86);border:1px solid rgba(255,255,255,.08);
+border-radius:11px;backdrop-filter:blur(15px)
 }
-
-.leftPanel{
-    left:14px;
-}
-
-.rightPanel{
-    right:14px;
-}
-
-.label{
-    margin-bottom:9px;
-
-    color:#637086;
-
-    font-size:8px;
-    font-weight:1000;
-
-    letter-spacing:1.5px;
-}
-
+.leftPanel{left:14px}.rightPanel{right:14px}
+.label{margin-bottom:9px;color:#637086;font-size:8px;font-weight:1000;letter-spacing:1.5px}
 .playerCard{
-    padding:11px;
-
-    margin-bottom:15px;
-
-    background:rgba(255,255,255,.035);
-
-    border:1px solid rgba(255,255,255,.06);
-
-    border-radius:8px;
+padding:11px;margin-bottom:15px;background:rgba(255,255,255,.035);
+border:1px solid rgba(255,255,255,.06);border-radius:8px
 }
-
-.playerName{
-    font-size:16px;
-    font-weight:1000;
-}
-
-.factionName{
-    margin-top:3px;
-
-    color:#7b879a;
-
-    font-size:9px;
-}
-
+.playerName{font-size:16px;font-weight:1000}
+.factionName{margin-top:3px;color:#7b879a;font-size:9px}
 .healthOuter{
-    height:5px;
-
-    margin-top:10px;
-
-    overflow:hidden;
-
-    background:#202632;
-
-    border-radius:99px;
+height:5px;margin-top:10px;overflow:hidden;background:#202632;border-radius:99px
 }
-
-#healthBar{
-    width:100%;
-    height:100%;
-
-    background:#4be38b;
-
-    transition:.15s;
-}
-
-.row{
-    display:flex;
-
-    justify-content:space-between;
-
-    line-height:2;
-
-    color:#748196;
-
-    font-size:10px;
-}
-
-.row b{
-    color:white;
-}
-
+#healthBar{width:100%;height:100%;background:#4be38b;transition:.15s}
+.row{display:flex;justify-content:space-between;line-height:2;color:#748196;font-size:10px}
+.row b{color:white}
 .faction{
-    display:flex;
-
-    align-items:center;
-
-    gap:8px;
-
-    margin:4px 0;
-
-    padding:8px;
-
-    border-radius:7px;
-
-    background:rgba(255,255,255,.025);
+display:flex;align-items:center;gap:8px;margin:4px 0;padding:8px;
+border-radius:7px;background:rgba(255,255,255,.025)
 }
-
-.dot{
-    width:8px;
-    height:8px;
-
-    border-radius:50%;
-}
-
-.factionNameSmall{
-    flex:1;
-
-    font-size:10px;
-    font-weight:900;
-}
-
-.factionCount{
-    color:#758196;
-
-    font-size:10px;
-}
-
-/* =========================
-   CHAT
-========================= */
+.dot{width:8px;height:8px;border-radius:50%}
+.factionNameSmall{flex:1;font-size:10px;font-weight:900}
+.factionCount{color:#758196;font-size:10px}
 
 #chat{
-    position:absolute;
-
-    right:14px;
-    bottom:14px;
-
-    width:310px;
-
-    pointer-events:auto;
+position:absolute;right:14px;bottom:14px;width:310px;pointer-events:auto
 }
-
 #chatMessages{
-    height:170px;
-
-    padding:9px;
-
-    overflow:hidden;
-
-    background:rgba(6,10,16,.9);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:10px 10px 0 0;
-
-    backdrop-filter:blur(15px);
+height:170px;padding:9px;overflow:hidden;background:rgba(6,10,16,.9);
+border:1px solid rgba(255,255,255,.08);border-radius:10px 10px 0 0;
+backdrop-filter:blur(15px)
 }
-
-.chatLine{
-    margin:4px 0;
-
-    color:#b7c1cf;
-
-    font-size:10px;
-
-    line-height:1.4;
-}
-
-.chatLine strong{
-    margin-right:5px;
-}
-
+.chatLine{margin:4px 0;color:#b7c1cf;font-size:10px;line-height:1.4}
+.chatLine strong{margin-right:5px}
 .chatInputRow{
-    display:flex;
-
-    height:38px;
-
-    background:#080c13;
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-top:0;
-
-    border-radius:0 0 10px 10px;
+display:flex;height:38px;background:#080c13;border:1px solid rgba(255,255,255,.08);
+border-top:0;border-radius:0 0 10px 10px
 }
-
 #chatInput{
-    flex:1;
-
-    min-width:0;
-
-    padding:0 10px;
-
-    border:0;
-    outline:0;
-
-    background:transparent;
-
-    color:white;
-
-    font-size:10px;
+flex:1;min-width:0;padding:0 10px;border:0;outline:0;
+background:transparent;color:white;font-size:10px
 }
-
 #chatSend{
-    width:48px;
-
-    border:0;
-
-    background:#4f8cff;
-
-    color:white;
-
-    cursor:pointer;
-
-    font-weight:900;
+width:48px;border:0;background:#4f8cff;color:white;cursor:pointer;font-weight:900
 }
 
-/* =========================
-   EVENTS
-========================= */
-
-#events{
-    position:absolute;
-
-    left:14px;
-    bottom:14px;
-
-    width:330px;
-}
-
+#events{position:absolute;left:14px;bottom:14px;width:330px}
 .event{
-    margin-top:5px;
-
-    padding:8px 10px;
-
-    background:rgba(5,9,15,.85);
-
-    border:1px solid rgba(255,255,255,.07);
-
-    border-radius:7px;
-
-    color:#b7c1cf;
-
-    font-size:10px;
+margin-top:5px;padding:8px 10px;background:rgba(5,9,15,.85);
+border:1px solid rgba(255,255,255,.07);border-radius:7px;
+color:#b7c1cf;font-size:10px
 }
-
-/* =========================
-   MINIMAP
-========================= */
-
 #minimap{
-    position:absolute;
-
-    right:338px;
-    bottom:14px;
-
-    width:210px;
-    height:130px;
-
-    border:1px solid rgba(255,255,255,.1);
-
-    border-radius:9px;
-
-    background:#070a10;
+position:absolute;right:338px;bottom:14px;width:210px;height:130px;
+border:1px solid rgba(255,255,255,.1);border-radius:9px;background:#070a10
 }
-
-/* =========================
-   CONTROLS
-========================= */
-
 #controls{
-    position:absolute;
-
-    left:50%;
-    bottom:14px;
-
-    transform:translateX(-50%);
-
-    padding:8px 12px;
-
-    background:rgba(5,9,15,.8);
-
-    border:1px solid rgba(255,255,255,.08);
-
-    border-radius:7px;
-
-    color:#738096;
-
-    font-size:9px;
-
-    backdrop-filter:blur(10px);
+position:absolute;left:50%;bottom:14px;transform:translateX(-50%);
+padding:8px 12px;background:rgba(5,9,15,.8);
+border:1px solid rgba(255,255,255,.08);border-radius:7px;
+color:#738096;font-size:9px;backdrop-filter:blur(10px)
 }
-
-/* =========================
-   DEATH
-========================= */
-
 #deathScreen{
-    position:fixed;
-
-    inset:0;
-
-    z-index:90;
-
-    display:none;
-
-    align-items:center;
-    justify-content:center;
-
-    background:rgba(0,0,0,.5);
-
-    pointer-events:none;
+position:fixed;inset:0;z-index:90;display:none;
+align-items:center;justify-content:center;background:rgba(0,0,0,.5);
+pointer-events:none
 }
-
-.deathText{
-    text-align:center;
-}
-
-.deathText h2{
-    margin:0;
-
-    font-size:52px;
-
-    letter-spacing:-3px;
-}
-
-.deathText p{
-    color:#7e899c;
-
-    font-size:11px;
-}
-
-/* =========================
-   MOBILE
-========================= */
+.deathText{text-align:center}
+.deathText h2{margin:0;font-size:52px;letter-spacing:-3px}
+.deathText p{color:#7e899c;font-size:11px}
 
 @media(max-width:850px){
-
-    .leftPanel{
-        display:none;
-    }
-
-    .rightPanel{
-        top:70px;
-        right:8px;
-        width:175px;
-    }
-
-    #chat{
-        display:none;
-    }
-
-    #events{
-        display:none;
-    }
-
-    #controls{
-        display:none;
-    }
-
-    #minimap{
-        right:8px;
-        bottom:8px;
-    }
-
-    .topbar{
-        padding:0 10px;
-        gap:10px;
-    }
-
-    .topbar .stat:nth-of-type(n+3){
-        display:none;
-    }
-
-    h1{
-        font-size:45px;
-    }
-
-    .startBox{
-        padding:30px 20px;
-    }
+.leftPanel{display:none}
+.rightPanel{top:70px;right:8px;width:175px}
+#chat,#events,#controls{display:none}
+#minimap{right:8px;bottom:8px}
+.topbar{padding:0 10px;gap:10px}
+.topbar .stat:nth-of-type(n+3){display:none}
+h1{font-size:45px}
+.startBox{padding:30px 20px}
 }
 </style>
 </head>
@@ -711,295 +170,139 @@ h1 span{
 
 <canvas id="game"></canvas>
 
-<!-- =========================
-     START
-========================= -->
-
 <div id="startScreen">
-
-    <div class="startBox">
-
-        <div class="logoCursor">🖱️</div>
-
-        <h1>
-            CURSOR <span>WARS</span>
-        </h1>
-
-        <div class="subtitle">
-            Real-time multiplayer cursor combat.
-            Join the global battlefield, choose a faction
-            and fight other players.
-        </div>
-
-        <input
-            id="name"
-            maxlength="16"
-            value="RON"
-            placeholder="Your cursor name"
-        >
-
-        <div
-            class="colors"
-            id="colors"
-        ></div>
-
-        <div id="status">
-            Loading multiplayer...
-        </div>
-
-        <button
-            id="playButton"
-            disabled
-        >
-            CONNECTING...
-        </button>
-
-    </div>
-
+<div class="startBox">
+<div class="logoCursor">🖱️</div>
+<h1>CURSOR <span>WARS</span></h1>
+<div class="subtitle">
+Real-time multiplayer cursor combat.<br>
+Fight players and NPCs across the global battlefield.
 </div>
 
+<input id="name" maxlength="16" value="RON" placeholder="Your cursor name">
 
-<!-- =========================
-     HUD
-========================= -->
+<div class="colors" id="colors"></div>
+
+<div id="status">Loading multiplayer...</div>
+
+<button id="playButton" disabled>CONNECTING...</button>
+</div>
+</div>
 
 <div id="hud">
 
-    <div class="topbar">
+<div class="topbar">
+<div class="logo">🖱️ CURSOR <span>WARS</span></div>
 
-        <div class="logo">
-            🖱️ CURSOR <span>WARS</span>
-        </div>
+<div class="stat">ONLINE<b id="online">1</b></div>
+<div class="stat">PING<b id="ping">—</b></div>
+<div class="stat">KILLS<b id="killsTop">0</b></div>
 
-        <div class="stat">
-            ONLINE
-            <b id="online">1</b>
-        </div>
+<div class="spacer"></div>
 
-        <div class="stat">
-            PING
-            <b id="ping">—</b>
-        </div>
+<button class="hudButton" id="center">CENTER</button>
+<button class="hudButton" id="pause">II</button>
+</div>
 
-        <div class="stat">
-            KILLS
-            <b id="killsTop">0</b>
-        </div>
+<div class="panel leftPanel">
 
-        <div class="spacer"></div>
+<div class="label">YOUR CURSOR</div>
 
-        <button
-            class="hudButton"
-            id="center"
-        >
-            CENTER
-        </button>
+<div class="playerCard">
+<div class="playerName" id="playerName">RON</div>
+<div class="factionName" id="playerFaction">Azure</div>
 
-        <button
-            class="hudButton"
-            id="pause"
-        >
-            II
-        </button>
+<div class="healthOuter">
+<div id="healthBar"></div>
+</div>
 
-    </div>
+<div class="row">
+<span>HEALTH</span>
+<b id="health">100</b>
+</div>
+</div>
 
+<div class="label">STATISTICS</div>
 
-    <div class="panel leftPanel">
-
-        <div class="label">
-            YOUR CURSOR
-        </div>
-
-        <div class="playerCard">
-
-            <div
-                class="playerName"
-                id="playerName"
-            >
-                RON
-            </div>
-
-            <div
-                class="factionName"
-                id="playerFaction"
-            >
-                Azure
-            </div>
-
-            <div class="healthOuter">
-                <div id="healthBar"></div>
-            </div>
-
-            <div class="row">
-                <span>HEALTH</span>
-                <b id="health">100</b>
-            </div>
-
-        </div>
-
-        <div class="label">
-            STATISTICS
-        </div>
-
-        <div class="row">
-            <span>Kills</span>
-            <b id="kills">0</b>
-        </div>
-
-        <div class="row">
-            <span>Deaths</span>
-            <b id="deaths">0</b>
-        </div>
-
-        <div class="row">
-            <span>Connection</span>
-            <b id="connection">—</b>
-        </div>
-
-    </div>
-
-
-    <div class="panel rightPanel">
-
-        <div class="label">
-            FACTIONS
-        </div>
-
-        <div id="factions"></div>
-
-    </div>
-
-
-    <div id="events"></div>
-
-
-    <canvas
-        id="minimap"
-        width="420"
-        height="260"
-    ></canvas>
-
-
-    <div id="controls">
-        <b>WASD</b> MOVE ·
-        <b>CLICK</b> MOVE ·
-        <b>F</b> ATTACK ·
-        <b>SPACE</b> PAUSE
-    </div>
-
-
-    <div id="chat">
-
-        <div id="chatMessages"></div>
-
-        <form
-            class="chatInputRow"
-            id="chatForm"
-        >
-
-            <input
-                id="chatInput"
-                maxlength="100"
-                autocomplete="off"
-                placeholder="Message..."
-            >
-
-            <button id="chatSend">
-                ➤
-            </button>
-
-        </form>
-
-    </div>
+<div class="row"><span>Kills</span><b id="kills">0</b></div>
+<div class="row"><span>Deaths</span><b id="deaths">0</b></div>
+<div class="row"><span>Connection</span><b id="connection">—</b></div>
 
 </div>
 
+<div class="panel rightPanel">
+<div class="label">FACTIONS</div>
+<div id="factions"></div>
+</div>
 
-<!-- =========================
-     DEATH
-========================= -->
+<div id="events"></div>
+
+<canvas id="minimap" width="420" height="260"></canvas>
+
+<div id="controls">
+<b>WASD</b> MOVE · <b>CLICK</b> MOVE · <b>F</b> ATTACK · <b>SPACE</b> PAUSE
+</div>
+
+<div id="chat">
+<div id="chatMessages"></div>
+
+<form class="chatInputRow" id="chatForm">
+<input id="chatInput" maxlength="100" autocomplete="off" placeholder="Message...">
+<button id="chatSend">➤</button>
+</form>
+</div>
+
+</div>
 
 <div id="deathScreen">
-
-    <div class="deathText">
-
-        <h2>💀 ELIMINATED</h2>
-
-        <p>
-            Respawning...
-        </p>
-
-    </div>
-
+<div class="deathText">
+<h2>💀 ELIMINATED</h2>
+<p>Respawning...</p>
 </div>
-
+</div>
 
 <script>
 
 /* =========================================================
-   SUPABASE CONFIG
+   SUPABASE
 ========================================================= */
 
 const SUPABASE_URL =
 "https://rldidvwcylirjyfktvtg.supabase.co";
 
 const SUPABASE_ANON_KEY =
-"sb_publishable_kA4FsVQoZLVPqd1xvXGCeQ_OgJ1_Odv";
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJsZGlkdndjeWxpcmp5Zmt2dGciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc4NjIyMzQ5MCwiZXhwIjoyMTAxNzk5NDkwfQ.YO5zeu5uL3siDDPVfsPc9v_VCETHixTWXjzotVOEp0U";
 
-
-const db =
-supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY,
-    {
-        realtime:{
-            params:{
-                eventsPerSecond:30
-            }
-        }
-    }
+const db = supabase.createClient(
+SUPABASE_URL,
+SUPABASE_ANON_KEY,
+{
+realtime:{
+params:{
+eventsPerSecond:30
+}
+}
+}
 );
 
 
 /* =========================================================
-   GAME CONFIG
+   CONFIG
 ========================================================= */
 
 const WORLD_WIDTH = 4000;
 const WORLD_HEIGHT = 2500;
+const ROOM = "cursor-wars-global";
 
-const ROOM =
-"cursor-wars-global";
-
+const NPC_COUNT = 14;
+const NPC_RESPAWN_TIME = 3000;
 
 const FACTIONS = [
-
-    {
-        name:"Azure",
-        color:"#4f8cff"
-    },
-
-    {
-        name:"Crimson",
-        color:"#ff5263"
-    },
-
-    {
-        name:"Emerald",
-        color:"#45df8b"
-    },
-
-    {
-        name:"Violet",
-        color:"#a76cff"
-    },
-
-    {
-        name:"Gold",
-        color:"#ffc84d"
-    }
-
+{name:"Azure",color:"#4f8cff"},
+{name:"Crimson",color:"#ff5263"},
+{name:"Emerald",color:"#45df8b"},
+{name:"Violet",color:"#a76cff"},
+{name:"Gold",color:"#ffc84d"}
 ];
 
 
@@ -1007,103 +310,64 @@ const FACTIONS = [
    CANVAS
 ========================================================= */
 
-const canvas =
-document.getElementById("game");
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
-const ctx =
-canvas.getContext("2d");
+const minimap = document.getElementById("minimap");
+const mctx = minimap.getContext("2d");
 
-const minimap =
-document.getElementById("minimap");
-
-const mctx =
-minimap.getContext("2d");
-
-let width =
-innerWidth;
-
-let height =
-innerHeight;
-
-let dpr =
-devicePixelRatio || 1;
-
+let width = innerWidth;
+let height = innerHeight;
+let dpr = devicePixelRatio || 1;
 
 function resize(){
 
-    width =
-    innerWidth;
+width = innerWidth;
+height = innerHeight;
+dpr = devicePixelRatio || 1;
 
-    height =
-    innerHeight;
+canvas.width = width * dpr;
+canvas.height = height * dpr;
 
-    canvas.width =
-    width * dpr;
+canvas.style.width = width + "px";
+canvas.style.height = height + "px";
 
-    canvas.height =
-    height * dpr;
-
-    canvas.style.width =
-    width + "px";
-
-    canvas.style.height =
-    height + "px";
-
-    ctx.setTransform(
-        dpr,
-        0,
-        0,
-        dpr,
-        0,
-        0
-    );
-
+ctx.setTransform(dpr,0,0,dpr,0,0);
 }
 
 resize();
-
-addEventListener(
-    "resize",
-    resize
-);
+addEventListener("resize",resize);
 
 
 /* =========================================================
    PLAYER
 ========================================================= */
 
-const myId =
-crypto.randomUUID();
-
+const myId = crypto.randomUUID();
 
 const me = {
 
-    id:myId,
+id:myId,
+name:"RON",
+faction:0,
+color:FACTIONS[0].color,
 
-    name:"RON",
+x:WORLD_WIDTH/2,
+y:WORLD_HEIGHT/2,
 
-    faction:0,
+vx:0,
+vy:0,
 
-    color:FACTIONS[0].color,
+angle:0,
 
-    x:WORLD_WIDTH / 2,
+hp:100,
+maxHp:100,
 
-    y:WORLD_HEIGHT / 2,
+kills:0,
+deaths:0,
 
-    vx:0,
-
-    vy:0,
-
-    hp:100,
-
-    kills:0,
-
-    deaths:0,
-
-    alive:true,
-
-    lastAttack:0
-
+alive:true,
+lastAttack:0
 };
 
 
@@ -1111,8 +375,58 @@ const me = {
    REMOTE PLAYERS
 ========================================================= */
 
-const remotePlayers =
-new Map();
+const remotePlayers = new Map();
+
+
+/* =========================================================
+   NPCs
+========================================================= */
+
+const npcs = [];
+
+function createNPC(index){
+
+const faction = index % FACTIONS.length;
+
+return {
+
+id:"npc_" + index,
+
+name:"BOT-" + String(index+1).padStart(2,"0"),
+
+faction,
+
+color:FACTIONS[faction].color,
+
+x:300 + Math.random()*(WORLD_WIDTH-600),
+y:300 + Math.random()*(WORLD_HEIGHT-600),
+
+vx:0,
+vy:0,
+
+angle:Math.random()*Math.PI*2,
+
+hp:100,
+maxHp:100,
+
+alive:true,
+
+target:null,
+
+lastAttack:0,
+
+respawnAt:0,
+
+wanderX:0,
+wanderY:0,
+wanderTimer:0
+
+};
+}
+
+for(let i=0;i<NPC_COUNT;i++){
+npcs.push(createNPC(i));
+}
 
 
 /* =========================================================
@@ -1120,13 +434,10 @@ new Map();
 ========================================================= */
 
 let channel = null;
-
 let connected = false;
-
 let joined = false;
 
 let lastSend = 0;
-
 let lastPing = 0;
 
 
@@ -1137,163 +448,68 @@ let lastPing = 0;
 const keys = {};
 
 const mouse = {
-
-    x:0,
-
-    y:0,
-
-    target:null
-
+x:0,
+y:0,
+target:null
 };
 
+addEventListener("keydown",e=>{
 
-addEventListener(
-    "keydown",
-    e => {
+keys[e.key.toLowerCase()] = true;
 
-        keys[
-            e.key.toLowerCase()
-        ] = true;
+if(e.key === " "){
+e.preventDefault();
+togglePause();
+}
 
+if(e.key.toLowerCase() === "f"){
+attack();
+}
 
-        if(
-            e.key === " "
-        ){
+});
 
-            e.preventDefault();
+addEventListener("keyup",e=>{
+keys[e.key.toLowerCase()] = false;
+});
 
-            togglePause();
+canvas.addEventListener("mousemove",e=>{
+mouse.x=e.clientX;
+mouse.y=e.clientY;
+});
 
-        }
+canvas.addEventListener("mousedown",e=>{
 
+if(e.button !== 0 || !joined) return;
 
-        if(
-            e.key.toLowerCase()
-            === "f"
-        ){
+mouse.target={
+x:me.x+(e.clientX-width/2),
+y:me.y+(e.clientY-height/2)
+};
 
-            attack();
+});
 
-        }
-
-    }
-);
-
-
-addEventListener(
-    "keyup",
-    e => {
-
-        keys[
-            e.key.toLowerCase()
-        ] = false;
-
-    }
-);
-
-
-canvas.addEventListener(
-    "mousemove",
-    e => {
-
-        mouse.x =
-        e.clientX;
-
-        mouse.y =
-        e.clientY;
-
-    }
-);
-
-
-canvas.addEventListener(
-    "mousedown",
-    e => {
-
-        if(
-            e.button !== 0 ||
-            !joined
-        ){
-
-            return;
-
-        }
-
-
-        mouse.target = {
-
-            x:
-            me.x +
-            (
-                e.clientX -
-                width / 2
-            ),
-
-            y:
-            me.y +
-            (
-                e.clientY -
-                height / 2
-            )
-
-        };
-
-    }
-);
-
-
-canvas.addEventListener(
-    "contextmenu",
-    e =>
-    e.preventDefault()
-);
+canvas.addEventListener("contextmenu",e=>e.preventDefault());
 
 
 /* =========================================================
-   UTILITY
+   UTIL
 ========================================================= */
 
-function clamp(
-    value,
-    min,
-    max
-){
-
-    return Math.max(
-        min,
-        Math.min(
-            max,
-            value
-        )
-    );
-
+function clamp(v,min,max){
+return Math.max(min,Math.min(max,v));
 }
 
-
-function distance(
-    a,
-    b
-){
-
-    return Math.hypot(
-        a.x - b.x,
-        a.y - b.y
-    );
-
+function distance(a,b){
+return Math.hypot(a.x-b.x,a.y-b.y);
 }
 
-
-function escapeHTML(
-    value
-){
-
-    return String(value)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-
+function escapeHTML(value){
+return String(value)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
 }
 
 
@@ -1301,309 +517,184 @@ function escapeHTML(
    NETWORK SEND
 ========================================================= */
 
-async function broadcast(
-    event,
-    payload
-){
+async function broadcast(event,payload){
 
-    if(
-        !channel ||
-        !connected
-    ){
+if(!channel || !connected) return;
 
-        return;
+try{
 
-    }
+await channel.send({
+type:"broadcast",
+event,
+payload
+});
 
+}catch(error){
 
-    try{
+console.error("Broadcast failed:",error);
 
-        await channel.send({
-
-            type:"broadcast",
-
-            event:event,
-
-            payload:payload
-
-        });
-
-    }
-    catch(error){
-
-        console.error(
-            "Broadcast failed:",
-            error
-        );
-
-    }
+}
 
 }
 
 
 /* =========================================================
-   STATE
+   PLAYER STATE
 ========================================================= */
 
 function state(){
 
-    return {
+return {
 
-        id:me.id,
+id:me.id,
+name:me.name,
+faction:me.faction,
+color:me.color,
 
-        name:me.name,
+x:Math.round(me.x),
+y:Math.round(me.y),
 
-        faction:me.faction,
+hp:Math.round(me.hp),
 
-        color:me.color,
+kills:me.kills,
+deaths:me.deaths,
 
-        x:Math.round(me.x),
+alive:me.alive,
 
-        y:Math.round(me.y),
+angle:me.angle,
 
-        hp:Math.round(me.hp),
+sent:Date.now()
 
-        kills:me.kills,
-
-        deaths:me.deaths,
-
-        alive:me.alive,
-
-        sent:Date.now()
-
-    };
+};
 
 }
 
 
 /* =========================================================
-   RECEIVE PLAYER
+   RECEIVE PLAYERS
 ========================================================= */
 
-function receivePlayer(
-data
-){
+function receivePlayer(data){
 
-    if(
-        !data ||
-        data.id === me.id
-    ){
+if(!data || data.id===me.id) return;
 
-        return;
+let p=remotePlayers.get(data.id);
 
-    }
+if(!p){
 
+p={
 
-    let p =
-    remotePlayers.get(
-        data.id
-    );
+id:data.id,
 
+name:data.name||"PLAYER",
 
-    if(!p){
+faction:Number(data.faction)||0,
 
-        p = {
+color:data.color||"#fff",
 
-            id:data.id,
+x:Number(data.x)||0,
+y:Number(data.y)||0,
 
-            name:data.name || "PLAYER",
+targetX:Number(data.x)||0,
+targetY:Number(data.y)||0,
 
-            faction:Number(data.faction) || 0,
+vx:0,
+vy:0,
 
-            color:data.color || "#fff",
+angle:Number(data.angle)||0,
 
-            x:Number(data.x) || 0,
+hp:Number(data.hp) || 0,
+maxHp:100,
 
-            y:Number(data.y) || 0,
+kills:Number(data.kills)||0,
+deaths:Number(data.deaths)||0,
 
-            targetX:Number(data.x) || 0,
+alive:data.alive!==false,
 
-            targetY:Number(data.y) || 0,
+lastSeen:Date.now()
 
-            hp:Number(data.hp) || 100,
+};
 
-            kills:Number(data.kills) || 0,
+remotePlayers.set(data.id,p);
 
-            deaths:Number(data.deaths) || 0,
+addEvent("👋",`${p.name} joined`);
 
-            alive:data.alive !== false,
+}else{
 
-            lastSeen:Date.now()
+p.name=data.name||p.name;
+p.faction=Number(data.faction)||0;
+p.color=data.color||p.color;
 
-        };
+p.targetX=Number(data.x)||p.x;
+p.targetY=Number(data.y)||p.y;
 
-        remotePlayers.set(
-            data.id,
-            p
-        );
+p.angle=Number(data.angle)||p.angle;
 
-        addEvent(
-            "👋",
-            `${p.name} joined`
-        );
+p.hp=Number(data.hp);
+if(!Number.isFinite(p.hp)) p.hp=0;
 
-    }
-    else{
+p.kills=Number(data.kills)||0;
+p.deaths=Number(data.deaths)||0;
 
-        p.name =
-        data.name || p.name;
+p.alive=data.alive!==false;
 
-        p.faction =
-        Number(data.faction) || 0;
+p.lastSeen=Date.now();
 
-        p.color =
-        data.color || p.color;
-
-        p.targetX =
-        Number(data.x) || p.x;
-
-        p.targetY =
-        Number(data.y) || p.y;
-
-        p.hp =
-        Number(data.hp) || 0;
-
-        p.kills =
-        Number(data.kills) || 0;
-
-        p.deaths =
-        Number(data.deaths) || 0;
-
-        p.alive =
-        data.alive !== false;
-
-        p.lastSeen =
-        Date.now();
-
-    }
+}
 
 }
 
 
 /* =========================================================
-   ATTACK RECEIVE
+   DAMAGE PLAYER
 ========================================================= */
 
-function receiveAttack(
-data
-){
+function damageMe(amount,attackerName){
 
-    if(
-        !data ||
-        data.target !== me.id ||
-        !me.alive
-    ){
+if(!me.alive) return;
 
-        return;
+me.hp -= amount;
 
-    }
+me.hp=clamp(me.hp,0,100);
 
+if(me.hp<=0){
 
-    const attacker =
-    remotePlayers.get(
-        data.attacker
-    );
+me.hp=0;
+me.alive=false;
+me.deaths++;
 
+document.getElementById("deathScreen").style.display="flex";
 
-    if(!attacker){
+addEvent("💀",`You were eliminated by ${attackerName}`);
 
-        return;
+setTimeout(respawn,2500);
 
-    }
+}
 
+updateUI();
 
-    /*
-       Friendly fire disabled.
-    */
-
-    if(
-        attacker.faction ===
-        me.faction
-    ){
-
-        return;
-
-    }
+}
 
 
-    /*
-       Server-side validation isn't
-       available in this one-file
-       client-only version, so still
-       validate distance here.
-    */
+/* =========================================================
+   RECEIVE ATTACK
+========================================================= */
 
-    if(
-        distance(
-            me,
-            attacker
-        ) > 160
-    ){
+function receiveAttack(data){
 
-        return;
+if(!data || data.target!==me.id || !me.alive) return;
 
-    }
+const attacker=remotePlayers.get(data.attacker);
 
+if(!attacker) return;
 
-    const damage =
-    clamp(
-        Number(data.damage) || 10,
-        5,
-        20
-    );
+if(attacker.faction===me.faction) return;
 
+if(distance(me,attacker)>170) return;
 
-    me.hp -=
-    damage;
+const damage=clamp(Number(data.damage)||10,5,20);
 
-
-    if(
-        me.hp <= 0
-    ){
-
-        me.hp = 0;
-
-        me.alive = false;
-
-        me.deaths++;
-
-
-        document.getElementById(
-            "deathScreen"
-        ).style.display =
-        "flex";
-
-
-        addEvent(
-            "💀",
-            `You were eliminated by ${attacker.name}`
-        );
-
-
-        broadcast(
-            "death",
-            {
-
-                victim:me.id,
-
-                killer:attacker.id
-
-            }
-        );
-
-
-        updateUI();
-
-
-        setTimeout(
-            respawn,
-            2500
-        );
-
-    }
-
-
-    updateUI();
+damageMe(damage,attacker.name);
 
 }
 
@@ -1612,58 +703,35 @@ data
    DEATH RECEIVE
 ========================================================= */
 
-function receiveDeath(
-data
-){
+function receiveDeath(data){
 
-    if(
-        !data
-    ){
+if(!data) return;
 
-        return;
+const victim=remotePlayers.get(data.victim);
 
-    }
+if(victim){
 
+victim.hp=0;
+victim.alive=false;
 
-    const victim =
-    remotePlayers.get(
-        data.victim
-    );
+}
 
+if(data.killer===me.id){
 
-    if(victim){
+me.kills++;
 
-        victim.hp = 0;
+addEvent(
+"🎯",
+`You eliminated ${victim?.name||"a player"}`
+);
 
-        victim.alive = false;
+}else if(victim){
 
-    }
+addEvent("💀",`${victim.name} was eliminated`);
 
+}
 
-    if(
-        data.killer === me.id
-    ){
-
-        me.kills++;
-
-
-        addEvent(
-            "🎯",
-            `You eliminated ${victim?.name || "a player"}`
-        );
-
-    }
-    else if(victim){
-
-        addEvent(
-            "💀",
-            `${victim.name} was eliminated`
-        );
-
-    }
-
-
-    updateUI();
+updateUI();
 
 }
 
@@ -1674,50 +742,75 @@ data
 
 function respawn(){
 
-    me.x =
-    300 +
-    Math.random() *
-    (
-        WORLD_WIDTH - 600
-    );
+me.x=300+Math.random()*(WORLD_WIDTH-600);
+me.y=300+Math.random()*(WORLD_HEIGHT-600);
+
+me.vx=0;
+me.vy=0;
+
+me.hp=100;
+me.alive=true;
+
+document.getElementById("deathScreen").style.display="none";
+
+broadcast("state",state());
+
+addEvent("⚡","You respawned");
+
+updateUI();
+
+}
 
 
-    me.y =
-    300 +
-    Math.random() *
-    (
-        WORLD_HEIGHT - 600
-    );
+/* =========================================================
+   FIND TARGET
+========================================================= */
 
+function findAttackTarget(){
 
-    me.vx = 0;
+let target=null;
+let best=Infinity;
 
-    me.vy = 0;
+for(const p of remotePlayers.values()){
 
-    me.hp = 100;
+if(
+!p.alive ||
+p.faction===me.faction
+) continue;
 
-    me.alive = true;
+const d=distance(me,p);
 
+if(d<best){
 
-    document.getElementById(
-        "deathScreen"
-    ).style.display =
-    "none";
+best=d;
+target=p;
 
+}
 
-    broadcast(
-        "state",
-        state()
-    );
+}
 
+for(const npc of npcs){
 
-    addEvent(
-        "⚡",
-        "You respawned"
-    );
+if(
+!npc.alive ||
+npc.faction===me.faction
+) continue;
 
+const d=distance(me,npc);
 
-    updateUI();
+if(d<best){
+
+best=d;
+target=npc;
+
+}
+
+}
+
+return {
+target,
+distance:best
+};
 
 }
 
@@ -1728,316 +821,445 @@ function respawn(){
 
 function attack(){
 
-    if(
-        !joined ||
-        !connected ||
-        !me.alive ||
-        paused
-    ){
+if(!joined || !connected || !me.alive || paused) return;
 
-        return;
+const now=performance.now();
 
-    }
+if(now-me.lastAttack<400) return;
 
+const result=findAttackTarget();
 
-    const now =
-    performance.now();
+if(!result.target || result.distance>155) return;
 
+me.lastAttack=now;
 
-    if(
-        now -
-        me.lastAttack
-        <
-        400
-    ){
+const damage=10+Math.floor(Math.random()*6);
 
-        return;
-
-    }
+const target=result.target;
 
 
-    let target = null;
+/* NPC */
 
-    let best =
-    Infinity;
+if(target.id.startsWith("npc_")){
 
+damageNPC(target,damage);
 
-    for(
-        const p of remotePlayers.values()
-    ){
+return;
 
-        if(
-            !p.alive ||
-            p.faction ===
-            me.faction
-        ){
-
-            continue;
-
-        }
+}
 
 
-        const d =
-        distance(
-            me,
-            p
-        );
+/* PLAYER */
 
+broadcast("attack",{
 
-        if(
-            d <
-            best
-        ){
+attacker:me.id,
 
-            best = d;
+target:target.id,
 
-            target = p;
+damage
 
-        }
-
-    }
-
-
-    if(
-        !target ||
-        best > 150
-    ){
-
-        return;
-
-    }
-
-
-    me.lastAttack =
-    now;
-
-
-    broadcast(
-        "attack",
-        {
-
-            attacker:me.id,
-
-            target:target.id,
-
-            damage:
-            10 +
-            Math.floor(
-                Math.random() * 6
-            )
-
-        }
-    );
+});
 
 }
 
 
 /* =========================================================
-   MOVEMENT
+   NPC DAMAGE
 ========================================================= */
 
-function move(
-dt
+function damageNPC(npc,damage){
+
+if(!npc.alive) return;
+
+npc.hp-=damage;
+
+npc.hp=clamp(npc.hp,0,100);
+
+if(npc.hp<=0){
+
+npc.hp=0;
+npc.alive=false;
+npc.respawnAt=performance.now()+NPC_RESPAWN_TIME;
+
+me.kills++;
+
+addEvent(
+"🤖",
+`You destroyed ${npc.name}`
+);
+
+updateUI();
+
+}
+
+}
+
+
+/* =========================================================
+   NPC TARGETING
+========================================================= */
+
+function npcFindTarget(npc){
+
+let best=null;
+let bestDistance=Infinity;
+
+
+/* Player */
+
+if(
+me.alive &&
+me.faction!==npc.faction
 ){
 
-    if(
-        !joined ||
-        paused ||
-        !me.alive
-    ){
+const d=distance(npc,me);
 
-        return;
+if(d<bestDistance){
 
-    }
+best=me;
+bestDistance=d;
 
+}
 
-    let dx = 0;
+}
 
-    let dy = 0;
 
+/* Other players */
 
-    if(
-        keys.w ||
-        keys.arrowup
-    ){
+for(const p of remotePlayers.values()){
 
-        dy--;
+if(
+!p.alive ||
+p.faction===npc.faction
+) continue;
 
-    }
+const d=distance(npc,p);
 
+if(d<bestDistance){
 
-    if(
-        keys.s ||
-        keys.arrowdown
-    ){
+best=p;
+bestDistance=d;
 
-        dy++;
+}
 
-    }
+}
 
 
-    if(
-        keys.a ||
-        keys.arrowleft
-    ){
+/* Other NPCs */
 
-        dx--;
+for(const other of npcs){
 
-    }
+if(
+other===npc ||
+!other.alive ||
+other.faction===npc.faction
+) continue;
 
+const d=distance(npc,other);
 
-    if(
-        keys.d ||
-        keys.arrowright
-    ){
+if(d<bestDistance){
 
-        dx++;
+best=other;
+bestDistance=d;
 
-    }
+}
 
+}
 
-    if(
-        dx ||
-        dy
-    ){
+return {
+target:best,
+distance:bestDistance
+};
 
-        const length =
-        Math.hypot(
-            dx,
-            dy
-        );
+}
 
 
-        dx /=
-        length;
+/* =========================================================
+   NPC AI
+========================================================= */
 
-        dy /=
-        length;
+function updateNPCs(dt,now){
 
+for(const npc of npcs){
 
-        mouse.target =
-        null;
+/* Respawn */
 
-    }
-    else if(
-        mouse.target
-    ){
+if(!npc.alive){
 
-        dx =
-        mouse.target.x -
-        me.x;
+if(now>=npc.respawnAt){
 
-        dy =
-        mouse.target.y -
-        me.y;
+npc.x=300+Math.random()*(WORLD_WIDTH-600);
+npc.y=300+Math.random()*(WORLD_HEIGHT-600);
 
+npc.hp=100;
+npc.alive=true;
 
-        const length =
-        Math.hypot(
-            dx,
-            dy
-        );
+npc.vx=0;
+npc.vy=0;
 
+npc.angle=Math.random()*Math.PI*2;
 
-        if(
-            length < 8
-        ){
+}
 
-            mouse.target =
-            null;
+continue;
 
-            dx = 0;
+}
 
-            dy = 0;
 
-        }
-        else{
+const result=npcFindTarget(npc);
 
-            dx /=
-            length;
+npc.target=result.target;
 
-            dy /=
-            length;
 
-        }
+/* Chase */
 
-    }
+if(
+result.target &&
+result.distance<600
+){
 
+let dx=result.target.x-npc.x;
+let dy=result.target.y-npc.y;
 
-    const speed =
-    290;
+const len=Math.hypot(dx,dy)||1;
 
+dx/=len;
+dy/=len;
 
-    const targetVX =
-    dx * speed;
+npc.vx += (dx*145-npc.vx)*Math.min(1,dt*4);
+npc.vy += (dy*145-npc.vy)*Math.min(1,dt*4);
 
-    const targetVY =
-    dy * speed;
+npc.angle=Math.atan2(dy,dx);
 
+if(
+result.distance<145 &&
+now-npc.lastAttack>850
+){
 
-    me.vx +=
-    (
-        targetVX -
-        me.vx
-    ) *
-    Math.min(
-        1,
-        dt * 14
-    );
+npc.lastAttack=now;
 
+const damage=5+Math.floor(Math.random()*6);
 
-    me.vy +=
-    (
-        targetVY -
-        me.vy
-    ) *
-    Math.min(
-        1,
-        dt * 14
-    );
+if(result.target===me){
 
+damageMe(damage,npc.name);
 
-    if(
-        !dx &&
-        !dy
-    ){
+}else if(result.target.id?.startsWith("npc_")){
 
-        me.vx *=
-        Math.pow(
-            .001,
-            dt
-        );
+damageNPC(result.target,damage);
 
-        me.vy *=
-        Math.pow(
-            .001,
-            dt
-        );
+}else{
 
-    }
+/*
+Remote NPC damage is intentionally local.
+Multiplayer player damage still goes through
+Supabase.
+*/
 
+if(result.target.id){
 
-    me.x +=
-    me.vx * dt;
+broadcast("attack",{
+attacker:npc.id,
+target:result.target.id,
+damage
+});
 
-    me.y +=
-    me.vy * dt;
+}
 
+}
 
-    me.x =
-    clamp(
-        me.x,
-        25,
-        WORLD_WIDTH - 25
-    );
+}
 
+}else{
 
-    me.y =
-    clamp(
-        me.y,
-        80,
-        WORLD_HEIGHT - 25
-    );
+/* Wander */
+
+npc.wanderTimer-=dt;
+
+if(npc.wanderTimer<=0){
+
+npc.wanderTimer=2+Math.random()*4;
+
+npc.wanderX=Math.random()*2-1;
+npc.wanderY=Math.random()*2-1;
+
+const len=Math.hypot(npc.wanderX,npc.wanderY)||1;
+
+npc.wanderX/=len;
+npc.wanderY/=len;
+
+}
+
+npc.vx += (npc.wanderX*65-npc.vx)*Math.min(1,dt*2);
+npc.vy += (npc.wanderY*65-npc.vy)*Math.min(1,dt*2);
+
+if(Math.hypot(npc.vx,npc.vy)>10){
+
+npc.angle=Math.atan2(npc.vy,npc.vx);
+
+}
+
+}
+
+
+/* Movement */
+
+npc.x+=npc.vx*dt;
+npc.y+=npc.vy*dt;
+
+if(npc.x<40||npc.x>WORLD_WIDTH-40){
+
+npc.vx*=-1;
+npc.x=clamp(npc.x,40,WORLD_WIDTH-40);
+
+}
+
+if(npc.y<80||npc.y>WORLD_HEIGHT-40){
+
+npc.vy*=-1;
+npc.y=clamp(npc.y,80,WORLD_HEIGHT-40);
+
+}
+
+}
+
+}
+
+
+/* =========================================================
+   PLAYER MOVEMENT
+========================================================= */
+
+function move(dt){
+
+if(!joined||paused||!me.alive) return;
+
+let dx=0;
+let dy=0;
+
+if(keys.w||keys.arrowup) dy--;
+if(keys.s||keys.arrowdown) dy++;
+if(keys.a||keys.arrowleft) dx--;
+if(keys.d||keys.arrowright) dx++;
+
+if(dx||dy){
+
+const length=Math.hypot(dx,dy);
+
+dx/=length;
+dy/=length;
+
+mouse.target=null;
+
+}else if(mouse.target){
+
+dx=mouse.target.x-me.x;
+dy=mouse.target.y-me.y;
+
+const length=Math.hypot(dx,dy);
+
+if(length<8){
+
+mouse.target=null;
+dx=0;
+dy=0;
+
+}else{
+
+dx/=length;
+dy/=length;
+
+}
+
+}
+
+const speed=290;
+
+const targetVX=dx*speed;
+const targetVY=dy*speed;
+
+me.vx+=(targetVX-me.vx)*Math.min(1,dt*14);
+me.vy+=(targetVY-me.vy)*Math.min(1,dt*14);
+
+if(!dx&&!dy){
+
+me.vx*=Math.pow(.001,dt);
+me.vy*=Math.pow(.001,dt);
+
+}
+
+me.x+=me.vx*dt;
+me.y+=me.vy*dt;
+
+me.x=clamp(me.x,25,WORLD_WIDTH-25);
+me.y=clamp(me.y,80,WORLD_HEIGHT-25);
+
+
+/*
+   Cursor always points in direction of movement.
+   If stationary, keep previous direction.
+*/
+
+if(Math.hypot(me.vx,me.vy)>8){
+
+me.angle=Math.atan2(me.vy,me.vx);
+
+}
+
+}
+
+
+/* =========================================================
+   DRAW HEALTH BAR
+========================================================= */
+
+function drawHealth(p,x,y){
+
+const barWidth=50;
+const barHeight=5;
+
+const hp=clamp(p.hp/p.maxHp,0,1);
+
+
+/* Background */
+
+ctx.fillStyle="rgba(0,0,0,.75)";
+
+ctx.fillRect(
+x-barWidth/2,
+y,
+barWidth,
+barHeight
+);
+
+
+/* Health */
+
+ctx.fillStyle=
+hp>.5 ? "#4be38b" :
+hp>.25 ? "#ffc84d" :
+"#ff5263";
+
+ctx.fillRect(
+x-barWidth/2,
+y,
+barWidth*hp,
+barHeight
+);
+
+
+/* HP text */
+
+ctx.textAlign="center";
+ctx.font="900 8px Arial";
+ctx.fillStyle="#fff";
+
+ctx.fillText(
+`${Math.ceil(p.hp)}/${p.maxHp}`,
+x,
+y-4
+);
 
 }
 
@@ -2046,344 +1268,180 @@ dt
    DRAW CURSOR
 ========================================================= */
 
-function drawCursor(
+function drawCursor(p,mine=false){
+
+const screenX=p.x-me.x+width/2;
+const screenY=p.y-me.y+height/2;
+
+if(
+screenX<-120 ||
+screenX>width+120 ||
+screenY<-120 ||
+screenY>height+120
+) return;
+
+ctx.save();
+
+ctx.translate(screenX,screenY);
+
+ctx.rotate(p.angle+Math.PI/2);
+
+ctx.shadowColor=p.color;
+ctx.shadowBlur=mine?25:15;
+
+ctx.fillStyle=p.color;
+
+ctx.beginPath();
+
+ctx.moveTo(0,-24);
+ctx.lineTo(9,10);
+ctx.lineTo(2,6);
+ctx.lineTo(-5,17);
+ctx.lineTo(-10,13);
+ctx.lineTo(-3,2);
+ctx.lineTo(-10,5);
+ctx.closePath();
+
+ctx.fill();
+
+ctx.shadowBlur=0;
+
+ctx.strokeStyle="rgba(255,255,255,.9)";
+ctx.lineWidth=1;
+
+ctx.stroke();
+
+ctx.restore();
+
+
+/* Name */
+
+ctx.textAlign="center";
+ctx.font="900 10px Arial";
+ctx.fillStyle="#fff";
+
+ctx.fillText(
+p.name,
+screenX,
+screenY+34
+);
+
+
+/* ALWAYS VISIBLE HEALTH */
+
+drawHealth(
 p,
-mine=false
-){
-
-    const screenX =
-    p.x -
-    me.x +
-    width / 2;
-
-
-    const screenY =
-    p.y -
-    me.y +
-    height / 2;
-
-
-    if(
-        screenX < -100 ||
-        screenX > width + 100 ||
-        screenY < -100 ||
-        screenY > height + 100
-    ){
-
-        return;
-
-    }
-
-
-    ctx.save();
-
-    ctx.translate(
-        screenX,
-        screenY
-    );
-
-
-    ctx.shadowColor =
-    p.color;
-
-    ctx.shadowBlur =
-    mine ? 25 : 15;
-
-
-    ctx.fillStyle =
-    p.color;
-
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        -6,
-        -20
-    );
-
-    ctx.lineTo(
-        5,
-        9
-    );
-
-    ctx.lineTo(
-        12,
-        5
-    );
-
-    ctx.lineTo(
-        21,
-        18
-    );
-
-    ctx.lineTo(
-        27,
-        14
-    );
-
-    ctx.lineTo(
-        17,
-        1
-    );
-
-    ctx.lineTo(
-        26,
-        -3
-    );
-
-    ctx.closePath();
-
-    ctx.fill();
-
-
-    ctx.shadowBlur = 0;
-
-    ctx.strokeStyle =
-    "rgba(255,255,255,.9)";
-
-    ctx.lineWidth = 1;
-
-    ctx.stroke();
-
-    ctx.restore();
-
-
-    ctx.textAlign =
-    "center";
-
-    ctx.font =
-    "900 10px Arial";
-
-    ctx.fillStyle =
-    "#fff";
-
-    ctx.fillText(
-        p.name,
-        screenX,
-        screenY + 33
-    );
-
-
-    if(
-        p.hp < 100
-    ){
-
-        ctx.fillStyle =
-        "rgba(0,0,0,.7)";
-
-        ctx.fillRect(
-            screenX - 18,
-            screenY + 38,
-            36,
-            3
-        );
-
-
-        ctx.fillStyle =
-        "#4be38b";
-
-        ctx.fillRect(
-            screenX - 18,
-            screenY + 38,
-            36 *
-            clamp(
-                p.hp / 100,
-                0,
-                1
-            ),
-            3
-        );
-
-    }
+screenX,
+screenY+48
+);
 
 }
 
 
 /* =========================================================
-   DRAW WORLD
+   WORLD
 ========================================================= */
 
 function drawWorld(){
 
-    ctx.fillStyle =
-    "#06090f";
+ctx.fillStyle="#06090f";
 
-    ctx.fillRect(
-        0,
-        0,
-        width,
-        height
-    );
+ctx.fillRect(0,0,width,height);
 
 
-    /*
-       Grid
-    */
+/* Grid */
 
-    const grid =
-    100;
+const grid=100;
 
+const offsetX=(width/2-me.x)%grid;
+const offsetY=(height/2-me.y)%grid;
 
-    const offsetX =
-    (
-        width / 2 -
-        me.x
-    ) % grid;
+ctx.strokeStyle="rgba(255,255,255,.035)";
+ctx.lineWidth=1;
 
+for(let x=offsetX;x<width;x+=grid){
 
-    const offsetY =
-    (
-        height / 2 -
-        me.y
-    ) % grid;
+ctx.beginPath();
+ctx.moveTo(x,62);
+ctx.lineTo(x,height);
+ctx.stroke();
 
+}
 
-    ctx.strokeStyle =
-    "rgba(255,255,255,.035)";
+for(let y=offsetY;y<height;y+=grid){
 
-    ctx.lineWidth = 1;
+ctx.beginPath();
+ctx.moveTo(0,y);
+ctx.lineTo(width,y);
+ctx.stroke();
 
-
-    for(
-        let x = offsetX;
-        x < width;
-        x += grid
-    ){
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            x,
-            62
-        );
-
-        ctx.lineTo(
-            x,
-            height
-        );
-
-        ctx.stroke();
-
-    }
+}
 
 
-    for(
-        let y = offsetY;
-        y < height;
-        y += grid
-    ){
+/* Border */
 
-        ctx.beginPath();
+ctx.strokeStyle="rgba(79,140,255,.2)";
 
-        ctx.moveTo(
-            0,
-            y
-        );
-
-        ctx.lineTo(
-            width,
-            y
-        );
-
-        ctx.stroke();
-
-    }
+ctx.strokeRect(
+-me.x+width/2,
+-me.y+height/2,
+WORLD_WIDTH,
+WORLD_HEIGHT
+);
 
 
-    /*
-       World border
-    */
+/* NPCs */
 
-    ctx.strokeStyle =
-    "rgba(79,140,255,.2)";
+for(const npc of npcs){
 
-    ctx.strokeRect(
-        -me.x + width / 2,
-        -me.y + height / 2,
-        WORLD_WIDTH,
-        WORLD_HEIGHT
-    );
+if(npc.alive){
+drawCursor(npc);
+}
+
+}
 
 
-    /*
-       Other players
-    */
+/* Players */
 
-    for(
-        const p of remotePlayers.values()
-    ){
+for(const p of remotePlayers.values()){
 
-        if(
-            p.alive
-        ){
+if(p.alive){
+drawCursor(p);
+}
 
-            drawCursor(
-                p
-            );
-
-        }
-
-    }
+}
 
 
-    /*
-       Local player
-    */
+/* Me */
 
-    if(
-        me.alive
-    ){
-
-        drawCursor(
-            me,
-            true
-        );
-
-    }
+if(me.alive){
+drawCursor(me,true);
+}
 
 
-    /*
-       Destination marker
-    */
+/* Destination */
 
-    if(
-        mouse.target
-    ){
+if(mouse.target){
 
-        const x =
-        mouse.target.x -
-        me.x +
-        width / 2;
+const x=mouse.target.x-me.x+width/2;
+const y=mouse.target.y-me.y+height/2;
 
+ctx.strokeStyle="rgba(255,255,255,.7)";
+ctx.lineWidth=1;
 
-        const y =
-        mouse.target.y -
-        me.y +
-        height / 2;
+ctx.beginPath();
 
+ctx.arc(
+x,
+y,
+10+Math.sin(performance.now()/120)*2,
+0,
+Math.PI*2
+);
 
-        ctx.strokeStyle =
-        "rgba(255,255,255,.7)";
+ctx.stroke();
 
-        ctx.lineWidth = 1;
-
-
-        ctx.beginPath();
-
-        ctx.arc(
-            x,
-            y,
-            10 +
-            Math.sin(
-                performance.now() / 120
-            ) * 2,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.stroke();
-
-    }
+}
 
 }
 
@@ -2394,80 +1452,77 @@ function drawWorld(){
 
 function drawMinimap(){
 
-    const w = 420;
+const w=420;
+const h=260;
 
-    const h = 260;
+mctx.fillStyle="#070a10";
+mctx.fillRect(0,0,w,h);
 
-
-    mctx.fillStyle =
-    "#070a10";
-
-    mctx.fillRect(
-        0,
-        0,
-        w,
-        h
-    );
+mctx.strokeStyle="rgba(255,255,255,.12)";
+mctx.strokeRect(1,1,w-2,h-2);
 
 
-    mctx.strokeStyle =
-    "rgba(255,255,255,.12)";
+/* NPCs */
 
-    mctx.strokeRect(
-        1,
-        1,
-        w - 2,
-        h - 2
-    );
+for(const npc of npcs){
 
+if(!npc.alive) continue;
 
-    for(
-        const p of remotePlayers.values()
-    ){
+mctx.fillStyle=npc.color;
 
-        if(
-            !p.alive
-        ){
+mctx.beginPath();
 
-            continue;
+mctx.arc(
+npc.x/WORLD_WIDTH*w,
+npc.y/WORLD_HEIGHT*h,
+3,
+0,
+Math.PI*2
+);
 
-        }
+mctx.fill();
 
-
-        mctx.fillStyle =
-        p.color;
+}
 
 
-        mctx.beginPath();
+/* Players */
 
-        mctx.arc(
-            p.x / WORLD_WIDTH * w,
-            p.y / WORLD_HEIGHT * h,
-            4,
-            0,
-            Math.PI * 2
-        );
+for(const p of remotePlayers.values()){
 
-        mctx.fill();
+if(!p.alive) continue;
 
-    }
+mctx.fillStyle=p.color;
+
+mctx.beginPath();
+
+mctx.arc(
+p.x/WORLD_WIDTH*w,
+p.y/WORLD_HEIGHT*h,
+4,
+0,
+Math.PI*2
+);
+
+mctx.fill();
+
+}
 
 
-    mctx.fillStyle =
-    me.color;
+/* Me */
 
+mctx.fillStyle=me.color;
 
-    mctx.beginPath();
+mctx.beginPath();
 
-    mctx.arc(
-        me.x / WORLD_WIDTH * w,
-        me.y / WORLD_HEIGHT * h,
-        6,
-        0,
-        Math.PI * 2
-    );
+mctx.arc(
+me.x/WORLD_WIDTH*w,
+me.y/WORLD_HEIGHT*h,
+6,
+0,
+Math.PI*2
+);
 
-    mctx.fill();
+mctx.fill();
 
 }
 
@@ -2478,113 +1533,78 @@ function drawMinimap(){
 
 function updateUI(){
 
-    document.getElementById(
-        "online"
-    ).textContent =
-    remotePlayers.size + 1;
+document.getElementById("online").textContent=
+remotePlayers.size+1+npcs.filter(n=>n.alive).length;
+
+document.getElementById("killsTop").textContent=me.kills;
+
+document.getElementById("kills").textContent=me.kills;
+
+document.getElementById("deaths").textContent=me.deaths;
+
+document.getElementById("playerName").textContent=me.name;
+
+document.getElementById("playerFaction").textContent=
+FACTIONS[me.faction].name;
+
+document.getElementById("health").textContent=Math.ceil(me.hp);
+
+document.getElementById("healthBar").style.width=
+me.hp+"%";
 
 
-    document.getElementById(
-        "killsTop"
-    ).textContent =
-    me.kills;
+const counts=FACTIONS.map(()=>0);
 
+counts[me.faction]++;
 
-    document.getElementById(
-        "kills"
-    ).textContent =
-    me.kills;
+for(const p of remotePlayers.values()){
 
+if(
+p.alive &&
+counts[p.faction]!==undefined
+){
 
-    document.getElementById(
-        "deaths"
-    ).textContent =
-    me.deaths;
+counts[p.faction]++;
 
+}
 
-    document.getElementById(
-        "playerName"
-    ).textContent =
-    me.name;
+}
 
+for(const npc of npcs){
 
-    document.getElementById(
-        "playerFaction"
-    ).textContent =
-    FACTIONS[
-        me.faction
-    ].name;
+if(
+npc.alive &&
+counts[npc.faction]!==undefined
+){
 
+counts[npc.faction]++;
 
-    document.getElementById(
-        "health"
-    ).textContent =
-    Math.ceil(
-        me.hp
-    );
+}
 
+}
 
-    document.getElementById(
-        "healthBar"
-    ).style.width =
-    me.hp + "%";
+document.getElementById("factions").innerHTML=
+FACTIONS.map((f,i)=>`
 
+<div class="faction">
 
-    const counts =
-    FACTIONS.map(
-        () => 0
-    );
+<div class="dot"
+style="
+background:${f.color};
+box-shadow:0 0 8px ${f.color};
+"></div>
 
+<div class="factionNameSmall">
+${f.name}
+</div>
 
-    counts[
-        me.faction
-    ]++;
+<div class="factionCount">
+${counts[i]}
+</div>
 
+</div>
 
-    for(
-        const p of remotePlayers.values()
-    ){
-
-        if(
-            p.alive &&
-            counts[p.faction] !== undefined
-        ){
-
-            counts[p.faction]++;
-
-        }
-
-    }
-
-
-    document.getElementById(
-        "factions"
-    ).innerHTML =
-    FACTIONS.map(
-        (f,i) => `
-
-            <div class="faction">
-
-                <div
-                    class="dot"
-                    style="
-                        background:${f.color};
-                        box-shadow:0 0 8px ${f.color};
-                    "
-                ></div>
-
-                <div class="factionNameSmall">
-                    ${f.name}
-                </div>
-
-                <div class="factionCount">
-                    ${counts[i]}
-                </div>
-
-            </div>
-
-        `
-    ).join("");
+`).join("");
 
 }
 
@@ -2593,40 +1613,23 @@ function updateUI(){
    EVENTS
 ========================================================= */
 
-let eventList = [];
+let eventList=[];
 
+function addEvent(icon,text){
 
-function addEvent(
-icon,
-text
-){
+eventList.unshift({icon,text});
 
-    eventList.unshift({
-        icon,
-        text
-    });
+eventList=eventList.slice(0,5);
 
+document.getElementById("events").innerHTML=
+eventList.map(e=>`
 
-    eventList =
-    eventList.slice(
-        0,
-        5
-    );
+<div class="event">
+${e.icon}
+${escapeHTML(e.text)}
+</div>
 
-
-    document.getElementById(
-        "events"
-    ).innerHTML =
-    eventList.map(
-        e => `
-
-            <div class="event">
-                ${e.icon}
-                ${escapeHTML(e.text)}
-            </div>
-
-        `
-    ).join("");
+`).join("");
 
 }
 
@@ -2635,337 +1638,199 @@ text
    CHAT
 ========================================================= */
 
-function addChat(
-name,
-text,
-color
-){
+function addChat(name,text,color){
 
-    const box =
-    document.getElementById(
-        "chatMessages"
-    );
+const box=document.getElementById("chatMessages");
 
+const line=document.createElement("div");
 
-    const line =
-    document.createElement(
-        "div"
-    );
+line.className="chatLine";
 
+const strong=document.createElement("strong");
 
-    line.className =
-    "chatLine";
+strong.textContent=name;
+strong.style.color=color;
 
+line.appendChild(strong);
 
-    const strong =
-    document.createElement(
-        "strong"
-    );
+line.appendChild(
+document.createTextNode(text)
+);
 
+box.appendChild(line);
 
-    strong.textContent =
-    name;
+while(box.children.length>30){
+box.removeChild(box.firstChild);
+}
 
-
-    strong.style.color =
-    color;
-
-
-    line.appendChild(
-        strong
-    );
-
-
-    line.appendChild(
-        document.createTextNode(
-            text
-        )
-    );
-
-
-    box.appendChild(
-        line
-    );
-
-
-    while(
-        box.children.length > 30
-    ){
-
-        box.removeChild(
-            box.firstChild
-        );
-
-    }
-
-
-    box.scrollTop =
-    box.scrollHeight;
+box.scrollTop=box.scrollHeight;
 
 }
 
 
 /* =========================================================
-   CONNECT TO SUPABASE
+   CONNECT
 ========================================================= */
 
 async function connect(){
 
-    const status =
-    document.getElementById(
-        "status"
-    );
+const status=document.getElementById("status");
+const play=document.getElementById("playButton");
 
+status.textContent="Connecting to multiplayer...";
 
-    const play =
-    document.getElementById(
-        "playButton"
-    );
+channel=db.channel(
+ROOM,
+{
+config:{
+broadcast:{
+self:false,
+ack:true
+}
+}
+}
+);
 
 
-    status.textContent =
-    "Connecting to multiplayer...";
+/* State */
 
+channel.on(
+"broadcast",
+{event:"state"},
+({payload})=>{
 
-    channel =
-    db.channel(
-        ROOM,
-        {
-            config:{
-                broadcast:{
-                    self:false,
-                    ack:true
-                }
-            }
-        }
-    );
+receivePlayer(payload);
+updateUI();
 
+}
+);
 
-    /*
-       State
-    */
 
-    channel.on(
-        "broadcast",
-        {
-            event:"state"
-        },
-        ({payload}) => {
+/* Attacks */
 
-            receivePlayer(
-                payload
-            );
+channel.on(
+"broadcast",
+{event:"attack"},
+({payload})=>{
 
-            updateUI();
+receiveAttack(payload);
 
-        }
-    );
+}
+);
 
 
-    /*
-       Attacks
-    */
+/* Death */
 
-    channel.on(
-        "broadcast",
-        {
-            event:"attack"
-        },
-        ({payload}) => {
+channel.on(
+"broadcast",
+{event:"death"},
+({payload})=>{
 
-            receiveAttack(
-                payload
-            );
+receiveDeath(payload);
 
-        }
-    );
+}
+);
 
 
-    /*
-       Deaths
-    */
+/* Chat */
 
-    channel.on(
-        "broadcast",
-        {
-            event:"death"
-        },
-        ({payload}) => {
+channel.on(
+"broadcast",
+{event:"chat"},
+({payload})=>{
 
-            receiveDeath(
-                payload
-            );
+if(payload){
 
-        }
-    );
+addChat(
+payload.name,
+payload.text,
+payload.color
+);
 
+}
 
-    /*
-       Chat
-    */
+}
+);
 
-    channel.on(
-        "broadcast",
-        {
-            event:"chat"
-        },
-        ({payload}) => {
 
-            if(
-                payload
-            ){
+/* Ping */
 
-                addChat(
-                    payload.name,
-                    payload.text,
-                    payload.color
-                );
+channel.on(
+"broadcast",
+{event:"ping"},
+({payload})=>{
 
-            }
+if(
+payload &&
+payload.target===me.id
+){
 
-        }
-    );
+const ping=Math.round(
+performance.now()-payload.time
+);
 
+document.getElementById("ping").textContent=
+ping+" ms";
 
-    /*
-       Ping
-    */
+}
 
-    channel.on(
-        "broadcast",
-        {
-            event:"ping"
-        },
-        ({payload}) => {
+}
+);
 
-            if(
-                payload &&
-                payload.target === me.id
-            ){
 
-                const ping =
-                Math.round(
-                    performance.now() -
-                    payload.time
-                );
+channel.subscribe(state=>{
 
+console.log(
+"Supabase Realtime:",
+state
+);
 
-                document.getElementById(
-                    "ping"
-                ).textContent =
-                ping + " ms";
+document.getElementById("connection").textContent=state;
 
-            }
 
-        }
-    );
+if(state==="SUBSCRIBED"){
 
+connected=true;
 
-    channel.subscribe(
-        async state => {
+status.textContent="✓ Multiplayer connected";
 
-            console.log(
-                "Supabase Realtime:",
-                state
-            );
+play.disabled=false;
 
+play.textContent="ENTER BATTLEFIELD";
 
-            document.getElementById(
-                "connection"
-            ).textContent =
-            state;
+addEvent("🌐","Connected to Cursor Wars");
 
+updateUI();
 
-            if(
-                state === "SUBSCRIBED"
-            ){
+}else if(state==="CHANNEL_ERROR"){
 
-                connected =
-                true;
+connected=false;
 
+status.textContent="Realtime channel error";
 
-                status.textContent =
-                "✓ Multiplayer connected";
+play.disabled=true;
 
+play.textContent="CONNECTION ERROR";
 
-                play.disabled =
-                false;
+}else if(state==="TIMED_OUT"){
 
+connected=false;
 
-                play.textContent =
-                "ENTER BATTLEFIELD";
+status.textContent="Realtime connection timed out";
 
+play.disabled=true;
 
-                addEvent(
-                    "🌐",
-                    "Connected to Cursor Wars"
-                );
+play.textContent="TIMED OUT";
 
+}else if(state==="CLOSED"){
 
-                updateUI();
+connected=false;
 
-            }
+status.textContent="Connection closed";
 
+}
 
-            else if(
-                state === "CHANNEL_ERROR"
-            ){
-
-                connected =
-                false;
-
-
-                status.textContent =
-                "Realtime channel error";
-
-
-                play.disabled =
-                true;
-
-
-                play.textContent =
-                "CONNECTION ERROR";
-
-            }
-
-
-            else if(
-                state === "TIMED_OUT"
-            ){
-
-                connected =
-                false;
-
-
-                status.textContent =
-                "Realtime connection timed out";
-
-
-                play.disabled =
-                true;
-
-
-                play.textContent =
-                "TIMED OUT";
-
-            }
-
-
-            else if(
-                state === "CLOSED"
-            ){
-
-                connected =
-                false;
-
-
-                status.textContent =
-                "Connection closed";
-
-            }
-
-        }
-    );
+});
 
 }
 
@@ -2974,214 +1839,109 @@ async function connect(){
    PLAY
 ========================================================= */
 
-document.getElementById(
-    "playButton"
-).onclick =
-async () => {
+document.getElementById("playButton").onclick=async()=>{
 
-    if(
-        !connected
-    ){
+if(!connected) return;
 
-        return;
+const enteredName=
+document.getElementById("name").value.trim();
 
-    }
+me.name=(enteredName||"RON").slice(0,16);
 
+me.faction=selectedFaction;
 
-    const enteredName =
-    document.getElementById(
-        "name"
-    ).value.trim();
+me.color=FACTIONS[selectedFaction].color;
 
+joined=true;
 
-    me.name =
-    (
-        enteredName ||
-        "RON"
-    ).slice(
-        0,
-        16
-    );
+document.getElementById("startScreen").classList.add("hidden");
 
+addEvent(
+"🚀",
+`${me.name} entered the battlefield`
+);
 
-    me.faction =
-    selectedFaction;
+updateUI();
 
-
-    me.color =
-    FACTIONS[
-        selectedFaction
-    ].color;
-
-
-    joined =
-    true;
-
-
-    document.getElementById(
-        "startScreen"
-    ).classList.add(
-        "hidden"
-    );
-
-
-    addEvent(
-        "🚀",
-        `${me.name} entered the battlefield`
-    );
-
-
-    updateUI();
-
-
-    await broadcast(
-        "state",
-        state()
-    );
+await broadcast("state",state());
 
 };
 
 
 /* =========================================================
-   COLORS
+   FACTIONS
 ========================================================= */
 
-let selectedFaction = 0;
+let selectedFaction=0;
 
+FACTIONS.forEach((f,index)=>{
 
-FACTIONS.forEach(
-    (f,index) => {
+const button=document.createElement("button");
 
-        const button =
-        document.createElement(
-            "button"
-        );
+button.className="colorButton";
 
+button.style.background=f.color;
 
-        button.className =
-        "colorButton";
+button.title=f.name;
 
+button.onclick=()=>{
 
-        button.style.background =
-        f.color;
+selectedFaction=index;
 
+document
+.querySelectorAll(".colorButton")
+.forEach(b=>b.classList.remove("selected"));
 
-        button.title =
-        f.name;
+button.classList.add("selected");
 
+};
 
-        button.onclick =
-        () => {
+document.getElementById("colors").appendChild(button);
 
-            selectedFaction =
-            index;
+if(index===0){
+button.classList.add("selected");
+}
 
-
-            document
-                .querySelectorAll(
-                    ".colorButton"
-                )
-                .forEach(
-                    b =>
-                    b.classList.remove(
-                        "selected"
-                    )
-                );
-
-
-            button.classList.add(
-                "selected"
-            );
-
-        };
-
-
-        document.getElementById(
-            "colors"
-        ).appendChild(
-            button
-        );
-
-
-        if(
-            index === 0
-        ){
-
-            button.classList.add(
-                "selected"
-            );
-
-        }
-
-    }
-);
+});
 
 
 /* =========================================================
    CHAT SEND
 ========================================================= */
 
-document.getElementById(
-    "chatForm"
-).addEventListener(
-    "submit",
-    async event => {
+document.getElementById("chatForm").addEventListener(
+"submit",
+async event=>{
 
-        event.preventDefault();
+event.preventDefault();
 
+const input=document.getElementById("chatInput");
 
-        const input =
-        document.getElementById(
-            "chatInput"
-        );
+const text=input.value.trim();
 
+if(!text||!connected||!joined) return;
 
-        const text =
-        input.value.trim();
+input.value="";
 
+const message={
 
-        if(
-            !text ||
-            !connected ||
-            !joined
-        ){
+name:me.name,
 
-            return;
+text:text.slice(0,100),
 
-        }
+color:me.color
 
+};
 
-        input.value =
-        "";
+addChat(
+message.name,
+message.text,
+message.color
+);
 
+await broadcast("chat",message);
 
-        const message = {
-
-            name:me.name,
-
-            text:text.slice(
-                0,
-                100
-            ),
-
-            color:me.color
-
-        };
-
-
-        addChat(
-            message.name,
-            message.text,
-            message.color
-        );
-
-
-        await broadcast(
-            "chat",
-            message
-        );
-
-    }
+}
 );
 
 
@@ -3189,29 +1949,17 @@ document.getElementById(
    CENTER
 ========================================================= */
 
-document.getElementById(
-    "center"
-).onclick =
-() => {
+document.getElementById("center").onclick=()=>{
 
-    me.x =
-    WORLD_WIDTH / 2;
+me.x=WORLD_WIDTH/2;
+me.y=WORLD_HEIGHT/2;
 
-    me.y =
-    WORLD_HEIGHT / 2;
+me.vx=0;
+me.vy=0;
 
-    me.vx = 0;
+mouse.target=null;
 
-    me.vy = 0;
-
-    mouse.target =
-    null;
-
-
-    broadcast(
-        "state",
-        state()
-    );
+broadcast("state",state());
 
 };
 
@@ -3220,116 +1968,62 @@ document.getElementById(
    PAUSE
 ========================================================= */
 
-let paused = false;
-
+let paused=false;
 
 function togglePause(){
 
-    if(
-        !joined
-    ){
+if(!joined) return;
 
-        return;
+paused=!paused;
 
-    }
-
-
-    paused =
-    !paused;
-
-
-    document.getElementById(
-        "pause"
-    ).textContent =
-    paused
-    ? "▶"
-    : "II";
+document.getElementById("pause").textContent=
+paused?"▶":"II";
 
 }
 
-
-document.getElementById(
-    "pause"
-).onclick =
-togglePause;
+document.getElementById("pause").onclick=togglePause;
 
 
 /* =========================================================
    REMOVE OLD PLAYERS
 ========================================================= */
 
-setInterval(
-    () => {
+setInterval(()=>{
 
-        const now =
-        Date.now();
+const now=Date.now();
 
+for(const [id,p] of remotePlayers){
 
-        for(
-            const [
-                id,
-                p
-            ]
-            of remotePlayers
-        ){
+if(now-p.lastSeen>8000){
 
-            if(
-                now -
-                p.lastSeen
-                >
-                8000
-            ){
+remotePlayers.delete(id);
 
-                remotePlayers.delete(
-                    id
-                );
+}
 
-            }
+}
 
-        }
+updateUI();
 
-
-        updateUI();
-
-    },
-    2000
-);
+},2000);
 
 
 /* =========================================================
-   INTERPOLATE REMOTE PLAYERS
+   INTERPOLATION
 ========================================================= */
 
-function interpolatePlayers(
-dt
-){
+function interpolatePlayers(dt){
 
-    for(
-        const p of remotePlayers.values()
-    ){
+for(const p of remotePlayers.values()){
 
-        p.x +=
-        (
-            p.targetX -
-            p.x
-        ) *
-        Math.min(
-            1,
-            dt * 14
-        );
+p.x+=
+(p.targetX-p.x)*
+Math.min(1,dt*14);
 
+p.y+=
+(p.targetY-p.y)*
+Math.min(1,dt*14);
 
-        p.y +=
-        (
-            p.targetY -
-            p.y
-        ) *
-        Math.min(
-            1,
-            dt * 14
-        );
-
-    }
+}
 
 }
 
@@ -3338,106 +2032,59 @@ dt
    GAME LOOP
 ========================================================= */
 
-let lastFrame =
-performance.now();
+let lastFrame=performance.now();
+
+function loop(now){
+
+const dt=Math.min(
+.05,
+(now-lastFrame)/1000
+);
+
+lastFrame=now;
+
+interpolatePlayers(dt);
+
+if(joined&&!paused){
+
+move(dt);
+
+updateNPCs(dt,now);
 
 
-function loop(
-now
-){
+/* 20 state updates/sec */
 
-    const dt =
-    Math.min(
-        .05,
-        (
-            now -
-            lastFrame
-        ) / 1000
-    );
+if(now-lastSend>=50){
+
+lastSend=now;
+
+broadcast("state",state());
+
+}
 
 
-    lastFrame =
-    now;
+/* Ping */
 
+if(now-lastPing>=2000){
 
-    interpolatePlayers(
-        dt
-    );
+lastPing=now;
 
+broadcast(
+"ping",
+{
+target:me.id,
+time:performance.now()
+}
+);
 
-    if(
-        joined &&
-        !paused
-    ){
+}
 
-        move(
-            dt
-        );
+}
 
+drawWorld();
+drawMinimap();
 
-        /*
-           20 network updates/sec.
-        */
-
-        if(
-            now -
-            lastSend
-            >=
-            50
-        ){
-
-            lastSend =
-            now;
-
-
-            broadcast(
-                "state",
-                state()
-            );
-
-        }
-
-
-        /*
-           Ping every 2 seconds.
-        */
-
-        if(
-            now -
-            lastPing
-            >=
-            2000
-        ){
-
-            lastPing =
-            now;
-
-
-            broadcast(
-                "ping",
-                {
-
-                    target:me.id,
-
-                    time:
-                    performance.now()
-
-                }
-            );
-
-        }
-
-    }
-
-
-    drawWorld();
-
-    drawMinimap();
-
-
-    requestAnimationFrame(
-        loop
-    );
+requestAnimationFrame(loop);
 
 }
 
@@ -3450,11 +2097,8 @@ updateUI();
 
 connect();
 
-requestAnimationFrame(
-    loop
-);
+requestAnimationFrame(loop);
 
 </script>
-
 </body>
 </html>
