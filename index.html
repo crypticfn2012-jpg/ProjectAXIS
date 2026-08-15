@@ -9,6 +9,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
+    .rainbow-logo {
+    font-size: 32px;
+    font-weight: 900;
+    background: linear-gradient(
+        90deg,
+        #ff0000,
+        #ff8c00,
+        #ffff00,
+        #00ff00,
+        #00ffff,
+        #008cff,
+        #8c00ff,
+        #ff00aa,
+        #ff0000
+    );
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbowMove 3s linear infinite;
+    text-align: center;
+}
+
+@keyframes rainbowMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 400% 50%; }
+}
     .title-wrap {
     display: flex;
     flex-direction: column;
@@ -549,6 +576,13 @@ h1 {
     <img src="icons/gun.png" class="icon">
     <div class="title">3D SHOOTING RANGE</div>
     <div class="subtitle">Fun target practise!</div>
+</div>
+
+
+<div class="card" onclick="openGame('https://rondev.cc.cd/')">
+    <div class="rainbow-logo">RON.DEV</div>
+    <div class="title"></div>
+    <div class="subtitle">a really old website i made ages ago.</div>
 </div>
 
 <div class="card" onclick="openGame('ron-engine-docs.html')">
