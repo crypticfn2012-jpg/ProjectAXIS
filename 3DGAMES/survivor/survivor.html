@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,79 +9,16 @@
     <title>SURVIV0R</title>
 
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
+        html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             overflow: hidden;
             background: #050505;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        /* Background */
-
-        #background {
-            position: fixed;
-            inset: 0;
-            background:
-                radial-gradient(
-                    circle at center,
-                    #171717 0%,
-                    #090909 45%,
-                    #020202 100%
-                );
-            z-index: 0;
-        }
-
-        #background::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-
-            background:
-                repeating-linear-gradient(
-                    0deg,
-                    rgba(255,255,255,0.015) 0px,
-                    rgba(255,255,255,0.015) 1px,
-                    transparent 1px,
-                    transparent 4px
-                );
-        }
-
-        /* Main game wrapper */
-
-        #game-wrapper {
-            position: relative;
-            width: min(1280px, 96vw);
-            aspect-ratio: 16 / 9;
-
-            background: #000;
-
-            border: 1px solid #292929;
-
-            box-shadow:
-                0 0 0 1px rgba(255,255,255,0.02),
-                0 25px 80px rgba(0,0,0,0.8);
-
-            z-index: 2;
-
-            overflow: hidden;
         }
 
         #unity-container {
@@ -88,697 +26,434 @@
             inset: 0;
             width: 100%;
             height: 100%;
-            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at center, #171717 0%, #050505 70%);
         }
 
         #unity-canvas {
             width: 100%;
             height: 100%;
-            display: block;
-            background: #000;
+            outline: none;
         }
-
-        /* Top game bar */
-
-        #top-bar {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-
-            height: 58px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 0 18px;
-
-            background:
-                linear-gradient(
-                    to bottom,
-                    rgba(0,0,0,0.82),
-                    rgba(0,0,0,0)
-                );
-
-            z-index: 10;
-
-            pointer-events: none;
-        }
-
-        #brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-
-            text-shadow:
-                0 2px 12px rgba(0,0,0,0.8);
-        }
-
-        #brand-title {
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: 4px;
-        }
-
-        #brand-version {
-            font-size: 10px;
-            color: #888;
-            letter-spacing: 1px;
-        }
-
-        #status {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-
-            font-size: 10px;
-            font-weight: bold;
-            letter-spacing: 1.5px;
-
-            color: #aaa;
-        }
-
-        #status-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #888;
-
-            box-shadow: 0 0 8px #888;
-        }
-
-        /* Loading screen */
 
         #unity-loading-bar {
             position: absolute;
-            inset: 0;
-
-            display: flex;
-            flex-direction: column;
-
-            align-items: center;
-            justify-content: center;
-
-            background:
-                radial-gradient(
-                    circle at center,
-                    #161616 0%,
-                    #080808 60%,
-                    #030303 100%
-                );
-
-            z-index: 50;
-        }
-
-        #loading-content {
-            width: min(420px, 75%);
+            left: 50%;
+            top: 50%;
+            width: min(420px, 70vw);
+            transform: translate(-50%, -50%);
             text-align: center;
+            z-index: 10;
         }
 
         #loading-title {
-            font-size: clamp(38px, 6vw, 72px);
-            font-weight: 900;
-            letter-spacing: 9px;
-
-            margin-bottom: 8px;
-
-            animation: titlePulse 2s ease-in-out infinite;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
         }
 
         #loading-subtitle {
             color: #777;
-            font-size: 10px;
-            letter-spacing: 4px;
-            margin-bottom: 34px;
+            font-family: Arial, sans-serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            margin-bottom: 16px;
         }
 
         #unity-progress-bar-empty {
             width: 100%;
             height: 5px;
-
             background: #222;
-
+            border-radius: 10px;
             overflow: hidden;
         }
 
         #unity-progress-bar-full {
             width: 0%;
             height: 100%;
-
             background: #fff;
-
-            box-shadow:
-                0 0 14px rgba(255,255,255,0.45);
-
             transition: width 0.15s ease;
         }
 
-        #loading-percent {
-            margin-top: 12px;
-
-            font-size: 11px;
-            color: #666;
-
-            letter-spacing: 2px;
-        }
-
-        @keyframes titlePulse {
-            0%, 100% {
-                opacity: 0.72;
-            }
-
-            50% {
-                opacity: 1;
-            }
-        }
-
-        /* Bottom controls */
-
-        #bottom-bar {
-            position: absolute;
-
-            left: 0;
-            right: 0;
-            bottom: 0;
-
-            height: 55px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            padding: 0 15px;
-
-            background:
-                linear-gradient(
-                    to top,
-                    rgba(0,0,0,0.85),
-                    rgba(0,0,0,0)
-                );
-
-            z-index: 10;
-        }
-
-        #bottom-left {
-            font-size: 9px;
-            letter-spacing: 1.5px;
-            color: #666;
-        }
-
-        #fullscreen-button {
-            pointer-events: auto;
-
-            padding: 9px 15px;
-
-            border: 1px solid #444;
-            background: rgba(0,0,0,0.7);
-
-            color: #ddd;
-
-            font-size: 10px;
-            font-weight: bold;
-
-            letter-spacing: 1.5px;
-
-            cursor: pointer;
-
-            transition:
-                background 0.15s,
-                border-color 0.15s,
-                color 0.15s;
-        }
-
-        #fullscreen-button:hover {
-            background: #fff;
-            color: #000;
-            border-color: #fff;
-        }
-
-        /* Fullscreen hint */
-
-        #fullscreen-hint {
-            position: absolute;
-
-            left: 50%;
-            bottom: 72px;
-
-            transform: translateX(-50%);
-
-            padding: 8px 13px;
-
-            background: rgba(0,0,0,0.75);
-            border: 1px solid #333;
-
-            color: #aaa;
-
-            font-size: 9px;
-            letter-spacing: 1px;
-
-            opacity: 0;
-
-            transition: opacity 0.3s;
-
-            pointer-events: none;
-
-            z-index: 20;
-        }
-
-        #game-wrapper:hover #fullscreen-hint {
-            opacity: 1;
-        }
-
-        /* Warning/error banner */
-
         #unity-warning {
             position: absolute;
-
-            top: 70px;
+            top: 20px;
             left: 50%;
-
             transform: translateX(-50%);
-
-            width: min(600px, 90%);
-
-            z-index: 100;
-
-            display: none;
+            width: min(700px, 90vw);
+            z-index: 20;
+            font-family: Arial, sans-serif;
         }
 
-        #unity-warning div {
-            padding: 12px 16px;
+        #game-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
 
-            margin-bottom: 5px;
-
-            border: 1px solid #555;
-
-            background: rgba(10,10,10,0.95);
-
-            color: #ddd;
-
+        #top-left {
+            position: absolute;
+            top: 20px;
+            left: 24px;
+            color: white;
+            font-family: Arial, sans-serif;
+            letter-spacing: 3px;
             font-size: 12px;
-
-            text-align: center;
+            opacity: .7;
         }
 
-        /* Mobile */
+        #fullscreen {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            pointer-events: auto;
+            border: 1px solid #444;
+            background: rgba(10,10,10,.85);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
 
-        @media (max-width: 700px) {
-            #game-wrapper {
-                width: 100vw;
-                height: 100vh;
-                aspect-ratio: auto;
-                border: none;
-            }
-
-            #top-bar {
-                height: 45px;
-            }
-
-            #brand-title {
-                font-size: 15px;
-                letter-spacing: 3px;
-            }
-
-            #brand-version {
-                display: none;
-            }
-
-            #bottom-bar {
-                height: 45px;
-            }
-
-            #bottom-left {
-                display: none;
-            }
+        #fullscreen:hover {
+            background: #222;
         }
     </style>
-
-    <script src="TemplateData/profiler.js"></script>
 </head>
 
 <body>
 
-<div id="background"></div>
+<div id="unity-container">
 
-<div id="game-wrapper">
-
-    <div id="unity-container">
-
-        <canvas
-            id="unity-canvas"
+    <canvas id="unity-canvas"
+            width="960"
+            height="600"
             tabindex="-1">
-        </canvas>
+    </canvas>
 
-        <!-- Loading -->
+    <div id="unity-loading-bar">
+        <div id="loading-title">SURVIV0R</div>
 
-        <div id="unity-loading-bar">
-
-            <div id="loading-content">
-
-                <div id="loading-title">
-                    SURVIV0R
-                </div>
-
-                <div id="loading-subtitle">
-                    INITIALIZING SURVIVAL SYSTEM
-                </div>
-
-                <div id="unity-progress-bar-empty">
-                    <div id="unity-progress-bar-full"></div>
-                </div>
-
-                <div id="loading-percent">
-                    0%
-                </div>
-
-            </div>
-
+        <div id="loading-subtitle">
+            INITIALIZING SURVIVAL SYSTEM
         </div>
 
-        <div id="unity-warning"></div>
-
-        <!-- Top UI -->
-
-        <div id="top-bar">
-
-            <div id="brand">
-
-                <div id="brand-title">
-                    SURVIV0R
-                </div>
-
-                <div id="brand-version">
-                    v0.1.0
-                </div>
-
-            </div>
-
-            <div id="status">
-
-                <div id="status-dot"></div>
-
-                <span>ONLINE</span>
-
-            </div>
-
+        <div id="unity-progress-bar-empty">
+            <div id="unity-progress-bar-full"></div>
         </div>
+    </div>
 
-        <!-- Bottom UI -->
+    <div id="unity-warning"></div>
 
-        <div id="bottom-bar">
+    <div id="game-overlay">
+        <div id="top-left">RON.COOL // SURVIV0R</div>
 
-            <div id="bottom-left">
-                RON.COOL // SURVIVAL PROTOCOL
-            </div>
-
-            <button id="fullscreen-button">
-                FULLSCREEN
-            </button>
-
-        </div>
-
-        <div id="fullscreen-hint">
-            CLICK FULLSCREEN FOR THE BEST EXPERIENCE
-        </div>
-
+        <button id="fullscreen">
+            FULLSCREEN
+        </button>
     </div>
 
 </div>
 
 <script>
 
-    const canvas =
-        document.querySelector("#unity-canvas");
+const canvas = document.getElementById("unity-canvas");
+const loadingBar = document.getElementById("unity-loading-bar");
+const progressBar = document.getElementById("unity-progress-bar-full");
+const warningBanner = document.getElementById("unity-warning");
+const fullscreenButton = document.getElementById("fullscreen");
 
-    const loadingBar =
-        document.querySelector("#unity-loading-bar");
 
-    const progressBar =
-        document.querySelector("#unity-progress-bar-full");
+/* -------------------------------------------------------
+   UNITY WARNING
+------------------------------------------------------- */
 
-    const loadingPercent =
-        document.querySelector("#loading-percent");
+function unityShowBanner(message, type) {
 
-    const warningBanner =
-        document.querySelector("#unity-warning");
+    const div = document.createElement("div");
 
-    const statusDot =
-        document.querySelector("#status-dot");
+    div.innerHTML = message;
 
-    const statusText =
-        document.querySelector("#status span");
+    div.style.padding = "12px";
+    div.style.marginBottom = "5px";
+    div.style.borderRadius = "5px";
+    div.style.fontFamily = "Arial";
 
-    const fullscreenButton =
-        document.querySelector("#fullscreen-button");
+    if (type === "error") {
+        div.style.background = "#b00000";
+        div.style.color = "white";
+    } else {
+        div.style.background = "#c89000";
+        div.style.color = "black";
+    }
 
+    warningBanner.appendChild(div);
+
+    if (type !== "error") {
+        setTimeout(() => {
+            if (div.parentNode) {
+                div.remove();
+            }
+        }, 5000);
+    }
+}
+
+
+/* -------------------------------------------------------
+   BUILD PATHS
+------------------------------------------------------- */
+
+const buildUrl = "Build";
+
+const loaderUrl =
+    buildUrl + "/SURVIV0R.loader.js";
+
+
+/*
+    IMPORTANT:
+
+    This points to the RAW GitHub copy of the compressed
+    WASM file.
+
+    However, GitHub Raw does NOT automatically provide the
+    Content-Encoding header Unity expects for a .gz file.
+
+    Therefore we download and decompress it ourselves.
+*/
+
+const wasmGzipUrl =
+    "https://raw.githubusercontent.com/crypticfn2012-jpg/ProjectAXIS/refs/heads/main/3DGAMES/survivor/Build/SURVIV0R.wasm.gz";
+
+
+/* -------------------------------------------------------
+   FETCH + DECOMPRESS WASM
+------------------------------------------------------- */
+
+async function loadWasm() {
+
+    const response = await fetch(wasmGzipUrl);
+
+    if (!response.ok) {
+        throw new Error(
+            "Failed to download SURVIV0R.wasm.gz: HTTP " +
+            response.status
+        );
+    }
+
+    const compressed = await response.arrayBuffer();
 
     /*
-     * UNITY CONFIG
-     */
+        DecompressionStream is supported by modern
+        Chromium/Edge/Chrome browsers.
+    */
 
-    const buildUrl = "Build";
+    if (!("DecompressionStream" in window)) {
+        throw new Error(
+            "This browser does not support GZIP decompression."
+        );
+    }
 
-    const loaderUrl =
-        buildUrl + "/SURVIV0R.loader.js";
+    const stream =
+        new Blob([compressed])
+            .stream()
+            .pipeThrough(
+                new DecompressionStream("gzip")
+            );
 
-    const config = {
+    const decompressed =
+        await new Response(stream).arrayBuffer();
 
-        arguments: [],
-
-        dataUrl:
-            buildUrl + "/SURVIV0R.data",
-
-        frameworkUrl:
-            buildUrl + "/SURVIV0R.framework.js",
-
-        codeUrl:
-         buildUrl + "/SURVIV0R.wasm.gz",
-
-        streamingAssetsUrl:
-            "StreamingAssets",
-
-        companyName:
-            "Ron.cool",
-
-        productName:
-            "SURVIV0R",
-
-        productVersion:
-            "0.1.0",
-
-        showBanner:
-            unityShowBanner
-    };
+    return decompressed;
+}
 
 
-    /*
-     * UNITY WARNINGS
-     */
+/* -------------------------------------------------------
+   LOAD UNITY
+------------------------------------------------------- */
 
-    function unityShowBanner(msg, type) {
+loadingBar.style.display = "block";
 
-        warningBanner.style.display =
-            "block";
+const script = document.createElement("script");
 
-        const div =
-            document.createElement("div");
+script.src = loaderUrl;
 
-        div.innerHTML = msg;
+script.onload = async () => {
 
-        warningBanner.appendChild(div);
+    try {
 
-        if (type === "error") {
+        /*
+            Download and decompress WASM first.
+        */
 
-            div.style.borderColor =
-                "#ff3333";
+        const wasmBinary =
+            await loadWasm();
 
-        } else {
 
-            div.style.borderColor =
-                "#777";
+        /*
+            Unity's generated loader normally downloads
+            the WASM itself.
 
-            setTimeout(() => {
+            We intercept the WASM URL and provide the
+            already-decompressed binary.
+        */
 
-                if (div.parentNode)
-                    div.remove();
+        const config = {
 
-                if (
-                    warningBanner.children.length === 0
-                ) {
-                    warningBanner.style.display =
-                        "none";
+            arguments: [],
+
+            dataUrl:
+                buildUrl + "/SURVIV0R.data",
+
+            frameworkUrl:
+                buildUrl + "/SURVIV0R.framework.js",
+
+            /*
+                Dummy URL.
+
+                The actual WASM is supplied through
+                wasmBinary below.
+            */
+
+            codeUrl:
+                buildUrl + "/SURVIV0R.wasm",
+
+            streamingAssetsUrl:
+                "StreamingAssets",
+
+            companyName:
+                "Ron.cool",
+
+            productName:
+                "SURVIV0R",
+
+            productVersion:
+                "0.1.0",
+
+            showBanner:
+                unityShowBanner,
+
+            wasmBinary:
+                wasmBinary
+        };
+
+
+        /*
+            Start Unity.
+        */
+
+        const unityInstance =
+            await createUnityInstance(
+                canvas,
+                config,
+                (progress) => {
+
+                    progressBar.style.width =
+                        (progress * 100) + "%";
+
                 }
-
-            }, 5000);
-        }
-    }
+            );
 
 
-    /*
-     * MOBILE
-     */
+        /*
+            Hide loader.
+        */
 
-    if (
-        /iPhone|iPad|iPod|Android/i
-        .test(navigator.userAgent)
-    ) {
-
-        const meta =
-            document.createElement("meta");
-
-        meta.name =
-            "viewport";
-
-        meta.content =
-            "width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes";
-
-        document.head.appendChild(meta);
-
-        document.querySelector(
-            "#unity-container"
-        ).className =
-            "unity-mobile";
-
-        canvas.className =
-            "unity-mobile";
-    }
+        loadingBar.style.display = "none";
 
 
-    /*
-     * LOADING
-     */
+        /*
+            Fullscreen.
+        */
 
-    loadingBar.style.display =
-        "flex";
+        fullscreenButton.onclick = () => {
 
+            unityInstance.SetFullscreen(1);
 
-    const script =
-        document.createElement("script");
-
-    script.src =
-        loaderUrl;
+        };
 
 
-    script.onload = () => {
+        /*
+            Double-click canvas = fullscreen.
+        */
 
-        createUnityInstance(
-            canvas,
-            config,
-
-            (progress) => {
-
-                const percent =
-                    Math.round(
-                        progress * 100
-                    );
-
-                progressBar.style.width =
-                    percent + "%";
-
-                loadingPercent.textContent =
-                    percent + "%";
-
-            }
-
-        ).then(
-            (unityInstance) => {
-
-                /*
-                 * GAME LOADED
-                 */
-
-                loadingPercent.textContent =
-                    "READY";
-
-                statusDot.style.background =
-                    "#fff";
-
-                statusDot.style.boxShadow =
-                    "0 0 10px #fff";
-
-                statusText.textContent =
-                    "ONLINE";
-
-
-                setTimeout(() => {
-
-                    loadingBar.style.opacity =
-                        "0";
-
-                    loadingBar.style.transition =
-                        "opacity 0.5s ease";
-
-                    setTimeout(() => {
-
-                        loadingBar.style.display =
-                            "none";
-
-                    }, 500);
-
-                }, 350);
-
-
-                /*
-                 * FULLSCREEN
-                 */
-
-                fullscreenButton.onclick =
-                    () => {
-
-                        unityInstance
-                            .SetFullscreen(1);
-
-                    };
-
-
-                /*
-                 * ESC HINT
-                 */
-
-                document.addEventListener(
-                    "keydown",
-                    (event) => {
-
-                        if (
-                            event.key === "Escape"
-                        ) {
-
-                            fullscreenButton
-                                .blur();
-
-                        }
-
-                    }
-                );
-
-            }
-
-        ).catch(
-            (message) => {
-
-                statusDot.style.background =
-                    "#ff3333";
-
-                statusDot.style.boxShadow =
-                    "0 0 10px #ff3333";
-
-                statusText.textContent =
-                    "ERROR";
-
-                unityShowBanner(
-                    message,
-                    "error"
-                );
-
+        canvas.addEventListener(
+            "dblclick",
+            () => {
+                unityInstance.SetFullscreen(1);
             }
         );
-    };
 
 
-    document.body.appendChild(script);
+        console.log(
+            "SURVIV0R successfully loaded."
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "SURVIV0R failed to start:",
+            error
+        );
+
+        loadingBar.innerHTML = `
+            <div style="
+                color:#ff4444;
+                font-family:Arial;
+                font-size:14px;
+                line-height:1.6;
+            ">
+                <strong>FAILED TO LOAD SURVIV0R</strong>
+                <br><br>
+                ${error.message}
+            </div>
+        `;
+
+    }
+
+};
+
+
+/* -------------------------------------------------------
+   LOAD UNITY LOADER SCRIPT
+------------------------------------------------------- */
+
+document.body.appendChild(script);
+
+
+/* -------------------------------------------------------
+   RESIZE
+------------------------------------------------------- */
+
+function resizeCanvas() {
+
+    canvas.style.width =
+        window.innerWidth + "px";
+
+    canvas.style.height =
+        window.innerHeight + "px";
+
+}
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+resizeCanvas();
 
 </script>
 
 </body>
 </html>
+```
