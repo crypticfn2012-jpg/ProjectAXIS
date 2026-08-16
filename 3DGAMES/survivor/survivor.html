@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <title>SURVIV0R</title>
+
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #050505;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Background */
+
+        #background {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(
+                    circle at center,
+                    #171717 0%,
+                    #090909 45%,
+                    #020202 100%
+                );
+            z-index: 0;
+        }
+
+        #background::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    rgba(255,255,255,0.015) 0px,
+                    rgba(255,255,255,0.015) 1px,
+                    transparent 1px,
+                    transparent 4px
+                );
+        }
+
+        /* Main game wrapper */
+
+        #game-wrapper {
+            position: relative;
+            width: min(1280px, 96vw);
+            aspect-ratio: 16 / 9;
+
+            background: #000;
+
+            border: 1px solid #292929;
+
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.02),
+                0 25px 80px rgba(0,0,0,0.8);
+
+            z-index: 2;
+
+            overflow: hidden;
+        }
+
+        #unity-container {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+
+        #unity-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: #000;
+        }
+
+        /* Top game bar */
+
+        #top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+
+            height: 58px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 18px;
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,0.82),
+                    rgba(0,0,0,0)
+                );
+
+            z-index: 10;
+
+            pointer-events: none;
+        }
+
+        #brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            text-shadow:
+                0 2px 12px rgba(0,0,0,0.8);
+        }
+
+        #brand-title {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 4px;
+        }
+
+        #brand-version {
+            font-size: 10px;
+            color: #888;
+            letter-spacing: 1px;
+        }
+
+        #status {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+
+            color: #aaa;
+        }
+
+        #status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #888;
+
+            box-shadow: 0 0 8px #888;
+        }
+
+        /* Loading screen */
+
+        #unity-loading-bar {
+            position: absolute;
+            inset: 0;
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    #161616 0%,
+                    #080808 60%,
+                    #030303 100%
+                );
+
+            z-index: 50;
+        }
+
+        #loading-content {
+            width: min(420px, 75%);
+            text-align: center;
+        }
+
+        #loading-title {
+            font-size: clamp(38px, 6vw, 72px);
+            font-weight: 900;
+            letter-spacing: 9px;
+
+            margin-bottom: 8px;
+
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+
+        #loading-subtitle {
+            color: #777;
+            font-size: 10px;
+            letter-spacing: 4px;
+            margin-bottom: 34px;
+        }
+
+        #unity-progress-bar-empty {
+            width: 100%;
+            height: 5px;
+
+            background: #222;
+
+            overflow: hidden;
+        }
+
+        #unity-progress-bar-full {
+            width: 0%;
+            height: 100%;
+
+            background: #fff;
+
+            box-shadow:
+                0 0 14px rgba(255,255,255,0.45);
+
+            transition: width 0.15s ease;
+        }
+
+        #loading-percent {
+            margin-top: 12px;
+
+            font-size: 11px;
+            color: #666;
+
+            letter-spacing: 2px;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% {
+                opacity: 0.72;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Bottom controls */
+
+        #bottom-bar {
+            position: absolute;
+
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 15px;
+
+            background:
+                linear-gradient(
+                    to top,
+                    rgba(0,0,0,0.85),
+                    rgba(0,0,0,0)
+                );
+
+            z-index: 10;
+        }
+
+        #bottom-left {
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            color: #666;
+        }
+
+        #fullscreen-button {
+            pointer-events: auto;
+
+            padding: 9px 15px;
+
+            border: 1px solid #444;
+            background: rgba(0,0,0,0.7);
+
+            color: #ddd;
+
+            font-size: 10px;
+            font-weight: bold;
+
+            letter-spacing: 1.5px;
+
+            cursor: pointer;
+
+            transition:
+                background 0.15s,
+                border-color 0.15s,
+                color 0.15s;
+        }
+
+        #fullscreen-button:hover {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        /* Fullscreen hint */
+
+        #fullscreen-hint {
+            position: absolute;
+
+            left: 50%;
+            bottom: 72px;
+
+            transform: translateX(-50%);
+
+            padding: 8px 13px;
+
+            background: rgba(0,0,0,0.75);
+            border: 1px solid #333;
+
+            color: #aaa;
+
+            font-size: 9px;
+            letter-spacing: 1px;
+
+            opacity: 0;
+
+            transition: opacity 0.3s;
+
+            pointer-events: none;
+
+            z-index: 20;
+        }
+
+        #game-wrapper:hover #fullscreen-hint {
+            opacity: 1;
+        }
+
+        /* Warning/error banner */
+
+        #unity-warning {
+            position: absolute;
+
+            top: 70px;
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            width: min(600px, 90%);
+
+            z-index: 100;
+
+            display: none;
+        }
+
+        #unity-warning div {
+            padding: 12px 16px;
+
+            margin-bottom: 5px;
+
+            border: 1px solid #555;
+
+            background: rgba(10,10,10,0.95);
+
+            color: #ddd;
+
+            font-size: 12px;
+
+            text-align: center;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 700px) {
+            #game-wrapper {
+                width: 100vw;
+                height: 100vh;
+                aspect-ratio: auto;
+                border: none;
+            }
+
+            #top-bar {
+                height: 45px;
+            }
+
+            #brand-title {
+                font-size: 15px;
+                letter-spacing: 3px;
+            }
+
+            #brand-version {
+                display: none;
+            }
+
+            #bottom-bar {
+                height: 45px;
+            }
+
+            #bottom-left {
+                display: none;
+            }
+        }
+    </style>
+
+    <script src="TemplateData/profiler.js"></script>
+</head>
+
+<body>
+
+<div id="background"></div>
+
+<div id="game-wrapper">
+
+    <div id="unity-container">
+
+        <canvas
+            id="unity-canvas"
+            tabindex="-1">
+        </canvas>
+
+        <!-- Loading -->
+
+        <div id="unity-loading-bar">
+
+            <div id="loading-content">
+
+                <div id="loading-title">
+                    SURVIV0R
+                </div>
+
+                <div id="loading-subtitle">
+                    INITIALIZING SURVIVAL SYSTEM
+                </div>
+
+                <div id="unity-progress-bar-empty">
+                    <div id="unity-progress-bar-full"></div>
+                </div>
+
+                <div id="loading-percent">
+                    0%
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="unity-warning"></div>
+
+        <!-- Top UI -->
+
+        <div id="top-bar">
+
+            <div id="brand">
+
+                <div id="brand-title">
+                    SURVIV0R
+                </div>
+
+                <div id="brand-version">
+                    v0.1.0
+                </div>
+
+            </div>
+
+            <div id="status">
+
+                <div id="status-dot"></div>
+
+                <span>ONLINE</span>
+
+            </div>
+
+        </div>
+
+        <!-- Bottom UI -->
+
+        <div id="bottom-bar">
+
+            <div id="bottom-left">
+                RON.COOL // SURVIVAL PROTOCOL
+            </div>
+
+            <button id="fullscreen-button">
+                FULLSCREEN
+            </button>
+
+        </div>
+
+        <div id="fullscreen-hint">
+            CLICK FULLSCREEN FOR THE BEST EXPERIENCE
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    const canvas =
+        document.querySelector("#unity-canvas");
+
+    const loadingBar =
+        document.querySelector("#unity-loading-bar");
+
+    const progressBar =
+        document.querySelector("#unity-progress-bar-full");
+
+    const loadingPercent =
+        document.querySelector("#loading-percent");
+
+    const warningBanner =
+        document.querySelector("#unity-warning");
+
+    const statusDot =
+        document.querySelector("#status-dot");
+
+    const statusText =
+        document.querySelector("#status span");
+
+    const fullscreenButton =
+        document.querySelector("#fullscreen-button");
+
+
+    /*
+     * UNITY CONFIG
+     */
+
+    const buildUrl = "Build";
+
+    const loaderUrl =
+        buildUrl + "/SURVIV0R.loader.js";
+
+    const config = {
+
+        arguments: [],
+
+        dataUrl:
+            buildUrl + "/SURVIV0R.data",
+
+        frameworkUrl:
+            buildUrl + "/SURVIV0R.framework.js",
+
+        codeUrl:
+            buildUrl + "/SURVIV0R.wasm",
+
+        streamingAssetsUrl:
+            "StreamingAssets",
+
+        companyName:
+            "Ron.cool",
+
+        productName:
+            "SURVIV0R",
+
+        productVersion:
+            "0.1.0",
+
+        showBanner:
+            unityShowBanner
+    };
+
+
+    /*
+     * UNITY WARNINGS
+     */
+
+    function unityShowBanner(msg, type) {
+
+        warningBanner.style.display =
+            "block";
+
+        const div =
+            document.createElement("div");
+
+        div.innerHTML = msg;
+
+        warningBanner.appendChild(div);
+
+        if (type === "error") {
+
+            div.style.borderColor =
+                "#ff3333";
+
+        } else {
+
+            div.style.borderColor =
+                "#777";
+
+            setTimeout(() => {
+
+                if (div.parentNode)
+                    div.remove();
+
+                if (
+                    warningBanner.children.length === 0
+                ) {
+                    warningBanner.style.display =
+                        "none";
+                }
+
+            }, 5000);
+        }
+    }
+
+
+    /*
+     * MOBILE
+     */
+
+    if (
+        /iPhone|iPad|iPod|Android/i
+        .test(navigator.userAgent)
+    ) {
+
+        const meta =
+            document.createElement("meta");
+
+        meta.name =
+            "viewport";
+
+        meta.content =
+            "width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes";
+
+        document.head.appendChild(meta);
+
+        document.querySelector(
+            "#unity-container"
+        ).className =
+            "unity-mobile";
+
+        canvas.className =
+            "unity-mobile";
+    }
+
+
+    /*
+     * LOADING
+     */
+
+    loadingBar.style.display =
+        "flex";
+
+
+    const script =
+        document.createElement("script");
+
+    script.src =
+        loaderUrl;
+
+
+    script.onload = () => {
+
+        createUnityInstance(
+            canvas,
+            config,
+
+            (progress) => {
+
+                const percent =
+                    Math.round(
+                        progress * 100
+                    );
+
+                progressBar.style.width =
+                    percent + "%";
+
+                loadingPercent.textContent =
+                    percent + "%";
+
+            }
+
+        ).then(
+            (unityInstance) => {
+
+                /*
+                 * GAME LOADED
+                 */
+
+                loadingPercent.textContent =
+                    "READY";
+
+                statusDot.style.background =
+                    "#fff";
+
+                statusDot.style.boxShadow =
+                    "0 0 10px #fff";
+
+                statusText.textContent =
+                    "ONLINE";
+
+
+                setTimeout(() => {
+
+                    loadingBar.style.opacity =
+                        "0";
+
+                    loadingBar.style.transition =
+                        "opacity 0.5s ease";
+
+                    setTimeout(() => {
+
+                        loadingBar.style.display =
+                            "none";
+
+                    }, 500);
+
+                }, 350);
+
+
+                /*
+                 * FULLSCREEN
+                 */
+
+                fullscreenButton.onclick =
+                    () => {
+
+                        unityInstance
+                            .SetFullscreen(1);
+
+                    };
+
+
+                /*
+                 * ESC HINT
+                 */
+
+                document.addEventListener(
+                    "keydown",
+                    (event) => {
+
+                        if (
+                            event.key === "Escape"
+                        ) {
+
+                            fullscreenButton
+                                .blur();
+
+                        }
+
+                    }
+                );
+
+            }
+
+        ).catch(
+            (message) => {
+
+                statusDot.style.background =
+                    "#ff3333";
+
+                statusDot.style.boxShadow =
+                    "0 0 10px #ff3333";
+
+                statusText.textContent =
+                    "ERROR";
+
+                unityShowBanner(
+                    message,
+                    "error"
+                );
+
+            }
+        );
+    };
+
+
+    document.body.appendChild(script);
+
+</script>
+
+</body>
+</html>
