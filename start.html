@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>START. — Ron.cool</title>
+<style>
+:root{--bg:#07080b;--fg:#f4f6fa;--muted:#777d89;--line:#20242d;--accent:#8dffbf;--danger:#ff6978}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--fg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,input{font:inherit}.app{height:100%;display:flex;flex-direction:column}.top{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:1px solid var(--line);position:relative;z-index:10}.logo{font-weight:950;letter-spacing:-.06em;font-size:18px}.logo span{color:#555b67;font-weight:700}.stats{display:flex;gap:20px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em}.stats b{color:var(--fg);font-size:12px;margin-left:5px}.game{flex:1;position:relative;display:grid;place-items:center;overflow:hidden}.level{position:absolute;top:30px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#626875}.hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);border:0;background:none;color:#4e5561;font-size:11px;cursor:pointer}.hint:hover{color:#aeb4c0}.stage{width:min(900px,92vw);height:min(560px,72vh);position:relative;display:grid;place-items:center}.message{position:absolute;top:15%;left:50%;transform:translateX(-50%);width:min(650px,90vw);text-align:center;font-size:clamp(16px,2vw,24px);font-weight:650;line-height:1.5;letter-spacing:-.025em}.sub{display:block;color:var(--muted);font-size:13px;font-weight:500;margin-top:10px}.start-btn{position:absolute;border:1px solid #3b414d;background:#10131a;color:#fff;border-radius:12px;padding:18px 54px;font-weight:900;letter-spacing:.05em;cursor:pointer;box-shadow:0 14px 50px rgba(0,0,0,.35);transition:.16s}.start-btn:hover{transform:translateY(-2px);background:#171b23;border-color:#697180}.start-btn:active{transform:scale(.97)}.tiny{position:absolute;font-size:10px;color:#444a55}.input{position:absolute;background:#0c0f14;border:1px solid #303640;color:#fff;border-radius:9px;padding:12px 14px;outline:none;text-align:center}.input:focus{border-color:#7b8492}.fake-error{font-family:ui-monospace,monospace;color:#aeb5c0;font-size:12px;text-align:left;border:1px solid #252a33;padding:18px;background:#090b0f;width:min(500px,90vw);line-height:1.7}.screen{position:absolute;inset:0;display:grid;place-items:center;background:#000;z-index:5}.screen h1{font-size:clamp(52px,11vw,120px);letter-spacing:-.08em;margin:0}.screen p{color:#666;font-size:12px;text-align:center}.toast{position:absolute;left:50%;bottom:62px;transform:translate(-50%,20px);opacity:0;background:#11151c;border:1px solid #282d36;padding:10px 13px;border-radius:9px;font-size:12px;z-index:30;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}.shake{animation:shake .35s}.flash{animation:flash .35s}@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}@keyframes flash{50%{filter:brightness(2)}}.moving{transition:left .25s ease,top .25s ease}.red{color:var(--danger)}.green{color:var(--accent)}.hidden{display:none!important}.progress{position:absolute;left:24px;bottom:25px;width:100px;height:2px;background:#191d24}.progress i{display:block;height:100%;background:#777;width:0}.menu{position:absolute;right:24px;bottom:22px;color:#414752;font-size:10px}.menu button{background:none;border:0;color:inherit;cursor:pointer}.modal{position:absolute;inset:0;background:rgba(0,0,0,.78);z-index:20;display:grid;place-items:center}.modalbox{width:min(460px,90vw);background:#0d1016;border:1px solid #292e38;border-radius:15px;padding:24px;box-shadow:0 30px 100px #000}.modalbox h2{margin:0 0 8px;font-size:20px}.modalbox p{color:#858c99;font-size:13px;line-height:1.6}.modalbox button{border:1px solid #333944;background:#151922;color:#fff;padding:10px 14px;border-radius:9px;cursor:pointer}.finish{text-align:center}.finish h1{font-size:64px;letter-spacing:-.07em;margin:0 0 8px}.finish p{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="logo">START. <span>/ RON.COOL</span></div><div class="stats"><span>LEVEL <b id="level">1</b></span><span>FAILS <b id="fails">0</b></span><span>TIME <b id="time">00:00</b></span></div></header>
+<main class="game" id="game"><div class="level">LEVEL <span id="levelTop">01</span> / 100</div><div class="stage" id="stage"></div><button class="hint" id="hint">need a hint?</button><div class="progress"><i id="progress"></i></div><div class="menu"><button id="resetAll">reset progress</button></div><div class="toast" id="toast"></div></main>
+</div>
+<script>
+(()=>{
+const $=s=>document.querySelector(s),stage=$('#stage'),game=$('#game'),toastEl=$('#toast');
+let level=Number(localStorage.getItem('start-level')||1),fails=Number(localStorage.getItem('start-fails')||0),started=localStorage.getItem('start-begun')==='1',startTime=Number(localStorage.getItem('start-time')||0),elapsed=Number(localStorage.getItem('start-elapsed')||0),timer;
+let state={};
+const hints={1:'Click the button.',2:'Maybe the button needs time.',3:'Your mouse is not the only thing that can move.',4:'Read what the screen is telling you.',5:'There may be a better choice.',6:'The keyboard is useful.',7:'Do exactly what it says.',8:'The button does not have to look like a button.',9:'Not every instruction is true.',10:'Try being faster.',11:'The game can hear your keyboard.',12:'Look for something that should not be there.',13:'Maybe the corner matters.',14:'Try the opposite.',15:'You have seen this before.',16:'The button can be anywhere.',17:'Sometimes waiting is the solution.',18:'Sometimes waiting is the problem.',19:'Use the browser like a player would.',20:'Try the thing you were told not to do.'};
+function save(){localStorage.setItem('start-level',level);localStorage.setItem('start-fails',fails);localStorage.setItem('start-begun',started?'1':'0');localStorage.setItem('start-time',startTime);localStorage.setItem('start-elapsed',elapsed)}
+function fmt(s){s=Math.floor(s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function update(){ $('#level').textContent=level;$('#levelTop').textContent=String(level).padStart(2,'0');$('#fails').textContent=fails;$('#time').textContent=fmt(elapsed+(started?(Date.now()-startTime)/1000:0));$('#progress').style.width=((level-1)/100*100)+'%'}
+function timerStart(){clearInterval(timer);timer=setInterval(update,250)}
+function say(t){toastEl.textContent=t;toastEl.classList.add('show');setTimeout(()=>toastEl.classList.remove('show'),1800)}
+function clearStage(){stage.innerHTML='';state={}}
+function advance(){level++;save();render()}
+function fail(msg='Wrong.'){fails++;save();game.classList.remove('shake');void game.offsetWidth;game.classList.add('shake');say(msg)}
+function el(tag,cls,text){let x=document.createElement(tag);if(cls)x.className=cls;if(text!==undefined)x.textContent=text;return x}
+function button(text,fn){let b=el('button','start-btn',text);b.onclick=fn;stage.appendChild(b);return b}
+function startClock(){if(!started){started=true;startTime=Date.now();save()}timerStart()}
+function normalButton(){button('START',advance)}
+function render(){clearStage();startClock();update();
+if(level>100){finish();return}
+const m=el('div','message');stage.appendChild(m);
+const L=levels[level]||levels[100];L(m);
+}
+function msg(a,b){let m=el('div','message');m.innerHTML=a+(b?`<span class="sub">${b}</span>`:'');stage.appendChild(m);return m}
+function finish(){clearStage();let f=el('div','finish');f.innerHTML='<h1>YOU DID IT.</h1><p>100 levels. One button. Somehow, you made it.</p><p class="green">Final fails: '+fails+' · Time: '+fmt(elapsed+(Date.now()-startTime)/1000)+'</p>';stage.appendChild(f);$('#hint').classList.add('hidden');}
+const levels={
+1:m=>{m.innerHTML='Press the button.<span class="sub">That is literally it.</span>';normalButton()},
+2:m=>{m.innerHTML='Press START.<span class="sub">It is currently unavailable.</span>';let b=button('START',advance);b.disabled=true;b.style.opacity='.3';setTimeout(()=>{b.disabled=false;b.style.opacity='1';m.querySelector('.sub').textContent='Okay. Now you can.'},1800)},
+3:m=>{m.textContent='Catch it.';let b=button('START',advance);b.classList.add('moving');function move(){b.style.left=Math.random()*70+15+'%';b.style.top=Math.random()*70+15+'%'}b.onmouseenter=()=>{move();};move()},
+4:m=>{m.innerHTML='The button is lying to you.<span class="sub">Read the small text.</span>';let b=button('DO NOT START',()=>{advance()});b.style.transform='rotate(180deg)';let s=el('div','tiny','Click the button anyway.');s.style.bottom='12%';s.style.left='50%';s.style.transform='translateX(-50%)';stage.appendChild(s)},
+5:m=>{m.textContent='Choose wisely.';let a=button('START',()=>fail('Wrong button.'));a.style.left='32%';a.style.top='55%';let b=button('DON’T START',advance);b.style.left='68%';b.style.top='55%'},
+6:m=>{m.innerHTML='There is no button.<span class="sub">Type START.</span>';let i=el('input','input');i.placeholder='type here';stage.appendChild(i);i.focus();i.onkeydown=e=>{if(e.key==='Enter'&&i.value.trim().toUpperCase()==='START')advance();else if(e.key==='Enter')fail('That was not START.')}},
+7:m=>{m.innerHTML='Do not press anything.<span class="sub">Wait for the message.</span>';let done=false;setTimeout(()=>{done=true;m.querySelector('.sub').textContent='Now press START.';button('START',advance)},2500);document.addEventListener('keydown',()=>{if(!done)fail('You pressed something.');},{once:true})},
+8:m=>{m.innerHTML='Find START.<span class="sub">It is here somewhere.</span>';let b=button('START',advance);b.style.opacity='0';b.style.width='180px';b.style.height='65px';b.style.background='transparent';b.style.border='0';b.style.boxShadow='none';b.onmouseenter=()=>b.style.opacity='.15'},
+9:m=>{m.innerHTML='CLICK THE GREEN BUTTON.<span class="sub">There is definitely one.</span>';let b=button('START',advance);b.style.background='#d9dce2';b.style.color='#050609';b.style.borderColor='#fff'},
+10:m=>{m.innerHTML='You have 2 seconds.<span class="sub">Start.</span>';let b=button('START',advance);let left=2;let iv=setInterval(()=>{left-=.1;if(left<=0){clearInterval(iv);b.disabled=true;fail('Too slow. Reloading level.');setTimeout(render,500)}},100)},
+11:m=>{m.innerHTML='Use the keyboard.<span class="sub">Press Enter.</span>';function k(e){if(e.key==='Enter'){document.removeEventListener('keydown',k);advance()}else if(e.key===' '){fail('Not that key.')}}document.addEventListener('keydown',k)},
+12:m=>{m.innerHTML='Something is missing.<span class="sub">Look around.</span>';let b=button('STRT',()=>fail('Almost.'));setTimeout(()=>{b.textContent='START'},1300);b.onclick=advance},
+13:m=>{m.innerHTML='Start is in the corner.<span class="sub">Which corner?</span>';let b=button('START',advance);b.style.left='5%';b.style.top='5%';b.style.transform='none'},
+14:m=>{m.innerHTML='Do the opposite.<span class="sub">Do not press START.</span>';let b=button('START',()=>fail('You did exactly what it said not to do.'));setTimeout(()=>{m.querySelector('.sub').textContent='Actually, press it.';b.onclick=advance},1800)},
+15:m=>{m.innerHTML='Have you seen this button before?<span class="sub">Think back.</span>';button('START',advance)},
+16:m=>{m.innerHTML='The button moves when you click it.<span class="sub">You need to click it twice.</span>';let b=button('START',()=>{if(!state.clicked){state.clicked=true;b.style.left='72%';b.style.top='22%';m.querySelector('.sub').textContent='Again.'}else advance()});b.style.left='28%';b.style.top='68%'},
+17:m=>{m.innerHTML='Wait.<span class="sub">Do nothing for 3 seconds.</span>';setTimeout(()=>{m.querySelector('.sub').textContent='Now.';button('START',advance)},3000)},
+18:m=>{m.innerHTML='Do not wait.<span class="sub">You have 1 second.</span>';button('START',advance);setTimeout(()=>{m.querySelector('.sub').textContent='Too late.';fail('You waited.')},1000)},
+19:m=>{m.innerHTML='Maybe the browser can help.<span class="sub">Try something unexpected.</span>';let b=button('START',advance);b.oncontextmenu=e=>{e.preventDefault();advance()};b.onclick=()=>fail('Left click? Really?')},
+20:m=>{m.innerHTML='Press the button you were told not to press.<span class="sub">There is one.</span>';let b=button('START',advance);b.style.display='none';let x=button('DO NOT PRESS',advance);x.style.background='#181018';x.style.borderColor='#51333a'},
+};
+// Generated puzzle families for 21-100. Each is different enough to feel like a level, while remaining deterministic.
+for(let n=21;n<=100;n++) levels[n]=(m)=>makeGenerated(n,m);
+function makeGenerated(n,m){
+const type=n%12;
+if(type===0){m.innerHTML='The answer is hidden in the level number.<span class="sub">Do something with '+n+'.</span>';let b=button(String(n),advance);}
+else if(type===1){m.innerHTML='Click START '+(n%4+1)+' times.<span class="sub">Not too fast.</span>';let count=0;b=button('START',()=>{count++;b.textContent='START '+count+'/'+(n%4+1);if(count>=n%4+1)advance()})}
+else if(type===2){m.innerHTML='One of these is real.<span class="sub">Only one works.</span>';for(let i=0;i<3;i++){let b=button(['START','START','START'][i],i===n%3?advance:()=>fail('Wrong one.'));b.style.left=(25+i*25)+'%';b.style.top='58%'}}
+else if(type===3){m.innerHTML='Make the button appear.<span class="sub">Move your mouse over the message.</span>';m.onmouseenter=()=>{button('START',advance)}}
+else if(type===4){m.innerHTML='The page is upside down.<span class="sub">So is the answer.</span>';stage.style.transform='rotate(180deg)';button('START',()=>{stage.style.transform='';advance()})}
+else if(type===5){m.innerHTML='Do not click START.<span class="sub">Seriously.</span>';let b=button('START',()=>fail('You clicked START.'));let s=el('button','start-btn','CONTINUE');s.onclick=advance;s.style.top='66%';}
+else if(type===6){m.innerHTML='Find the smallest thing you can click.<span class="sub">Good luck.</span>';let b=button('START',advance);b.style.opacity='0';b.style.padding='1px';b.style.width='2px';b.style.height='2px';b.style.left=(20+(n*7)%60)+'%';b.style.top=(20+(n*13)%60)+'%'}
+else if(type===7){m.innerHTML='The game has a bug.<span class="sub">Exploit it.</span>';let b=button('START',()=>fail('That bug is intentional.'));b.oncontextmenu=e=>{e.preventDefault();advance()}}
+else if(type===8){m.innerHTML='Say the magic word.<span class="sub">Type it into the box.</span>';let i=el('input','input');i.placeholder=['start','please','ron','hello','continue'][n%5];stage.appendChild(i);i.focus();i.onkeydown=e=>{if(e.key==='Enter'){if(i.value.trim().toLowerCase()===i.placeholder.toLowerCase())advance();else fail('Wrong word.')}}}
+else if(type===9){m.innerHTML='Click after the light turns green.';let b=button('WAIT',()=>fail('Too early.'));setTimeout(()=>{b.textContent='START';b.onclick=advance;b.classList.add('green')},900+(n%5)*250)}
+else if(type===10){m.innerHTML='There is a button somewhere.<span class="sub">You have '+(5+n%6)+' seconds.</span>';let b=button('START',advance);b.style.left=(10+(n*17)%75)+'%';b.style.top=(18+(n*23)%60)+'%';setTimeout(()=>{b.remove();fail('Time ran out.');setTimeout(render,300)},(5+n%6)*1000)}
+else{m.innerHTML='The level is watching you.<span class="sub">Try clicking START without looking at it.</span>';let b=button('START',advance);b.style.opacity='.08';b.onmouseenter=()=>b.style.opacity='1'}
+}
+$('#hint').onclick=()=>{if(level<=20)say(hints[level]||'Try something unexpected.');else say('There is a solution. You just have to find it.')};
+$('#resetAll').onclick=()=>{if(confirm('Reset all progress?')){localStorage.removeItem('start-level');localStorage.removeItem('start-fails');localStorage.removeItem('start-begun');localStorage.removeItem('start-time');localStorage.removeItem('start-elapsed');location.reload()}};
+window.addEventListener('beforeunload',()=>{if(started){elapsed+=(Date.now()-startTime)/1000;startTime=Date.now();save()}});
+window.addEventListener('keydown',e=>{if(e.key==='Escape')say('There is no escape button.')});
+render();
+})();
+</script>
+</body>
+</html>
