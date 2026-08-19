@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Scrubber</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a0f2e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: linear-gradient(135deg, #1a2a4e 0%, #2a1a4e 100%);
+            border: 2px solid #4a9eff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(74, 158, 255, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #4eff00;
+            margin-bottom: 10px;
+            font-size: 32px;
+            text-shadow: 0 0 10px rgba(78, 255, 0, 0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .upload-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(20, 40, 80, 0.6);
+            border: 2px dashed #4a9eff;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-section:hover {
+            background: rgba(74, 158, 255, 0.1);
+            border-color: #4eff00;
+        }
+
+        .upload-section input {
+            display: none;
+        }
+
+        .upload-label {
+            cursor: pointer;
+            font-size: 16px;
+            color: #4a9eff;
+        }
+
+        .upload-label:hover {
+            color: #4eff00;
+        }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .viewer-section {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .viewer-section.active {
+            display: block;
+        }
+
+        canvas {
+            width: 100%;
+            height: auto;
+            background: #000;
+            border: 2px solid #4a9eff;
+            border-radius: 8px;
+            cursor: col-resize;
+            display: block;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.3);
+        }
+
+        .controls {
+            background: rgba(20, 40, 80, 0.6);
+            padding: 20px;
+            border: 1px solid #4a9eff;
+            border-radius: 8px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .info {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+        }
+
+        .info-item {
+            display: flex;
+            gap: 8px;
+        }
+
+        .info-label {
+            color: #888;
+        }
+
+        .info-value {
+            color: #4eff00;
+            font-weight: bold;
+        }
+
+        .slider-container {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .slider-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #1a1a1a;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4eff00;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(78, 255, 0, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4eff00;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(78, 255, 0, 0.5);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 16px;
+            background: rgba(74, 158, 255, 0.3);
+            color: #4eff00;
+            border: 1px solid #4a9eff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #4a9eff;
+            color: #000;
+            box-shadow: 0 0 10px rgba(74, 158, 255, 0.5);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status {
+            padding: 15px;
+            background: rgba(20, 40, 80, 0.6);
+            border: 1px solid #4a9eff;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #4eff00;
+            text-align: center;
+            display: none;
+        }
+
+        .status.active {
+            display: block;
+        }
+
+        .status.error {
+            color: #ff6666;
+            border-color: #ff6666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #1a1a1a;
+            border-radius: 2px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #4eff00;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .instructions {
+            background: rgba(79, 255, 0, 0.05);
+            border-left: 3px solid #4eff00;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .instructions b {
+            color: #4eff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 FRAME SCRUBBER</h1>
+        <p class="subtitle">Upload a video and control it frame-by-frame with your mouse</p>
+
+        <div class="instructions">
+            <b>HOW IT WORKS:</b> Upload an MP4 video → Move your mouse left/right to scrub through frames → See every frame in detail
+        </div>
+
+        <div class="upload-section">
+            <label class="upload-label" for="videoInput">
+                <div style="font-size: 20px; margin-bottom: 10px;">📁</div>
+                <div>Click to upload MP4 video</div>
+                <div class="file-info">Or drag & drop video here</div>
+            </label>
+            <input type="file" id="videoInput" accept="video/mp4" />
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <div class="viewer-section" id="viewerSection">
+            <canvas id="canvas"></canvas>
+
+            <div class="controls">
+                <div class="info">
+                    <div class="info-item">
+                        <span class="info-label">Frame:</span>
+                        <span class="info-value" id="frameCount">0/0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">FPS:</span>
+                        <span class="info-value" id="fps">30</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Duration:</span>
+                        <span class="info-value" id="duration">0s</span>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="playPauseBtn" onclick="scrubber.togglePlay()">▶ Play</button>
+                    <button onclick="scrubber.downloadFrame()">💾 Save Frame</button>
+                    <button onclick="document.getElementById('videoInput').click()">📁 New Video</button>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <label class="slider-label">TIMELINE (drag or scroll)</label>
+                <input type="range" id="frameSlider" min="0" max="100" value="0" />
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class FrameScrubber {
+            constructor() {
+                this.video = null;
+                this.canvas = document.getElementById('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.videoInput = document.getElementById('videoInput');
+                this.frameSlider = document.getElementById('frameSlider');
+                this.currentFrame = 0;
+                this.totalFrames = 0;
+                this.fps = 30;
+                this.isPlaying = false;
+                this.frames = [];
+                this.videoLoaded = false;
+
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                this.videoInput.addEventListener('change', (e) => this.loadVideo(e));
+                this.frameSlider.addEventListener('input', (e) => this.scrubFrame(e.target.value));
+                this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+                this.canvas.addEventListener('wheel', (e) => this.handleScroll(e));
+                
+                document.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    document.querySelector('.upload-section').style.borderColor = '#4eff00';
+                });
+                
+                document.addEventListener('dragleave', () => {
+                    document.querySelector('.upload-section').style.borderColor = '#4a9eff';
+                });
+                
+                document.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    document.querySelector('.upload-section').style.borderColor = '#4a9eff';
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.includes('video')) {
+                        this.videoInput.files = e.dataTransfer.files;
+                        this.loadVideo({ target: { files: [file] } });
+                    }
+                });
+            }
+
+            loadVideo(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                this.showStatus(`Loading "${file.name}"...`, false);
+                this.video = document.createElement('video');
+                
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    const blob = new Blob([evt.target.result], { type: 'video/mp4' });
+                    const blobUrl = URL.createObjectURL(blob);
+                    this.video.src = blobUrl;
+                    this.video.onloadedmetadata = () => this.extractFrames();
+                    this.video.onerror = () => {
+                        this.showStatus('Error loading video. Try a different file.', true);
+                    };
+                };
+                reader.readAsArrayBuffer(file);
+            }
+
+            extractFrames() {
+                this.totalFrames = Math.ceil(this.video.duration * this.fps);
+                this.frames = [];
+                this.currentFrame = 0;
+
+                this.canvas.width = this.video.videoWidth;
+                this.canvas.height = this.video.videoHeight;
+
+                this.showStatus(`Extracting ${this.totalFrames} frames (this may take a moment)...`, false);
+                this.frameSlider.max = this.totalFrames - 1;
+
+                let frameIndex = 0;
+                const interval = setInterval(() => {
+                    if (frameIndex >= this.totalFrames) {
+                        clearInterval(interval);
+                        this.videoLoaded = true;
+                        document.getElementById('viewerSection').classList.add('active');
+                        this.showStatus(`✓ Ready! ${this.totalFrames} frames extracted. Move mouse left/right to scrub.`, false);
+                        this.drawFrame(0);
+                        return;
+                    }
+
+                    this.video.currentTime = frameIndex / this.fps;
+                    
+                    setTimeout(() => {
+                        this.ctx.drawImage(this.video, 0, 0);
+                        const imgData = this.canvas.toDataURL('image/jpeg', 0.9);
+                        this.frames.push(imgData);
+
+                        const progress = (frameIndex / this.totalFrames) * 100;
+                        document.getElementById('progressFill').style.width = progress + '%';
+                        document.getElementById('frameCount').textContent = `${frameIndex + 1}/${this.totalFrames}`;
+
+                        frameIndex++;
+                    }, 10);
+                }, 20);
+            }
+
+            handleMouseMove(e) {
+                if (!this.videoLoaded || this.isPlaying) return;
+
+                const rect = this.canvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const percent = Math.max(0, Math.min(1, x / rect.width));
+                const frameIndex = Math.floor(percent * (this.totalFrames - 1));
+
+                this.scrubFrame(frameIndex);
+                this.frameSlider.value = frameIndex;
+            }
+
+            handleScroll(e) {
+                if (!this.videoLoaded || this.isPlaying) return;
+                e.preventDefault();
+
+                let newFrame = this.currentFrame + (e.deltaY > 0 ? 1 : -1);
+                newFrame = Math.max(0, Math.min(this.totalFrames - 1, newFrame));
+                
+                this.scrubFrame(newFrame);
+                this.frameSlider.value = newFrame;
+            }
+
+            scrubFrame(frameIndex) {
+                this.currentFrame = parseInt(frameIndex);
+                this.drawFrame(this.currentFrame);
+                document.getElementById('frameCount').textContent = `${this.currentFrame + 1}/${this.totalFrames}`;
+                document.getElementById('progressFill').style.width = ((this.currentFrame / this.totalFrames) * 100) + '%';
+            }
+
+            drawFrame(index) {
+                if (this.frames[index]) {
+                    const img = new Image();
+                    img.src = this.frames[index];
+                    img.onload = () => {
+                        this.ctx.drawImage(img, 0, 0);
+                    };
+                }
+            }
+
+            togglePlay() {
+                if (!this.videoLoaded) return;
+                
+                this.isPlaying = !this.isPlaying;
+                document.getElementById('playPauseBtn').textContent = this.isPlaying ? '⏸ Pause' : '▶ Play';
+
+                if (this.isPlaying) {
+                    this.play();
+                }
+            }
+
+            play() {
+                if (!this.isPlaying) return;
+
+                this.currentFrame++;
+                if (this.currentFrame >= this.totalFrames) {
+                    this.currentFrame = 0;
+                }
+
+                this.drawFrame(this.currentFrame);
+                this.frameSlider.value = this.currentFrame;
+                document.getElementById('frameCount').textContent = `${this.currentFrame + 1}/${this.totalFrames}`;
+                document.getElementById('progressFill').style.width = ((this.currentFrame / this.totalFrames) * 100) + '%';
+
+                setTimeout(() => this.play(), 1000 / this.fps);
+            }
+
+            downloadFrame() {
+                if (!this.frames[this.currentFrame]) return;
+
+                const link = document.createElement('a');
+                link.href = this.frames[this.currentFrame];
+                link.download = `frame-${String(this.currentFrame).padStart(6, '0')}.jpg`;
+                link.click();
+            }
+
+            showStatus(msg, isError = false) {
+                const status = document.getElementById('status');
+                status.textContent = msg;
+                status.classList.add('active');
+                status.classList.toggle('error', isError);
+            }
+        }
+
+        const scrubber = new FrameScrubber();
+    </script>
+</body>
+</html>
