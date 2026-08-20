@@ -29,8 +29,8 @@
 
             font-family: "Fredoka", sans-serif;
             text-align: center;
-
             color: #f8fafc;
+
             background: #070b1b;
         }
 
@@ -56,7 +56,6 @@
 
         .nebula {
             z-index: -2;
-
             opacity: 0.72;
 
             background:
@@ -78,12 +77,12 @@
 
             filter: blur(16px);
 
-            animation: drift 18s ease-in-out infinite alternate;
+            animation:
+                drift 18s ease-in-out infinite alternate;
         }
 
         .stars {
             z-index: -1;
-
             opacity: 0.22;
 
             background-image:
@@ -91,7 +90,8 @@
 
             background-size: 43px 43px;
 
-            animation: starDrift 26s linear infinite;
+            animation:
+                starDrift 26s linear infinite;
         }
 
         @keyframes drift {
@@ -110,7 +110,8 @@
 
         @keyframes starDrift {
             to {
-                background-position: 43px 86px;
+                background-position:
+                    43px 86px;
             }
         }
 
@@ -123,7 +124,6 @@
             border-radius: 50%;
 
             filter: blur(70px);
-
             opacity: 0.26;
 
             z-index: -1;
@@ -190,9 +190,12 @@
 
             color: #fff;
 
-            background: rgba(20, 27, 61, 0.72);
+            background:
+                rgba(20, 27, 61, 0.72);
 
-            border: 1px solid rgba(255, 255, 255, 0.24);
+            border:
+                1px solid rgba(255, 255, 255, 0.24);
+
             border-radius: 10px;
 
             box-shadow:
@@ -258,7 +261,6 @@
             font-size: 13px;
 
             filter: grayscale(1);
-
             opacity: 0.8;
         }
 
@@ -307,7 +309,9 @@
         }
 
         .discord-link:active {
-            transform: translateY(0) scale(0.97);
+            transform:
+                translateY(0)
+                scale(0.97);
         }
 
         .discord-icon {
@@ -379,6 +383,8 @@
 
             display: flex;
 
+            align-items: center;
+
             gap: 12px;
 
             z-index: 5;
@@ -401,19 +407,70 @@
 
             box-shadow:
                 0 3px 8px
-                rgba(0, 0, 0, 0.25);
+                rgba(0, 0, 0, 0.25),
 
-            cursor: pointer;
+                inset 0 -2px 3px
+                rgba(0, 0, 0, 0.08);
 
             pointer-events: auto;
 
-            transition:
-                transform 0.12s ease;
+            cursor: pointer;
+
+            transform-origin: center;
+
+            will-change: transform;
         }
+
+        .pupil {
+            position: absolute;
+
+            width: 12px;
+            height: 12px;
+
+            left: 50%;
+            top: 50%;
+
+            background: #111;
+
+            border-radius: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            transition:
+                transform 0.07s
+                cubic-bezier(0.2, 0.8, 0.2, 1);
+
+            will-change: transform;
+        }
+
+        /* Small reflection */
+
+        .pupil::after {
+            content: "";
+
+            position: absolute;
+
+            width: 3px;
+            height: 3px;
+
+            top: 2px;
+            left: 2px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.85);
+        }
+
+        /* =========================================================
+           EYE JUMP
+        ========================================================= */
 
         .eye.jump {
             animation:
-                eyeJump 0.42s
+                eyeJump
+                0.42s
                 cubic-bezier(0.2, 0.8, 0.3, 1);
         }
 
@@ -424,21 +481,21 @@
                     rotate(0deg);
             }
 
-            30% {
+            25% {
                 transform:
-                    translateY(-16px)
-                    rotate(-7deg);
+                    translateY(-14px)
+                    rotate(-8deg);
             }
 
-            55% {
+            50% {
                 transform:
                     translateY(2px)
-                    rotate(5deg);
+                    rotate(6deg);
             }
 
-            75% {
+            70% {
                 transform:
-                    translateY(-6px)
+                    translateY(-5px)
                     rotate(-3deg);
             }
 
@@ -447,26 +504,6 @@
                     translateY(0)
                     rotate(0deg);
             }
-        }
-
-        .pupil {
-            position: absolute;
-
-            width: 12px;
-            height: 12px;
-
-            background: #111;
-
-            border-radius: 50%;
-
-            left: 50%;
-            top: 50%;
-
-            transform:
-                translate(-50%, -50%);
-
-            transition:
-                transform 0.08s ease-out;
         }
 
         /* =========================================================
@@ -519,7 +556,8 @@
                 inset 0 1px
                 rgba(255, 255, 255, 0.08);
 
-            backdrop-filter: blur(14px);
+            backdrop-filter:
+                blur(14px);
 
             cursor: pointer;
 
@@ -607,7 +645,7 @@
         }
 
         /* =========================================================
-           RAINBOW RON.DEV
+           RON.DEV RAINBOW
         ========================================================= */
 
         .rainbow-logo {
@@ -627,7 +665,6 @@
             background:
                 linear-gradient(
                     90deg,
-
                     #ff0000,
                     #ff8c00,
                     #ffff00,
@@ -639,7 +676,8 @@
                     #ff0000
                 );
 
-            background-size: 400% 100%;
+            background-size:
+                400% 100%;
 
             -webkit-background-clip: text;
             background-clip: text;
@@ -647,16 +685,21 @@
             color: transparent;
 
             animation:
-                rainbowMove 3s linear infinite;
+                rainbowMove
+                3s
+                linear
+                infinite;
         }
 
         @keyframes rainbowMove {
             0% {
-                background-position: 0% 50%;
+                background-position:
+                    0% 50%;
             }
 
             100% {
-                background-position: 400% 50%;
+                background-position:
+                    400% 50%;
             }
         }
 
@@ -699,7 +742,8 @@
             }
 
             .icon {
-                grid-row: span 2;
+                grid-row:
+                    span 2;
 
                 width: 64px;
                 height: 64px;
@@ -735,7 +779,25 @@
             }
 
             .blog-link {
-                padding: 9px 11px;
+                padding:
+                    9px 11px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .pupil {
+                transition: none;
+            }
+
+            .eye.jump {
+                animation: none;
+            }
+
+            .nebula,
+            .stars,
+            .orb,
+            .rainbow-logo {
+                animation: none;
             }
         }
     </style>
@@ -782,14 +844,12 @@
         <!-- BLOG -->
 
         <div class="site-tools">
-
             <a
                 class="blog-link"
                 href="blog.html"
             >
                 ✎ My blog
             </a>
-
         </div>
 
 
@@ -824,7 +884,9 @@
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true"
                 >
-                    <path d="M19.54 0c1.13 0 2.05.92 2.05 2.05v19.9c0 1.13-.92 2.05-2.05 2.05H4.46c-1.13 0-2.05-.92-2.05-2.05V2.05C2.41.92 3.33 0 4.46 0h15.08ZM8.02 7.04a8.3 8.3 0 0 0-1.73.55c-1.25 1.86-1.92 3.94-2.04 6.2 1.52 1.14 2.98 1.83 4.42 2.28l.54-.75c-.82-.27-1.6-.64-2.32-1.1l.56-.42c1.39.65 2.9.98 4.55.98s3.16-.33 4.55-.98l.56.42c-.72.46-1.5.83-2.32 1.1l.54.75c1.44-.45 2.9-1.14 4.42-2.28-.12-2.26-.79-4.34-2.04-6.2a8.3 8.3 0 0 0-1.73-.55l-.24.5c-.95-.36-1.94-.54-2.92-.54s-1.97.18-2.92.54l-.24-.5ZM8.7 12.54c.5 0 .9-.46.9-1.03s-.4-1.03-.9-1.03-.9.46-.9 1.03.4 1.03.9 1.03Zm6.6 0c.5 0 .9-.46.9-1.03s-.4-1.03-.9-1.03-.9.46-.9 1.03.4 1.03.9 1.03Z"/>
+                    <path
+                        d="M19.54 0c1.13 0 2.05.92 2.05 2.05v19.9c0 1.13-.92 2.05-2.05 2.05H4.46c-1.13 0-2.05-.92-2.05-2.05V2.05C2.41.92 3.33 0 4.46 0h15.08ZM8.02 7.04a8.3 8.3 0 0 0-1.73.55c-1.25 1.86-1.92 3.94-2.04 6.2 1.52 1.14 2.98 1.83 4.42 2.28l.54-.75c-.82-.27-1.6-.64-2.32-1.1l.56-.42c1.39.65 2.9.98 4.55.98s3.16-.33 4.55-.98l.56.42c-.72.46-1.5.83-2.32 1.1l.54.75c1.44-.45 2.9-1.14 4.42-2.28-.12-2.26-.79-4.34-2.04-6.2a8.3 8.3 0 0 0-1.73-.55l-.24.5c-.95-.36-1.94-.54-2.92-.54s-1.97.18-2.92.54l-.24-.5ZM8.7 12.54c.5 0 .9-.46.9-1.03s-.4-1.03-.9-1.03-.9.46-.9 1.03.4 1.03.9 1.03Zm6.6 0c.5 0 .9-.46.9-1.03s-.4-1.03-.9-1.03-.9.46-.9 1.03.4 1.03.9 1.03Z"
+                    />
                 </svg>
 
                 <span>
@@ -857,11 +919,17 @@
 
                 <div class="googly-eyes">
 
-                    <div class="eye">
+                    <div
+                        class="eye eye-left"
+                        aria-label="Googly eye"
+                    >
                         <div class="pupil"></div>
                     </div>
 
-                    <div class="eye">
+                    <div
+                        class="eye eye-right"
+                        aria-label="Googly eye"
+                    >
                         <div class="pupil"></div>
                     </div>
 
@@ -1393,7 +1461,7 @@
             onclick="openGame('cursorwars.html')"
         >
             <img
-                src="icons/cursorwpng"
+                src="icons/cursorwpng.png"
                 class="icon"
                 alt="Cursor Wars"
             >
@@ -1562,7 +1630,7 @@
         </div>
 
 
-        <!-- 32 — RON.DEV -->
+        <!-- 32 -->
 
         <div
             class="card"
@@ -1658,20 +1726,17 @@
                     2
                 );
 
-
             spaceCanvas.width =
                 window.innerWidth * ratio;
 
             spaceCanvas.height =
                 window.innerHeight * ratio;
 
-
             spaceCanvas.style.width =
                 `${window.innerWidth}px`;
 
             spaceCanvas.style.height =
                 `${window.innerHeight}px`;
-
 
             spaceContext.setTransform(
                 ratio,
@@ -1692,7 +1757,6 @@
             const height =
                 window.innerHeight;
 
-
             spaceContext.clearRect(
                 0,
                 0,
@@ -1706,13 +1770,11 @@
                 const x =
                     star.x * width;
 
-
                 const y =
                     (
                         star.y +
                         time * star.speed
                     ) % 1 * height;
-
 
                 const pulse =
                     0.45 +
@@ -1721,13 +1783,15 @@
                         star.phase
                     ) * 0.35;
 
-
                 spaceContext.fillStyle =
-                    `rgba(220,231,255,${pulse})`;
-
+                    `rgba(
+                        220,
+                        231,
+                        255,
+                        ${pulse}
+                    )`;
 
                 spaceContext.beginPath();
-
 
                 spaceContext.arc(
                     x,
@@ -1737,9 +1801,7 @@
                     Math.PI * 2
                 );
 
-
                 spaceContext.fill();
-
             });
 
 
@@ -1751,12 +1813,10 @@
 
         resizeSpace();
 
-
         window.addEventListener(
             "resize",
             resizeSpace
         );
-
 
         requestAnimationFrame(
             animateSpace
@@ -1764,77 +1824,180 @@
 
 
         /* =========================================================
-           GOOGLY EYES — FOLLOW MOUSE
+           GOOGLY EYES
+           EACH EYE HAS ITS OWN PUPIL
         ========================================================= */
 
-        const pupils =
-            document.querySelectorAll(
-                ".pupil"
-            );
+        const eyes =
+            document.querySelectorAll(".eye");
 
+
+        /*
+           Move each pupil independently.
+
+           The important difference from the old version is that
+           every pupil calculates its own direction from the
+           centre of its OWN eye.
+        */
+
+        function updateGooglyEyes(
+            mouseX,
+            mouseY
+        ) {
+
+            eyes.forEach((eye) => {
+
+                const pupil =
+                    eye.querySelector(".pupil");
+
+                if (!pupil) {
+                    return;
+                }
+
+
+                /*
+                   Get the position of THIS eye.
+                */
+
+                const rect =
+                    eye.getBoundingClientRect();
+
+
+                const eyeCenterX =
+                    rect.left +
+                    rect.width / 2;
+
+                const eyeCenterY =
+                    rect.top +
+                    rect.height / 2;
+
+
+                /*
+                   Find the cursor direction
+                   relative to THIS eye.
+                */
+
+                const dx =
+                    mouseX -
+                    eyeCenterX;
+
+                const dy =
+                    mouseY -
+                    eyeCenterY;
+
+
+                const distance =
+                    Math.sqrt(
+                        dx * dx +
+                        dy * dy
+                    );
+
+
+                /*
+                   Maximum distance the pupil can move.
+
+                   Keeping this around 7px means the pupil
+                   stays completely inside the eyeball.
+                */
+
+                const maxDistance =
+                    7;
+
+
+                /*
+                   Cursor is exactly at eye centre.
+                */
+
+                if (distance < 0.001) {
+
+                    pupil.style.transform =
+                        "translate(-50%, -50%)";
+
+                    return;
+                }
+
+
+                /*
+                   Normalize direction.
+
+                   This turns the cursor direction into
+                   a clean -1 → 1 direction.
+                */
+
+                const directionX =
+                    dx / distance;
+
+                const directionY =
+                    dy / distance;
+
+
+                /*
+                   Move pupil toward cursor.
+
+                   Every eye gets its own X/Y values.
+                */
+
+                const moveX =
+                    directionX *
+                    maxDistance;
+
+                const moveY =
+                    directionY *
+                    maxDistance;
+
+
+                pupil.style.transform =
+                    `translate(
+                        calc(-50% + ${moveX}px),
+                        calc(-50% + ${moveY}px)
+                    )`;
+            });
+        }
+
+
+        /* =========================================================
+           MOUSE
+        ========================================================= */
 
         document.addEventListener(
             "mousemove",
             (event) => {
 
-                pupils.forEach(
-                    (pupil) => {
-
-                        const eye =
-                            pupil.parentElement;
-
-
-                        const rect =
-                            eye.getBoundingClientRect();
-
-
-                        const eyeX =
-                            rect.left +
-                            rect.width / 2;
-
-
-                        const eyeY =
-                            rect.top +
-                            rect.height / 2;
-
-
-                        const dx =
-                            event.clientX -
-                            eyeX;
-
-
-                        const dy =
-                            event.clientY -
-                            eyeY;
-
-
-                        const angle =
-                            Math.atan2(
-                                dy,
-                                dx
-                            );
-
-
-                        const distance = 7;
-
-
-                        const x =
-                            Math.cos(angle) *
-                            distance;
-
-
-                        const y =
-                            Math.sin(angle) *
-                            distance;
-
-
-                        pupil.style.transform =
-                            `translate(
-                                calc(-50% + ${x}px),
-                                calc(-50% + ${y}px)
-                            )`;
-                    }
+                updateGooglyEyes(
+                    event.clientX,
+                    event.clientY
                 );
+
+            },
+            {
+                passive: true
+            }
+        );
+
+
+        /* =========================================================
+           TOUCH SUPPORT
+        ========================================================= */
+
+        document.addEventListener(
+            "touchmove",
+            (event) => {
+
+                const touch =
+                    event.touches[0];
+
+                if (!touch) {
+                    return;
+                }
+
+                updateGooglyEyes(
+                    touch.clientX,
+                    touch.clientY
+                );
+
+            },
+            {
+                passive: true
             }
         );
 
@@ -1843,49 +2006,56 @@
            GOOGLY EYES — CLICK TO JUMP
         ========================================================= */
 
-        document
-            .querySelectorAll(".eye")
-            .forEach((eye) => {
+        eyes.forEach((eye) => {
 
-                eye.addEventListener(
-                    "click",
-                    (event) => {
+            eye.addEventListener(
+                "click",
+                (event) => {
 
-                        event.stopPropagation();
+                    /*
+                       Don't let clicking the eye
+                       activate anything behind it.
+                    */
 
-
-                        /* Restart animation */
-
-                        eye.classList.remove(
-                            "jump"
-                        );
+                    event.stopPropagation();
 
 
-                        void eye.offsetWidth;
+                    /*
+                       Restart animation.
+                    */
+
+                    eye.classList.remove(
+                        "jump"
+                    );
 
 
-                        eye.classList.add(
-                            "jump"
-                        );
+                    void eye.offsetWidth;
 
 
-                        /* Remove animation class */
+                    eye.classList.add(
+                        "jump"
+                    );
 
-                        setTimeout(
-                            () => {
 
-                                eye.classList.remove(
-                                    "jump"
-                                );
+                    /*
+                       Clean up animation class.
+                    */
 
-                            },
-                            450
-                        );
+                    setTimeout(
+                        () => {
 
-                    }
-                );
+                            eye.classList.remove(
+                                "jump"
+                            );
 
-            });
+                        },
+                        450
+                    );
+
+                }
+            );
+
+        });
 
     </script>
 
