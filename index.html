@@ -2,691 +2,1529 @@
 <html lang="en">
 <head>
     <link rel="icon" type="image/png" href="/favicon.png">
-<meta charset="UTF-8">
-<title>Ron.cool</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Ron.cool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
 
-<style>
-    .rainbow-logo {
-    font-size: 32px;
-    font-weight: 900;
-    background: linear-gradient(
-        90deg,
-        #ff0000,
-        #ff8c00,
-        #ffff00,
-        #00ff00,
-        #00ffff,
-        #008cff,
-        #8c00ff,
-        #ff00aa,
-        #ff0000
-    );
-    background-size: 400% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: rainbowMove 3s linear infinite;
-    text-align: center;
-}
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-@keyframes rainbowMove {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 400% 50%; }
-}
-    .title-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+        html {
+            scroll-behavior: smooth;
+        }
 
-.title {
-    position: relative;
-    display: inline-block;
-}
+        body {
+            margin: 0;
+            font-family: 'Fredoka', sans-serif;
+            text-align: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #f8fafc;
+            background: #070b1b;
+        }
 
-.title h1 {
-    margin: 0;
-    position: relative;
-    z-index: 1;
-}
+        /* =========================
+           SPACE BACKGROUND
+        ========================= */
 
-/* Googly eyes */
-.googly-eyes {
-    position: absolute;
-    top: -18px;
-    left: 50%;
-    transform: translateX(-50%);
+        #spaceCanvas,
+        .nebula,
+        .stars {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
 
-    display: flex;
-    gap: 12px;
+        #spaceCanvas {
+            z-index: -3;
+        }
 
-    z-index: 5;
-    pointer-events: none;
-}
+        .nebula {
+            z-index: -2;
+            opacity: .72;
+            background:
+                radial-gradient(
+                    ellipse at 15% 20%,
+                    rgba(58, 100, 220, .36),
+                    transparent 34%
+                ),
+                radial-gradient(
+                    ellipse at 85% 70%,
+                    rgba(205, 61, 176, .28),
+                    transparent 32%
+                ),
+                radial-gradient(
+                    ellipse at 48% 100%,
+                    rgba(24, 169, 181, .22),
+                    transparent 32%
+                );
+            filter: blur(16px);
+            animation: drift 18s ease-in-out infinite alternate;
+        }
 
-.eye {
-    width: 30px;
-    height: 30px;
+        .stars {
+            z-index: -1;
+            opacity: .22;
+            background-image:
+                radial-gradient(#fff 1px, transparent 1px);
+            background-size: 43px 43px;
+            animation: starDrift 26s linear infinite;
+        }
 
-    background: white;
-    border: 3px solid #111;
-    border-radius: 50%;
+        @keyframes drift {
+            from {
+                transform: scale(1)
+                    translate3d(-1%, -1%, 0);
+            }
 
-    position: relative;
+            to {
+                transform: scale(1.12)
+                    translate3d(1%, 1%, 0);
+            }
+        }
 
-    box-shadow: 0 3px 8px rgba(0,0,0,.25);
-}
+        @keyframes starDrift {
+            to {
+                background-position: 43px 86px;
+            }
+        }
 
-.pupil {
-    position: absolute;
+        .orb {
+            position: fixed;
+            width: 180px;
+            height: 180px;
+            filter: blur(70px);
+            opacity: 0.26;
+            z-index: -1;
+            border-radius: 50%;
+            animation: floatOrb 12s ease-in-out infinite alternate;
+        }
 
-    width: 12px;
-    height: 12px;
+        .orb1 {
+            background: #60a5fa;
+            top: 10%;
+            left: 10%;
+        }
 
-    background: #111;
-    border-radius: 50%;
+        .orb2 {
+            background: #f472b6;
+            bottom: 10%;
+            right: 10%;
+            animation-delay: -5s;
+        }
 
-    left: 50%;
-    top: 50%;
+        @keyframes floatOrb {
+            to {
+                transform:
+                    translate(35px, -28px)
+                    scale(1.2);
+            }
+        }
 
-    transform: translate(-50%, -50%);
+        /* =========================
+           TOP PAGE AREA
+        ========================= */
 
-    transition: transform 0.08s ease-out;
-}
-    .title-wrap {
-    position: relative;
-    display: inline-block;
-}
+        .top-area {
+            position: relative;
+            width: 100%;
+            min-height: 170px;
+        }
 
-.title-wrap h1 {
-    margin: 0;
-    position: relative;
-    z-index: 1;
-}
+        /* BLOG
+           ABSOLUTE = stays at top of page,
+           NOT fixed to screen */
+        .site-tools {
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            z-index: 10;
+        }
 
-/* Googly eyes */
-.googly-eyes {
-    position: absolute;
+        .blog-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
 
-    /*
-        Adjust these if you want the eyes
-        higher/lower or more left/right.
-    */
-    top: -18px;
-    left: 50%;
+            border: 1px solid rgba(255, 255, 255, .24);
+            border-radius: 10px;
 
-    transform: translateX(-50%);
+            padding: 10px 13px;
 
-    display: flex;
-    gap: 12px;
+            color: #fff;
+            background: rgba(20, 27, 61, .72);
 
-    z-index: 5;
-    pointer-events: none;
-}
+            box-shadow:
+                0 8px 22px rgba(0, 0, 0, .18);
 
-.eye {
-    width: 30px;
-    height: 30px;
+            backdrop-filter: blur(12px);
 
-    background: white;
-    border: 3px solid #111;
-    border-radius: 50%;
+            font-size: 12px;
+            font-weight: 600;
 
-    position: relative;
+            text-decoration: none;
 
-    box-shadow:
-        0 3px 8px rgba(0,0,0,.25);
-}
+            transition:
+                transform .2s,
+                background .2s,
+                border-color .2s;
+        }
 
-.pupil {
-    position: absolute;
+        .blog-link:hover {
+            transform: translateY(-2px);
 
-    width: 12px;
-    height: 12px;
+            border-color:
+                rgba(255, 255, 255, .65);
 
-    background: #111;
-    border-radius: 50%;
+            background:
+                rgba(63, 76, 145, .82);
+        }
 
-    left: 50%;
-    top: 50%;
+        /* =========================
+           PROTECTION + DISCORD
+        ========================= */
 
-    transform: translate(-50%, -50%);
+        .site-protection {
+            position: absolute;
+            top: 18px;
+            left: 18px;
 
-    transition: transform 0.08s ease-out;
-}
-body {
-    margin: 0;
-    font-family: 'Fredoka', sans-serif;
-    text-align: center;
-    min-height: 100vh;
-    overflow-x: hidden;
-    color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
 
-    background: #070b1b;
-}
+            color: #8b929c;
 
-#spaceCanvas,
-.nebula,
-.stars {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
+            font-size: 12px;
+            font-weight: 500;
 
-#spaceCanvas {
-    z-index: -3;
-}
+            opacity: .9;
 
-.nebula {
-    z-index: -2;
-    opacity: .72;
-    background:
-        radial-gradient(ellipse at 15% 20%, rgba(58, 100, 220, .36), transparent 34%),
-        radial-gradient(ellipse at 85% 70%, rgba(205, 61, 176, .28), transparent 32%),
-        radial-gradient(ellipse at 48% 100%, rgba(24, 169, 181, .22), transparent 32%);
-    filter: blur(16px);
-    animation: drift 18s ease-in-out infinite alternate;
-}
+            z-index: 9999;
+        }
 
-.stars {
-    z-index: -1;
-    opacity: .22;
-    background-image: radial-gradient(#fff 1px, transparent 1px);
-    background-size: 43px 43px;
-    animation: starDrift 26s linear infinite;
-}
+        .protection-text {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
 
-@keyframes drift {
-    from { transform: scale(1) translate3d(-1%, -1%, 0); }
-    to { transform: scale(1.12) translate3d(1%, 1%, 0); }
-}
+        .protection-lock {
+            font-size: 13px;
+            filter: grayscale(1);
+            opacity: .8;
+        }
 
-@keyframes starDrift {
-    to { background-position: 43px 86px; }
-}
+        /* DISCORD */
 
-.orb {
-    position: fixed;
-    width: 180px;
-    height: 180px;
-    filter: blur(70px);
-    opacity: 0.26;
-    z-index: -1;
-    border-radius: 50%;
-    animation: floatOrb 12s ease-in-out infinite alternate;
-}
+        .discord-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
 
-.orb1 {
-    background: #60a5fa;
-    top: 10%;
-    left: 10%;
-}
+            padding: 8px 12px;
 
-.orb2 {
-    background: #f472b6;
-    bottom: 10%;
-    right: 10%;
-    animation-delay: -5s;
-}
+            border-radius: 10px;
 
-@keyframes floatOrb {
-    to { transform: translate(35px, -28px) scale(1.2); }
-}
+            color: #fff;
 
-/* HEADER */
-.header {
-    position: relative;
-    z-index: 1;
-    width: min(1100px, calc(100% - 32px));
-    margin: 52px auto 34px;
-}
+            background:
+                rgba(88, 101, 242, .82);
 
-.site-tools {
-    position: fixed;
-    top: 18px;
-    right: 20px;
-    z-index: 3;
-}
+            border:
+                1px solid rgba(255, 255, 255, .16);
 
-.blog-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    border: 1px solid rgba(255, 255, 255, .24);
-    border-radius: 10px;
-    padding: 10px 13px;
-    color: #fff;
-    background: rgba(20, 27, 61, .72);
-    box-shadow: 0 8px 22px rgba(0, 0, 0, .18);
-    backdrop-filter: blur(12px);
-    font-size: 12px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: transform .2s, background .2s, border-color .2s;
-}
+            text-decoration: none;
 
-.blog-link:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, .65);
-    background: rgba(63, 76, 145, .82);
-}
+            font-size: 12px;
+            font-weight: 600;
 
-/* LOGO */
-.logo {
-    width: 110px;
-    transition: 0.3s;
-}
+            box-shadow:
+                0 7px 20px rgba(0, 0, 0, .18);
 
-.logo:hover {
-    transform: scale(1.05) rotate(-2deg);
-}
+            backdrop-filter: blur(10px);
 
-/* TITLE */
-h1 {
-    font-size: clamp(38px, 6vw, 62px);
-    margin: 10px 0;
-    letter-spacing: -0.04em;
-    text-shadow: 0 5px 28px rgba(126, 151, 255, .32);
-}
+            transition:
+                transform .2s ease,
+                background .2s ease,
+                box-shadow .2s ease;
+        }
 
-.grid {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
-    width: min(1100px, calc(100% - 32px));
-    margin: 0 auto 60px;
-}
+        .discord-link:hover {
+            transform: translateY(-2px);
 
-.card {
-    min-width: 0;
-    padding: 22px 16px 18px;
-    border: 1px solid rgba(255, 255, 255, .16);
-    border-radius: 20px;
-    color: #f8fafc;
-    background: rgba(20, 27, 61, .64);
-    box-shadow: 0 16px 36px rgba(0, 0, 0, .22), inset 0 1px rgba(255, 255, 255, .08);
-    backdrop-filter: blur(14px);
-    cursor: pointer;
-    transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
-}
+            background: #5865f2;
 
-.card:hover {
-    transform: translateY(-7px) scale(1.02);
-    border-color: rgba(196, 211, 255, .7);
-    background: rgba(49, 61, 119, .7);
-    box-shadow: 0 20px 42px rgba(45, 54, 157, .35), 0 0 0 1px rgba(168, 185, 255, .12);
-}
+            box-shadow:
+                0 10px 26px
+                rgba(88, 101, 242, .35),
 
-.card:active {
-    transform: translateY(-2px) scale(.99);
-}
+                0 0 0 1px
+                rgba(255, 255, 255, .12);
+        }
 
-.icon {
-    display: block;
-    width: 82px;
-    height: 82px;
-    object-fit: contain;
-    margin: 0 auto 14px;
-    border-radius: 18px;
-    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .22));
-    transition: transform .25s ease;
-}
+        .discord-link:active {
+            transform: translateY(0) scale(.97);
+        }
 
-.mood-icon {
-    display: grid;
-    place-items: center;
-    color: #fff;
-    background: linear-gradient(145deg, #78c894, #3e806e);
-    font-size: 42px;
-}
+        .discord-icon {
+            width: 16px;
+            height: 16px;
 
-.card:hover .icon {
-    transform: rotate(-4deg) scale(1.08);
-}
+            fill: currentColor;
 
-.title {
-    font-size: 18px;
-    font-weight: 600;
-}
-.site-protection { position: fixed; top: 18px; left: 18px; display: flex; align-items: center; gap: 7px; color: #8b929c; font-size: 12px; font-weight: 500; opacity: 0.85; z-index: 9999; } .protection-lock { font-size: 13px; filter: grayscale(1); opacity: 0.8; }
-.subtitle {
-    margin-top: 5px;
-    color: #b9c4e7;
-    font-size: 12px;
-}
+            flex-shrink: 0;
+        }
 
-@media (max-width: 900px) {
-    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
+        /* =========================
+           HEADER
+        ========================= */
 
-@media (max-width: 500px) {
-    .header { margin-top: 34px; }
-    .grid { grid-template-columns: 1fr; gap: 13px; }
-    .card { display: grid; grid-template-columns: 64px 1fr; column-gap: 14px; align-items: center; padding: 13px 16px; text-align: left; }
-    .icon { grid-row: span 2; width: 64px; height: 64px; margin: 0; }
-    .title, .subtitle { align-self: end; }
-    .subtitle { align-self: start; }
-}
+        .header {
+            position: relative;
+            z-index: 1;
 
-</style>
+            width:
+                min(1100px, calc(100% - 32px));
+
+            margin:
+                0 auto 34px;
+        }
+
+        .title-wrap {
+            position: relative;
+            display: inline-block;
+        }
+
+        .title {
+            position: relative;
+            display: inline-block;
+        }
+
+        .title h1 {
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* =========================
+           LOGO
+        ========================= */
+
+        h1 {
+            font-size:
+                clamp(38px, 6vw, 62px);
+
+            margin: 10px 0;
+
+            letter-spacing: -.04em;
+
+            text-shadow:
+                0 5px 28px
+                rgba(126, 151, 255, .32);
+        }
+
+        .logo {
+            width: 110px;
+            transition: .3s;
+        }
+
+        .logo:hover {
+            transform:
+                scale(1.05)
+                rotate(-2deg);
+        }
+
+        /* =========================
+           GOOGLY EYES
+        ========================= */
+
+        .googly-eyes {
+            position: absolute;
+
+            top: -18px;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            display: flex;
+
+            gap: 12px;
+
+            z-index: 5;
+
+            pointer-events: none;
+        }
+
+        .eye {
+            width: 30px;
+            height: 30px;
+
+            background: white;
+
+            border:
+                3px solid #111;
+
+            border-radius: 50%;
+
+            position: relative;
+
+            box-shadow:
+                0 3px 8px
+                rgba(0,0,0,.25);
+        }
+
+        .pupil {
+            position: absolute;
+
+            width: 12px;
+            height: 12px;
+
+            background: #111;
+
+            border-radius: 50%;
+
+            left: 50%;
+            top: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            transition:
+                transform .08s ease-out;
+        }
+
+        /* =========================
+           GAME GRID
+        ========================= */
+
+        .grid {
+            position: relative;
+            z-index: 1;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 18px;
+
+            width:
+                min(1100px, calc(100% - 32px));
+
+            margin:
+                0 auto 60px;
+        }
+
+        .card {
+            min-width: 0;
+
+            padding:
+                22px 16px 18px;
+
+            border:
+                1px solid rgba(255,255,255,.16);
+
+            border-radius: 20px;
+
+            color: #f8fafc;
+
+            background:
+                rgba(20,27,61,.64);
+
+            box-shadow:
+                0 16px 36px
+                rgba(0,0,0,.22),
+
+                inset 0 1px
+                rgba(255,255,255,.08);
+
+            backdrop-filter: blur(14px);
+
+            cursor: pointer;
+
+            transition:
+                transform .22s ease,
+                border-color .22s ease,
+                background .22s ease,
+                box-shadow .22s ease;
+        }
+
+        .card:hover {
+            transform:
+                translateY(-7px)
+                scale(1.02);
+
+            border-color:
+                rgba(196,211,255,.7);
+
+            background:
+                rgba(49,61,119,.7);
+
+            box-shadow:
+                0 20px 42px
+                rgba(45,54,157,.35),
+
+                0 0 0 1px
+                rgba(168,185,255,.12);
+        }
+
+        .card:active {
+            transform:
+                translateY(-2px)
+                scale(.99);
+        }
+
+        .icon {
+            display: block;
+
+            width: 82px;
+            height: 82px;
+
+            object-fit: contain;
+
+            margin:
+                0 auto 14px;
+
+            border-radius: 18px;
+
+            filter:
+                drop-shadow(
+                    0 8px 12px
+                    rgba(0,0,0,.22)
+                );
+
+            transition:
+                transform .25s ease;
+        }
+
+        .card:hover .icon {
+            transform:
+                rotate(-4deg)
+                scale(1.08);
+        }
+
+        .mood-icon {
+            display: grid;
+            place-items: center;
+
+            color: #fff;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #78c894,
+                    #3e806e
+                );
+
+            font-size: 42px;
+        }
+
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            margin-top: 5px;
+
+            color: #b9c4e7;
+
+            font-size: 12px;
+        }
+
+        /* =========================
+           RAINBOW RON.DEV
+        ========================= */
+
+        .rainbow-logo {
+            font-size: 32px;
+            font-weight: 900;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #ff0000,
+                    #ff8c00,
+                    #ffff00,
+                    #00ff00,
+                    #00ffff,
+                    #008cff,
+                    #8c00ff,
+                    #ff00aa,
+                    #ff0000
+                );
+
+            background-size: 400% 100%;
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+
+            animation:
+                rainbowMove 3s linear infinite;
+
+            text-align: center;
+        }
+
+        @keyframes rainbowMove {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 400% 50%;
+            }
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .top-area {
+                min-height: 150px;
+            }
+
+            .header {
+                margin-top: 0;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 13px;
+            }
+
+            .card {
+                display: grid;
+
+                grid-template-columns:
+                    64px 1fr;
+
+                column-gap: 14px;
+
+                align-items: center;
+
+                padding:
+                    13px 16px;
+
+                text-align: left;
+            }
+
+            .icon {
+                grid-row: span 2;
+
+                width: 64px;
+                height: 64px;
+
+                margin: 0;
+            }
+
+            .title,
+            .subtitle {
+                align-self: end;
+            }
+
+            .subtitle {
+                align-self: start;
+            }
+
+            .site-protection {
+                top: 12px;
+                left: 12px;
+            }
+
+            .site-tools {
+                top: 12px;
+                right: 12px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-<canvas id="spaceCanvas" aria-hidden="true"></canvas>
-<div class="nebula" aria-hidden="true"></div>
-<div class="stars"></div>
-<div class="orb orb1"></div>
-<div class="orb orb2"></div>
-<div class="site-tools"><a class="blog-link" href="blog.html">✎ My blog</a></div>
-<div class="header">
 
-    
-<div class="title-wrap">
+    <!-- BACKGROUND -->
+    <canvas
+        id="spaceCanvas"
+        aria-hidden="true">
+    </canvas>
+
+    <div
+        class="nebula"
+        aria-hidden="true">
+    </div>
+
+    <div class="stars"></div>
+
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
 
 
-    <div class="title">
-        <h1>Ron.cool</h1>
+    <!-- TOP OF PAGE -->
+    <div class="top-area">
 
-        <div class="googly-eyes">
-            <div class="eye">
-                <div class="pupil"></div>
+        <!-- BLOG BUTTON -->
+        <div class="site-tools">
+            <a
+                class="blog-link"
+                href="blog.html"
+            >
+                ✎ My blog
+            </a>
+        </div>
+
+
+        <!-- PROTECTION + DISCORD -->
+        <div class="site-protection">
+
+            <div class="protection-text">
+                <span class="protection-lock">
+                    🔒
+                </span>
+
+                <span>
+                    This site is protected
+                </span>
             </div>
 
-            <div class="eye">
-                <div class="pupil"></div>
+
+            <!-- DISCORD BUTTON -->
+            <a
+                class="discord-link"
+                href="https://discord.gg/rhH2GkStNJ"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Join our Discord server"
+            >
+
+                <svg
+                    class="discord-icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                >
+                    <path d="M19.54 0c1.13 0 2.05.92 2.05 2.05v19.9c0 1.13-.92 2.05-2.05 2.05H4.46c-1.13 0-2.05-.92-2.05-2.05V2.05C2.41.92 3.33 0 4.46 0h15.08ZM8.02 7.04a8.3 8.3 0 0 0-1.73.55c-1.25 1.86-1.92 3.94-2.04 6.2 1.52 1.14 2.98 1.83 4.42 2.28l.54-.75c-.82-.27-1.6-.64-2.32-1.1l.56-.42c1.39.65 2.9.98 4.55.98s3.16-.33 4.55-.98l.56.42c-.72.46-1.5.83-2.32 1.1l.54.75c1.44-.45 2.9-1.14 4.42-2.28-.12-2.26-.79-4.34-2.04-6.2a8.3 8.3 0 0 0-1.73-.55l-.24.5c-.95-.36-1.94-.54-2.92-.54s-1.97.18-2.92.54l-.24-.5ZM8.7 12.54c.5 0 .9-.46.9-1.03s-.4-1.03-.9-1.03-.9.46-.9 1.03.4 1.03.9 1.03Zm6.6 0c.5 0 .9-.46.9-1.03s-.4-1.03-.9-1.03-.9.46-.9 1.03.4 1.03.9 1.03Z"/>
+                </svg>
+
+                <span>
+                    Join our Discord
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- HEADER -->
+    <div class="header">
+
+        <div class="title-wrap">
+
+            <div class="title">
+
+                <h1>
+                    Ron.cool
+                </h1>
+
+                <div class="googly-eyes">
+
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+
+                    <div class="eye">
+                        <div class="pupil"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- GAMES -->
+    <div class="grid">
+
+        <div
+            class="card"
+            onclick="openGame('8ball.html')"
+        >
+            <img
+                src="icons/8ball.png"
+                class="icon"
+            >
+            <div class="title">
+                Magic 8 Ball
+            </div>
+            <div class="subtitle">
+                Ask anything
             </div>
         </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('color.html')"
+        >
+            <img
+                src="icons/color.png"
+                class="icon"
+            >
+            <div class="title">
+                Color Lab
+            </div>
+            <div class="subtitle">
+                Mix colors
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('life.html')"
+        >
+            <img
+                src="icons/life.png"
+                class="icon"
+                alt="Life Check"
+            >
+            <div class="title">
+                Life Check
+            </div>
+            <div class="subtitle">
+                Collect good moments
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('mood.html')"
+        >
+            <img
+                src="icons/mood.png"
+                class="icon"
+                alt="Mood Garden"
+            >
+            <div class="title">
+                Mood Garden
+            </div>
+            <div class="subtitle">
+                Plant your feelings
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('aquarium.html')"
+        >
+            <img
+                src="icons/aquarium.png"
+                class="icon"
+            >
+            <div class="title">
+                Pocket aquarium
+            </div>
+            <div class="subtitle">
+                Manage little fish
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('compliment.html')"
+        >
+            <img
+                src="icons/compliment.png"
+                class="icon"
+            >
+            <div class="title">
+                Compliment
+            </div>
+            <div class="subtitle">
+                Feel good
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('dice.html')"
+        >
+            <img
+                src="icons/dice.png"
+                class="icon"
+            >
+            <div class="title">
+                Dice
+            </div>
+            <div class="subtitle">
+                Roll it
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('particle.html')"
+        >
+            <img
+                src="icons/particles.png"
+                class="icon"
+            >
+            <div class="title">
+                Particles
+            </div>
+            <div class="subtitle">
+                Draw magic
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('reaction.html')"
+        >
+            <img
+                src="icons/reaction.png"
+                class="icon"
+            >
+            <div class="title">
+                Reaction
+            </div>
+            <div class="subtitle">
+                Test reflex
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('slots.html')"
+        >
+            <img
+                src="icons/slots.png"
+                class="icon"
+            >
+            <div class="title">
+                Slots
+            </div>
+            <div class="subtitle">
+                Try luck
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('spinwheel.html')"
+        >
+            <img
+                src="icons/wheel.png"
+                class="icon"
+            >
+            <div class="title">
+                Spin Wheel
+            </div>
+            <div class="subtitle">
+                Random pick
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('typing.html')"
+        >
+            <img
+                src="icons/typing.png"
+                class="icon"
+            >
+            <div class="title">
+                Typing
+            </div>
+            <div class="subtitle">
+                Speed test
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('emoji.html')"
+        >
+            <img
+                src="icons/emoji.png"
+                class="icon"
+            >
+            <div class="title">
+                Emoji Rain
+            </div>
+            <div class="subtitle">
+                Rain Emoji's
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('memory.html')"
+        >
+            <img
+                src="icons/memory.png"
+                class="icon"
+            >
+            <div class="title">
+                Memory Test
+            </div>
+            <div class="subtitle">
+                Test your memory
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('space.html')"
+        >
+            <img
+                src="icons/space.png"
+                class="icon"
+            >
+            <div class="title">
+                Explore Space
+            </div>
+            <div class="subtitle">
+                Have fun going around the galaxy
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('button.html')"
+        >
+            <img
+                src="icons/button.png"
+                class="icon"
+            >
+            <div class="title">
+                Button Press
+            </div>
+            <div class="subtitle">
+                Random.....
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('flappy.html')"
+        >
+            <img
+                src="icons/flappy.png"
+                class="icon"
+            >
+            <div class="title">
+                FLAPPY.EXE
+            </div>
+            <div class="subtitle">
+                Flappy bird for coders
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('computer.html')"
+        >
+            <img
+                src="icons/computer.png"
+                class="icon"
+            >
+            <div class="title">
+                COMPUTER.EXE
+            </div>
+            <div class="subtitle">
+                Be a computer virus simulator
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('codeCracker.html')"
+        >
+            <img
+                src="icons/code.png"
+                class="icon"
+            >
+            <div class="title">
+                Crack the code
+            </div>
+            <div class="subtitle">
+                crack the code - daily codes so make sure to come back tommorow!
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('bomb.html')"
+        >
+            <img
+                src="icons/bomb.png"
+                class="icon"
+            >
+            <div class="title">
+                Don't Click the Bomb
+            </div>
+            <div class="subtitle">
+                Don't click the wrong tile!
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('cursormaze.html')"
+        >
+            <img
+                src="icons/maze.png"
+                class="icon"
+            >
+            <div class="title">
+                Cursor Maze
+            </div>
+            <div class="subtitle">
+                Navigate through endlessly procedurally generated mazes without touching the walls
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('orbit.html')"
+        >
+            <img
+                src="icons/orbit.png"
+                class="icon"
+            >
+            <div class="title">
+                Orbit
+            </div>
+            <div class="subtitle">
+                Stay in orbit, collect stars, and dodge incoming meteors.
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('star.html')"
+        >
+            <img
+                src="icons/star.png"
+                class="icon"
+            >
+            <div class="title">
+                Whats That Star?
+            </div>
+            <div class="subtitle">
+                Explore the night sky, identify stars, planets and constellations, uncover hidden secrets, and discover fascinating facts about the universe.
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('cursorwars.html')"
+        >
+            <img
+                src="icons/cursorwpng"
+                class="icon"
+            >
+            <div class="title">
+                Cursor Wars
+            </div>
+            <div class="subtitle">
+                Real-time multiplayer cursor combat. Fight, survive, dominate.
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('whatif.html')"
+        >
+            <img
+                src="icons/what.png"
+                class="icon"
+            >
+            <div class="title">
+                WHA IF?
+            </div>
+            <div class="subtitle">
+                Change one thing about reality and see what happens. Experiment with millions of possibilities, discover unexpected consequences, and break the world in ways you never imagined.
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('start.html')"
+        >
+            <img
+                src="icons/start.png"
+                class="icon"
+            >
+            <div class="title">
+                JUST START
+            </div>
+            <div class="subtitle">
+                JUST PRESS THE BUTTON....
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('frame.html')"
+        >
+            <img
+                src="icons/frame.png"
+                class="icon"
+            >
+            <div class="title">
+                Frame Scrubber
+            </div>
+            <div class="subtitle">
+                Upload a video and control it frame-by-frame with your mouse
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('RonScript.html')"
+        >
+            <img
+                src="icons/RS.png"
+                class="icon"
+            >
+            <div class="title">
+                RonScript
+            </div>
+            <div class="subtitle">
+                A fun coding language made by Ron!
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('3DGAMES/City/index.html')"
+        >
+            <img
+                src="icons/3d.png"
+                class="icon"
+            >
+            <div class="title">
+                3D Engine test
+            </div>
+            <div class="subtitle">
+                play around with 3d objects
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('3DGAMES/TestGame/index.html')"
+        >
+            <img
+                src="icons/3d2.png"
+                class="icon"
+            >
+            <div class="title">
+                R.C ENGINE PLAYGROUND
+            </div>
+            <div class="subtitle">
+                Walk, jump, interact and test the 3D engine
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('https://roncool.cc.cd/3DGAMES/RonRange/index.html')"
+        >
+            <img
+                src="icons/gun.png"
+                class="icon"
+            >
+            <div class="title">
+                3D SHOOTING RANGE
+            </div>
+            <div class="subtitle">
+                Fun target practise!
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('https://rondev.cc.cd/')"
+        >
+            <div class="rainbow-logo">
+                RON.DEV
+            </div>
+
+            <div class="title"></div>
+
+            <div class="subtitle">
+                a really old website i made ages ago.
+            </div>
+        </div>
+
+
+        <div
+            class="card"
+            onclick="openGame('ron-engine-docs.html')"
+        >
+            <img
+                src="icons/engine.png"
+                class="icon"
+            >
+            <div class="title">
+                R.C Engine Documentation
+            </div>
+            <div class="subtitle">
+                Learn Ron.cool's new engine easily!
+            </div>
+        </div>
+
     </div>
-    <div class="site-protection"> <span class="protection-lock">🔒</span> <span>This site is protected</span> </div>
-
-</div>
-
-<div class="grid">
-
-<div class="card" onclick="openGame('8ball.html')">
-    <img src="icons/8ball.png" class="icon">
-    <div class="title">Magic 8 Ball</div>
-    <div class="subtitle">Ask anything</div>
-</div>
-
-<div class="card" onclick="openGame('color.html')">
-    <img src="icons/color.png" class="icon">
-    <div class="title">Color Lab</div>
-    <div class="subtitle">Mix colors</div>
-</div>
-
-<div class="card" onclick="openGame('life.html')">
-    <img src="icons/life.png" class="icon" alt="Life Check">
-    <div class="title">Life Check</div>
-    <div class="subtitle">Collect good moments</div>
-</div>
-
-<div class="card" onclick="openGame('mood.html')">
-    <img src="icons/mood.png" class="icon" alt="Mood Garden">
-    <div class="title">Mood Garden</div>
-    <div class="subtitle">Plant your feelings</div>
-</div>
-
-<div class="card" onclick="openGame('aquarium.html')">
-    <img src="icons/aquarium.png" class="icon">
-    <div class="title">Pocket aquarium </div>
-    <div class="subtitle">Manage little fish</div>
-</div>
-
-<div class="card" onclick="openGame('compliment.html')">
-    <img src="icons/compliment.png" class="icon">
-    <div class="title">Compliment</div>
-    <div class="subtitle">Feel good</div>
-</div>
-
-<div class="card" onclick="openGame('dice.html')">
-    <img src="icons/dice.png" class="icon">
-    <div class="title">Dice</div>
-    <div class="subtitle">Roll it</div>
-</div>
-
-<div class="card" onclick="openGame('particle.html')">
-    <img src="icons/particles.png" class="icon">
-    <div class="title">Particles</div>
-    <div class="subtitle">Draw magic</div>
-</div>
-
-<div class="card" onclick="openGame('reaction.html')">
-    <img src="icons/reaction.png" class="icon">
-    <div class="title">Reaction</div>
-    <div class="subtitle">Test reflex</div>
-</div>
-
-<div class="card" onclick="openGame('slots.html')">
-    <img src="icons/slots.png" class="icon">
-    <div class="title">Slots</div>
-    <div class="subtitle">Try luck</div>
-</div>
-
-<div class="card" onclick="openGame('spinwheel.html')">
-    <img src="icons/wheel.png" class="icon">
-    <div class="title">Spin Wheel</div>
-    <div class="subtitle">Random pick</div>
-</div>
-
-<div class="card" onclick="openGame('typing.html')">
-    <img src="icons/typing.png" class="icon">
-    <div class="title">Typing</div>
-    <div class="subtitle">Speed test</div>
-</div>
-
-<div class="card" onclick="openGame('emoji.html')">
-    <img src="icons/emoji.png" class="icon">
-    <div class="title">Emoji Rain</div>
-    <div class="subtitle">Rain Emoji's</div>
-</div>
-
-<div class="card" onclick="openGame('memory.html')">
-    <img src="icons/memory.png" class="icon">
-    <div class="title">Memory Test</div>
-    <div class="subtitle">Test your memory</div>
-</div>
-
-<div class="card" onclick="openGame('space.html')">
-    <img src="icons/space.png" class="icon">
-    <div class="title">Explore Space</div>
-    <div class="subtitle">Have fun going around the galaxy</div>
-</div>
-
-<div class="card" onclick="openGame('button.html')">
-    <img src="icons/button.png" class="icon">
-    <div class="title">Button Press</div>
-    <div class="subtitle">Random.....</div>
-</div>
-
-<div class="card" onclick="openGame('flappy.html')">
-    <img src="icons/flappy.png" class="icon">
-    <div class="title">FLAPPY.EXE</div>
-    <div class="subtitle">Flappy bird for coders</div>
-</div>
-
-<div class="card" onclick="openGame('computer.html')">
-    <img src="icons/computer.png" class="icon">
-    <div class="title">COMPUTER.EXE</div>
-    <div class="subtitle">Be a computer virus simulator</div>
-</div>
-
-<div class="card" onclick="openGame('codeCracker.html')">
-    <img src="icons/code.png" class="icon">
-    <div class="title">Crack the code</div>
-    <div class="subtitle">crack the code - daily codes so make sure to come back tommorow!</div>
-</div>
-
-<div class="card" onclick="openGame('bomb.html')">
-    <img src="icons/bomb.png" class="icon">
-    <div class="title">Don't Click the Bomb</div>
-    <div class="subtitle">Don't click the wrong tile!</div>
-</div>
-
-<div class="card" onclick="openGame('cursormaze.html')">
-    <img src="icons/maze.png" class="icon">
-    <div class="title">Cursor Maze</div>
-    <div class="subtitle">Navigate through endlessly procedurally generated mazes without touching the walls</div>
-</div>
-
-<div class="card" onclick="openGame('orbit.html')">
-    <img src="icons/orbit.png" class="icon">
-    <div class="title">Orbit</div>
-    <div class="subtitle">Stay in orbit, collect stars, and dodge incoming meteors.</div>
-</div>
-
-<div class="card" onclick="openGame('star.html')">
-    <img src="icons/star.png" class="icon">
-    <div class="title">Whats That Star?</div>
-    <div class="subtitle">Explore the night sky, identify stars, planets and constellations, uncover hidden secrets, and discover fascinating facts about the universe.</div>
-</div>
-
-<div class="card" onclick="openGame('cursorwars.html')">
-    <img src="icons/cursorwpng" class="icon">
-    <div class="title">Cursor Wars</div>
-    <div class="subtitle">Real-time multiplayer cursor combat. Fight, survive, dominate.</div>
-</div>
-
-<div class="card" onclick="openGame('whatif.html')">
-    <img src="icons/what.png" class="icon">
-    <div class="title">WHA IF?</div>
-    <div class="subtitle">Change one thing about reality and see what happens. Experiment with millions of possibilities, discover unexpected consequences, and break the world in ways you never imagined.</div>
-</div>
-
-<div class="card" onclick="openGame('start.html')">
-    <img src="icons/start.png" class="icon">
-    <div class="title">JUST START</div>
-    <div class="subtitle">JUST PRESS THE BUTTON....</div>
-</div>
-
-<div class="card" onclick="openGame('frame.html')">
-    <img src="icons/frame.png" class="icon">
-    <div class="title">Frame Scrubber</div>
-    <div class="subtitle">Upload a video and control it frame-by-frame with your mouse</div>
-</div>
 
 
-<div class="card" onclick="openGame('RonScript.html')">
-    <img src="icons/RS.png" class="icon">
-    <div class="title">RonScript</div>
-    <div class="subtitle">A fun coding language made by Ron!</div>
-</div>
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
 
-<div class="card" onclick="openGame('3DGAMES/City/index.html')">
-    <img src="icons/3d.png" class="icon">
-    <div class="title">3D Engine test</div>
-    <div class="subtitle">play around with 3d objects</div>
-</div>
+    <script>
 
-<div class="card" onclick="openGame('3DGAMES/TestGame/index.html')">
-    <img src="icons/3d2.png" class="icon">
-    <div class="title">R.C ENGINE PLAYGROUND</div>
-    <div class="subtitle">Walk, jump, interact and test the 3D engine</div>
-</div>
-
-<div class="card" onclick="openGame('https://roncool.cc.cd/3DGAMES/RonRange/index.html')">
-    <img src="icons/gun.png" class="icon">
-    <div class="title">3D SHOOTING RANGE</div>
-    <div class="subtitle">Fun target practise!</div>
-</div>
+        function openGame(page) {
+            window.location.href = page;
+        }
 
 
-<div class="card" onclick="openGame('https://rondev.cc.cd/')">
-    <div class="rainbow-logo">RON.DEV</div>
-    <div class="title"></div>
-    <div class="subtitle">a really old website i made ages ago.</div>
-</div>
+        /* SPACE BACKGROUND */
 
-<div class="card" onclick="openGame('ron-engine-docs.html')">
-    <img src="icons/engine.png" class="icon">
-    <div class="title">R.C Engine Documentation</div>
-    <div class="subtitle">Learn Ron.cool's new engine easily!</div>
-</div>
+        const spaceCanvas =
+            document.getElementById('spaceCanvas');
+
+        const spaceContext =
+            spaceCanvas.getContext('2d');
+
+        const spaceStars =
+            Array.from(
+                { length: 150 },
+                () => ({
+                    x: Math.random(),
+                    y: Math.random(),
+                    size:
+                        Math.random() * 1.8 + .35,
+                    speed:
+                        Math.random() * .00018 + .00004,
+                    phase:
+                        Math.random() *
+                        Math.PI * 2
+                })
+            );
 
 
+        function resizeSpace() {
+
+            const ratio =
+                Math.min(
+                    window.devicePixelRatio || 1,
+                    2
+                );
+
+            spaceCanvas.width =
+                window.innerWidth * ratio;
+
+            spaceCanvas.height =
+                window.innerHeight * ratio;
+
+            spaceCanvas.style.width =
+                `${window.innerWidth}px`;
+
+            spaceCanvas.style.height =
+                `${window.innerHeight}px`;
+
+            spaceContext.setTransform(
+                ratio,
+                0,
+                0,
+                ratio,
+                0,
+                0
+            );
+        }
 
 
+        function animateSpace(time) {
 
-</div>
+            spaceContext.clearRect(
+                0,
+                0,
+                window.innerWidth,
+                window.innerHeight
+            );
 
-<script>
-function openGame(page) {
-    window.location.href = page;
-}
+            spaceStars.forEach((star) => {
 
-const spaceCanvas = document.getElementById('spaceCanvas');
-const spaceContext = spaceCanvas.getContext('2d');
-const spaceStars = Array.from({ length: 150 }, () => ({
-    x: Math.random(),
-    y: Math.random(),
-    size: Math.random() * 1.8 + .35,
-    speed: Math.random() * .00018 + .00004,
-    phase: Math.random() * Math.PI * 2
-}));
+                const x =
+                    star.x *
+                    window.innerWidth;
 
-function resizeSpace() {
-    const ratio = Math.min(window.devicePixelRatio || 1, 2);
-    spaceCanvas.width = window.innerWidth * ratio;
-    spaceCanvas.height = window.innerHeight * ratio;
-    spaceCanvas.style.width = `${window.innerWidth}px`;
-    spaceCanvas.style.height = `${window.innerHeight}px`;
-    spaceContext.setTransform(ratio, 0, 0, ratio, 0, 0);
-}
+                const y =
+                    (
+                        (star.y +
+                        time * star.speed) % 1
+                    ) *
+                    window.innerHeight;
 
-function animateSpace(time) {
-    spaceContext.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    spaceStars.forEach((star) => {
-        const x = star.x * window.innerWidth;
-        const y = ((star.y + time * star.speed) % 1) * window.innerHeight;
-        const pulse = .45 + Math.sin(time * .002 + star.phase) * .35;
-        spaceContext.fillStyle = `rgba(220, 231, 255, ${pulse})`;
-        spaceContext.beginPath();
-        spaceContext.arc(x, y, star.size, 0, Math.PI * 2);
-        spaceContext.fill();
-    });
-    requestAnimationFrame(animateSpace);
-}
+                const pulse =
+                    .45 +
+                    Math.sin(
+                        time * .002 +
+                        star.phase
+                    ) * .35;
 
-resizeSpace();
-window.addEventListener('resize', resizeSpace);
-requestAnimationFrame(animateSpace);
-</script>
-<script>
-const pupils = document.querySelectorAll(".pupil");
+                spaceContext.fillStyle =
+                    `rgba(220,231,255,${pulse})`;
 
-document.addEventListener("mousemove", (event) => {
+                spaceContext.beginPath();
 
-    pupils.forEach((pupil) => {
+                spaceContext.arc(
+                    x,
+                    y,
+                    star.size,
+                    0,
+                    Math.PI * 2
+                );
 
-        const eye = pupil.parentElement;
-        const rect = eye.getBoundingClientRect();
+                spaceContext.fill();
 
-        const eyeX = rect.left + rect.width / 2;
-        const eyeY = rect.top + rect.height / 2;
+            });
 
-        const dx = event.clientX - eyeX;
-        const dy = event.clientY - eyeY;
+            requestAnimationFrame(
+                animateSpace
+            );
+        }
 
-        const angle = Math.atan2(dy, dx);
 
-        // Maximum pupil movement
-        const distance = 7;
+        resizeSpace();
 
-        const x = Math.cos(angle) * distance;
-        const y = Math.sin(angle) * distance;
+        window.addEventListener(
+            'resize',
+            resizeSpace
+        );
 
-        pupil.style.transform =
-            `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-    });
+        requestAnimationFrame(
+            animateSpace
+        );
 
-});
-</script>
+
+        /* GOOGLY EYES */
+
+        const pupils =
+            document.querySelectorAll(
+                ".pupil"
+            );
+
+
+        document.addEventListener(
+            "mousemove",
+            (event) => {
+
+                pupils.forEach(
+                    (pupil) => {
+
+                        const eye =
+                            pupil.parentElement;
+
+                        const rect =
+                            eye.getBoundingClientRect();
+
+                        const eyeX =
+                            rect.left +
+                            rect.width / 2;
+
+                        const eyeY =
+                            rect.top +
+                            rect.height / 2;
+
+                        const dx =
+                            event.clientX -
+                            eyeX;
+
+                        const dy =
+                            event.clientY -
+                            eyeY;
+
+                        const angle =
+                            Math.atan2(dy, dx);
+
+                        const distance = 7;
+
+                        const x =
+                            Math.cos(angle) *
+                            distance;
+
+                        const y =
+                            Math.sin(angle) *
+                            distance;
+
+                        pupil.style.transform =
+                            `translate(
+                                calc(-50% + ${x}px),
+                                calc(-50% + ${y}px)
+                            )`;
+                    }
+                );
+            }
+        );
+
+    </script>
+
 </body>
 </html>
