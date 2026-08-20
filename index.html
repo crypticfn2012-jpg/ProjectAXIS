@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
     <link rel="icon" type="image/png" href="/favicon.png">
+
     <meta charset="UTF-8">
-    <title>Ron.cool</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <title>Ron.cool</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
     <style>
         * {
@@ -19,25 +24,29 @@
 
         body {
             margin: 0;
-            font-family: 'Fredoka', sans-serif;
-            text-align: center;
             min-height: 100vh;
             overflow-x: hidden;
+
+            font-family: "Fredoka", sans-serif;
+            text-align: center;
+
             color: #f8fafc;
             background: #070b1b;
         }
 
-        /* =========================
+        /* =========================================================
            SPACE BACKGROUND
-        ========================= */
+        ========================================================= */
 
         #spaceCanvas,
         .nebula,
         .stars {
             position: fixed;
             inset: 0;
+
             width: 100%;
             height: 100%;
+
             pointer-events: none;
         }
 
@@ -47,44 +56,54 @@
 
         .nebula {
             z-index: -2;
-            opacity: .72;
+
+            opacity: 0.72;
+
             background:
                 radial-gradient(
                     ellipse at 15% 20%,
-                    rgba(58, 100, 220, .36),
+                    rgba(58, 100, 220, 0.36),
                     transparent 34%
                 ),
                 radial-gradient(
                     ellipse at 85% 70%,
-                    rgba(205, 61, 176, .28),
+                    rgba(205, 61, 176, 0.28),
                     transparent 32%
                 ),
                 radial-gradient(
                     ellipse at 48% 100%,
-                    rgba(24, 169, 181, .22),
+                    rgba(24, 169, 181, 0.22),
                     transparent 32%
                 );
+
             filter: blur(16px);
+
             animation: drift 18s ease-in-out infinite alternate;
         }
 
         .stars {
             z-index: -1;
-            opacity: .22;
+
+            opacity: 0.22;
+
             background-image:
                 radial-gradient(#fff 1px, transparent 1px);
+
             background-size: 43px 43px;
+
             animation: starDrift 26s linear infinite;
         }
 
         @keyframes drift {
             from {
-                transform: scale(1)
+                transform:
+                    scale(1)
                     translate3d(-1%, -1%, 0);
             }
 
             to {
-                transform: scale(1.12)
+                transform:
+                    scale(1.12)
                     translate3d(1%, 1%, 0);
             }
         }
@@ -97,25 +116,35 @@
 
         .orb {
             position: fixed;
+
             width: 180px;
             height: 180px;
-            filter: blur(70px);
-            opacity: 0.26;
-            z-index: -1;
+
             border-radius: 50%;
-            animation: floatOrb 12s ease-in-out infinite alternate;
+
+            filter: blur(70px);
+
+            opacity: 0.26;
+
+            z-index: -1;
+
+            animation:
+                floatOrb 12s ease-in-out infinite alternate;
         }
 
         .orb1 {
-            background: #60a5fa;
             top: 10%;
             left: 10%;
+
+            background: #60a5fa;
         }
 
         .orb2 {
-            background: #f472b6;
-            bottom: 10%;
             right: 10%;
+            bottom: 10%;
+
+            background: #f472b6;
+
             animation-delay: -5s;
         }
 
@@ -127,41 +156,47 @@
             }
         }
 
-        /* =========================
-           TOP PAGE AREA
-        ========================= */
+        /* =========================================================
+           TOP AREA
+        ========================================================= */
 
         .top-area {
             position: relative;
+
             width: 100%;
             min-height: 170px;
         }
 
-        /* BLOG
-           ABSOLUTE = stays at top of page,
-           NOT fixed to screen */
+        /* =========================================================
+           BLOG
+        ========================================================= */
+
         .site-tools {
             position: absolute;
+
             top: 18px;
             right: 20px;
+
             z-index: 10;
         }
 
         .blog-link {
             display: inline-flex;
+
             align-items: center;
             gap: 7px;
-
-            border: 1px solid rgba(255, 255, 255, .24);
-            border-radius: 10px;
 
             padding: 10px 13px;
 
             color: #fff;
-            background: rgba(20, 27, 61, .72);
+
+            background: rgba(20, 27, 61, 0.72);
+
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            border-radius: 10px;
 
             box-shadow:
-                0 8px 22px rgba(0, 0, 0, .18);
+                0 8px 22px rgba(0, 0, 0, 0.18);
 
             backdrop-filter: blur(12px);
 
@@ -171,33 +206,35 @@
             text-decoration: none;
 
             transition:
-                transform .2s,
-                background .2s,
-                border-color .2s;
+                transform 0.2s ease,
+                background 0.2s ease,
+                border-color 0.2s ease;
         }
 
         .blog-link:hover {
             transform: translateY(-2px);
 
             border-color:
-                rgba(255, 255, 255, .65);
+                rgba(255, 255, 255, 0.65);
 
             background:
-                rgba(63, 76, 145, .82);
+                rgba(63, 76, 145, 0.82);
         }
 
-        /* =========================
+        /* =========================================================
            PROTECTION + DISCORD
-        ========================= */
+        ========================================================= */
 
         .site-protection {
             position: absolute;
+
             top: 18px;
             left: 18px;
 
             display: flex;
             flex-direction: column;
             align-items: flex-start;
+
             gap: 8px;
 
             color: #8b929c;
@@ -205,41 +242,43 @@
             font-size: 12px;
             font-weight: 500;
 
-            opacity: .9;
+            opacity: 0.9;
 
-            z-index: 9999;
+            z-index: 10;
         }
 
         .protection-text {
             display: flex;
+
             align-items: center;
             gap: 7px;
         }
 
         .protection-lock {
             font-size: 13px;
-            filter: grayscale(1);
-            opacity: .8;
-        }
 
-        /* DISCORD */
+            filter: grayscale(1);
+
+            opacity: 0.8;
+        }
 
         .discord-link {
             display: inline-flex;
+
             align-items: center;
             gap: 8px;
 
             padding: 8px 12px;
 
-            border-radius: 10px;
-
             color: #fff;
 
             background:
-                rgba(88, 101, 242, .82);
+                rgba(88, 101, 242, 0.82);
 
             border:
-                1px solid rgba(255, 255, 255, .16);
+                1px solid rgba(255, 255, 255, 0.16);
+
+            border-radius: 10px;
 
             text-decoration: none;
 
@@ -247,14 +286,14 @@
             font-weight: 600;
 
             box-shadow:
-                0 7px 20px rgba(0, 0, 0, .18);
+                0 7px 20px rgba(0, 0, 0, 0.18);
 
             backdrop-filter: blur(10px);
 
             transition:
-                transform .2s ease,
-                background .2s ease,
-                box-shadow .2s ease;
+                transform 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
         }
 
         .discord-link:hover {
@@ -263,15 +302,12 @@
             background: #5865f2;
 
             box-shadow:
-                0 10px 26px
-                rgba(88, 101, 242, .35),
-
-                0 0 0 1px
-                rgba(255, 255, 255, .12);
+                0 10px 26px rgba(88, 101, 242, 0.35),
+                0 0 0 1px rgba(255, 255, 255, 0.12);
         }
 
         .discord-link:active {
-            transform: translateY(0) scale(.97);
+            transform: translateY(0) scale(0.97);
         }
 
         .discord-icon {
@@ -283,12 +319,13 @@
             flex-shrink: 0;
         }
 
-        /* =========================
+        /* =========================================================
            HEADER
-        ========================= */
+        ========================================================= */
 
         .header {
             position: relative;
+
             z-index: 1;
 
             width:
@@ -300,51 +337,36 @@
 
         .title-wrap {
             position: relative;
+
             display: inline-block;
         }
 
-        .title {
+        .main-title {
             position: relative;
+
             display: inline-block;
         }
 
-        .title h1 {
-            margin: 0;
+        .main-title h1 {
             position: relative;
+
             z-index: 1;
-        }
 
-        /* =========================
-           LOGO
-        ========================= */
+            margin: 0;
 
-        h1 {
             font-size:
                 clamp(38px, 6vw, 62px);
 
-            margin: 10px 0;
-
-            letter-spacing: -.04em;
+            letter-spacing: -0.04em;
 
             text-shadow:
                 0 5px 28px
-                rgba(126, 151, 255, .32);
+                rgba(126, 151, 255, 0.32);
         }
 
-        .logo {
-            width: 110px;
-            transition: .3s;
-        }
-
-        .logo:hover {
-            transform:
-                scale(1.05)
-                rotate(-2deg);
-        }
-
-        /* =========================
+        /* =========================================================
            GOOGLY EYES
-        ========================= */
+        ========================================================= */
 
         .googly-eyes {
             position: absolute;
@@ -365,21 +387,66 @@
         }
 
         .eye {
+            position: relative;
+
             width: 30px;
             height: 30px;
 
-            background: white;
+            background: #fff;
 
             border:
                 3px solid #111;
 
             border-radius: 50%;
 
-            position: relative;
-
             box-shadow:
                 0 3px 8px
-                rgba(0,0,0,.25);
+                rgba(0, 0, 0, 0.25);
+
+            cursor: pointer;
+
+            pointer-events: auto;
+
+            transition:
+                transform 0.12s ease;
+        }
+
+        .eye.jump {
+            animation:
+                eyeJump 0.42s
+                cubic-bezier(0.2, 0.8, 0.3, 1);
+        }
+
+        @keyframes eyeJump {
+            0% {
+                transform:
+                    translateY(0)
+                    rotate(0deg);
+            }
+
+            30% {
+                transform:
+                    translateY(-16px)
+                    rotate(-7deg);
+            }
+
+            55% {
+                transform:
+                    translateY(2px)
+                    rotate(5deg);
+            }
+
+            75% {
+                transform:
+                    translateY(-6px)
+                    rotate(-3deg);
+            }
+
+            100% {
+                transform:
+                    translateY(0)
+                    rotate(0deg);
+            }
         }
 
         .pupil {
@@ -399,15 +466,16 @@
                 translate(-50%, -50%);
 
             transition:
-                transform .08s ease-out;
+                transform 0.08s ease-out;
         }
 
-        /* =========================
+        /* =========================================================
            GAME GRID
-        ========================= */
+        ========================================================= */
 
         .grid {
             position: relative;
+
             z-index: 1;
 
             display: grid;
@@ -424,38 +492,42 @@
                 0 auto 60px;
         }
 
+        /* =========================================================
+           GAME CARD
+        ========================================================= */
+
         .card {
             min-width: 0;
 
             padding:
                 22px 16px 18px;
 
-            border:
-                1px solid rgba(255,255,255,.16);
-
-            border-radius: 20px;
-
             color: #f8fafc;
 
             background:
-                rgba(20,27,61,.64);
+                rgba(20, 27, 61, 0.64);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.16);
+
+            border-radius: 20px;
 
             box-shadow:
                 0 16px 36px
-                rgba(0,0,0,.22),
+                rgba(0, 0, 0, 0.22),
 
                 inset 0 1px
-                rgba(255,255,255,.08);
+                rgba(255, 255, 255, 0.08);
 
             backdrop-filter: blur(14px);
 
             cursor: pointer;
 
             transition:
-                transform .22s ease,
-                border-color .22s ease,
-                background .22s ease,
-                box-shadow .22s ease;
+                transform 0.22s ease,
+                border-color 0.22s ease,
+                background 0.22s ease,
+                box-shadow 0.22s ease;
         }
 
         .card:hover {
@@ -464,24 +536,28 @@
                 scale(1.02);
 
             border-color:
-                rgba(196,211,255,.7);
+                rgba(196, 211, 255, 0.7);
 
             background:
-                rgba(49,61,119,.7);
+                rgba(49, 61, 119, 0.7);
 
             box-shadow:
                 0 20px 42px
-                rgba(45,54,157,.35),
+                rgba(45, 54, 157, 0.35),
 
                 0 0 0 1px
-                rgba(168,185,255,.12);
+                rgba(168, 185, 255, 0.12);
         }
 
         .card:active {
             transform:
                 translateY(-2px)
-                scale(.99);
+                scale(0.99);
         }
+
+        /* =========================================================
+           ICONS
+        ========================================================= */
 
         .icon {
             display: block;
@@ -499,11 +575,11 @@
             filter:
                 drop-shadow(
                     0 8px 12px
-                    rgba(0,0,0,.22)
+                    rgba(0, 0, 0, 0.22)
                 );
 
             transition:
-                transform .25s ease;
+                transform 0.25s ease;
         }
 
         .card:hover .icon {
@@ -512,23 +588,11 @@
                 scale(1.08);
         }
 
-        .mood-icon {
-            display: grid;
-            place-items: center;
+        /* =========================================================
+           CARD TEXT
+        ========================================================= */
 
-            color: #fff;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #78c894,
-                    #3e806e
-                );
-
-            font-size: 42px;
-        }
-
-        .title {
+        .card .title {
             font-size: 18px;
             font-weight: 600;
         }
@@ -539,19 +603,31 @@
             color: #b9c4e7;
 
             font-size: 12px;
+            line-height: 1.4;
         }
 
-        /* =========================
+        /* =========================================================
            RAINBOW RON.DEV
-        ========================= */
+        ========================================================= */
 
         .rainbow-logo {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            min-height: 82px;
+
+            margin:
+                0 auto 14px;
+
             font-size: 32px;
             font-weight: 900;
 
             background:
                 linear-gradient(
                     90deg,
+
                     #ff0000,
                     #ff8c00,
                     #ffff00,
@@ -572,8 +648,6 @@
 
             animation:
                 rainbowMove 3s linear infinite;
-
-            text-align: center;
         }
 
         @keyframes rainbowMove {
@@ -586,12 +660,11 @@
             }
         }
 
-        /* =========================
+        /* =========================================================
            MOBILE
-        ========================= */
+        ========================================================= */
 
         @media (max-width: 900px) {
-
             .grid {
                 grid-template-columns:
                     repeat(2, minmax(0, 1fr));
@@ -599,17 +672,13 @@
         }
 
         @media (max-width: 500px) {
-
             .top-area {
                 min-height: 150px;
             }
 
-            .header {
-                margin-top: 0;
-            }
-
             .grid {
                 grid-template-columns: 1fr;
+
                 gap: 13px;
             }
 
@@ -638,7 +707,7 @@
                 margin: 0;
             }
 
-            .title,
+            .card .title,
             .subtitle {
                 align-self: end;
             }
@@ -656,13 +725,28 @@
                 top: 12px;
                 right: 12px;
             }
+
+            .discord-link span {
+                display: none;
+            }
+
+            .discord-link {
+                padding: 10px;
+            }
+
+            .blog-link {
+                padding: 9px 11px;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- BACKGROUND -->
+    <!-- =========================================================
+         BACKGROUND
+    ========================================================= -->
+
     <canvas
         id="spaceCanvas"
         aria-hidden="true">
@@ -673,30 +757,48 @@
         aria-hidden="true">
     </div>
 
-    <div class="stars"></div>
+    <div
+        class="stars"
+        aria-hidden="true">
+    </div>
 
-    <div class="orb orb1"></div>
-    <div class="orb orb2"></div>
+    <div
+        class="orb orb1"
+        aria-hidden="true">
+    </div>
+
+    <div
+        class="orb orb2"
+        aria-hidden="true">
+    </div>
 
 
-    <!-- TOP OF PAGE -->
+    <!-- =========================================================
+         TOP AREA
+    ========================================================= -->
+
     <div class="top-area">
 
-        <!-- BLOG BUTTON -->
+        <!-- BLOG -->
+
         <div class="site-tools">
+
             <a
                 class="blog-link"
                 href="blog.html"
             >
                 ✎ My blog
             </a>
+
         </div>
 
 
         <!-- PROTECTION + DISCORD -->
+
         <div class="site-protection">
 
             <div class="protection-text">
+
                 <span class="protection-lock">
                     🔒
                 </span>
@@ -704,10 +806,10 @@
                 <span>
                     This site is protected
                 </span>
+
             </div>
 
 
-            <!-- DISCORD BUTTON -->
             <a
                 class="discord-link"
                 href="https://discord.gg/rhH2GkStNJ"
@@ -736,16 +838,22 @@
     </div>
 
 
-    <!-- HEADER -->
-    <div class="header">
+    <!-- =========================================================
+         HEADER
+    ========================================================= -->
+
+    <header class="header">
 
         <div class="title-wrap">
 
-            <div class="title">
+            <div class="main-title">
 
                 <h1>
                     Ron.cool
                 </h1>
+
+
+                <!-- GOOGLY EYES -->
 
                 <div class="googly-eyes">
 
@@ -763,11 +871,16 @@
 
         </div>
 
-    </div>
+    </header>
 
 
-    <!-- GAMES -->
-    <div class="grid">
+    <!-- =========================================================
+         GAMES
+    ========================================================= -->
+
+    <main class="grid">
+
+        <!-- 1 -->
 
         <div
             class="card"
@@ -776,15 +889,20 @@
             <img
                 src="icons/8ball.png"
                 class="icon"
+                alt="Magic 8 Ball"
             >
+
             <div class="title">
                 Magic 8 Ball
             </div>
+
             <div class="subtitle">
                 Ask anything
             </div>
         </div>
 
+
+        <!-- 2 -->
 
         <div
             class="card"
@@ -793,15 +911,20 @@
             <img
                 src="icons/color.png"
                 class="icon"
+                alt="Color Lab"
             >
+
             <div class="title">
                 Color Lab
             </div>
+
             <div class="subtitle">
                 Mix colors
             </div>
         </div>
 
+
+        <!-- 3 -->
 
         <div
             class="card"
@@ -812,14 +935,18 @@
                 class="icon"
                 alt="Life Check"
             >
+
             <div class="title">
                 Life Check
             </div>
+
             <div class="subtitle">
                 Collect good moments
             </div>
         </div>
 
+
+        <!-- 4 -->
 
         <div
             class="card"
@@ -830,14 +957,18 @@
                 class="icon"
                 alt="Mood Garden"
             >
+
             <div class="title">
                 Mood Garden
             </div>
+
             <div class="subtitle">
                 Plant your feelings
             </div>
         </div>
 
+
+        <!-- 5 -->
 
         <div
             class="card"
@@ -846,15 +977,20 @@
             <img
                 src="icons/aquarium.png"
                 class="icon"
+                alt="Pocket Aquarium"
             >
+
             <div class="title">
-                Pocket aquarium
+                Pocket Aquarium
             </div>
+
             <div class="subtitle">
                 Manage little fish
             </div>
         </div>
 
+
+        <!-- 6 -->
 
         <div
             class="card"
@@ -863,15 +999,20 @@
             <img
                 src="icons/compliment.png"
                 class="icon"
+                alt="Compliment"
             >
+
             <div class="title">
                 Compliment
             </div>
+
             <div class="subtitle">
                 Feel good
             </div>
         </div>
 
+
+        <!-- 7 -->
 
         <div
             class="card"
@@ -880,15 +1021,20 @@
             <img
                 src="icons/dice.png"
                 class="icon"
+                alt="Dice"
             >
+
             <div class="title">
                 Dice
             </div>
+
             <div class="subtitle">
                 Roll it
             </div>
         </div>
 
+
+        <!-- 8 -->
 
         <div
             class="card"
@@ -897,15 +1043,20 @@
             <img
                 src="icons/particles.png"
                 class="icon"
+                alt="Particles"
             >
+
             <div class="title">
                 Particles
             </div>
+
             <div class="subtitle">
                 Draw magic
             </div>
         </div>
 
+
+        <!-- 9 -->
 
         <div
             class="card"
@@ -914,15 +1065,20 @@
             <img
                 src="icons/reaction.png"
                 class="icon"
+                alt="Reaction"
             >
+
             <div class="title">
                 Reaction
             </div>
+
             <div class="subtitle">
                 Test reflex
             </div>
         </div>
 
+
+        <!-- 10 -->
 
         <div
             class="card"
@@ -931,15 +1087,20 @@
             <img
                 src="icons/slots.png"
                 class="icon"
+                alt="Slots"
             >
+
             <div class="title">
                 Slots
             </div>
+
             <div class="subtitle">
-                Try luck
+                Try your luck
             </div>
         </div>
 
+
+        <!-- 11 -->
 
         <div
             class="card"
@@ -948,15 +1109,20 @@
             <img
                 src="icons/wheel.png"
                 class="icon"
+                alt="Spin Wheel"
             >
+
             <div class="title">
                 Spin Wheel
             </div>
+
             <div class="subtitle">
                 Random pick
             </div>
         </div>
 
+
+        <!-- 12 -->
 
         <div
             class="card"
@@ -965,15 +1131,20 @@
             <img
                 src="icons/typing.png"
                 class="icon"
+                alt="Typing"
             >
+
             <div class="title">
                 Typing
             </div>
+
             <div class="subtitle">
                 Speed test
             </div>
         </div>
 
+
+        <!-- 13 -->
 
         <div
             class="card"
@@ -982,15 +1153,20 @@
             <img
                 src="icons/emoji.png"
                 class="icon"
+                alt="Emoji Rain"
             >
+
             <div class="title">
                 Emoji Rain
             </div>
+
             <div class="subtitle">
-                Rain Emoji's
+                Rain emojis
             </div>
         </div>
 
+
+        <!-- 14 -->
 
         <div
             class="card"
@@ -999,15 +1175,20 @@
             <img
                 src="icons/memory.png"
                 class="icon"
+                alt="Memory Test"
             >
+
             <div class="title">
                 Memory Test
             </div>
+
             <div class="subtitle">
                 Test your memory
             </div>
         </div>
 
+
+        <!-- 15 -->
 
         <div
             class="card"
@@ -1016,15 +1197,20 @@
             <img
                 src="icons/space.png"
                 class="icon"
+                alt="Explore Space"
             >
+
             <div class="title">
                 Explore Space
             </div>
+
             <div class="subtitle">
                 Have fun going around the galaxy
             </div>
         </div>
 
+
+        <!-- 16 -->
 
         <div
             class="card"
@@ -1033,15 +1219,20 @@
             <img
                 src="icons/button.png"
                 class="icon"
+                alt="Button Press"
             >
+
             <div class="title">
                 Button Press
             </div>
+
             <div class="subtitle">
                 Random.....
             </div>
         </div>
 
+
+        <!-- 17 -->
 
         <div
             class="card"
@@ -1050,15 +1241,20 @@
             <img
                 src="icons/flappy.png"
                 class="icon"
+                alt="Flappy.exe"
             >
+
             <div class="title">
                 FLAPPY.EXE
             </div>
+
             <div class="subtitle">
-                Flappy bird for coders
+                Flappy Bird for coders
             </div>
         </div>
 
+
+        <!-- 18 -->
 
         <div
             class="card"
@@ -1067,15 +1263,20 @@
             <img
                 src="icons/computer.png"
                 class="icon"
+                alt="Computer.exe"
             >
+
             <div class="title">
                 COMPUTER.EXE
             </div>
+
             <div class="subtitle">
                 Be a computer virus simulator
             </div>
         </div>
 
+
+        <!-- 19 -->
 
         <div
             class="card"
@@ -1084,15 +1285,20 @@
             <img
                 src="icons/code.png"
                 class="icon"
+                alt="Crack the Code"
             >
+
             <div class="title">
-                Crack the code
+                Crack the Code
             </div>
+
             <div class="subtitle">
-                crack the code - daily codes so make sure to come back tommorow!
+                Crack the daily code — come back tomorrow!
             </div>
         </div>
 
+
+        <!-- 20 -->
 
         <div
             class="card"
@@ -1101,15 +1307,20 @@
             <img
                 src="icons/bomb.png"
                 class="icon"
+                alt="Don't Click the Bomb"
             >
+
             <div class="title">
                 Don't Click the Bomb
             </div>
+
             <div class="subtitle">
                 Don't click the wrong tile!
             </div>
         </div>
 
+
+        <!-- 21 -->
 
         <div
             class="card"
@@ -1118,15 +1329,20 @@
             <img
                 src="icons/maze.png"
                 class="icon"
+                alt="Cursor Maze"
             >
+
             <div class="title">
                 Cursor Maze
             </div>
+
             <div class="subtitle">
-                Navigate through endlessly procedurally generated mazes without touching the walls
+                Navigate endlessly generated mazes without touching the walls
             </div>
         </div>
 
+
+        <!-- 22 -->
 
         <div
             class="card"
@@ -1135,15 +1351,20 @@
             <img
                 src="icons/orbit.png"
                 class="icon"
+                alt="Orbit"
             >
+
             <div class="title">
                 Orbit
             </div>
+
             <div class="subtitle">
                 Stay in orbit, collect stars, and dodge incoming meteors.
             </div>
         </div>
 
+
+        <!-- 23 -->
 
         <div
             class="card"
@@ -1152,15 +1373,20 @@
             <img
                 src="icons/star.png"
                 class="icon"
+                alt="What's That Star"
             >
+
             <div class="title">
-                Whats That Star?
+                What's That Star?
             </div>
+
             <div class="subtitle">
-                Explore the night sky, identify stars, planets and constellations, uncover hidden secrets, and discover fascinating facts about the universe.
+                Explore the night sky, identify stars, planets and constellations.
             </div>
         </div>
 
+
+        <!-- 24 -->
 
         <div
             class="card"
@@ -1169,15 +1395,20 @@
             <img
                 src="icons/cursorwpng"
                 class="icon"
+                alt="Cursor Wars"
             >
+
             <div class="title">
                 Cursor Wars
             </div>
+
             <div class="subtitle">
                 Real-time multiplayer cursor combat. Fight, survive, dominate.
             </div>
         </div>
 
+
+        <!-- 25 -->
 
         <div
             class="card"
@@ -1186,15 +1417,20 @@
             <img
                 src="icons/what.png"
                 class="icon"
+                alt="What If"
             >
+
             <div class="title">
-                WHA IF?
+                WHAT IF?
             </div>
+
             <div class="subtitle">
-                Change one thing about reality and see what happens. Experiment with millions of possibilities, discover unexpected consequences, and break the world in ways you never imagined.
+                Change one thing about reality and see what happens.
             </div>
         </div>
 
+
+        <!-- 26 -->
 
         <div
             class="card"
@@ -1203,15 +1439,20 @@
             <img
                 src="icons/start.png"
                 class="icon"
+                alt="Just Start"
             >
+
             <div class="title">
                 JUST START
             </div>
+
             <div class="subtitle">
                 JUST PRESS THE BUTTON....
             </div>
         </div>
 
+
+        <!-- 27 -->
 
         <div
             class="card"
@@ -1220,15 +1461,20 @@
             <img
                 src="icons/frame.png"
                 class="icon"
+                alt="Frame Scrubber"
             >
+
             <div class="title">
                 Frame Scrubber
             </div>
+
             <div class="subtitle">
                 Upload a video and control it frame-by-frame with your mouse
             </div>
         </div>
 
+
+        <!-- 28 -->
 
         <div
             class="card"
@@ -1237,15 +1483,20 @@
             <img
                 src="icons/RS.png"
                 class="icon"
+                alt="RonScript"
             >
+
             <div class="title">
                 RonScript
             </div>
+
             <div class="subtitle">
                 A fun coding language made by Ron!
             </div>
         </div>
 
+
+        <!-- 29 -->
 
         <div
             class="card"
@@ -1254,15 +1505,20 @@
             <img
                 src="icons/3d.png"
                 class="icon"
+                alt="3D Engine Test"
             >
+
             <div class="title">
-                3D Engine test
+                3D Engine Test
             </div>
+
             <div class="subtitle">
-                play around with 3d objects
+                Play around with 3D objects
             </div>
         </div>
 
+
+        <!-- 30 -->
 
         <div
             class="card"
@@ -1271,32 +1527,42 @@
             <img
                 src="icons/3d2.png"
                 class="icon"
+                alt="R.C Engine Playground"
             >
+
             <div class="title">
                 R.C ENGINE PLAYGROUND
             </div>
+
             <div class="subtitle">
                 Walk, jump, interact and test the 3D engine
             </div>
         </div>
 
 
+        <!-- 31 -->
+
         <div
             class="card"
-            onclick="openGame('https://roncool.cc.cd/3DGAMES/RonRange/index.html')"
+            onclick="openGame('3DGAMES/RonRange/index.html')"
         >
             <img
                 src="icons/gun.png"
                 class="icon"
+                alt="3D Shooting Range"
             >
+
             <div class="title">
                 3D SHOOTING RANGE
             </div>
+
             <div class="subtitle">
                 Fun target practise!
             </div>
         </div>
 
+
+        <!-- 32 — RON.DEV -->
 
         <div
             class="card"
@@ -1314,6 +1580,8 @@
         </div>
 
 
+        <!-- 33 -->
+
         <div
             class="card"
             onclick="openGame('ron-engine-docs.html')"
@@ -1321,36 +1589,45 @@
             <img
                 src="icons/engine.png"
                 class="icon"
+                alt="R.C Engine Documentation"
             >
+
             <div class="title">
                 R.C Engine Documentation
             </div>
+
             <div class="subtitle">
                 Learn Ron.cool's new engine easily!
             </div>
         </div>
 
-    </div>
+    </main>
 
 
-    <!-- =========================
+    <!-- =========================================================
          JAVASCRIPT
-    ========================= -->
+    ========================================================= -->
 
     <script>
+
+        /* =========================================================
+           GAME NAVIGATION
+        ========================================================= */
 
         function openGame(page) {
             window.location.href = page;
         }
 
 
-        /* SPACE BACKGROUND */
+        /* =========================================================
+           SPACE BACKGROUND
+        ========================================================= */
 
         const spaceCanvas =
-            document.getElementById('spaceCanvas');
+            document.getElementById("spaceCanvas");
 
         const spaceContext =
-            spaceCanvas.getContext('2d');
+            spaceCanvas.getContext("2d");
 
         const spaceStars =
             Array.from(
@@ -1358,13 +1635,17 @@
                 () => ({
                     x: Math.random(),
                     y: Math.random(),
+
                     size:
-                        Math.random() * 1.8 + .35,
+                        Math.random() * 1.8 + 0.35,
+
                     speed:
-                        Math.random() * .00018 + .00004,
+                        Math.random() * 0.00018 + 0.00004,
+
                     phase:
                         Math.random() *
-                        Math.PI * 2
+                        Math.PI *
+                        2
                 })
             );
 
@@ -1377,17 +1658,20 @@
                     2
                 );
 
+
             spaceCanvas.width =
                 window.innerWidth * ratio;
 
             spaceCanvas.height =
                 window.innerHeight * ratio;
 
+
             spaceCanvas.style.width =
                 `${window.innerWidth}px`;
 
             spaceCanvas.style.height =
                 `${window.innerHeight}px`;
+
 
             spaceContext.setTransform(
                 ratio,
@@ -1402,37 +1686,48 @@
 
         function animateSpace(time) {
 
+            const width =
+                window.innerWidth;
+
+            const height =
+                window.innerHeight;
+
+
             spaceContext.clearRect(
                 0,
                 0,
-                window.innerWidth,
-                window.innerHeight
+                width,
+                height
             );
+
 
             spaceStars.forEach((star) => {
 
                 const x =
-                    star.x *
-                    window.innerWidth;
+                    star.x * width;
+
 
                 const y =
                     (
-                        (star.y +
-                        time * star.speed) % 1
-                    ) *
-                    window.innerHeight;
+                        star.y +
+                        time * star.speed
+                    ) % 1 * height;
+
 
                 const pulse =
-                    .45 +
+                    0.45 +
                     Math.sin(
-                        time * .002 +
+                        time * 0.002 +
                         star.phase
-                    ) * .35;
+                    ) * 0.35;
+
 
                 spaceContext.fillStyle =
                     `rgba(220,231,255,${pulse})`;
 
+
                 spaceContext.beginPath();
+
 
                 spaceContext.arc(
                     x,
@@ -1442,9 +1737,11 @@
                     Math.PI * 2
                 );
 
+
                 spaceContext.fill();
 
             });
+
 
             requestAnimationFrame(
                 animateSpace
@@ -1454,17 +1751,21 @@
 
         resizeSpace();
 
+
         window.addEventListener(
-            'resize',
+            "resize",
             resizeSpace
         );
+
 
         requestAnimationFrame(
             animateSpace
         );
 
 
-        /* GOOGLY EYES */
+        /* =========================================================
+           GOOGLY EYES — FOLLOW MOUSE
+        ========================================================= */
 
         const pupils =
             document.querySelectorAll(
@@ -1482,37 +1783,50 @@
                         const eye =
                             pupil.parentElement;
 
+
                         const rect =
                             eye.getBoundingClientRect();
+
 
                         const eyeX =
                             rect.left +
                             rect.width / 2;
 
+
                         const eyeY =
                             rect.top +
                             rect.height / 2;
+
 
                         const dx =
                             event.clientX -
                             eyeX;
 
+
                         const dy =
                             event.clientY -
                             eyeY;
 
+
                         const angle =
-                            Math.atan2(dy, dx);
+                            Math.atan2(
+                                dy,
+                                dx
+                            );
+
 
                         const distance = 7;
+
 
                         const x =
                             Math.cos(angle) *
                             distance;
 
+
                         const y =
                             Math.sin(angle) *
                             distance;
+
 
                         pupil.style.transform =
                             `translate(
@@ -1523,6 +1837,55 @@
                 );
             }
         );
+
+
+        /* =========================================================
+           GOOGLY EYES — CLICK TO JUMP
+        ========================================================= */
+
+        document
+            .querySelectorAll(".eye")
+            .forEach((eye) => {
+
+                eye.addEventListener(
+                    "click",
+                    (event) => {
+
+                        event.stopPropagation();
+
+
+                        /* Restart animation */
+
+                        eye.classList.remove(
+                            "jump"
+                        );
+
+
+                        void eye.offsetWidth;
+
+
+                        eye.classList.add(
+                            "jump"
+                        );
+
+
+                        /* Remove animation class */
+
+                        setTimeout(
+                            () => {
+
+                                eye.classList.remove(
+                                    "jump"
+                                );
+
+                            },
+                            450
+                        );
+
+                    }
+                );
+
+            });
 
     </script>
 
