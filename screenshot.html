@@ -1,0 +1,1028 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Screenshot.exe — RON.cool</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+    --bg:#08090d;
+    --panel:#101219;
+    --panel2:#151822;
+    --border:#272c3a;
+    --text:#f5f7ff;
+    --muted:#8d94a8;
+    --accent:#7c5cff;
+    --accent2:#00d4ff;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 20% 0%,rgba(124,92,255,.16),transparent 30%),
+        radial-gradient(circle at 90% 100%,rgba(0,212,255,.10),transparent 30%),
+        var(--bg);
+    color:var(--text);
+    font-family:Inter,Segoe UI,Arial,sans-serif;
+}
+
+button,input,textarea,select{font:inherit}
+
+.topbar{
+    height:70px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 32px;
+    border-bottom:1px solid var(--border);
+    background:rgba(8,9,13,.8);
+    backdrop-filter:blur(15px);
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-weight:900;
+    letter-spacing:-.5px;
+}
+
+.logoIcon{
+    width:36px;
+    height:36px;
+    border-radius:10px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 0 25px rgba(124,92,255,.35);
+}
+
+.logo span{color:#8e7cff}
+
+.topRight{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.container{
+    width:min(1450px,94%);
+    margin:35px auto 70px;
+}
+
+.hero{
+    margin-bottom:28px;
+}
+
+.hero h1{
+    font-size:42px;
+    letter-spacing:-2px;
+    line-height:1;
+}
+
+.hero p{
+    color:var(--muted);
+    margin-top:10px;
+}
+
+.workspace{
+    display:grid;
+    grid-template-columns:390px 1fr;
+    gap:24px;
+}
+
+.panel{
+    background:rgba(16,18,25,.88);
+    border:1px solid var(--border);
+    border-radius:18px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);
+}
+
+.controls{
+    padding:22px;
+}
+
+.sectionTitle{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color:#72798c;
+    font-weight:800;
+    margin:5px 0 12px;
+}
+
+.templates{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-bottom:22px;
+}
+
+.template{
+    background:#151822;
+    border:1px solid #292e3c;
+    color:#dce0ec;
+    border-radius:10px;
+    padding:11px 9px;
+    cursor:pointer;
+    text-align:left;
+    transition:.15s;
+}
+
+.template:hover{
+    border-color:#5549a0;
+    transform:translateY(-1px);
+}
+
+.template.active{
+    border-color:var(--accent);
+    background:rgba(124,92,255,.12);
+    box-shadow:0 0 0 1px rgba(124,92,255,.12);
+}
+
+.template small{
+    display:block;
+    color:#777e91;
+    margin-top:3px;
+    font-size:10px;
+}
+
+.field{
+    margin-bottom:14px;
+}
+
+.field label{
+    display:block;
+    font-size:12px;
+    color:#a9afbf;
+    margin-bottom:7px;
+    font-weight:700;
+}
+
+input,textarea,select{
+    width:100%;
+    border:1px solid #2b3040;
+    background:#0c0e14;
+    color:white;
+    border-radius:9px;
+    outline:none;
+    padding:11px 12px;
+}
+
+textarea{
+    min-height:88px;
+    resize:vertical;
+}
+
+input:focus,textarea:focus,select:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(124,92,255,.08);
+}
+
+.actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:9px;
+    margin-top:20px;
+}
+
+.btn{
+    border:0;
+    border-radius:10px;
+    padding:12px;
+    cursor:pointer;
+    font-weight:800;
+    transition:.15s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+    filter:brightness(1.08);
+}
+
+.primary{
+    color:white;
+    background:linear-gradient(135deg,#7055ff,#8c64ff);
+}
+
+.secondary{
+    color:#dfe3ef;
+    background:#1a1e29;
+    border:1px solid #2c3241;
+}
+
+.download{
+    width:100%;
+    margin-top:9px;
+    background:linear-gradient(135deg,#00bde8,#00d4a8);
+    color:#001114;
+}
+
+.previewPanel{
+    padding:20px;
+    min-width:0;
+}
+
+.previewHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.previewHeader strong{font-size:14px}
+
+.live{
+    font-size:11px;
+    color:#61e5ae;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#52e0a4;
+    box-shadow:0 0 10px #52e0a4;
+}
+
+.canvasWrap{
+    width:100%;
+    min-height:610px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        linear-gradient(45deg,#11141b 25%,transparent 25%) 0 0/20px 20px,
+        linear-gradient(-45deg,#11141b 25%,transparent 25%) 0 0/20px 20px,
+        linear-gradient(45deg,transparent 75%,#11141b 75%) 0 0/20px 20px,
+        linear-gradient(-45deg,transparent 75%,#11141b 75%) 0 0/20px 20px,
+        #0d0f14;
+    border:1px solid #242937;
+    border-radius:13px;
+    padding:35px;
+    overflow:hidden;
+}
+
+#preview{
+    width:min(100%,1000px);
+    height:auto;
+    max-height:650px;
+    object-fit:contain;
+    box-shadow:0 25px 70px rgba(0,0,0,.55);
+    border-radius:4px;
+}
+
+.info{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:15px;
+}
+
+.badge{
+    padding:7px 10px;
+    border-radius:7px;
+    background:#151923;
+    border:1px solid #272c39;
+    color:#858ca0;
+    font-size:11px;
+}
+
+@media(max-width:950px){
+    .workspace{grid-template-columns:1fr}
+    .canvasWrap{min-height:400px}
+}
+
+@media(max-width:600px){
+    .topbar{padding:0 16px}
+    .container{width:94%;margin-top:24px}
+    .hero h1{font-size:32px}
+    .templates{grid-template-columns:1fr 1fr}
+    .canvasWrap{padding:15px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+    <div class="logo">
+        <div class="logoIcon">📸</div>
+        <div>Screenshot<span>.exe</span></div>
+    </div>
+    <div class="topRight">RON.cool experiment</div>
+</header>
+
+<main class="container">
+
+    <div class="hero">
+        <h1>Fake Screenshot Generator</h1>
+        <p>Create completely fake screenshots, errors, conversations and system screens.</p>
+    </div>
+
+    <div class="workspace">
+
+        <section class="panel controls">
+
+            <div class="sectionTitle">Template</div>
+
+            <div class="templates">
+
+                <button class="template active" data-type="windows">
+                     Windows Error
+                    <small>System dialog</small>
+                </button>
+
+                <button class="template" data-type="discord">
+                     Discord
+                    <small>Fake conversation</small>
+                </button>
+
+                <button class="template" data-type="crash">
+                     Game Crash
+                    <small>Fatal error</small>
+                </button>
+
+                <button class="template" data-type="terminal">
+                     Terminal
+                    <small>Command prompt</small>
+                </button>
+
+                <button class="template" data-type="browser">
+                     Browser
+                    <small>Fake webpage</small>
+                </button>
+
+                <button class="template" data-type="bsod">
+                     BSOD
+                    <small>System failure</small>
+                </button>
+
+                <button class="template" data-type="phone">
+                     Phone
+                    <small>Mobile screen</small>
+                </button>
+
+                <button class="template" data-type="warning">
+                     Warning
+                    <small>System alert</small>
+                </button>
+
+            </div>
+
+            <div class="sectionTitle">Content</div>
+
+            <div class="field">
+                <label>Title</label>
+                <input id="title" value="Fatal Error">
+            </div>
+
+            <div class="field">
+                <label>Message</label>
+                <textarea id="message">Something went wrong and the application needs to close.</textarea>
+            </div>
+
+            <div class="field">
+                <label>Username</label>
+                <input id="username" value="Ron">
+            </div>
+
+            <div class="field">
+                <label>Extra / Error Code</label>
+                <input id="extra" value="Error Code: 0x800F0922">
+            </div>
+
+            <div class="actions">
+                <button class="btn secondary" id="randomBtn">🎲 Randomize</button>
+                <button class="btn primary" id="generateBtn">✨ Generate</button>
+            </div>
+
+            <button class="btn download" id="downloadBtn">⬇ Download PNG</button>
+
+        </section>
+
+        <section class="panel previewPanel">
+
+            <div class="previewHeader">
+                <strong>Live Preview</strong>
+
+                <div class="live">
+                    <span class="dot"></span>
+                    LIVE
+                </div>
+            </div>
+
+            <div class="canvasWrap">
+                <canvas id="preview" width="1280" height="720"></canvas>
+            </div>
+
+            <div class="info">
+                <div class="badge">1280 × 720</div>
+                <div class="badge">PNG export</div>
+                <div class="badge">100% client-side</div>
+            </div>
+
+        </section>
+
+    </div>
+</main>
+
+<script>
+const canvas = document.getElementById("preview");
+const ctx = canvas.getContext("2d");
+
+const titleInput = document.getElementById("title");
+const messageInput = document.getElementById("message");
+const usernameInput = document.getElementById("username");
+const extraInput = document.getElementById("extra");
+
+let currentType = "windows";
+
+const data = {
+    windows: {
+        title:"Fatal Error",
+        message:"Something went wrong and the application needs to close.",
+        username:"Ron",
+        extra:"Error Code: 0x800F0922"
+    },
+    discord:{
+        title:"Discord",
+        message:"bro what did you just send me 💀",
+        username:"Ron",
+        extra:"Today at 10:42 PM"
+    },
+    crash:{
+        title:"GAME CRASHED",
+        message:"The application encountered an unexpected error and must close.",
+        username:"FortniteClient-Win64-Shipping.exe",
+        extra:"Crash ID: 7F3A-9912"
+    },
+    terminal:{
+        title:"C:\\Users\\Ron",
+        message:"Access denied.\nThe requested operation requires administrator privileges.",
+        username:"C:\\Users\\Ron>",
+        extra:"Process exited with code 1"
+    },
+    browser:{
+        title:"This site can't be reached",
+        message:"The webpage might be temporarily down or it may have moved permanently to a new web address.",
+        username:"ron.cool",
+        extra:"ERR_CONNECTION_REFUSED"
+    },
+    bsod:{
+        title:":( ",
+        message:"Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.",
+        username:"Windows",
+        extra:"Stop code: CRITICAL_PROCESS_DIED"
+    },
+    phone:{
+        title:"Something went wrong",
+        message:"Please try again later. If the problem continues, restart the application.",
+        username:"RON",
+        extra:"10:42"
+    },
+    warning:{
+        title:"SECURITY WARNING",
+        message:"Windows Defender has detected suspicious activity on this device.",
+        username:"Windows Security",
+        extra:"Threat ID: Trojan.Generic.84721"
+    }
+};
+
+const randomWords = {
+    titles:[
+        "Fatal Error",
+        "Unexpected Error",
+        "Application Error",
+        "SYSTEM FAILURE",
+        "Something went wrong",
+        "Connection Lost",
+        "Access Denied",
+        "Critical Error",
+        "WHAT THE FUCK",
+        "Unknown Error"
+    ],
+    messages:[
+        "Something went horribly wrong and nobody knows why.",
+        "The application stopped responding.",
+        "An unexpected error occurred. Please try again.",
+        "The operation could not be completed.",
+        "Your computer has encountered an extremely stupid problem.",
+        "The requested resource could not be found.",
+        "Connection to the server was lost.",
+        "The system encountered an unrecoverable error."
+    ],
+    codes:[
+        "0x800F0922",
+        "0xC000021A",
+        "0xDEADBEEF",
+        "0x1337",
+        "0x00000069",
+        "ERR_CONNECTION_REFUSED",
+        "ERR_SYSTEM_FAILURE",
+        "CRASH_0x42069"
+    ],
+    users:[
+        "Ron",
+        "Alex",
+        "Tommy",
+        "Admin",
+        "unknown_user",
+        "Player123",
+        "RON.cool"
+    ]
+};
+
+function resizeFont(text,maxWidth,start=38){
+    let size=start;
+    while(size>14){
+        ctx.font=`700 ${size}px Segoe UI`;
+        if(ctx.measureText(text).width<=maxWidth)return size;
+        size--;
+    }
+    return size;
+}
+
+function roundRect(x,y,w,h,r){
+    ctx.beginPath();
+    ctx.roundRect(x,y,w,h,r);
+}
+
+function clear(bg="#111"){
+    ctx.fillStyle=bg;
+    ctx.fillRect(0,0,1280,720);
+}
+
+function drawWindows(){
+    clear("#dfe3e8");
+
+    ctx.fillStyle="rgba(0,0,0,.15)";
+    ctx.fillRect(330,185,630,350);
+
+    ctx.fillStyle="#f7f7f7";
+    roundRect(310,165,630,350,8);
+    ctx.fill();
+
+    ctx.strokeStyle="#c5c8cd";
+    ctx.stroke();
+
+    ctx.fillStyle="#eceff1";
+    roundRect(310,165,630,48,8);
+    ctx.fill();
+
+    ctx.fillStyle="#333";
+    ctx.font="600 15px Segoe UI";
+    ctx.fillText("Windows",335,195);
+
+    ctx.fillStyle="#888";
+    ctx.font="20px Arial";
+    ctx.fillText("×",910,197);
+
+    ctx.fillStyle="#202124";
+    ctx.font="28px Segoe UI";
+    ctx.fillText("⚠",350,270);
+
+    ctx.fillStyle="#202124";
+    ctx.font=`600 ${resizeFont(titleInput.value,480,24)}px Segoe UI`;
+    ctx.fillText(titleInput.value,405,270);
+
+    drawWrapped(
+        messageInput.value,
+        405,310,470,
+        23,
+        "#444"
+    );
+
+    ctx.fillStyle="#777";
+    ctx.font="14px Segoe UI";
+    ctx.fillText(extraInput.value,405,415);
+
+    ctx.fillStyle="#f0f1f2";
+    roundRect(785,450,115,40,6);
+    ctx.fill();
+
+    ctx.strokeStyle="#c5c8cd";
+    ctx.stroke();
+
+    ctx.fillStyle="#222";
+    ctx.font="600 14px Segoe UI";
+    ctx.fillText("OK",827,476);
+}
+
+function drawDiscord(){
+    clear("#313338");
+
+    ctx.fillStyle="#1e1f22";
+    ctx.fillRect(0,0,265,720);
+
+    ctx.fillStyle="#111214";
+    ctx.fillRect(265,0,1015,58);
+
+    ctx.fillStyle="#f2f3f5";
+    ctx.font="700 18px Segoe UI";
+    ctx.fillText("# general",292,36);
+
+    ctx.fillStyle="#949ba4";
+    ctx.font="13px Segoe UI";
+    ctx.fillText("Welcome to the beginning of this channel.",292,83);
+
+    drawAvatar(320,150,"R","#5865f2");
+    ctx.fillStyle="#f2f3f5";
+    ctx.font="700 15px Segoe UI";
+    ctx.fillText(usernameInput.value,365,150);
+
+    ctx.fillStyle="#949ba4";
+    ctx.font="11px Segoe UI";
+    ctx.fillText("Today at 10:42 PM",365,169);
+
+    ctx.fillStyle="#dbdee1";
+    ctx.font="15px Segoe UI";
+    drawWrapped(messageInput.value,365,198,700,23,"#dbdee1");
+
+    drawAvatar(320,285,"A","#23a55a");
+    ctx.fillStyle="#f2f3f5";
+    ctx.font="700 15px Segoe UI";
+    ctx.fillText("Alex",365,285);
+
+    ctx.fillStyle="#949ba4";
+    ctx.font="11px Segoe UI";
+    ctx.fillText("Today at 10:43 PM",365,304);
+
+    ctx.fillStyle="#dbdee1";
+    ctx.font="15px Segoe UI";
+    ctx.fillText("nah bro you're actually cooked 💀",365,333);
+
+    ctx.fillStyle="#2b2d31";
+    roundRect(285,630,940,55,10);
+    ctx.fill();
+
+    ctx.fillStyle="#72767d";
+    ctx.font="15px Segoe UI";
+    ctx.fillText("Message #general",310,664);
+}
+
+function drawCrash(){
+    clear("#101114");
+
+    ctx.fillStyle="#191b20";
+    roundRect(230,125,820,470,12);
+    ctx.fill();
+
+    ctx.strokeStyle="#343842";
+    ctx.stroke();
+
+    ctx.fillStyle="#ff5364";
+    ctx.beginPath();
+    ctx.arc(290,185,30,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="white";
+    ctx.font="bold 30px Arial";
+    ctx.fillText("×",280,195);
+
+    ctx.fillStyle="#fff";
+    ctx.font="700 30px Segoe UI";
+    ctx.fillText(titleInput.value,345,193);
+
+    ctx.fillStyle="#aeb4c0";
+    ctx.font="16px Segoe UI";
+    drawWrapped(messageInput.value,285,255,690,26,"#aeb4c0");
+
+    ctx.fillStyle="#686e7b";
+    ctx.font="13px Consolas";
+    ctx.fillText(usernameInput.value,285,390);
+    ctx.fillText(extraInput.value,285,420);
+
+    ctx.fillStyle="#252831";
+    roundRect(790,505,210,48,8);
+    ctx.fill();
+
+    ctx.fillStyle="#fff";
+    ctx.font="600 14px Segoe UI";
+    ctx.fillText("Close application",835,535);
+}
+
+function drawTerminal(){
+    clear("#050505");
+
+    ctx.fillStyle="#111";
+    ctx.fillRect(0,0,1280,52);
+
+    ctx.fillStyle="#aaa";
+    ctx.font="14px Consolas";
+    ctx.fillText(usernameInput.value,25,33);
+
+    ctx.fillStyle="#00ff75";
+    ctx.font="17px Consolas";
+
+    let lines=[
+        "Microsoft Windows [Version 11.0.26100.1]",
+        "(c) Microsoft Corporation. All rights reserved.",
+        "",
+        usernameInput.value+" whoami",
+        "ron",
+        "",
+        usernameInput.value+" "+titleInput.value.toLowerCase(),
+        ...messageInput.value.split("\n"),
+        "",
+        extraInput.value,
+        "",
+        usernameInput.value+" █"
+    ];
+
+    let y=90;
+
+    lines.forEach(line=>{
+        ctx.fillText(line,30,y);
+        y+=30;
+    });
+}
+
+function drawBrowser(){
+    clear("#e9edf2");
+
+    ctx.fillStyle="#fff";
+    ctx.fillRect(0,0,1280,72);
+
+    ctx.fillStyle="#f1f3f4";
+    ctx.fillRect(0,72,1280,52);
+
+    ctx.fillStyle="#5f6368";
+    ctx.font="18px Arial";
+    ctx.fillText("←",25,106);
+    ctx.fillText("→",58,106);
+    ctx.fillText("↻",92,106);
+
+    ctx.fillStyle="#fff";
+    roundRect(140,87,930,30,15);
+    ctx.fill();
+
+    ctx.fillStyle="#5f6368";
+    ctx.font="13px Arial";
+    ctx.fillText("https://"+usernameInput.value,165,107);
+
+    ctx.fillStyle="#202124";
+    ctx.font="600 34px Segoe UI";
+    ctx.fillText(titleInput.value,150,270);
+
+    ctx.fillStyle="#5f6368";
+    ctx.font="18px Segoe UI";
+    drawWrapped(messageInput.value,150,320,820,30,"#5f6368");
+
+    ctx.fillStyle="#777";
+    ctx.font="14px Consolas";
+    ctx.fillText(extraInput.value,150,455);
+
+    ctx.fillStyle="#1a73e8";
+    roundRect(150,490,130,42,5);
+    ctx.fill();
+
+    ctx.fillStyle="#fff";
+    ctx.font="600 14px Segoe UI";
+    ctx.fillText("Reload",190,517);
+}
+
+function drawBSOD(){
+    clear("#0078d7");
+
+    ctx.fillStyle="white";
+    ctx.font="80px Segoe UI";
+    ctx.fillText(":(",110,180);
+
+    ctx.font="27px Segoe UI";
+    drawWrapped(messageInput.value,110,245,980,42,"white");
+
+    ctx.font="20px Segoe UI";
+    ctx.fillText("0% complete",110,430);
+
+    ctx.font="17px Segoe UI";
+    ctx.fillText(extraInput.value,110,500);
+
+    ctx.font="15px Segoe UI";
+    ctx.fillText("For more information about this issue, visit support.microsoft.com",110,555);
+}
+
+function drawPhone(){
+    clear("#0d0f13");
+
+    ctx.fillStyle="#050609";
+    roundRect(440,35,400,650,45);
+    ctx.fill();
+
+    ctx.fillStyle="#151821";
+    roundRect(455,50,370,620,35);
+    ctx.fill();
+
+    ctx.fillStyle="#08090d";
+    roundRect(585,62,110,25,15);
+    ctx.fill();
+
+    ctx.fillStyle="#fff";
+    ctx.font="700 15px Segoe UI";
+    ctx.fillText(extraInput.value,480,90);
+
+    ctx.fillStyle="#fff";
+    ctx.font="700 25px Segoe UI";
+    ctx.fillText(titleInput.value,490,300);
+
+    ctx.fillStyle="#a3a9b5";
+    ctx.font="15px Segoe UI";
+    drawWrapped(messageInput.value,490,340,300,24,"#a3a9b5");
+
+    ctx.fillStyle="#777";
+    ctx.font="13px Segoe UI";
+    ctx.fillText(usernameInput.value,490,455);
+
+    ctx.fillStyle="#222631";
+    roundRect(490,500,300,45,12);
+    ctx.fill();
+
+    ctx.fillStyle="#fff";
+    ctx.font="600 14px Segoe UI";
+    ctx.fillText("Try Again",600,528);
+}
+
+function drawWarning(){
+    clear("#17130b");
+
+    ctx.fillStyle="rgba(255,180,0,.08)";
+    ctx.fillRect(0,0,1280,720);
+
+    ctx.fillStyle="#f5b942";
+    ctx.beginPath();
+    ctx.moveTo(640,130);
+    ctx.lineTo(760,340);
+    ctx.lineTo(520,340);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle="#19140a";
+    ctx.font="bold 100px Arial";
+    ctx.fillText("!",625,300);
+
+    ctx.fillStyle="#fff";
+    ctx.font=`700 ${resizeFont(titleInput.value,900,40)}px Segoe UI`;
+    ctx.textAlign="center";
+    ctx.fillText(titleInput.value,640,430);
+
+    ctx.font="18px Segoe UI";
+    drawWrappedCentered(messageInput.value,640,475,850,28,"#b8b1a2");
+
+    ctx.font="13px Consolas";
+    ctx.fillStyle="#777";
+    ctx.fillText(extraInput.value,640,570);
+
+    ctx.textAlign="left";
+}
+
+function drawAvatar(x,y,letter,color){
+    ctx.fillStyle=color;
+    ctx.beginPath();
+    ctx.arc(x,y,22,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle="#fff";
+    ctx.font="bold 18px Arial";
+    ctx.fillText(letter,x-6,y+6);
+}
+
+function drawWrapped(text,x,y,maxWidth,lineHeight,color){
+    ctx.fillStyle=color;
+    const words=text.split(/\s+/);
+    let line="";
+
+    for(const word of words){
+        const test=line?line+" "+word:word;
+
+        if(ctx.measureText(test).width>maxWidth && line){
+            ctx.fillText(line,x,y);
+            line=word;
+            y+=lineHeight;
+        }else{
+            line=test;
+        }
+    }
+
+    if(line)ctx.fillText(line,x,y);
+}
+
+function drawWrappedCentered(text,x,y,maxWidth,lineHeight,color){
+    ctx.fillStyle=color;
+    const words=text.split(/\s+/);
+    let line="";
+    const lines=[];
+
+    for(const word of words){
+        const test=line?line+" "+word:word;
+
+        if(ctx.measureText(test).width>maxWidth && line){
+            lines.push(line);
+            line=word;
+        }else{
+            line=test;
+        }
+    }
+
+    if(line)lines.push(line);
+
+    lines.forEach((l,i)=>{
+        ctx.fillText(l,x,y+i*lineHeight);
+    });
+}
+
+function render(){
+    switch(currentType){
+        case"windows":drawWindows();break;
+        case"discord":drawDiscord();break;
+        case"crash":drawCrash();break;
+        case"terminal":drawTerminal();break;
+        case"browser":drawBrowser();break;
+        case"bsod":drawBSOD();break;
+        case"phone":drawPhone();break;
+        case"warning":drawWarning();break;
+    }
+}
+
+document.querySelectorAll(".template").forEach(button=>{
+    button.addEventListener("click",()=>{
+        document.querySelectorAll(".template").forEach(x=>x.classList.remove("active"));
+        button.classList.add("active");
+
+        currentType=button.dataset.type;
+
+        const d=data[currentType];
+
+        titleInput.value=d.title;
+        messageInput.value=d.message;
+        usernameInput.value=d.username;
+        extraInput.value=d.extra;
+
+        render();
+    });
+});
+
+[titleInput,messageInput,usernameInput,extraInput].forEach(input=>{
+    input.addEventListener("input",render);
+});
+
+document.getElementById("generateBtn").onclick=()=>{
+    render();
+
+    const button=document.getElementById("generateBtn");
+    button.textContent="✓ Generated";
+
+    setTimeout(()=>{
+        button.textContent="✨ Generate";
+    },700);
+};
+
+document.getElementById("randomBtn").onclick=()=>{
+
+    titleInput.value=randomWords.titles[
+        Math.floor(Math.random()*randomWords.titles.length)
+    ];
+
+    messageInput.value=randomWords.messages[
+        Math.floor(Math.random()*randomWords.messages.length)
+    ];
+
+    usernameInput.value=randomWords.users[
+        Math.floor(Math.random()*randomWords.users.length)
+    ];
+
+    extraInput.value="Error Code: "+randomWords.codes[
+        Math.floor(Math.random()*randomWords.codes.length)
+    ];
+
+    render();
+};
+
+document.getElementById("downloadBtn").onclick=()=>{
+
+    render();
+
+    const link=document.createElement("a");
+
+    link.download=
+        "ron-screenshot-"+Date.now()+".png";
+
+    link.href=canvas.toDataURL("image/png");
+
+    link.click();
+};
+
+render();
+</script>
+
+</body>
+</html>
+
