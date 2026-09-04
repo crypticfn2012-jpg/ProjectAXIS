@@ -146,10 +146,10 @@
     }
 
     #logo {
-        width: 42px;
+        width: 58px;
         height: 42px;
         object-fit: contain;
-        display: none;
+        display: block;
         filter: drop-shadow(0 0 18px rgba(255,79,163,.55));
     }
 
@@ -479,10 +479,9 @@
 
 <header class="topbar">
     <div class="brand">
-        <!-- LOGO: replace the src with your logo, then remove display:none below if desired -->
-        <img id="logo" src="" alt="GTA VI logo">
+        <img id="logo" src="https://static1.thegamerimages.com/wordpress/wp-content/uploads/2024/03/news-rockstar-logo-over-yellow-background-with-light-beams-overlayed-1.jpg" alt="GTA VI logo">
         <div class="brand-mark" id="brandMark"><span></span></div>
-        <span>GAME CLIENT</span>
+        <span>ROCKSTAR GAME SERVICES</span>
     </div>
 
     <div class="secure">
@@ -571,7 +570,8 @@ const GAME_IMAGES = [
 ];
 
 
-const GAME_LOGO = "https://ibb.co/JWn651xK";
+const GAME_LOGO = "https://static1.thegamerimages.com/wordpress/wp-content/uploads/2024/03/news-rockstar-logo-over-yellow-background-with-light-beams-overlayed-1.jpg";
+const OFFICIAL_TRAILER_URL = "https://www.youtube.com/watch?v=QdBZY2fkU-0";
 
 
 const LOAD_TIME = 99000;
@@ -596,6 +596,11 @@ if (GAME_LOGO.trim() !== "") {
     logo.style.display = "block";
     brandMark.style.display = "none";
 }
+
+logo.addEventListener("error", () => {
+    logo.style.display = "none";
+    brandMark.style.display = "grid";
+});
 
 
 
@@ -700,8 +705,7 @@ function finishLoading() {
 
 
 playButton.addEventListener("click", () => {
-    
-    alert("THIS IS A JOKE PLEASE DON'T SUE ME ROCKSTAR XOXO");
+    window.location.href = OFFICIAL_TRAILER_URL;
 });
 
 
