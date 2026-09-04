@@ -34,9 +34,6 @@
             background: #070b1b;
         }
 
-        /* =========================================================
-           SPACE BACKGROUND
-        ========================================================= */
 
         #spaceCanvas,
         .nebula,
@@ -156,9 +153,6 @@
             }
         }
 
-        /* =========================================================
-           TOP AREA
-        ========================================================= */
 
         .top-area {
             position: relative;
@@ -167,66 +161,7 @@
             min-height: 170px;
         }
 
-        /* =========================================================
-           BLOG
-        ========================================================= */
-
-        .site-tools {
-            position: absolute;
-
-            top: 18px;
-            right: 20px;
-
-            z-index: 10;
-        }
-
-        .blog-link {
-            display: inline-flex;
-
-            align-items: center;
-            gap: 7px;
-
-            padding: 10px 13px;
-
-            color: #fff;
-
-            background:
-                rgba(20, 27, 61, 0.72);
-
-            border:
-                1px solid rgba(255, 255, 255, 0.24);
-
-            border-radius: 10px;
-
-            box-shadow:
-                0 8px 22px rgba(0, 0, 0, 0.18);
-
-            backdrop-filter: blur(12px);
-
-            font-size: 12px;
-            font-weight: 600;
-
-            text-decoration: none;
-
-            transition:
-                transform 0.2s ease,
-                background 0.2s ease,
-                border-color 0.2s ease;
-        }
-
-        .blog-link:hover {
-            transform: translateY(-2px);
-
-            border-color:
-                rgba(255, 255, 255, 0.65);
-
-            background:
-                rgba(63, 76, 145, 0.82);
-        }
-
-        /* =========================================================
-           PROTECTION + DISCORD
-        ========================================================= */
+        
 
         .site-protection {
             position: absolute;
@@ -323,9 +258,6 @@
             flex-shrink: 0;
         }
 
-        /* =========================================================
-           HEADER
-        ========================================================= */
 
         .header {
             position: relative;
@@ -368,9 +300,6 @@
                 rgba(126, 151, 255, 0.32);
         }
 
-        /* =========================================================
-           GOOGLY EYES
-        ========================================================= */
 
         .googly-eyes {
             position: absolute;
@@ -444,7 +373,6 @@
             will-change: transform;
         }
 
-        /* Small reflection */
 
         .pupil::after {
             content: "";
@@ -463,9 +391,6 @@
                 rgba(255, 255, 255, 0.85);
         }
 
-        /* =========================================================
-           EYE JUMP
-        ========================================================= */
 
         .eye.jump {
             animation:
@@ -506,9 +431,6 @@
             }
         }
 
-        /* =========================================================
-           GAME GRID
-        ========================================================= */
 
         .grid {
             position: relative;
@@ -529,9 +451,6 @@
                 0 auto 60px;
         }
 
-        /* =========================================================
-           GAME CARD
-        ========================================================= */
 
         .card {
             min-width: 0;
@@ -593,9 +512,6 @@
                 scale(0.99);
         }
 
-        /* =========================================================
-           ICONS
-        ========================================================= */
 
         .icon {
             display: block;
@@ -626,9 +542,6 @@
                 scale(1.08);
         }
 
-        /* =========================================================
-           CARD TEXT
-        ========================================================= */
 
         .card .title {
             font-size: 18px;
@@ -644,9 +557,6 @@
             line-height: 1.4;
         }
 
-        /* =========================================================
-           RON.DEV RAINBOW
-        ========================================================= */
 
         .rainbow-logo {
             display: flex;
@@ -703,9 +613,6 @@
             }
         }
 
-        /* =========================================================
-           MOBILE
-        ========================================================= */
 
         @media (max-width: 900px) {
             .grid {
@@ -778,10 +685,6 @@
                 padding: 10px;
             }
 
-            .blog-link {
-                padding:
-                    9px 11px;
-            }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -805,9 +708,7 @@
 
 <body>
 
-    <!-- =========================================================
-         BACKGROUND
-    ========================================================= -->
+ 
 
     <canvas
         id="spaceCanvas"
@@ -835,25 +736,13 @@
     </div>
 
 
-    <!-- =========================================================
-         TOP AREA
-    ========================================================= -->
 
     <div class="top-area">
 
-        <!-- BLOG -->
-
-        <div class="site-tools">
-            <a
-                class="blog-link"
-                href="blog.html"
-            >
-                ✎ My blog
-            </a>
-        </div>
+       
 
 
-        <!-- PROTECTION + DISCORD -->
+       
 
         <div class="site-protection">
 
@@ -900,9 +789,6 @@
     </div>
 
 
-    <!-- =========================================================
-         HEADER
-    ========================================================= -->
 
     <header class="header">
 
@@ -915,7 +801,6 @@
                 </h1>
 
 
-                <!-- GOOGLY EYES -->
 
                 <div class="googly-eyes">
 
@@ -942,13 +827,9 @@
     </header>
 
 
-    <!-- =========================================================
-         GAMES
-    ========================================================= -->
 
     <main class="grid">
 
-        <!-- 1 -->
 
         <div
             class="card"
@@ -970,7 +851,6 @@
         </div>
 
 
-        <!-- 2 -->
 
         <div
             class="card"
@@ -992,7 +872,6 @@
         </div>
 
 
-        <!-- 3 -->
 
         <div
             class="card"
@@ -1014,7 +893,6 @@
         </div>
 
 
-        <!-- 4 -->
 
         <div
             class="card"
@@ -1036,7 +914,6 @@
         </div>
 
 
-        <!-- 5 -->
 
         <div
             class="card"
@@ -1058,7 +935,6 @@
         </div>
 
 
-        <!-- 6 -->
 
         <div
             class="card"
@@ -1080,7 +956,6 @@
         </div>
 
 
-        <!-- 7 -->
 
         <div
             class="card"
@@ -1102,7 +977,6 @@
         </div>
 
 
-        <!-- 8 -->
 
         <div
             class="card"
@@ -1124,7 +998,6 @@
         </div>
 
 
-        <!-- 9 -->
 
         <div
             class="card"
@@ -1146,7 +1019,6 @@
         </div>
 
 
-        <!-- 10 -->
 
         <div
             class="card"
@@ -1168,7 +1040,6 @@
         </div>
 
 
-        <!-- 11 -->
 
         <div
             class="card"
@@ -1190,7 +1061,6 @@
         </div>
 
 
-        <!-- 12 -->
 
         <div
             class="card"
@@ -1212,7 +1082,6 @@
         </div>
 
 
-        <!-- 13 -->
 
         <div
             class="card"
@@ -1234,7 +1103,6 @@
         </div>
 
 
-        <!-- 14 -->
 
         <div
             class="card"
@@ -1256,7 +1124,6 @@
         </div>
 
 
-        <!-- 15 -->
 
         <div
             class="card"
@@ -1278,7 +1145,6 @@
         </div>
 
 
-        <!-- 16 -->
 
         <div
             class="card"
@@ -1300,7 +1166,6 @@
         </div>
 
 
-        <!-- 17 -->
 
         <div
             class="card"
@@ -1322,7 +1187,6 @@
         </div>
 
 
-        <!-- 18 -->
 
         <div
             class="card"
@@ -1344,7 +1208,6 @@
         </div>
 
 
-        <!-- 19 -->
 
         <div
             class="card"
@@ -1366,7 +1229,6 @@
         </div>
 
 
-        <!-- 20 -->
 
         <div
             class="card"
@@ -1388,7 +1250,6 @@
         </div>
 
 
-        <!-- 21 -->
 
         <div
             class="card"
@@ -1410,7 +1271,6 @@
         </div>
 
 
-        <!-- 22 -->
 
         <div
             class="card"
@@ -1432,7 +1292,6 @@
         </div>
 
 
-        <!-- 23 -->
 
         <div
             class="card"
@@ -1454,7 +1313,6 @@
         </div>
 
 
-        <!-- 24 -->
 
         <div
             class="card"
@@ -1476,7 +1334,6 @@
         </div>
 
 
-        <!-- 25 -->
 
         <div
             class="card"
@@ -1498,7 +1355,6 @@
         </div>
 
 
-        <!-- 26 -->
 
         <div
             class="card"
@@ -1520,7 +1376,6 @@
         </div>
 
 
-        <!-- 27 -->
 
         <div
             class="card"
@@ -1580,7 +1435,6 @@
             </div>
         </div>
 
-        <!-- 28 -->
 
         <div
             class="card"
@@ -1602,7 +1456,6 @@
         </div>
 
 
-        <!-- 29 -->
 
         <div
             class="card"
@@ -1624,7 +1477,6 @@
         </div>
 
 
-        <!-- 30 -->
 
         <div
             class="card"
@@ -1646,7 +1498,6 @@
         </div>
 
 
-        <!-- 31 -->
 
         <div
             class="card"
@@ -1668,7 +1519,6 @@
         </div>
 
 
-        <!-- 32 -->
 
         <div
             class="card"
@@ -1686,7 +1536,6 @@
         </div>
 
 
-        <!-- 33 -->
 
         <div
             class="card"
@@ -1710,24 +1559,15 @@
     </main>
 
 
-    <!-- =========================================================
-         JAVASCRIPT
-    ========================================================= -->
 
     <script>
 
-        /* =========================================================
-           GAME NAVIGATION
-        ========================================================= */
 
         function openGame(page) {
             window.location.href = page;
         }
 
 
-        /* =========================================================
-           SPACE BACKGROUND
-        ========================================================= */
 
         const spaceCanvas =
             document.getElementById("spaceCanvas");
@@ -1861,22 +1701,11 @@
         );
 
 
-        /* =========================================================
-           GOOGLY EYES
-           EACH EYE HAS ITS OWN PUPIL
-        ========================================================= */
 
         const eyes =
             document.querySelectorAll(".eye");
 
 
-        /*
-           Move each pupil independently.
-
-           The important difference from the old version is that
-           every pupil calculates its own direction from the
-           centre of its OWN eye.
-        */
 
         function updateGooglyEyes(
             mouseX,
@@ -1893,9 +1722,6 @@
                 }
 
 
-                /*
-                   Get the position of THIS eye.
-                */
 
                 const rect =
                     eye.getBoundingClientRect();
@@ -1910,10 +1736,6 @@
                     rect.height / 2;
 
 
-                /*
-                   Find the cursor direction
-                   relative to THIS eye.
-                */
 
                 const dx =
                     mouseX -
@@ -1931,20 +1753,11 @@
                     );
 
 
-                /*
-                   Maximum distance the pupil can move.
-
-                   Keeping this around 7px means the pupil
-                   stays completely inside the eyeball.
-                */
 
                 const maxDistance =
                     7;
 
 
-                /*
-                   Cursor is exactly at eye centre.
-                */
 
                 if (distance < 0.001) {
 
@@ -1955,12 +1768,6 @@
                 }
 
 
-                /*
-                   Normalize direction.
-
-                   This turns the cursor direction into
-                   a clean -1 → 1 direction.
-                */
 
                 const directionX =
                     dx / distance;
@@ -1969,11 +1776,6 @@
                     dy / distance;
 
 
-                /*
-                   Move pupil toward cursor.
-
-                   Every eye gets its own X/Y values.
-                */
 
                 const moveX =
                     directionX *
@@ -1993,9 +1795,6 @@
         }
 
 
-        /* =========================================================
-           MOUSE
-        ========================================================= */
 
         document.addEventListener(
             "mousemove",
@@ -2013,9 +1812,6 @@
         );
 
 
-        /* =========================================================
-           TOUCH SUPPORT
-        ========================================================= */
 
         document.addEventListener(
             "touchmove",
@@ -2040,9 +1836,6 @@
         );
 
 
-        /* =========================================================
-           GOOGLY EYES — CLICK TO JUMP
-        ========================================================= */
 
         eyes.forEach((eye) => {
 
@@ -2050,17 +1843,10 @@
                 "click",
                 (event) => {
 
-                    /*
-                       Don't let clicking the eye
-                       activate anything behind it.
-                    */
 
                     event.stopPropagation();
 
 
-                    /*
-                       Restart animation.
-                    */
 
                     eye.classList.remove(
                         "jump"
@@ -2075,9 +1861,6 @@
                     );
 
 
-                    /*
-                       Clean up animation class.
-                    */
 
                     setTimeout(
                         () => {
