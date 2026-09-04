@@ -1,0 +1,15 @@
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Remove .html extension from URLs
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([^\.]+)$ $1.html [NC,L]
+
+    # Redirect URLs with .html to clean URLs (optional, for SEO)
+    RewriteCond %{REQUEST_URI} \.html$
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(.+)\.html$ /$1 [R=301,L]
+</IfModule>
