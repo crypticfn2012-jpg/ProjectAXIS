@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launching GTA VI</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    :root {
+        --pink: #ff4fa3;
+        --purple: #7c3cff;
+        --blue: #38a8ff;
+        --orange: #ff9a3c;
+        --text: #fff;
+        --muted: rgba(255,255,255,.62);
+        --glass: rgba(10, 7, 24, .46);
+        --border: rgba(255,255,255,.14);
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #090513;
+        color: var(--text);
+    }
+
+    body {
+        position: relative;
+    }
+
+  
+
+    .game-name::after {
+        content: "";
+    }
+
+    
+
+    #background {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background:
+            radial-gradient(circle at 18% 20%, rgba(255,76,174,.32), transparent 34%),
+            radial-gradient(circle at 80% 28%, rgba(75,89,255,.28), transparent 36%),
+            radial-gradient(circle at 55% 100%, rgba(255,131,49,.20), transparent 38%),
+            #090513;
+        overflow: hidden;
+    }
+
+    .slide {
+        position: absolute;
+        inset: -3%;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        transform: scale(1.035);
+        filter: saturate(1.18) contrast(1.05);
+        transition: opacity 1.2s ease, transform 7s ease;
+    }
+
+    .slide.active {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .image-fallback {
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(120deg, rgba(255,64,170,.55), transparent 35%),
+            linear-gradient(225deg, rgba(91,55,255,.55), transparent 40%),
+            linear-gradient(0deg, rgba(255,128,45,.48), transparent 42%),
+            radial-gradient(circle at 50% 45%, #fa3c91 0%, #6e35d8 42%, #0d0a24 78%);
+    }
+
+    .image-fallback::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+            repeating-linear-gradient(125deg,
+                transparent 0 80px,
+                rgba(255,255,255,.035) 81px 82px,
+                transparent 83px 160px);
+        opacity: .6;
+    }
+
+    .vignette {
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(90deg, rgba(4,2,12,.82), rgba(4,2,12,.22) 52%, rgba(4,2,12,.58)),
+            linear-gradient(0deg, rgba(4,2,12,.76), transparent 42%, rgba(4,2,12,.28));
+    }
+
+    .grain {
+        position: absolute;
+        inset: -50%;
+        opacity: .055;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E");
+        animation: grain .18s steps(2) infinite;
+    }
+
+    @keyframes grain {
+        0% { transform: translate(0,0); }
+        25% { transform: translate(3%,-2%); }
+        50% { transform: translate(-2%,3%); }
+        75% { transform: translate(2%,2%); }
+        100% { transform: translate(-3%,-2%); }
+    }
+
+    .topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 82px;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 42px;
+        border-bottom: 1px solid rgba(255,255,255,.08);
+        background: linear-gradient(180deg, rgba(7,4,17,.55), transparent);
+        backdrop-filter: blur(5px);
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        font-size: 13px;
+        text-transform: uppercase;
+    }
+
+    #logo {
+        width: 42px;
+        height: 42px;
+        object-fit: contain;
+        display: none;
+        filter: drop-shadow(0 0 18px rgba(255,79,163,.55));
+    }
+
+    .brand-mark {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: 11px;
+        background: linear-gradient(135deg, rgba(255,74,169,.3), rgba(84,53,255,.28));
+        box-shadow: inset 0 0 20px rgba(255,255,255,.05), 0 8px 30px rgba(0,0,0,.2);
+    }
+
+    .brand-mark span {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff69b4, #7444ff);
+        box-shadow: 0 0 22px #ff55a9;
+    }
+
+    .secure {
+        color: rgba(255,255,255,.65);
+        font-size: 11px;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+    .secure b {
+        color: #9dffce;
+        font-weight: 700;
+    }
+
+    .content {
+        position: relative;
+        z-index: 3;
+        width: min(1380px, 100%);
+        min-height: 100vh;
+        margin: auto;
+        padding: 150px 6vw 80px;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero {
+        width: 650px;
+        max-width: 100%;
+    }
+
+    .eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255,255,255,.7);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .24em;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+    }
+
+    .eyebrow-line {
+        width: 34px;
+        height: 1px;
+        background: linear-gradient(90deg, var(--pink), var(--blue));
+        box-shadow: 0 0 12px rgba(255,79,163,.8);
+    }
+
+    h1 {
+        font-size: clamp(54px, 7vw, 106px);
+        line-height: .87;
+        letter-spacing: -.065em;
+        font-weight: 900;
+        max-width: 800px;
+        text-shadow: 0 10px 50px rgba(0,0,0,.38);
+    }
+
+    h1 .launching {
+        display: block;
+        color: white;
+        font-size: .38em;
+        letter-spacing: .02em;
+        line-height: 1;
+        margin-bottom: 16px;
+        font-weight: 650;
+        opacity: .82;
+    }
+
+    h1 .game-name {
+        display: inline-block;
+        color: transparent;
+        background: linear-gradient(110deg, #fff 0%, #ff91c8 26%, #8c68ff 62%, #ffb45d 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        filter: drop-shadow(0 0 32px rgba(255,80,170,.22));
+    }
+
+    .subtitle {
+        margin-top: 27px;
+        color: rgba(255,255,255,.68);
+        max-width: 510px;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .loader-card {
+        width: min(610px, 100%);
+        margin-top: 36px;
+        padding: 19px 21px 18px;
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        background: var(--glass);
+        box-shadow:
+            inset 0 1px rgba(255,255,255,.07),
+            0 25px 70px rgba(0,0,0,.24);
+        backdrop-filter: blur(18px);
+    }
+
+    .loader-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 13px;
+        font-size: 12px;
+    }
+
+    #status {
+        font-weight: 750;
+    }
+
+    #percent {
+        color: rgba(255,255,255,.55);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .bar {
+        height: 4px;
+        width: 100%;
+        border-radius: 99px;
+        overflow: hidden;
+        background: rgba(255,255,255,.1);
+    }
+
+    #progress {
+        height: 100%;
+        width: 0%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #ff4fa3, #8652ff 55%, #ffae55);
+        box-shadow: 0 0 18px rgba(255,75,166,.65);
+        transition: width .25s ease;
+    }
+
+    .stats {
+        display: flex;
+        gap: 22px;
+        margin-top: 15px;
+        color: rgba(255,255,255,.48);
+        font-size: 10px;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .stat {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #71ffad;
+        box-shadow: 0 0 10px #71ffad;
+    }
+
+    .dot.pink {
+        background: #ff65b2;
+        box-shadow: 0 0 10px #ff65b2;
+    }
+
+    .dot.blue {
+        background: #64b5ff;
+        box-shadow: 0 0 10px #64b5ff;
+    }
+
+    #playScreen {
+        display: none;
+        margin-top: 34px;
+        animation: reveal .8s cubic-bezier(.16,1,.3,1) forwards;
+    }
+
+    @keyframes reveal {
+        from { opacity: 0; transform: translateY(15px) scale(.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    #playButton {
+        border: 0;
+        cursor: pointer;
+        position: relative;
+        min-width: 210px;
+        padding: 17px 30px;
+        border-radius: 12px;
+        color: white;
+        background: linear-gradient(110deg, #ff438f, #8048ff 62%, #ff9c4b);
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        box-shadow:
+            0 14px 40px rgba(255,65,155,.26),
+            inset 0 1px rgba(255,255,255,.4);
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    #playButton:hover {
+        transform: translateY(-3px) scale(1.025);
+        box-shadow:
+            0 20px 55px rgba(255,65,155,.42),
+            0 0 30px rgba(126,74,255,.25),
+            inset 0 1px rgba(255,255,255,.5);
+    }
+
+    #playButton:active {
+        transform: translateY(0) scale(.99);
+    }
+
+    .right-info {
+        position: fixed;
+        right: 45px;
+        bottom: 40px;
+        z-index: 4;
+        text-align: right;
+        color: rgba(255,255,255,.42);
+        font-size: 10px;
+        letter-spacing: .13em;
+        line-height: 1.8;
+        text-transform: uppercase;
+    }
+
+    .right-info strong {
+        color: rgba(255,255,255,.7);
+    }
+
+    .corner {
+        position: fixed;
+        width: 100px;
+        height: 100px;
+        z-index: 4;
+        pointer-events: none;
+        opacity: .45;
+    }
+
+    .corner.tl {
+        top: 105px;
+        left: 35px;
+        border-left: 1px solid rgba(255,255,255,.16);
+        border-top: 1px solid rgba(255,255,255,.16);
+    }
+
+    .corner.br {
+        right: 35px;
+        bottom: 35px;
+        border-right: 1px solid rgba(255,255,255,.16);
+        border-bottom: 1px solid rgba(255,255,255,.16);
+    }
+
+    .hidden-after-load {
+        transition: opacity .6s ease, transform .6s ease;
+    }
+
+    body.loaded .loader-card {
+        opacity: 0;
+        transform: translateY(8px);
+        pointer-events: none;
+        height: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        border: 0;
+    }
+
+    @media (max-width: 800px) {
+        .topbar {
+            padding: 0 20px;
+        }
+
+        .secure {
+            display: none;
+        }
+
+        .content {
+            padding: 125px 25px 70px;
+            align-items: flex-start;
+        }
+
+        .hero {
+            padding-top: 60px;
+        }
+
+        h1 {
+            font-size: clamp(55px, 15vw, 88px);
+        }
+
+        .right-info,
+        .corner {
+            display: none;
+        }
+
+        .loader-card {
+            margin-top: 28px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div id="background">
+    <div class="image-fallback"></div>
+    <div id="slides"></div>
+    <div class="vignette"></div>
+    <div class="grain"></div>
+</div>
+
+<header class="topbar">
+    <div class="brand">
+        <!-- LOGO: replace the src with your logo, then remove display:none below if desired -->
+        <img id="logo" src="" alt="GTA VI logo">
+        <div class="brand-mark" id="brandMark"><span></span></div>
+        <span>GAME CLIENT</span>
+    </div>
+
+    <div class="secure">
+        CONNECTION <b>● SECURE</b>
+    </div>
+</header>
+
+<div class="corner tl"></div>
+<div class="corner br"></div>
+
+<main class="content">
+    <section class="hero">
+
+        <div class="eyebrow">
+            <span class="eyebrow-line"></span>
+            INITIALIZING CLIENT
+        </div>
+
+        <h1>
+            <span class="launching">Launching</span>
+            <span class="game-name"></span>
+        </h1>
+
+        <p class="subtitle">
+            Preparing the game environment, synchronizing services and loading
+            the latest assets. Please wait while everything gets ready.
+        </p>
+
+        <div class="loader-card" id="loaderCard">
+            <div class="loader-top">
+                <span id="status">Loading assets...</span>
+                <span id="percent">0%</span>
+            </div>
+
+            <div class="bar">
+                <div id="progress"></div>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <span class="dot"></span>
+                    <span>Players <strong id="players">55</strong></span>
+                </div>
+
+                <div class="stat">
+                    <span class="dot pink"></span>
+                    <span>Online</span>
+                </div>
+
+                <div class="stat">
+                    <span class="dot blue"></span>
+                    <span id="server">EU-WEST</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="playScreen">
+            <button id="playButton">Play GTA VI</button>
+        </div>
+
+    </section>
+</main>
+
+<div class="right-info">
+    BUILD <strong>LIVE</strong><br>
+    SERVICES <strong>OPERATIONAL</strong><br>
+    REGION <strong>EU-WEST</strong>
+</div>
+
+<script>
+
+
+const GAME_NAME = "GTA VI";
+
+
+const GAME_IMAGES = [
+    "https://gamedaily.com/.image/MTU6MDAwMDAwMDAwMDU0MjY5/gta-6-extended-look-key-artwork.jpg?profile=w2560&ar=16-9",
+    "https://gagadget.com/media/post_big2/gta-6_13KENK7.webp",
+     "https://www.wikigta6.com/wp-content/uploads/2025/12/GTA-6-Characters-new.jpg",
+     "https://media.ixbt.games/ixbt-data/1293832/media-trtnrgxvrfcipuz2j9mqgzym.jpg",
+    "https://media.assettype.com/outlook-respawn/2026-05-29/o7qnw909/GTA-VI.jpg",
+    "https://cdn.mos.cms.futurecdn.net/p4CpHd5o3t6FqAWCCXnreD.jpg",
+    "https://vegamoviess.cfd/uploads/posts/covers/screenshot-Grand.111.webp",
+     "https://th.bing.com/th?id=OIF.7b%2f6QdPhQUP3zDyzI1wdjA&r=0&rs=1&pid=ImgDetMain&o=7&rm=3",
+    "https://www.psu.com/wp/wp-content/uploads/2026/08/grand-theft-auto-6-dev-considered-4-protagonists.jpg",
+];
+
+
+const GAME_LOGO = "https://ibb.co/JWn651xK";
+
+
+const LOAD_TIME = 99000;
+
+
+
+
+document.querySelectorAll(".game-name").forEach(el => {
+    el.textContent = GAME_NAME;
+});
+
+document.title = "Launching " + GAME_NAME;
+
+const playButton = document.getElementById("playButton");
+playButton.textContent = "Play " + GAME_NAME;
+
+const logo = document.getElementById("logo");
+const brandMark = document.getElementById("brandMark");
+
+if (GAME_LOGO.trim() !== "") {
+    logo.src = GAME_LOGO;
+    logo.style.display = "block";
+    brandMark.style.display = "none";
+}
+
+
+
+const slides = document.getElementById("slides");
+
+if (GAME_IMAGES.length > 0) {
+    GAME_IMAGES.forEach((src, index) => {
+        const slide = document.createElement("div");
+        slide.className = "slide";
+        slide.style.backgroundImage = `url("${src}")`;
+        if (index === 0) slide.classList.add("active");
+        slides.appendChild(slide);
+    });
+}
+
+let currentSlide = 0;
+
+function nextImage() {
+    const allSlides = document.querySelectorAll(".slide");
+
+    if (allSlides.length <= 1) return;
+
+    allSlides[currentSlide].classList.remove("active");
+    currentSlide = (currentSlide + 1) % allSlides.length;
+    allSlides[currentSlide].classList.add("active");
+}
+
+
+
+const imageTimer = setInterval(nextImage, 4000);
+
+
+
+const statusText = document.getElementById("status");
+
+const loadingMessages = [
+    "Loading assets...",
+    "Preparing game world...",
+    "Connecting to services...",
+    "Synchronizing player data...",
+    "Checking game files...",
+    "Loading textures...",
+    "Initializing audio...",
+    "Finalizing client...",
+    "Almost ready..."
+];
+
+
+
+const playersElement = document.getElementById("players");
+let playerCount = 55;
+
+const playerTimer = setInterval(() => {
+    playerCount += Math.floor(Math.random() * 9) - 4;
+    if (playerCount < 40) playerCount = 40;
+    playersElement.textContent = playerCount.toLocaleString();
+}, 1600);
+
+
+
+const startTime = Date.now();
+
+function updateLoader() {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / LOAD_TIME, 1);
+
+   
+    const eased = 1 - Math.pow(1 - progress, 1.35);
+    const percent = Math.floor(eased * 100);
+
+    document.getElementById("progress").style.width = percent + "%";
+    document.getElementById("percent").textContent = percent + "%";
+
+    const messageIndex = Math.min(
+        Math.floor(progress * loadingMessages.length),
+        loadingMessages.length - 1
+    );
+
+    statusText.textContent = loadingMessages[messageIndex];
+
+    if (progress < 1) {
+        requestAnimationFrame(updateLoader);
+    } else {
+        finishLoading();
+    }
+}
+
+function finishLoading() {
+    clearInterval(imageTimer);
+    clearInterval(playerTimer);
+
+    document.getElementById("progress").style.width = "100%";
+    document.getElementById("percent").textContent = "100%";
+    statusText.textContent = "Ready to play";
+
+    setTimeout(() => {
+        document.body.classList.add("loaded");
+        document.getElementById("playScreen").style.display = "block";
+    }, 650);
+}
+
+
+
+playButton.addEventListener("click", () => {
+    
+    alert("THIS IS A JOKE PLEASE DON'T SUE ME ROCKSTAR XOXO");
+});
+
+
+
+updateLoader();
+</script>
+
+</body>
+</html>
